@@ -1,8 +1,8 @@
-import Admin from '../db/models/admin';
-const { Sequelize } = require('sequelize');
+import Admin from '../models/admin';
+import Sequelize from 'sequelize';
 
 var environment = 'local';
-var config = require(__dirname + '/../../config/config.json')[environment];
+var config = require(__dirname + '/../config/config.json')[environment];
 
 // get information about local or aws MYSQL credentials 
 const connectionSetting = () => {
@@ -19,11 +19,23 @@ const connSetting = connectionSetting();
 const sequelize = new Sequelize({
   ...connSetting,
   dialect: config.dialect,
-  logging: true
+  logging: console.log
 });
 
+const testConnection = async () => {
+  try {
+    await sequelize.authenticate();
+    console.log('Connection has been established successfully.');
+  } catch (error) {
+    console.error('Unable to connect to the database:', error);
+  }
+};
+
+// test the connection
+testConnection();
+
 const db = {};
-const AdminModel = Admin(sequelize);
+const AdminModel = Admin(sequelize, Sequelize);
 db[AdminModel.name] = AdminModel;
 
 
@@ -36,4 +48,4 @@ Object.keys(db).forEach((modelName) => {
 db.sequelize = sequelize;
 db.Sequelize = Sequelize;
 
-module.exports = db;
+export default db;
