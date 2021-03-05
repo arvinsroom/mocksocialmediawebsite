@@ -1,6 +1,5 @@
-#!/usr/bin/env node
-const Umzug = require('umzug');
-const db = require('./clients/database-client');
+import Umzug from 'umzug';
+import db from './clients/database-client';
 
 const umzug = new Umzug({
   storage: 'sequelize',
@@ -12,14 +11,11 @@ const umzug = new Umzug({
         db.sequelize.getQueryInterface(),
         db.Sequelize
       ],
-      path: __dirname + '/db/migrations',
+      path: 'migrations',
       pattern: /\.js$/
   },
   logger: console // Change this later
 });
 
-(async () => {
-  await umzug.up();
-  console.log('Migrations ran successfully!');
-  return;
-})();
+export const umzugUp = async () => await umzug.up();
+export const umzugDown = async () => await umzug.down();

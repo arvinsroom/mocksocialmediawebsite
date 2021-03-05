@@ -22,6 +22,6 @@ async function up(queryInterface, DataTypes) {
 }
 
 module.exports = {
-  down,
-  up
+  up,
+  down
 };
