@@ -1,8 +1,8 @@
 import Admin from '../models/admin';
 import Sequelize from 'sequelize';
 
-var environment = 'local';
-var config = require(__dirname + '/../config/config.json')[environment];
+const environment = 'local';
+const config = require(__dirname + '/../config/config.json')[environment];
 
 // get information about local or aws MYSQL credentials 
 const connectionSetting = () => {

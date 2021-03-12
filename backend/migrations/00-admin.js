@@ -7,7 +7,7 @@ async function up(queryInterface, DataTypes) {
     _id: {
       allowNull: false,
       primaryKey: true,
-      type: DataTypes.STRING(36)
+      type: DataTypes.UUIDV4
     },
     username: {
       allowNull: false,
@@ -15,7 +15,7 @@ async function up(queryInterface, DataTypes) {
     },
     password: {
       allowNull: false,
-      type: DataTypes.STRING(36)
+      type: DataTypes.STRING
     }
   });
   await queryInterface.addIndex('Admin', ['username', 'password']);
