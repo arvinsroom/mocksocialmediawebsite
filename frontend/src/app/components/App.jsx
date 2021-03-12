@@ -1,14 +1,23 @@
 import Admin from './Admin/Admin';
+import Home from './Configure/AdminConfigurePortal/Home/Home';
+import Configure from './Configure/Configure';
+
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
 
 function App() {
   return (
     <div className="wrapper">
-      <h1>Application</h1>
+      {/* <h1>Mock Website</h1> */}
       <BrowserRouter>
         <Switch>
-          <Route path="/admin">
+          < Route exact path="/admin/configure">
+            <Configure />
+          </ Route>
+          <Route exact path="/admin">
             <Admin />
+          </Route>
+          <Route exact path="/">
+            <Home />
           </Route>
         </Switch>
       </BrowserRouter>

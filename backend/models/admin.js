@@ -3,7 +3,8 @@ export default (sequelize, DataTypes) => {
     _id: {
       allowNull: false,
       primaryKey: true,
-      type: DataTypes.STRING(36)
+      type: DataTypes.UUID,
+      defaultValue: DataTypes.UUIDV4
     },
     username: {
       allowNull: false,
@@ -11,7 +12,7 @@ export default (sequelize, DataTypes) => {
     },
     password: {
       allowNull: false,
-      type: DataTypes.STRING(36)
+      type: DataTypes.STRING
     }
   }, {
 		tableName: "Admin",

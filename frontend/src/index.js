@@ -1,5 +1,6 @@
 const express = require('express');
 const bodyParser = require('body-parser');
+const path = require('path');
 
 const app = express();
 // parse requests of content-type - application/json
@@ -11,7 +12,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 // __dirname will be everything inside dist folder
 app.use(express.static(__dirname));
 
-app.get('/', function (req, res) {
+app.get('/*', function (req, res) {
   res.sendFile(path.join(__dirname, 'index.html'));
 });
 
