@@ -1,25 +1,21 @@
-async function down(queryInterface, DataTypes) {
-  await queryInterface.dropTable('UserPost');
-}
-
-async function up(queryInterface, DataTypes) {
-  await queryInterface.createTable('UserPost', {
+export default (sequelize, DataTypes) => {
+	const UserPost = sequelize.define("UserPost", {
     _id: {
       allowNull: false,
       primaryKey: true,
       type: DataTypes.INTEGER
     },
-    // type: {
-    //   allowNull: true,
-    //   type: DataTypes.ENUM('LINK', 'VIDEO', 'PHOTO', 'TEXTONLY)
-    // }, not sure if we need it
+    type: {
+      allowNull: true,
+      type: DataTypes.ENUM('LINK', 'VIDEO', 'PHOTO', 'TEXT')
+    },
     userId: {
       allowNull: false,
       references: {
         key: '_id',
         model: 'User'
       },
-      type: DataTypes.UUIDV4
+      type: DataTypes.UUID
     },
     linkTitle: {
       allowNull: false,
@@ -45,11 +41,14 @@ async function up(queryInterface, DataTypes) {
       allowNull: false,
       type: DataTypes.BLOB('long')
     },
-  });
-  await queryInterface.addIndex('UserPost', ['userId', 'linkTitle']);
-}
+    misinformation: {
+      allowNull: false,
+      type: DataTypes.BOOLEAN,
+    }
+  }, {
+		freezeTableName: true, // model name equal to table name
+    timestamps: false, // enable timestamps
+	});
 
-module.exports = {
-  up,
-  down
-};
+  return UserPost;
+}

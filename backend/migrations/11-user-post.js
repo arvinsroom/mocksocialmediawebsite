@@ -1,23 +1,23 @@
 async function down(queryInterface, DataTypes) {
-  await queryInterface.dropTable('AdminPost');
+  await queryInterface.dropTable('UserPost');
 }
 
 async function up(queryInterface, DataTypes) {
-  await queryInterface.createTable('AdminPost', {
+  await queryInterface.createTable('UserPost', {
     _id: {
       allowNull: false,
       primaryKey: true,
       type: DataTypes.INTEGER
     },
     type: {
-      allowNull: false,
+      allowNull: true,
       type: DataTypes.ENUM('LINK', 'VIDEO', 'PHOTO', 'TEXT')
     },
-    templateId: {
+    userId: {
       allowNull: false,
       references: {
         key: '_id',
-        model: 'Template'
+        model: 'User'
       },
       type: DataTypes.UUID
     },
@@ -50,7 +50,7 @@ async function up(queryInterface, DataTypes) {
       type: DataTypes.BOOLEAN,
     }
   });
-  // await queryInterface.addIndex('AdminPost', ['templateId', 'type']);
+  // await queryInterface.addIndex('UserPost', ['userId', 'linkTitle']);
 }
 
 module.exports = {

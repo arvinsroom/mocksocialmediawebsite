@@ -7,7 +7,7 @@ async function up(queryInterface, DataTypes) {
     _id: {
       allowNull: false,
       primaryKey: true,
-      type: DataTypes.UUIDV4
+      type: DataTypes.UUID
     },
     templateId: {
       allowNull: false,
@@ -15,14 +15,22 @@ async function up(queryInterface, DataTypes) {
         key: '_id',
         model: 'Template'
       },
-      type: DataTypes.UUIDV4
+      type: DataTypes.UUID
+    },
+    pageId: {
+      allowNull: false,
+      references: {
+        key: '_id',
+        model: 'Page'
+      },
+      type: DataTypes.UUID
     },
     richText: {
       allowNull: false,
       type: DataTypes.TEXT
     }
   });
-  await queryInterface.addIndex('Info', ['templateId', 'richText']);
+  await queryInterface.addIndex('Info', ['templateId', 'pageId']);
 }
 
 module.exports = {

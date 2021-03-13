@@ -18,4 +18,7 @@ const umzug = new Umzug({
 });
 
 export const umzugUp = async () => await umzug.up();
-export const umzugDown = async () => await umzug.down();
+
+// make sure to remove this command before production,
+// we donot want to have some access to drop everything
+export const umzugDown = async () => await umzug.down({ to: 0 });
