@@ -1,13 +1,13 @@
 async function down(queryInterface, DataTypes) {
-  await queryInterface.dropTable('UserMcqAnswer');
+  await queryInterface.dropTable('UserAnswer');
 }
 
 async function up(queryInterface, DataTypes) {
-  await queryInterface.createTable('UserMcqAnswer', {
+  await queryInterface.createTable('UserAnswer', {
     _id: {
       allowNull: false,
       primaryKey: true,
-      type: DataTypes.UUIDV4
+      type: DataTypes.UUID
     },
     userId: {
       allowNull: false,
@@ -15,7 +15,7 @@ async function up(queryInterface, DataTypes) {
         key: '_id',
         model: 'User'
       },
-      type: DataTypes.UUIDV4
+      type: DataTypes.UUID
     },
     questionId: {
       allowNull: false,
@@ -23,20 +23,26 @@ async function up(queryInterface, DataTypes) {
         key: '_id',
         model: 'Question'
       },
-      type: DataTypes.UUIDV4
+      type: DataTypes.UUID
     },
     // this will have a reference to multiple rows in mcqAnswer
     // these entries are selected by user to be true
-    mcqAnswerId: {
-      allowNull: false,
+    mcqOptionId: {
+      allowNull: true,
       references: {
         key: '_id',
-        model: 'McqAnswer'
+        model: 'McqOption'
       },
-      type: DataTypes.UUIDV4
+      type: DataTypes.UUID
+    },
+    // against a userId and a questionId we should either have a simgle opentextAnswerText or
+    // multiple or single mcqOptionId's 
+    opentextAnswerText: {
+      allowNull: true,
+      type: DataTypes.TEXT
     }
   });
-  await queryInterface.addIndex('UserMcqAnswer', ['userId', 'questionId']);
+  // await queryInterface.addIndex('UserAnswer', ['userId', 'questionId']);
 }
 
 module.exports = {

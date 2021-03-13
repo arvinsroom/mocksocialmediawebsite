@@ -1,13 +1,10 @@
-async function down(queryInterface, DataTypes) {
-  await queryInterface.dropTable('Template');
-}
-
-async function up(queryInterface, DataTypes) {
-  await queryInterface.createTable('Template', {
+export default (sequelize, DataTypes) => {
+	const Template = sequelize.define("Template", {
     _id: {
       allowNull: false,
       primaryKey: true,
-      type: DataTypes.UUID
+      type: DataTypes.UUID,
+      defaultValue: DataTypes.UUIDV4 // create a default UUIDV4 for each record
     },
     name: {
       allowNull: false,
@@ -42,14 +39,12 @@ async function up(queryInterface, DataTypes) {
     //   _id: 'reference to know what to fetch',
     // }
     flow: {
-      allowNull: true,
+      allowNull: false,
       type: DataTypes.TEXT, // json object implement sutible getter and setters, if needed
     }
-  });
-  // await queryInterface.addIndex('Template', ['type', 'name']);
+  }, {
+		freezeTableName: true, // model name equal to table name
+    timestamps: false, // enable timestamps
+	});
+  return Template;
 }
-
-module.exports = {
-  up,
-  down
-};

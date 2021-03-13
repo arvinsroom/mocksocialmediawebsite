@@ -13,11 +13,10 @@ export default (sequelize, DataTypes) => {
     password: {
       allowNull: false,
       type: DataTypes.STRING
-    }
+    },
   }, {
-		tableName: "Admin",
-		freezeTableName: true,
-    timestamps: false
+		freezeTableName: true, // model name equal to table name
+    timestamps: false, // enable timestamps
 	});
 
 	return Admin;

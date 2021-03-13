@@ -7,7 +7,7 @@ async function up(queryInterface, DataTypes) {
     _id: {
       allowNull: false,
       primaryKey: true,
-      type: DataTypes.UUIDV4
+      type: DataTypes.UUID
     },
     username: {
       allowNull: false,
@@ -18,7 +18,7 @@ async function up(queryInterface, DataTypes) {
       type: DataTypes.STRING
     }
   });
-  await queryInterface.addIndex('Admin', ['username', 'password']);
+  await queryInterface.addIndex('Admin', ['username'])
 }
 
 module.exports = {

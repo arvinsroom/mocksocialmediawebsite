@@ -7,7 +7,7 @@ async function up(queryInterface, DataTypes) {
     _id: {
       allowNull: false,
       primaryKey: true,
-      type: DataTypes.UUIDV4
+      type: DataTypes.UUID
     },
     profilePic: {
       allowNull: true,
@@ -23,11 +23,10 @@ async function up(queryInterface, DataTypes) {
         key: '_id',
         model: 'User'
       },
-      type: DataTypes.UUIDV4
+      type: DataTypes.UUID
     },
-    // need started at stamp
   });
-  await queryInterface.addIndex('UserRegister', ['userId', 'username']);
+  // await queryInterface.addIndex('UserRegister', ['userId', 'username']);
 }
 
 module.exports = {

@@ -1,13 +1,13 @@
 async function down(queryInterface, DataTypes) {
-  await queryInterface.dropTable('OpentextAnswer');
+  await queryInterface.dropTable('McqOption');
 }
 
 async function up(queryInterface, DataTypes) {
-  await queryInterface.createTable('OpentextAnswer', {
+  await queryInterface.createTable('McqOption', {
     _id: {
       allowNull: false,
       primaryKey: true,
-      type: DataTypes.UUIDV4
+      type: DataTypes.UUID
     },
     questionId: {
       allowNull: false,
@@ -15,14 +15,14 @@ async function up(queryInterface, DataTypes) {
         key: '_id',
         model: 'Question'
       },
-      type: DataTypes.UUIDV4
+      type: DataTypes.UUID
     },
-    answerText: {
+    optionText: {
       allowNull: true,
       type: DataTypes.TEXT
     },
   });
-  await queryInterface.addIndex('OpentextAnswer', ['questionId', 'isCorrectMcq']);
+  // await queryInterface.addIndex('McqOption', ['questionId', 'optionText']);
 }
 
 module.exports = {

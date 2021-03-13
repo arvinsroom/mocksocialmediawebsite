@@ -7,7 +7,7 @@ async function up(queryInterface, DataTypes) {
     _id: {
       allowNull: false,
       primaryKey: true,
-      type: DataTypes.UUIDV4
+      type: DataTypes.UUID
     },
     templateId: {
       allowNull: false,
@@ -15,7 +15,15 @@ async function up(queryInterface, DataTypes) {
         key: '_id',
         model: 'Template'
       },
-      type: DataTypes.UUIDV4
+      type: DataTypes.UUID
+    },
+    pageId: {
+      allowNull: false,
+      references: {
+        key: '_id',
+        model: 'Page'
+      },
+      type: DataTypes.UUID
     },
     text: {
       allowNull: false,
@@ -25,9 +33,9 @@ async function up(queryInterface, DataTypes) {
       allowNull: false,
       type: DataTypes.STRING(1024)
     }
-    // also need finished at time here
+    // also output _id of user table for further analysis, everything should be connected to that id
   });
-  await queryInterface.addIndex('FinishScreen', ['templateId', 'text']);
+  // await queryInterface.addIndex('FinishScreen', ['templateId', 'text']);
 }
 
 module.exports = {

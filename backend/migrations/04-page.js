@@ -7,7 +7,7 @@ async function up(queryInterface, DataTypes) {
     _id: {
       allowNull: false,
       primaryKey: true,
-      type: DataTypes.UUIDV4
+      type: DataTypes.UUID
     },
     name: {
       allowNull: false,
@@ -19,14 +19,14 @@ async function up(queryInterface, DataTypes) {
         key: '_id',
         model: 'Template'
       },
-      type: DataTypes.UUIDV4
+      type: DataTypes.UUID
     },
     type: {
       allowNull: false,
-      type: DataTypes.ENUM('MCQ', 'OPENTEXT')
+      type: DataTypes.ENUM('MCQ', 'OPENTEXT', 'INFO', 'REGISTER', 'FINISH', 'MEDIA')
     },
   });
-  await queryInterface.addIndex('Page', ['templateId', 'name']);
+  // await queryInterface.addIndex('Page', ['templateId', 'name']);
 }
 
 module.exports = {

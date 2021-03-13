@@ -1,9 +1,5 @@
-async function down(queryInterface, DataTypes) {
-  await queryInterface.dropTable('AdminPost');
-}
-
-async function up(queryInterface, DataTypes) {
-  await queryInterface.createTable('AdminPost', {
+export default (sequelize, DataTypes) => {
+	const AdminPost = sequelize.define("AdminPost", {
     _id: {
       allowNull: false,
       primaryKey: true,
@@ -49,11 +45,9 @@ async function up(queryInterface, DataTypes) {
       allowNull: false,
       type: DataTypes.BOOLEAN,
     }
-  });
-  // await queryInterface.addIndex('AdminPost', ['templateId', 'type']);
+  }, {
+		freezeTableName: true, // model name equal to table name
+    timestamps: false, // enable timestamps
+	});
+  return AdminPost;
 }
-
-module.exports = {
-  up,
-  down
-};

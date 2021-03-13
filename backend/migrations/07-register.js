@@ -7,7 +7,7 @@ async function up(queryInterface, DataTypes) {
     _id: {
       allowNull: false,
       primaryKey: true,
-      type: DataTypes.UUIDV4
+      type: DataTypes.UUID
     },
     profilePic: {
       allowNull: false,
@@ -19,16 +19,24 @@ async function up(queryInterface, DataTypes) {
       defaultValue: false,
       type: DataTypes.BOOLEAN,
     },
+    pageId: {
+      allowNull: false,
+      references: {
+        key: '_id',
+        model: 'Page'
+      },
+      type: DataTypes.UUID
+    },
     templateId: {
       allowNull: false,
       references: {
         key: '_id',
         model: 'Template'
       },
-      type: DataTypes.UUIDV4
+      type: DataTypes.UUID
     },
   });
-  await queryInterface.addIndex('Register', ['templateId', 'name']);
+  // await queryInterface.addIndex('Register', ['templateId', 'name']);
 }
 
 module.exports = {

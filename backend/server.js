@@ -13,7 +13,7 @@ var bcrypt = require("bcryptjs");
 // TODO: This should be removed before we go live or production
 // This will drop every single table
 try {
-  await umzugDown();
+  // await umzugDown();
   console.log('Tables Droped, Migrations ran successfully!');
 } catch (err) {
   console.log(err);
@@ -36,19 +36,19 @@ try {
     password: bcrypt.hashSync(config.password, 8)
   };
   // Save Admin object in the database
-  Admin.create(admin)
-  .then(data => {
-    console.log('User Created: ', data);
-  })
-  .catch(err => {
-    conosle.log("Some error occurred while creating the Admin Username/Password.", err);
-  });
+  // Admin.create(admin)
+  // .then(data => {
+  //   console.log('User Created: ', data);
+  // })
+  // .catch(err => {
+  //   console.log("Some error occurred while creating the Admin Username/Password.", err);
+  // });
 
   // create a express server
   const app = express();
 
   var corsOptions = {
-    origin: "http://localhost:8081"
+    origin: '*'//"http://localhost:8081"
   };
 
   app.use(cors(corsOptions));
@@ -69,6 +69,8 @@ try {
   });
 
   require("./routes/auth-routes")(app);
+  require("./routes/template-routes")(app);
+
 
   // set port, listen for requests
   const PORT = process.env.PORT || 8080;

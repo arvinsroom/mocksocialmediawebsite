@@ -1,9 +1,5 @@
-async function down(queryInterface, DataTypes) {
-  await queryInterface.dropTable('Question');
-}
-
-async function up(queryInterface, DataTypes) {
-  await queryInterface.createTable('Question', {
+export default (sequelize, DataTypes) => {
+	const Question = sequelize.define("FinishScreen", {
     _id: {
       allowNull: false,
       primaryKey: true,
@@ -26,11 +22,10 @@ async function up(queryInterface, DataTypes) {
       defaultValue: false,
       type: DataTypes.BOOLEAN,
     }
-  });
-  // await queryInterface.addIndex('Question', ['pageId', 'questionText']);
+  }, {
+		freezeTableName: true, // model name equal to table name
+    timestamps: false, // enable timestamps
+	});
+  return Question;
 }
 
-module.exports = {
-  up,
-  down
-};
