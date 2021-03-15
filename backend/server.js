@@ -70,6 +70,7 @@ try {
 
   require("./routes/auth-routes")(app);
   require("./routes/template-routes")(app);
+  require("./routes/question-routes")(app);
 
 
   // set port, listen for requests

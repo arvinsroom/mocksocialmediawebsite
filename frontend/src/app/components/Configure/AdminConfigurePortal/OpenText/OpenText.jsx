@@ -1,50 +1,19 @@
-import { Button, TextField, FormControl, InputLabel, Select, MenuItem } from '@material-ui/core';
-import { useEffect, useState, Component, createElement } from 'react';
+import { Button, TextField, IconButton, Card, Tooltip, Fab, Grid, Switch } from '@material-ui/core';
+import { useEffect, useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
+import { create } from "../../../../services/questions-service";
+import DeleteIcon from '@material-ui/icons/Delete';
+import AddIcon from '@material-ui/icons/Add';
+import cloneDeep from 'lodash/cloneDeep';
 
-let pg = 0;
-
-const setPg = () => {
-  let prev = pg;
-  pg++;
-  return prev;
-}
-
-const OpenText = () => {
+const OpenText = ({templateId}) => {
   const [OpenTextArr, setOpenTextArr] = useState([]);
-  // const [pg, setPg] = useState(0);
-  const [OpenTextQuestions, setOpenTextQuestions] = useState({});
-  // const [OpenTextQuestions, setTemplateName] = useState([]);
   const [message, setMessage] = useState("");
 
   // on first render check if user logged in, verify server
-  // useEffect({
-
-  // }, [])
-
-  // const renderPages = ({ OpenTextArr }) => (
-  //   <ul>
-  //     <li>
-  //       <button type="button" onClick={() => OpenTextArr.push({})}>
-  //         Add Page
-  //       </button>
-  //     </li>
-  //     {OpenTextArr.map((member, index) => (
-  //       <li key={index}>
-  //         <button
-  //           type="button"
-  //           title="Remove Page"
-  //           onClick={() => fields.remove(index)}
-  //         />
-  //         <h4>Page #{index + 1}</h4>
-  //         {/* <FieldArray name={`${member}.hobbies`} component={renderHobbies} /> */}
-  //         {createElement(renderOpenTextQuestion, { OpenTextArr })}
-  //       </li>
-  //     ))}
-  //   </ul>
-  // )
-
-
+  // useEffect(() => {
+  //   setOpenTextArr(OpenTextArr)
+  // }, [OpenTextArr])
 
   const useStyles = makeStyles((theme) => ({
     paper: {
@@ -61,10 +30,30 @@ const OpenText = () => {
       margin: theme.spacing(3, 0, 2),
     },
     formControl: {
-      // margin: theme.spacing(1),
       minWidth: 120,
       width: '100%'
     },
+    root: {
+      marginBottom: '20px'
+    },
+    floatRight: {
+      float: 'right',
+      margin: 'auto'
+    },
+    textGrid: {
+      width: '95%',
+      margin: '10px'
+    },
+    floatLeft: {
+      float: 'left',
+      margin: 'auto'
+    },
+    center: {
+      width: '100%'
+    },
+    marginAuto: {
+      margin: 'auto'
+    }
   }));
 
   const classes = useStyles();
@@ -93,113 +82,161 @@ const OpenText = () => {
     console.log('OpenTextArr: ', OpenTextArr);
   };
 
-  const handleChange = (question, event) => {
-    console.log('question Obj: ', question);
-    console.log(event.target.value);
-    question.question = event.target.value;
+  // add the question text to the question object
+  const handleQuestionText = async (question, event) => {
+    event.preventDefault();
+    question.questionText = event.target.value;
+    // deep copy OpenTextArr
+    let newOpenTextArr = cloneDeep(OpenTextArr);
+    // make this new OpenTextArr
+    await setOpenTextArr(newOpenTextArr);
   };
 
-  // const createMenuItems = () => {
-  //   let menuItems = [];
-  //   for (let item in TEMPLATE_TYPES) {
-  //     console.log(item);
-  //     menuItems.push(<MenuItem value={TEMPLATE_TYPES[item]} key={item}>{item}</MenuItem>)
-  //   }
-  //   return menuItems;
-  // }
+  // add required field to the question object
+  const handleRequiredField = async (question, event) => {
+    event.preventDefault();
+    // console.log(event.target.checked);
+    question.required = event.target.checked;
+    // deep copy OpenTextArr
+    let newOpenTextArr = cloneDeep(OpenTextArr);
+    // make this new OpenTextArr
+    await setOpenTextArr(newOpenTextArr);
+  };
 
-  const createMenuItems = () => {
-    let menuItems = [];
-    console.log('in menu');
-    for (let item in OpenTextArr) {
-      console.log(item);
-      menuItems.push(<p>{'jaksfg'}</p>)
-    }
-    return menuItems;
+  // BAD: maybe change in future
+  const handlePageName = async (pg, event) => {
+    event.preventDefault();
+    // update the current object name
+    pg.name = event.target.value;
+    // deep copy OpenTextArr
+    let newOpenTextArr = cloneDeep(OpenTextArr);
+    // make this new OpenTextArr
+    await setOpenTextArr(newOpenTextArr);
   }
 
   const addPage = async () => {
-    // push a new apge object
-    console.log('empty page object pushed');
-    // push a empty object in OpenTextArr, [[], [], ...]
-    const pageObj = [];
-    await setOpenTextArr([...OpenTextArr, pageObj]);
+    let pageObj = {
+      name: "",
+      questions: []
+    };
+    let newOpenTextArr = cloneDeep(OpenTextArr);
+    newOpenTextArr.push(pageObj);
+    await setOpenTextArr(newOpenTextArr);
   }
 
   const removePage = async (index) => {
-    // push a new apge object
-    console.log('remove page object at index: ', index);
-    OpenTextArr.splice(index, 1);
-    await setOpenTextArr([...OpenTextArr]);
+    let newOpenTextArr = cloneDeep(OpenTextArr);
+    newOpenTextArr.splice(index, 1);
+    await setOpenTextArr(newOpenTextArr);
   }
 
-  // pgobj is a single entry in OpenTextArr
   const addQuestion = async (index) => {
-    // push a new question object on specific page
-    console.log(`question pushed to at page ${index}`);
     let obj = {
+      questionText: "",
+      required: false
     };
-    let pushObj = [...OpenTextArr[index], obj];
-    let newArr = [...OpenTextArr];
-    newArr[index] = pushObj;
-    await setOpenTextArr([...newArr]);
+    let newOpenTextArr = cloneDeep(OpenTextArr);
+    if (!newOpenTextArr[index].questions) {
+      newOpenTextArr[index].questions = [obj]
+    } else newOpenTextArr[index].questions.push(obj);
+    await setOpenTextArr(newOpenTextArr);
   }
 
-  const removeQuestion = (pg, pgIndex, questionIndex) => {
-    // push a new question object on specific page
-    // console.log(`question pushed to ${pg} at index ${index}`);
-    // let obj = {
-    //   question: "This is question?",
-    //   answer: "This is answer..."
-    // };
-    // let prevObj = pg[index];
-    // prevObj.push(obj);
-    // let newArr = [...setOpenTextArr];
-    // newArr[index] = prevObj;
-    // setOpenTextArr(newArr);
+  const removeQuestion = async (pgIndex, questionIndex) => {
+    let newOpenTextArr = cloneDeep(OpenTextArr);
+    newOpenTextArr[pgIndex].questions.splice(questionIndex, 1);
+    await setOpenTextArr(newOpenTextArr);
   }
-
-  const updateQuestion = (data, questionObj) => {
-    questionObj.question = data.value;
-  };
-
 
   return (
     <>
-      <form onSubmit={handleSubmit}>
-      <button type="button" onClick={() => addPage()}>
-        Add Page
-      </button>
-      
-      {OpenTextArr.map((pg, index) => (
-        <li key={index}>
-          <button type="button" title="Remove Page" onClick={() => removePage(index)}>
-            Remove Page
-          </button>
-          <h4>Page #{index}</h4>
-          {/* on each page we can add multiple questions */}
-          <button type="button" onClick={() => addQuestion(index)}>
-            Add Quesion
-          </button>
-          {pg.length > 0 ? pg.map((question, questionIndex) => (
-            <li key={questionIndex}>
-              {console.log(question)}
-              {/* <button type="button" title="Remove Page" onClick={() => removeQuestion(pg, index, questionIndex)}>
-                Remove Question
-              </button> */}
-             <div>
-               <span>Add a question</span>
-               <input type="text" placeholder={'Please type in question'} onChange={(e) => handleChange(question, e)}/>
-             </div>
-            </li>
-          )): null}
-        </li>
-      ))}
-      <button
+      <form onSubmit={handleSubmit} className={classes.form}>
+      <Tooltip title="Add Page" aria-label="Add Page">
+        <IconButton onClick={() => addPage()}>
+          <Fab color="default" >
+            <AddIcon />
+          </Fab>
+        </IconButton>
+      </Tooltip>
+      {OpenTextArr && OpenTextArr.length > 0 ? OpenTextArr.map((pg, index) => (
+          <Card key={index} className={classes.root}>
+            <Grid container spacing={3}>
+              <Grid item xs={2}>
+                <Tooltip title="Add Quesion" aria-label="Add Quesion" >
+                  <IconButton onClick={() => addQuestion(index)}>
+                    <Fab color="primary" >
+                      <AddIcon />
+                    </Fab>
+                  </IconButton>
+                </Tooltip>
+              </Grid>
+              <Grid item xs={8}>
+                <TextField
+                  className={classes.center}
+                  margin="normal"
+                  required
+                  value={pg.name}
+                  label="Provide a unique page name"
+                  onChange={(e) => handlePageName(pg, e)}
+                  autoFocus
+                />
+              </Grid>
+              <Grid item xs={2} className={classes.floatRight}>
+                <Tooltip title="Delete Page" aria-label="Delete Page">
+                  <IconButton aria-label="delete page"  onClick={() => removePage(index)} className={classes.floatRight}>
+                    <DeleteIcon color="primary" />
+                  </IconButton>
+                </Tooltip>
+              </Grid>
+
+            </Grid>
+            {OpenTextArr[index].questions && OpenTextArr[index].questions.length > 0 ? OpenTextArr[index].questions.map((question, questionIndex) => (
+              <div key={questionIndex} className={classes.root}>
+                <Grid container spacing={3}>
+                  <Grid item xs={10}>
+                    <TextField
+                      className={classes.textGrid}
+                      variant="outlined"
+                      margin="normal"
+                      required
+                      value={question.questionText}
+                      label="Please type in your question below"
+                      onChange={(e) => handleQuestionText(question, e)}
+                      autoFocus
+                    />
+                  </Grid>
+                  <Grid item xs={1} className={classes.marginAuto}>
+                    <Tooltip title="Question Required?">
+                      <Switch
+                        checked={question.required}
+                        onChange={(e) => handleRequiredField(question, e)}
+                        color="primary"
+                        name="requiredField"
+                        inputProps={{ 'aria-label': 'Question/Answer Required' }}
+                      />
+                    </Tooltip>
+                  </Grid>
+                  <Grid item xs={1} className={classes.floatRight}>
+                    <Tooltip title="Delete question">
+                      <IconButton aria-label="delete question" className={classes.floatRight} onClick={() => removeQuestion(index, questionIndex)}>
+                        <DeleteIcon />
+                      </IconButton>
+                    </Tooltip>
+                  </Grid>
+                </Grid>
+              </div>
+            )) : null}
+          </Card>
+      )) : null}
+      <Button
         type="submit"
+        fullWidth
+        variant="contained"
+        color="primary"
+        className={classes.submit}
       >
         Save
-      </button>
+      </Button>
       </form>
    </>
   )

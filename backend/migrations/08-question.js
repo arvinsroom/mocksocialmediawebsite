@@ -22,8 +22,7 @@ async function up(queryInterface, DataTypes) {
       type: DataTypes.TEXT
     },
     required: {
-      allowNull: false,
-      defaultValue: false,
+      defaultValue: true,
       type: DataTypes.BOOLEAN,
     }
   });

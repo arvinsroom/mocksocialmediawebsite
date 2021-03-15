@@ -1,18 +1,17 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import * as XLSX from 'xlsx';
-import { Button, FormControlLabel, Switch, Typography, Input, FormGroup, Divider } from '@material-ui/core';
+import { Button, FormControlLabel, Switch, Typography, Input, FormGroup, Divider, TextField } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 
-const General = () => {
+const General = ({templateId}) => {
   const [mediaJSON, setMediaJSON] = useState("");
   const [languageJSON, setLanguageJSON] = useState("");
-  const [permissions, setPermissions] = useState({
-    requestAudio: false,
-    requestVideo: false,
-    requestCookies: false,
-  });
   const [message, setMessage] = useState("");
+  const [pageName, setPageName] = useState("");
 
+  // useEffect(() => {
+  //   console.log('This is the value of templateId: ', templateId);
+  // }, [])
 
   /* list of supported file types */
   const SheetJSFT = [ "xlsx", "xlsb", "xlsm", "xls", "xml", "csv", "txt", "ods", "fods", "uos", "sylk", "dif", "dbf", "prn", "qpw", "123", "wb*", "wq*", "html", "htm"]
@@ -46,6 +45,15 @@ const General = () => {
     e.preventDefault();
     setMessage("");
 
+    // const data = {
+    //   templateId: templateId,
+    //   name: pageName,
+    //   type: "REGISTER",
+    //   register: {
+    //     profilePic: state.requestPhoto,
+    //     username: state.requestUsername,
+    //   }
+    // };
     // send the username and password to the server
     // login(username, password).then(
     //   () => {
@@ -65,9 +73,6 @@ const General = () => {
     // );
     console.log('Language Data: ', languageJSON);
     console.log('Media Data: ', mediaJSON);
-    console.log('Audio permission: ', permissions.requestAudio);
-    console.log('video permission: ', permissions.requestVideo);
-    console.log('cookies permission: ', permissions.requestCookies);
   };
 
   const useStyles = makeStyles((theme) => ({
@@ -91,19 +96,28 @@ const General = () => {
     },
     divider: {
       margin: 20
+    },
+    marginBottom: {
+      marginBottom: '10%'
     }
   }));
 
   const classes = useStyles();
 
-  const handlePermissions = (event) => {
-    setPermissions({ ...permissions, [event.target.name]: event.target.checked });
-  };
-
   return (
     <>
     <div className={classes.paper}>
     <form onSubmit={handleSubmit} className={classes.form}>
+      <TextField
+        className={classes.marginBottom}
+        margin="normal"
+        required
+        fullWidth
+        value={pageName}
+        label="Provide a unique page name"
+        onChange={({ target }) => setPageName(target.value)}
+        autoFocus
+      />
       <Typography component="h6">
         Social Media Post Spreadsheet
       </Typography>
@@ -125,42 +139,6 @@ const General = () => {
         accept={SheetJSFT}
         onChange={(e) => handleChange("language", e)}
       />
-      <Divider className={classes.divider}/>
-      <Typography component="h6">
-        Please provide additional permissions?
-      </Typography>
-      <FormGroup>
-      <FormControlLabel
-        control={<Switch
-          checked={permissions.requestAudio}
-          onChange={handlePermissions}
-          color="primary"
-          name="requestAudio"
-          inputProps={{ 'aria-label': 'Request audio permissions' }}
-        />}
-        label="Request Audio"
-      />
-      <FormControlLabel
-        control={<Switch
-          checked={permissions.requestVideo}
-          onChange={handlePermissions}
-          color="primary"
-          name="requestVideo"
-          inputProps={{ 'aria-label': 'Request Video permission' }}
-        />}
-        label="Request Video"
-      />
-      <FormControlLabel
-        control={<Switch
-          checked={permissions.requestCookies}
-          onChange={handlePermissions}
-          color="primary"
-          name="requestCookies"
-          inputProps={{ 'aria-label': 'Request Cookies permission' }}
-        />}
-        label="Request Cookies"
-      />
-      </FormGroup>
       <Divider className={classes.divider}/>
       <Button
         type="submit"

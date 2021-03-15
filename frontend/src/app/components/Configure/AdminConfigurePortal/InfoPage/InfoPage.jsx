@@ -3,9 +3,10 @@ import { useEffect, useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import MUIRichTextEditor from "mui-rte";
 
-const InfoPage = () => {
+const InfoPage = ({templateId}) => {
   const [richData, setRichData] = useState("");
   const [message, setMessage] = useState("");
+  const [pageName, setPageName] = useState("");
 
   // on first render check if user logged in, verify server
   // useEffect({
@@ -18,6 +19,9 @@ const InfoPage = () => {
       display: 'flex',
       flexDirection: 'column',
       alignItems: 'center',
+    },
+    marginBottom:{
+      marginBottom: '10%'
     }
   }));
 
@@ -26,7 +30,14 @@ const InfoPage = () => {
   const handleSave = (data) => {
     setMessage("");
 
-    // also send finished time
+    const result = {
+      templateId: templateId,
+      name: pageName,
+      type: "INFO",
+      register: {
+        richText: data,
+      }
+    };
 
     // send the username and password to the server
     // login(username, password).then(
@@ -51,6 +62,16 @@ const InfoPage = () => {
   return (
     <>
     <div className={classes.paper}>
+      <TextField
+        className={classes.marginBottom}
+        margin="normal"
+        required
+        fullWidth
+        value={pageName}
+        label="Provide a unique page name"
+        onChange={({ target }) => setPageName(target.value)}
+        autoFocus
+      />
       <MUIRichTextEditor
         label="Type something here..."
         // defaultValue={richData}

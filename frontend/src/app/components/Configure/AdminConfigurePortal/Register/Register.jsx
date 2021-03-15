@@ -1,14 +1,14 @@
-import { Button, FormControlLabel, FormGroup, Switch, FormControl, FormLabel } from '@material-ui/core';
+import { Button, FormControlLabel, FormGroup, Switch, FormControl, FormLabel, TextField } from '@material-ui/core';
 import { useEffect, useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 
-const Register = () => {
+const Register = ({templateId}) => {
   const [state, setState] = useState({
     requestPhoto: false,
     requestUsername: false,
-    requestQualtricsCode: false,
   });
   const [message, setMessage] = useState("");
+  const [pageName, setPageName] = useState("");
 
   // on first render check if user logged in, verify server
   // useEffect({
@@ -34,6 +34,9 @@ const Register = () => {
       minWidth: 120,
       width: '100%'
     },
+    marginBottom:{
+      marginBottom: '10%'
+    }
   }));
 
   const classes = useStyles();
@@ -42,6 +45,15 @@ const Register = () => {
     e.preventDefault();
     setMessage("");
 
+    const data = {
+      templateId: templateId,
+      name: pageName,
+      type: "REGISTER",
+      register: {
+        profilePic: state.requestPhoto,
+        username: state.requestUsername,
+      }
+    };
     // send the username and password to the server
     // login(username, password).then(
     //   () => {
@@ -61,7 +73,6 @@ const Register = () => {
     // );
     console.log('Request Photo: ', state.requestPhoto);
     console.log('Request Username: ', state.requestUsername);
-    console.log('Request Qualtrics Code: ', state.requestQualtricsCode);
   };
 
   const handleChange = (event) => {
@@ -72,9 +83,18 @@ const Register = () => {
     <>
     <div className={classes.paper}>
     <form onSubmit={handleSubmit} className={classes.form}>
+    <TextField
+        className={classes.marginBottom}
+        margin="normal"
+        required
+        fullWidth
+        value={pageName}
+        label="Provide a unique page name"
+        onChange={({ target }) => setPageName(target.value)}
+        autoFocus
+      />
     <FormControl component="fieldset">
       <FormLabel component="legend">Please provide additional requests for registrations?</FormLabel>
-
     <FormGroup>
         <FormControlLabel
           control={<Switch
@@ -95,16 +115,6 @@ const Register = () => {
             inputProps={{ 'aria-label': 'Request username checkbox' }}
           />}
           label="Request Username"
-        />
-        <FormControlLabel
-          control={<Switch
-            checked={state.requestQualtricsCode}
-            onChange={handleChange}
-            color="primary"
-            name="requestQualtricsCode"
-            inputProps={{ 'aria-label': 'Request qualtrics code checkbox' }}
-          />}
-          label="Request Qualtrics Code"
         />
       </FormGroup>
     </FormControl>

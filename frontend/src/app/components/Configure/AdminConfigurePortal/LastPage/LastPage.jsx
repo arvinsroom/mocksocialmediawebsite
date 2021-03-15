@@ -3,10 +3,11 @@ import { useEffect, useState } from 'react';
 import { TEMPLATE_TYPES } from '../../../../constants';
 import { makeStyles } from '@material-ui/core/styles';
 
-const LastPage = () => {
+const LastPage = ({templateId}) => {
   const [redirectionLink, setRedirectionLink] = useState("");
   const [anyText, setAnyText] = useState("");
   const [message, setMessage] = useState("");
+  const [pageName, setPageName] = useState("");
 
   // on first render check if user logged in, verify server
   // useEffect({
@@ -27,6 +28,9 @@ const LastPage = () => {
     submit: {
       margin: theme.spacing(3, 0, 2),
     },
+    marginBottom:{
+      marginBottom: '10%'
+    }
   }));
 
   const classes = useStyles();
@@ -35,7 +39,15 @@ const LastPage = () => {
     e.preventDefault();
     setMessage("");
 
-    // also send finished time
+    const data = {
+      templateId: templateId,
+      name: pageName,
+      type: "FINISH",
+      register: {
+        redirectionLink,
+        text: anyText,
+      }
+    };
 
     // send the username and password to the server
     // login(username, password).then(
@@ -62,6 +74,16 @@ const LastPage = () => {
     <>
     <div className={classes.paper}>
     <form onSubmit={handleSubmit} className={classes.form}>
+      <TextField
+        className={classes.marginBottom}
+        margin="normal"
+        required
+        fullWidth
+        value={pageName}
+        label="Provide a unique page name"
+        onChange={({ target }) => setPageName(target.value)}
+        autoFocus
+      />
       <TextField
         variant="outlined"
         margin="normal"
