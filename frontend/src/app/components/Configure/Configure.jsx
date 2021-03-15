@@ -6,7 +6,6 @@ import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
-import Container from '@material-ui/core/Container';
 
 import Template from './AdminConfigurePortal/Template/Template';
 import General from './AdminConfigurePortal/General/General';
@@ -16,6 +15,8 @@ import MCQ from './AdminConfigurePortal/MCQ/MCQ';
 import OpenText from './AdminConfigurePortal/OpenText/OpenText';
 import LastPage from './AdminConfigurePortal/LastPage/LastPage';
 import Flow from './AdminConfigurePortal/Flow/Flow';
+
+import { useState } from 'react';
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -63,10 +64,14 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+
+
 const Configure = () => {
   const classes = useStyles();
   const [value, setValue] = React.useState(0);
-
+  const [disable, setDisable] = useState(true);
+  const [templateId, setTemplateId] = useState("null"); // default null
+  
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
@@ -84,38 +89,38 @@ const Configure = () => {
           aria-label="scrollable auto tabs for template settings"
         >
           <Tab label="Template" {...a11yProps(0)} />
-          <Tab label="General" {...a11yProps(1)} />
-          <Tab label="Register" {...a11yProps(2)} />
-          <Tab label="InfoPage" {...a11yProps(3)} />
-          <Tab label="MCQ" {...a11yProps(4)} />
-          <Tab label="OpenText" {...a11yProps(5)} />
-          <Tab label="LastPage" {...a11yProps(6)} />
-          <Tab label="Flow" {...a11yProps(7)} />
+          <Tab label="General" {...a11yProps(1)} disabled={templateId === null ? true : false}/>
+          <Tab label="Register" {...a11yProps(2)} disabled={templateId === null ? true : false}/>
+          <Tab label="InfoPage" {...a11yProps(3)} disabled={templateId === null ? true : false}/>
+          <Tab label="MCQ" {...a11yProps(4)} disabled={templateId === null ? true : false}/>
+          <Tab label="OpenText" {...a11yProps(5)} disabled={templateId === null ? true : false}/>
+          <Tab label="LastPage" {...a11yProps(6)} disabled={templateId === null ? true : false}/>
+          <Tab label="Flow" {...a11yProps(7)} disabled={templateId === null ? true : false}/>
         </Tabs>
       </AppBar>
       <TabPanel value={value} index={0}>
-        <Template />
+        <Template setTemplateId={setTemplateId}/>
       </TabPanel>
       <TabPanel value={value} index={1}>
-        <General />
+        <General templateId={templateId}/>
       </TabPanel>
       <TabPanel value={value} index={2}>
-        <Register />
+        <Register templateId={templateId}/>
       </TabPanel>
       <TabPanel value={value} index={3}>
-        <InfoPage />
+        <InfoPage templateId={templateId}/>
       </TabPanel>
       <TabPanel value={value} index={5}>
-        <OpenText />
+        <OpenText templateId={templateId}/>
       </TabPanel>
       <TabPanel value={value} index={4}>
-        <MCQ />
+        <MCQ templateId={templateId}/>
       </TabPanel>
       <TabPanel value={value} index={6}>
-        <LastPage />
+        <LastPage templateId={templateId}/>
       </TabPanel>
       <TabPanel value={value} index={7}>
-        <Flow />
+        <Flow templateId={templateId}/>
       </TabPanel>
     </>
   );

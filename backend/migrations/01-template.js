@@ -37,6 +37,10 @@ async function up(queryInterface, DataTypes) {
       defaultValue: false,
       type: DataTypes.BOOLEAN,
     },
+    qualtricsId: {
+      defaultValue: false,
+      type: DataTypes.BOOLEAN,
+    },
     // flow?? is a {
     //   type: 'of component',
     //   _id: 'reference to know what to fetch',
