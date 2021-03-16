@@ -6,6 +6,11 @@ import {
   umzugDown
 } from './migrations';
 import db from "./clients/database-client";
+import template from './routes/template-routes';
+import auth from './routes/auth-routes';
+
+const { verifyToken, isAdmin } = require("./middleware/authJwt");
+
 // get the admin model, we can perform operations on this
 const Admin = db.Admin;
 var bcrypt = require("bcryptjs");
@@ -61,17 +66,32 @@ try {
     extended: true
   }));
 
-  // simple route
-  app.get("/", (req, res) => {
-    res.json({
-      message: "Welcome to Mock Website application."
-    });
+  // add middleware where we check of x-access-token with each request
+  // in future maybe add this on on specific admin routes
+  app.use(function(req, res, next) {
+    res.header(
+      "Access-Control-Allow-Headers",
+      "x-access-token, Origin, Content-Type, Accept"
+    );
+    next();
   });
 
-  require("./routes/auth-routes")(app);
-  require("./routes/template-routes")(app);
-  require("./routes/question-routes")(app);
+  // simple route
+  // app.get("/", (req, res) => {
+  //   res.json({
+  //     message: "Welcome to Mock Website application."
+  //   });
+  // });
 
+  // we do not need middleware here as admin is trying to log in
+  app.use('/api/admin/login', auth);
+
+  // add middleware to our application
+  app.use('/api/template', [verifyToken, isAdmin], template);
+
+  // require("./routes/template-routes")(app);
+  // TemplateRouter(app);
+  // require("./routes/question-routes")(app);
 
   // set port, listen for requests
   const PORT = process.env.PORT || 8080;

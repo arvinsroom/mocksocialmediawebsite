@@ -8,7 +8,7 @@ export const verifyToken = (req, res, next) => {
 
   if (!token) {
     return res.status(403).send({
-      message: "No token provided!"
+      message: "No token provided, Please log in again!"
     });
   }
 
@@ -18,7 +18,7 @@ export const verifyToken = (req, res, next) => {
         message: "Unauthorized!"
       });
     }
-    console.log('decoded.id'. decoded._id);
+    // console.log('decoded.id'. decoded._id);
     req.adminId = decoded._id;
     next();
   });
@@ -27,13 +27,14 @@ export const verifyToken = (req, res, next) => {
 export const isAdmin = (req, res, next) => {
   Admin.findByPk(req.adminId)
     .then(() => {
-      return res.status(200).send({
-        access: 'OK'
-      });
+      next();
+      // return res.status(200).send({
+      //   access: 'OK'
+      // });
   })
   .catch(err => {
     return res.status(403).send({
-      message: "No admin user exit with provided token!" + toString(err)
+      message: "No admin user exit with provided token, Plese log in again!" + toString(err)
     });
   });
 };

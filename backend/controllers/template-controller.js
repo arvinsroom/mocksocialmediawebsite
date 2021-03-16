@@ -2,7 +2,15 @@ import db from "../clients/database-client";
 const Template = db.Template;
 
 // save a template and return the _id for the template created
-const create = (req, res) => {
+const create = async (req, res, next) => {
+  // fetch the adminId added from middleware
+  if (!req.adminId) {
+    console.log('should not print');
+    res.status(400).send({
+      message: "Invalid Token, please log in again!"
+    });
+    return;
+  }
   if (!req.body.name) {
     res.status(400).send({
       message: "Template name is required!"
@@ -23,22 +31,31 @@ const create = (req, res) => {
     cookiesPermission: req.body.cookiesPermission,
     randomPosts: req.body.randomPosts,
     type: req.body.type,
-    flow: req.body.flow ? req.body.flow : "",
+    flow: req.body.flow,
+    qualtricsId: req.body.qualtricsId,
+    adminId: req.adminId
   };
-  
-  Template.create(template)
-    .then(data => {
-      // fetch json
-      res.res({
-        _id: data._id
-      });
-    })
-    .catch(err => {
-      res.status(500).send({
-        message:
-          err.message || "Some error occurred while creating the Template."
-      });
+  // for each request have a transaction sequilize object to roll back if something goes wrong
+  // necessary for nested links between tables
+  let transaction;
+
+  try {
+    transaction = await db.sequelize.transaction();
+    const data = await Template.create(template, { transaction });
+    // if we reach here, there were no errors therefore commit the transaction
+    await transaction.commit();
+    // fetch json
+    res.send({
+      _id: data._id
     });
+  } catch (error) {
+    // if we reach here, there were some errors thrown, therefore roolback the transaction
+    if (transaction) await transaction.rollback();
+    res.status(500).send({
+      message:
+        error.message || "Some error occurred while creating the Template."
+    });
+  }
 };
 
 // for now we only need to update the flow

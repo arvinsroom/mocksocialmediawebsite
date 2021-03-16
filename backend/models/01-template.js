@@ -6,6 +6,14 @@ export default (sequelize, DataTypes) => {
       type: DataTypes.UUID,
       defaultValue: DataTypes.UUIDV4 // create a default UUIDV4 for each record
     },
+    adminId: {
+      allowNull: false,
+      references: {
+        key: '_id',
+        model: 'Admin'
+      },
+      type: DataTypes.UUID
+    },
     name: {
       allowNull: false,
       type: DataTypes.STRING(36)
@@ -50,5 +58,13 @@ export default (sequelize, DataTypes) => {
 		freezeTableName: true, // model name equal to table name
     timestamps: false, // enable timestamps
 	});
+
+  Template.associate = (models) => {
+    Template.belongsTo(models.Admin, {
+      as: 'admin',
+      foreignKey: 'adminId'
+    })
+  };
+
   return Template;
 }

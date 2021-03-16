@@ -1,49 +1,39 @@
 import React, { useEffect, useState } from "react";
-import { getCurrentUser, login, verifyAdmin } from "../../services/auth-service";
 import { useHistory } from "react-router-dom";
-import { Button, CssBaseline, TextField, Typography } from '@material-ui/core';
+import { Button, CssBaseline, TextField, Typography, CircularProgress, Snackbar } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
-
+import { useDispatch, useSelector } from "react-redux";
+import { login } from "../../actions/auth";
 
 const Admin = () => {
   let history = useHistory();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  // const [user, setUser] = useState();
-  const [message, setMessage] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const [open, setOpen] = useState(false);
+
+  const { isLoggedIn } = useSelector(state => state.auth);
+  const { message } = useSelector(state => state.message);
+
+  const dispatch = useDispatch();
 
   useEffect(() => {
-    // const loggedInUser = getCurrentUser();
-    // if (loggedInUser) {
-    //   console.log('founduser', foundUser);
-    // }
-  }, []);
+    if (isLoggedIn) history.push("/admin/configure");
+  }, [history, isLoggedIn]);
 
   const handleSubmit = async e => {
     e.preventDefault();
-    setMessage("");
-    // const user = { username, password };
-    // console.log('username: ', username);
-    // console.log('password: ', password);
-
+    setIsLoading(true);
     // send the username and password to the server
-    login(username, password).then(
-      () => {
+    dispatch(login(username, password))
+      .then(() => {
         history.push("/admin/configure");
-        // window.location.reload();
-      },
-      (error) => {
-        const resMessage =
-          (error.response &&
-            error.response.data &&
-            error.response.data.message) ||
-          error.message ||
-          error.toString();
-        console.log('errorMessage: ', resMessage);
-        setMessage(resMessage);
-      }
-    );
+      })
+      .catch(() => {
+        setIsLoading(false);
+        setOpen(true);
+      });
   };
 
   const useStyles = makeStyles((theme) => ({
@@ -69,7 +59,7 @@ const Admin = () => {
     <Container component="main" maxWidth="xs">
       <CssBaseline />
       <div className={classes.paper}>
-        <Typography component={'span'} component="h1" variant="h5">
+        <Typography component={'span'} variant="h5">
           Sign in
         </Typography>
         <form onSubmit={handleSubmit} className={classes.form} noValidate>
@@ -103,14 +93,10 @@ const Admin = () => {
           >
             Sign In
           </Button>
+          {isLoading && <CircularProgress />}
         </form>
-        {message && (
-        <div className="form-group">
-          <div className="alert alert-danger" role="alert">
-            {message}
-          </div>
-        </div>
-      )}
+      <Snackbar open={open} autoHideDuration={2000} message={message}>
+      </Snackbar>
       </div>
     </Container>
     </>

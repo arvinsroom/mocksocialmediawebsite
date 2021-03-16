@@ -1,6 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { makeStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
@@ -15,8 +14,14 @@ import MCQ from './AdminConfigurePortal/MCQ/MCQ';
 import OpenText from './AdminConfigurePortal/OpenText/OpenText';
 import LastPage from './AdminConfigurePortal/LastPage/LastPage';
 import Flow from './AdminConfigurePortal/Flow/Flow';
-
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useDispatch, useSelector } from "react-redux";
+import Toolbar from '@material-ui/core/Toolbar';
+import Button from '@material-ui/core/Button';
+import { logout } from "../../actions/auth";
+import { useHistory } from "react-router-dom";
+import { clearMessage } from "../../actions/message";
+import { Redirect } from 'react-router-dom';
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -33,11 +38,6 @@ function TabPanel(props) {
         <Box p={3}>
           <Typography component={'span'}>{children}</Typography>
         </Box>
-        // <Container>
-        //   <Box>
-        //       {children}
-        //   </Box>
-        // </Container>
       )}
     </div>
   );
@@ -56,28 +56,36 @@ function a11yProps(index) {
   };
 }
 
-const useStyles = makeStyles((theme) => ({
-  root: {
-    flexGrow: 1,
-    width: '100%',
-    backgroundColor: theme.palette.background.paper,
-  },
-}));
-
-
-
 const Configure = () => {
-  const classes = useStyles();
+  let history = useHistory();
   const [value, setValue] = React.useState(0);
-  const [disable, setDisable] = useState(true);
-  const [templateId, setTemplateId] = useState("null"); // default null
-  
+  const [templateId, setTemplateId] = useState(null); // default null
+  const { isLoggedIn } = useSelector(state => state.auth);
+
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
 
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    history.listen((location) => {
+      dispatch(clearMessage()); // clear message when changing location
+    });
+  }, [dispatch, history]);
+
+  if (!isLoggedIn) {
+    return <Redirect to="/admin" />;
+  }
+
   return (
     <>
+      <AppBar position="static">
+        <Toolbar>
+          <Button onClick={() => dispatch(logout())} color="inherit">Logout</Button>
+        </Toolbar>
+      </AppBar>
+
       <AppBar position="static" color="default">
         <Tabs
           value={value}

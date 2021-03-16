@@ -19,5 +19,11 @@ export default (sequelize, DataTypes) => {
     timestamps: false, // enable timestamps
 	});
 
+  Admin.associate = (models) => {
+    Admin.hasMany(models.Template, {
+      as: 'template',
+    })
+  };
+
 	return Admin;
 };

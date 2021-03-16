@@ -1,7 +1,7 @@
-import db from "../../clients/database-client";
+import db from "../clients/database-client";
 const Page = db.page;
 
-const pageCreate = (pageObj) => {
+const pageCreate = async (pageObj) => {
   if (!pageObj.templateId) {
     throw "Template Id is required!";
   }
@@ -11,22 +11,13 @@ const pageCreate = (pageObj) => {
   if (!pageObj.type) {
     throw "Page type is required!";
   }
-
-  // form a info object with required information
-  const page = {
-    templateId: pageObj.templateId,
-    name: pageObj.name,
-    type: pageObj.type,
-  };
   
-  Page.create(page)
-    .then(data => {
-      // return the id created
-      return data._id;
-    })
-    .catch(err => {
-      throw err.message || "Some error occurred while creating the Page record."
-    });
+  try {
+    const data = await Page.create({ ...pageObj });
+    return data._id;
+  } catch (error) {
+    throw err.message || "Some error occurred while creating the Page record."
+  }
 };
 
 // get page data using pageId

@@ -1,12 +1,15 @@
-import { Button, TextField, FormControl, InputLabel, Select, MenuItem, Switch, FormControlLabel, FormGroup, Typography } from '@material-ui/core';
+import { Button, TextField, FormControl, InputLabel, Select, MenuItem, Switch, FormControlLabel, FormGroup, Snackbar } from '@material-ui/core';
 import { useEffect, useState } from 'react';
 import { TEMPLATE_TYPES } from '../../../../constants';
-import { makeStyles } from '@material-ui/core/styles';
+import { create } from '../../../../services/template-service';
+
+import { useSelector } from "react-redux";
+import { Redirect } from 'react-router-dom';
+import useStyles from '../../../Style/Style';
 
 const Template = ({setTemplateId}) => {
   const [templateName, setTemplateName] = useState("");
   const [templateType, setTemplateType] = useState("");
-  const [message, setMessage] = useState("");
   const [randomPosts, setRandomPosts] = useState(false);
   const [requiredQualtricsId, setRequiredQualtricsId] = useState(false);
   const [permissions, setPermissions] = useState({
@@ -14,45 +17,35 @@ const Template = ({setTemplateId}) => {
     requestVideo: false,
     requestCookies: false,
   });
+  const [message, setMessage] = useState("");
+  const [open, setOpen] = useState(false);
+  const { isLoggedIn } = useSelector(state => state.auth);
+  const classes = useStyles();
 
   // on first render check if user logged in, verify server
   useEffect(() => {
+    // setMessage("");
     // setTimeout(() => {
     //   setTemplateId("testing id");
     // }, 3000);
   }, [])
 
-  const useStyles = makeStyles((theme) => ({
-    paper: {
-      marginTop: theme.spacing(8),
-      display: 'flex',
-      flexDirection: 'column',
-      alignItems: 'center',
-    },
-    form: {
-      width: '100%', // Fix IE 11 issue.
-      marginTop: theme.spacing(1),
-    },
-    submit: {
-      margin: theme.spacing(3, 0, 2),
-    },
-    formControl: {
-      // margin: theme.spacing(1),
-      minWidth: 120,
-      width: '100%'
-    },
-    marginBottom:{
-      marginBottom: '10%'
-    }
-  }));
-
-  const classes = useStyles();
+  const resetValues = () => {
+    setTemplateName("");
+    setTemplateType("");
+    setRandomPosts(false);
+    setRequiredQualtricsId(false);
+    setPermissions({
+      requestAudio: false,
+      requestVideo: false,
+      requestCookies: false,
+    })
+  };
 
   const handleSubmit = async e => {
     e.preventDefault();
-    setMessage("");
 
-    const data = {
+    const template = {
       name: templateName,
       type: templateType,
       randomPosts,
@@ -62,30 +55,24 @@ const Template = ({setTemplateId}) => {
       qualtricsId: requiredQualtricsId,
       flow: "",
     };
-    // send the username and password to the server
-    // login(username, password).then(
-    //   () => {
-    //     history.push("/admin/configure");
-    //     window.location.reload();
-    //   },
-    //   (error) => {
-    //     const resMessage =
-    //       (error.response &&
-    //         error.response.data &&
-    //         error.response.data.message) ||
-    //       error.message ||
-    //       error.toString();
-    //     console.log('errorMessage: ', resMessage);
-    //     setMessage(resMessage);
-    //   }
-    // );
-    console.log('Template Name: ', templateName);
-    console.log('Template Type: ', templateType);
-    console.log('Enable Random posts: ', randomPosts);
-    console.log('Audio permission: ', permissions.requestAudio);
-    console.log('video permission: ', permissions.requestVideo);
-    console.log('cookies permission: ', permissions.requestCookies);
-    console.log('qualtrics Id required: ', requiredQualtricsId);
+    try {
+      const { data } = await create(template);
+      if (data._id) {
+        setTemplateId(data._id);
+        setMessage("Template Successfully created!")
+        setOpen(true);
+        resetValues();
+      }
+    } catch (error) {
+      const resMessage =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+      setMessage(resMessage)
+      setOpen(true);
+    }
   };
 
   const handleChange = (event) => {
@@ -112,6 +99,10 @@ const Template = ({setTemplateId}) => {
     return menuItems;
   }
 
+  if (!isLoggedIn) {
+    return <Redirect to="/admin" />;
+  }
+
   return (
     <>
     <div className={classes.paper}>
@@ -122,6 +113,7 @@ const Template = ({setTemplateId}) => {
         required
         fullWidth
         id="templateName"
+        value={templateName}
         label="Provide a template name"
         onChange={({ target }) => setTemplateName(target.value)}
         autoFocus
@@ -149,9 +141,6 @@ const Template = ({setTemplateId}) => {
           />}
           label="Enable random post rendering"
         />
-      {/* <Typography component="h6">
-        Please provide additional permissions?
-      </Typography> */}
       <FormControlLabel
         control={<Switch
           checked={permissions.requestAudio}
@@ -203,13 +192,8 @@ const Template = ({setTemplateId}) => {
         Save
       </Button>
     </form>
-      {message && (
-        <div className="form-group">
-          <div className="alert alert-danger" role="alert">
-            {message}
-          </div>
-        </div>
-      )}
+    <Snackbar open={open} autoHideDuration={2000} message={message}>
+    </Snackbar>
     </div>
     </>
   )
