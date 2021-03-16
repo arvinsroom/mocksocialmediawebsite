@@ -1,51 +1,31 @@
-import { Button, FormControlLabel, FormGroup, Switch, FormControl, FormLabel, TextField } from '@material-ui/core';
-import { useEffect, useState } from 'react';
-import { makeStyles } from '@material-ui/core/styles';
+import { Button, FormControlLabel, FormGroup, Switch, FormControl, FormLabel, TextField, Snackbar } from '@material-ui/core';
+import { useState } from 'react';
+import useStyles from '../../../Style/Style';
+import { useSelector } from "react-redux";
+import { create } from '../../../../services/register-service';
 
 const Register = ({templateId}) => {
   const [state, setState] = useState({
     requestPhoto: false,
     requestUsername: false,
   });
-  const [message, setMessage] = useState("");
   const [pageName, setPageName] = useState("");
+
+  const [message, setMessage] = useState("");
+  const [open, setOpen] = useState(false);
+  const { isLoggedIn } = useSelector(state => state.auth);
+  const classes = useStyles();
+
 
   // on first render check if user logged in, verify server
   // useEffect({
 
   // }, [])
 
-  const useStyles = makeStyles((theme) => ({
-    paper: {
-      marginTop: theme.spacing(8),
-      display: 'flex',
-      flexDirection: 'column',
-      alignItems: 'center',
-    },
-    form: {
-      width: '100%', // Fix IE 11 issue.
-      marginTop: theme.spacing(1),
-    },
-    submit: {
-      margin: theme.spacing(3, 0, 2),
-    },
-    formControl: {
-      // margin: theme.spacing(1),
-      minWidth: 120,
-      width: '100%'
-    },
-    marginBottom:{
-      marginBottom: '10%'
-    }
-  }));
-
-  const classes = useStyles();
-
   const handleSubmit = async e => {
     e.preventDefault();
-    setMessage("");
 
-    const data = {
+    const register = {
       templateId: templateId,
       name: pageName,
       type: "REGISTER",
@@ -54,25 +34,24 @@ const Register = ({templateId}) => {
         username: state.requestUsername,
       }
     };
-    // send the username and password to the server
-    // login(username, password).then(
-    //   () => {
-    //     history.push("/admin/configure");
-    //     window.location.reload();
-    //   },
-    //   (error) => {
-    //     const resMessage =
-    //       (error.response &&
-    //         error.response.data &&
-    //         error.response.data.message) ||
-    //       error.message ||
-    //       error.toString();
-    //     console.log('errorMessage: ', resMessage);
-    //     setMessage(resMessage);
-    //   }
-    // );
-    console.log('Request Photo: ', state.requestPhoto);
-    console.log('Request Username: ', state.requestUsername);
+    try {
+      const { data } = await create(register);
+      if (data._id) {
+        setTemplateId(data._id);
+        setMessage("Template Successfully created!")
+        setOpen(true);
+        resetValues();
+      }
+    } catch (error) {
+      const resMessage =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+      setMessage(resMessage)
+      setOpen(true);
+    }
   };
 
   const handleChange = (event) => {
@@ -135,6 +114,8 @@ const Register = ({templateId}) => {
           </div>
         </div>
       )}
+      <Snackbar open={open} autoHideDuration={2000} message={message}>
+      </Snackbar>
     </div>
     </>
   )

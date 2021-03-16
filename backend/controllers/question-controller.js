@@ -1,10 +1,10 @@
-import page from './internal/create-page';
-import bulkQuestions from './internal/bulk-create-questions';
+import page from './create-page';
+import bulkQuestions from './bulk-create-questions';
 
 // here we will recieve array of question
 // 1) we need to create a page with specific id and type and tempplate id
 // 2) use that information and create a question and its respective mcq options
-const create = (req, res) => {
+const create = async (req, res) => {
   const { templateId, type, pageQuestionArr } = req.body; 
   if (!templateId) {
     res.status(400).send({
@@ -29,11 +29,12 @@ const create = (req, res) => {
   for (let i = 0; i < pageQuestionArr.length; i++) {
     // create the page with the name within each pageQuestionArray and template Id
     let retObj = {};
-    const pageId = await page.pageCreate({
+    const pageObj = {
       name: pageQuestionArr[i].name,
       templateId,
       type
-    });
+    };
+    const pageId = await page.pageCreate(pageObj);
     // add page Id
     retObj.pageId = pageId;
     // now create the full page with all the questions

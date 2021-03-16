@@ -9,6 +9,14 @@ async function up(queryInterface, DataTypes) {
       primaryKey: true,
       type: DataTypes.UUID
     },
+    adminId: {
+      allowNull: false,
+      references: {
+        key: '_id',
+        model: 'Admin'
+      },
+      type: DataTypes.UUID
+    },
     name: {
       allowNull: false,
       type: DataTypes.STRING(36)
@@ -50,7 +58,7 @@ async function up(queryInterface, DataTypes) {
       type: DataTypes.TEXT, // json object implement sutible getter and setters, if needed
     }
   });
-  // await queryInterface.addIndex('Template', ['type', 'name']);
+  await queryInterface.addIndex('Template', ['adminId', 'name']);
 }
 
 module.exports = {
