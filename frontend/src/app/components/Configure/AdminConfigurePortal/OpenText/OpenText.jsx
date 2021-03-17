@@ -1,5 +1,5 @@
 import { Button, TextField, IconButton, Card, Tooltip, Fab, Grid, Switch, Snackbar } from '@material-ui/core';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { create } from "../../../../services/questions-service";
 import DeleteIcon from '@material-ui/icons/Delete';
 import AddIcon from '@material-ui/icons/Add';
@@ -133,22 +133,18 @@ const OpenText = () => {
     <>
       <form onSubmit={handleSubmit} className={classes.form}>
       <Tooltip title="Add Page" aria-label="Add Page">
-        <IconButton onClick={() => addPage()}>
-          <Fab color="default" >
-            <AddIcon />
-          </Fab>
-        </IconButton>
+        <Fab color="default" onClick={() => addPage()} className={classes.marginTenPx}>
+          <AddIcon />
+        </Fab>
       </Tooltip>
       {OpenTextArr && OpenTextArr.length > 0 ? OpenTextArr.map((pg, index) => (
           <Card key={index} className={classes.rootText}>
             <Grid container spacing={3}>
               <Grid item xs={2}>
                 <Tooltip title="Add Quesion" aria-label="Add Quesion" >
-                  <IconButton onClick={() => addQuestion(index)}>
-                    <Fab color="primary" >
-                      <AddIcon />
-                    </Fab>
-                  </IconButton>
+                  <Fab color="primary" onClick={() => addQuestion(index)} className={classes.marginTenPx}>
+                    <AddIcon />
+                  </Fab>
                 </Tooltip>
               </Grid>
               <Grid item xs={8}>
