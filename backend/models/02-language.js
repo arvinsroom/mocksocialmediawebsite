@@ -29,5 +29,13 @@ export default (sequelize, DataTypes) => {
 		freezeTableName: true, // model name equal to table name
     timestamps: false, // enable timestamps
 	});
+
+  Language.associate = (models) => {
+    Language.belongsTo(models.Template, {
+      as: 'template',
+      foreignKey: 'templateId'
+    })
+  };
+
   return Language;
 }

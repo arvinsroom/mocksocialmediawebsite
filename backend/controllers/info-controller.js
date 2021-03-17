@@ -1,58 +1,68 @@
 import db from "../clients/database-client";
+import Page from './create-page';
 const Info = db.Info;
 
 // save a Info and return the _id for the Info created
-const create = (req, res) => {
-  if (!req.body.templateId) {
+const create = async (req, res, next) => {
+  const {
+    templateId,
+    name,
+    type,
+    info
+  } = req.body;
+  if (!templateId) {
     res.status(400).send({
       message: "Template Id is required!"
     });
     return;
   }
-  if (!req.body.pageId) {
+  if (!name) {
     res.status(400).send({
-      message: "Page Id is required!"
+      message: "Page name is required!"
+    });
+    return;
+  }
+  if (!type) {
+    res.status(400).send({
+      message: "Page Type is required!"
+    });
+    return;
+  }
+  if (!info.richText) {
+    res.status(400).send({
+      message: "Info Rich Data is required!"
     });
     return;
   }
 
-  // form a info object with required information
-  const info = {
-    templateId: req.body.templateId,
-    richText: req.body.richText,
-    pageId: req.body.pageId,
-  };
-  
-  Info.create(info)
-    .then(data => {
-      // return the id created
-      res.res({
-        _id: data._id
-      });
-    })
-    .catch(err => {
-      res.status(500).send({
-        message:
-          err.message || "Some error occurred while creating the Info record."
-      });
+  // create the page first
+  let transaction;
+  try {
+    transaction = await db.sequelize.transaction();
+    const pageId = await Page.pageCreate({ templateId, name, type }, transaction); // should return page Id
+    // now create a entry for register
+    const data = await Info.create({
+      templateId,
+      pageId,
+      richText: info.richText,
+    }, { transaction });
+    // if we reach here, there were no errors therefore commit the transaction
+    await transaction.commit();
+    // send json for info _id
+    res.send({
+      _id: data._id
     });
-};
-
-const findOne = (req, res) => {
-  const _id = req.params._id;
-
-  Info.findByPk(id)
-    .then(data => {
-      res.send(data);
-    })
-    .catch(err => {
-      res.status(500).send({
-        message: "Error retrieving Tutorial with id=" + id
-      });
+  } catch (error) {
+    console.log(error.message);
+    // if we reach here, there were some errors thrown, therefore roolback the transaction
+    if (transaction) await transaction.rollback();
+    res.status(500).send({
+      message:
+        error.message || "Some error occurred while creating the Info record."
     });
+  }
 };
 
 export default {
   create,
-  findOne
 }

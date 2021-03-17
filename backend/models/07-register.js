@@ -3,7 +3,8 @@ export default (sequelize, DataTypes) => {
     _id: {
       allowNull: false,
       primaryKey: true,
-      type: DataTypes.UUID
+      type: DataTypes.UUID,
+      defaultValue: DataTypes.UUIDV4 // create a default UUIDV4 for each record
     },
     profilePic: {
       allowNull: false,
@@ -35,5 +36,19 @@ export default (sequelize, DataTypes) => {
 		freezeTableName: true, // model name equal to table name
     timestamps: false, // enable timestamps
 	});
+
+  Register.associate = (models) => {
+    Register.belongsTo(models.Template, {
+      as: 'template',
+      foreignKey: 'templateId'
+    })
+  };
+
+  Register.associate = (models) => {
+    Register.belongsTo(models.Page, {
+      as: 'page',
+      foreignKey: 'pageId'
+    })
+  };
   return Register;
 }

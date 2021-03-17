@@ -1,5 +1,5 @@
 export default (sequelize, DataTypes) => {
-	const Info = sequelize.define("Info", {
+	const Finish = sequelize.define("Finish", {
     _id: {
       allowNull: false,
       primaryKey: true,
@@ -22,28 +22,35 @@ export default (sequelize, DataTypes) => {
       },
       type: DataTypes.UUID
     },
-    richText: {
-      allowNull: false,
-      type: DataTypes.TEXT
+    text: {
+      allowNull: true,
+      type: DataTypes.TEXT,
+      defaultValue: null
+    },
+    redirectionLink: {
+      allowNull: true,
+      type: DataTypes.TEXT,
+      defaultValue: null
     }
+    // also output _id of user table for further analysis, everything should be connected to that id
   }, {
 		freezeTableName: true, // model name equal to table name
     timestamps: false, // enable timestamps
 	});
 
-  Info.associate = (models) => {
-    Info.belongsTo(models.Template, {
+  Finish.associate = (models) => {
+    Finish.belongsTo(models.Template, {
       as: 'template',
       foreignKey: 'templateId'
     })
   };
 
-  Info.associate = (models) => {
-    Info.belongsTo(models.Page, {
+  Finish.associate = (models) => {
+    Finish.belongsTo(models.Page, {
       as: 'page',
       foreignKey: 'pageId'
     })
   };
 
-  return Info;
+  return Finish;
 }

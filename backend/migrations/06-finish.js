@@ -1,5 +1,9 @@
-export default (sequelize, DataTypes) => {
-	const FinishScreen = sequelize.define("FinishScreen", {
+async function down(queryInterface, DataTypes) {
+  await queryInterface.dropTable('Finish');
+}
+
+async function up(queryInterface, DataTypes) {
+  await queryInterface.createTable('Finish', {
     _id: {
       allowNull: false,
       primaryKey: true,
@@ -22,17 +26,19 @@ export default (sequelize, DataTypes) => {
       type: DataTypes.UUID
     },
     text: {
-      allowNull: false,
-      type: DataTypes.STRING(1024)
+      allowNull: true,
+      type: DataTypes.TEXT
     },
     redirectionLink: {
-      allowNull: false,
-      type: DataTypes.STRING(1024)
+      allowNull: true,
+      type: DataTypes.TEXT
     }
     // also output _id of user table for further analysis, everything should be connected to that id
-  }, {
-		freezeTableName: true, // model name equal to table name
-    timestamps: false, // enable timestamps
-	});
-  return FinishScreen;
+  });
+  await queryInterface.addIndex('Finish', ['templateId', 'pageId']);
 }
+
+module.exports = {
+  up,
+  down
+};

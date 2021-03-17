@@ -1,85 +1,62 @@
-import { Button, TextField, IconButton, Card, Tooltip, Fab, Grid, Switch } from '@material-ui/core';
+import { Button, TextField, IconButton, Card, Tooltip, Fab, Grid, Switch, Snackbar } from '@material-ui/core';
 import { useEffect, useState } from 'react';
-import { makeStyles } from '@material-ui/core/styles';
 import { create } from "../../../../services/questions-service";
 import DeleteIcon from '@material-ui/icons/Delete';
 import AddIcon from '@material-ui/icons/Add';
 import cloneDeep from 'lodash/cloneDeep';
+import { useSelector } from "react-redux";
+import { Redirect } from 'react-router-dom';
+import useStyles from '../../../style';
 
-const OpenText = ({templateId}) => {
+const OpenText = () => {
   const [OpenTextArr, setOpenTextArr] = useState([]);
+
   const [message, setMessage] = useState("");
+  const [open, setOpen] = useState(false);
+  const { isLoggedIn } = useSelector(state => state.auth);
+  const classes = useStyles();
+  const { _id: templateId } = useSelector(state => state.template);
 
   // on first render check if user logged in, verify server
   // useEffect(() => {
   //   setOpenTextArr(OpenTextArr)
   // }, [OpenTextArr])
 
-  const useStyles = makeStyles((theme) => ({
-    paper: {
-      marginTop: theme.spacing(8),
-      display: 'flex',
-      flexDirection: 'column',
-      alignItems: 'center',
-    },
-    form: {
-      width: '100%', // Fix IE 11 issue.
-      marginTop: theme.spacing(1),
-    },
-    submit: {
-      margin: theme.spacing(3, 0, 2),
-    },
-    formControl: {
-      minWidth: 120,
-      width: '100%'
-    },
-    root: {
-      marginBottom: '20px'
-    },
-    floatRight: {
-      float: 'right',
-      margin: 'auto'
-    },
-    textGrid: {
-      width: '95%',
-      margin: '10px'
-    },
-    floatLeft: {
-      float: 'left',
-      margin: 'auto'
-    },
-    center: {
-      width: '100%'
-    },
-    marginAuto: {
-      margin: 'auto'
-    }
-  }));
-
-  const classes = useStyles();
+  const resetValues = () => {
+    setOpenTextArr([]);
+  };
 
   const handleSubmit = async e => {
     e.preventDefault();
-    setMessage("");
 
-    // send the username and password to the server
-    // login(username, password).then(
-    //   () => {
-    //     history.push("/admin/configure");
-    //     window.location.reload();
-    //   },
-    //   (error) => {
-    //     const resMessage =
-    //       (error.response &&
-    //         error.response.data &&
-    //         error.response.data.message) ||
-    //       error.message ||
-    //       error.toString();
-    //     console.log('errorMessage: ', resMessage);
-    //     setMessage(resMessage);
-    //   }
-    // );
-    console.log('OpenTextArr: ', OpenTextArr);
+    if (!templateId) {
+      setMessage("Please make sure Template is created!");
+      setOpen(true);
+    }
+
+    const openText = {
+      templateId,
+      type: 'OPENTEXT',
+      pageQuestionArr: OpenTextArr
+    };
+
+    try {
+      const { data } = await create(openText);
+      if (data) {
+        setMessage("Opentext questions Successfully created!")
+        setOpen(true);
+        resetValues();
+      }
+    } catch (error) {
+      const resMessage =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+      setMessage(resMessage)
+      setOpen(true);
+    }
   };
 
   // add the question text to the question object
@@ -148,6 +125,10 @@ const OpenText = ({templateId}) => {
     await setOpenTextArr(newOpenTextArr);
   }
 
+  if (!isLoggedIn) {
+    return <Redirect to="/admin" />;
+  }
+
   return (
     <>
       <form onSubmit={handleSubmit} className={classes.form}>
@@ -159,7 +140,7 @@ const OpenText = ({templateId}) => {
         </IconButton>
       </Tooltip>
       {OpenTextArr && OpenTextArr.length > 0 ? OpenTextArr.map((pg, index) => (
-          <Card key={index} className={classes.root}>
+          <Card key={index} className={classes.rootText}>
             <Grid container spacing={3}>
               <Grid item xs={2}>
                 <Tooltip title="Add Quesion" aria-label="Add Quesion" >
@@ -191,7 +172,7 @@ const OpenText = ({templateId}) => {
 
             </Grid>
             {OpenTextArr[index].questions && OpenTextArr[index].questions.length > 0 ? OpenTextArr[index].questions.map((question, questionIndex) => (
-              <div key={questionIndex} className={classes.root}>
+              <div key={questionIndex} className={classes.rootText}>
                 <Grid container spacing={3}>
                   <Grid item xs={10}>
                     <TextField
@@ -238,6 +219,8 @@ const OpenText = ({templateId}) => {
         Save
       </Button>
       </form>
+      <Snackbar open={open} autoHideDuration={2000} message={message}>
+      </Snackbar>
    </>
   )
 }

@@ -4,7 +4,7 @@ import Language from '../models/02-language';
 import AdminPost from '../models/03-admin-post';
 import Page from '../models/04-page';
 import Info from '../models/05-info';
-import FinishScreen from '../models/06-finish-screen';
+import Finish from '../models/06-finish';
 import Register from '../models/07-register';
 import Question from '../models/08-question';
 import McqOption from '../models/09-mcq-option';
@@ -36,7 +36,7 @@ const sequelize = new Sequelize({
   ...connSetting,
   dialect: config.dialect,
   // timezone: '-05:00', // utc, but let the original time be in Universal Coordinated Time
-  logging: console.log
+  // logging: (...msg) => console.log(msg),
 });
 
 const testConnection = async () => {
@@ -58,7 +58,7 @@ const LanguageModel = Language(sequelize, Sequelize);
 const AdminPostModel = AdminPost(sequelize, Sequelize);
 const PageModel = Page(sequelize, Sequelize);
 const InfoModel = Info(sequelize, Sequelize);
-const FinishScreenModel = FinishScreen(sequelize, Sequelize);
+const FinishModel = Finish(sequelize, Sequelize);
 const RegisterModel = Register(sequelize, Sequelize);
 const QuestionModel = Question(sequelize, Sequelize);
 const McqOptionModel = McqOption(sequelize, Sequelize);
@@ -75,7 +75,7 @@ db[LanguageModel.name] = LanguageModel;
 db[AdminPostModel.name] = AdminPostModel;
 db[PageModel.name] = PageModel;
 db[InfoModel.name] = InfoModel;
-db[FinishScreenModel.name] = FinishScreenModel;
+db[FinishModel.name] = FinishModel;
 db[RegisterModel.name] = RegisterModel;
 db[QuestionModel.name] = QuestionModel;
 db[McqOptionModel.name] = McqOptionModel;

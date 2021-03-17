@@ -26,7 +26,7 @@ async function up(queryInterface, DataTypes) {
       type: DataTypes.BOOLEAN,
     }
   });
-  // await queryInterface.addIndex('Question', ['pageId', 'questionText']);
+  await queryInterface.addIndex('Question', ['pageId']);
 }
 
 module.exports = {

@@ -26,7 +26,7 @@ async function up(queryInterface, DataTypes) {
       type: DataTypes.ENUM('MCQ', 'OPENTEXT', 'INFO', 'REGISTER', 'FINISH', 'MEDIA')
     },
   });
-  // await queryInterface.addIndex('Page', ['templateId', 'name']);
+  await queryInterface.addIndex('Page', ['templateId', 'type']);
 }
 
 module.exports = {

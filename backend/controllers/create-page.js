@@ -1,7 +1,7 @@
 import db from "../clients/database-client";
-const Page = db.page;
+const Page = db.Page;
 
-const pageCreate = async (pageObj) => {
+const pageCreate = async (pageObj, transaction) => {
   if (!pageObj.templateId) {
     throw "Template Id is required!";
   }
@@ -13,10 +13,11 @@ const pageCreate = async (pageObj) => {
   }
   
   try {
-    const data = await Page.create({ ...pageObj });
+    const data = await Page.create(pageObj, { transaction });
     return data._id;
   } catch (error) {
-    throw err.message || "Some error occurred while creating the Page record."
+    console.log(error.message);
+    throw error.message || "Some error occurred while creating the Page record."
   }
 };
 
@@ -37,7 +38,6 @@ const findOne = (req, res) => {
   
 
 export default {
-  create,
   findOne,
   pageCreate,
 }

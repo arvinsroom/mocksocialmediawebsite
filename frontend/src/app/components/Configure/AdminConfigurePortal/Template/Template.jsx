@@ -3,11 +3,12 @@ import { useEffect, useState } from 'react';
 import { TEMPLATE_TYPES } from '../../../../constants';
 import { create } from '../../../../services/template-service';
 
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { Redirect } from 'react-router-dom';
-import useStyles from '../../../Style/Style';
+import useStyles from '../../../style';
+import { setTemplateId } from "../../../../actions/template";
 
-const Template = ({setTemplateId}) => {
+const Template = () => {
   const [templateName, setTemplateName] = useState("");
   const [templateType, setTemplateType] = useState("");
   const [randomPosts, setRandomPosts] = useState(false);
@@ -21,6 +22,8 @@ const Template = ({setTemplateId}) => {
   const [open, setOpen] = useState(false);
   const { isLoggedIn } = useSelector(state => state.auth);
   const classes = useStyles();
+
+  const dispatch = useDispatch();
 
   // on first render check if user logged in, verify server
   useEffect(() => {
@@ -58,7 +61,8 @@ const Template = ({setTemplateId}) => {
     try {
       const { data } = await create(template);
       if (data._id) {
-        setTemplateId(data._id);
+        // dispatch the event to save template Id in store
+        dispatch(setTemplateId(data._id))
         setMessage("Template Successfully created!")
         setOpen(true);
         resetValues();

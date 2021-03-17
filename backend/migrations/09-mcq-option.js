@@ -22,7 +22,7 @@ async function up(queryInterface, DataTypes) {
       type: DataTypes.TEXT
     },
   });
-  // await queryInterface.addIndex('McqOption', ['questionId', 'optionText']);
+  await queryInterface.addIndex('McqOption', ['questionId']);
 }
 
 module.exports = {

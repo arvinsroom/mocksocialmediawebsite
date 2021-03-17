@@ -7,7 +7,11 @@ import {
 } from './migrations';
 import db from "./clients/database-client";
 import template from './routes/template-routes';
+import register from './routes/register-routes';
 import auth from './routes/auth-routes';
+import finish from './routes/finish-routes';
+import info from './routes/info-routes';
+import question from './routes/question-routes';
 
 const { verifyToken, isAdmin } = require("./middleware/authJwt");
 
@@ -88,6 +92,11 @@ try {
 
   // add middleware to our application
   app.use('/api/template', [verifyToken, isAdmin], template);
+  app.use('/api/register', [verifyToken, isAdmin], register);
+  app.use('/api/info', [verifyToken, isAdmin], info);
+  app.use('/api/finish', [verifyToken, isAdmin], finish);
+  app.use('/api/questions', [verifyToken, isAdmin], question);
+
 
   // require("./routes/template-routes")(app);
   // TemplateRouter(app);

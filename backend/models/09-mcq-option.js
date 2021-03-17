@@ -3,7 +3,8 @@ export default (sequelize, DataTypes) => {
     _id: {
       allowNull: false,
       primaryKey: true,
-      type: DataTypes.UUID
+      type: DataTypes.UUID,
+      defaultValue: DataTypes.UUIDV4 // create a default UUIDV4 for each record
     },
     questionId: {
       allowNull: false,
@@ -21,6 +22,14 @@ export default (sequelize, DataTypes) => {
 		freezeTableName: true, // model name equal to table name
     timestamps: false, // enable timestamps
 	});
+
+  McqOption.associate = (models) => {
+    McqOption.hasOne(models.Question, {
+      as: 'question',
+      foreignKey: 'questionId'
+    })
+  };
+
   return McqOption;
 }
 

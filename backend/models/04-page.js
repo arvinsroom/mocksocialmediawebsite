@@ -3,7 +3,8 @@ export default (sequelize, DataTypes) => {
     _id: {
       allowNull: false,
       primaryKey: true,
-      type: DataTypes.UUID
+      type: DataTypes.UUID,
+      defaultValue: DataTypes.UUIDV4 // create a default UUIDV4 for each record
     },
     name: {
       allowNull: false,
@@ -25,5 +26,28 @@ export default (sequelize, DataTypes) => {
 		freezeTableName: true, // model name equal to table name
     timestamps: false, // enable timestamps
 	});
+
+  Page.associate = (models) => {
+    Page.hasOne(models.Register, {
+      as: 'register',
+    })
+  };
+  Page.associate = (models) => {
+    Page.hasOne(models.Finish, {
+      as: 'finish',
+    })
+  };
+  Page.associate = (models) => {
+    Page.hasOne(models.Info, {
+      as: 'info',
+    })
+  };
+  
+  Page.associate = (models) => {
+    Page.hasMany(models.Question, {
+      as: 'question',
+    })
+  };
+
   return Page;
 }

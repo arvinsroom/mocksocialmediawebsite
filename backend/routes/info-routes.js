@@ -1,11 +1,7 @@
+import info from "../controllers/info-controller"
+var express = require('express')
+var router = express.Router()
 
-module.exports = app => {
-  const info = require("../controllers/info-controller.js");
-  
-  var router = require("express").Router();
+router.post("/", info.create);
 
-  // Create a new Tutorial
-  router.post("/", info.create);
-
-  app.use('/api/info', router);
-};
+export default router;
