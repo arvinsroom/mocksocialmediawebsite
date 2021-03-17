@@ -49,5 +49,13 @@ export default (sequelize, DataTypes) => {
 		freezeTableName: true, // model name equal to table name
     timestamps: false, // enable timestamps
 	});
+
+  AdminPost.associate = (models) => {
+    AdminPost.belongsTo(models.Template, {
+      as: 'template',
+      foreignKey: 'templateId'
+    })
+  };
+
   return AdminPost;
 }

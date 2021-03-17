@@ -1,11 +1,7 @@
+import register  from "../controllers/register-controller"
+var express = require('express')
+var router = express.Router()
 
-module.exports = app => {
-  const template = require("../controllers/template-controller.js");
-  
-  var router = require("express").Router();
+router.post("/", register.create);
 
-  // Create a new Tutorial
-  router.post("/", template.create);
-
-  app.use('/api/template', router);
-};
+export default router;

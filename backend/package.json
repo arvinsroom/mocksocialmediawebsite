@@ -18,7 +18,7 @@
     "build-dev": "webpack --mode development",
     "start-dev": "webpack serve --mode development",
     "clean-db": "rm -rf ./db && mkdir -p ./db",
-    "dev-server": "npm run clean-db && npm run build-dev && nodemon ./db/index.js",
+    "dev-server": "npm run clean-db && npm run build-dev && nodemon --inspect ./db/index.js",
     "prod-server": "npm run clean-db && npm run build-prod && node ./db/index.js"
   },
   "eslintConfig": {

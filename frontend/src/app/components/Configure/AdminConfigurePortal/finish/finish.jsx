@@ -1,15 +1,13 @@
-import { Button, FormControlLabel, FormGroup, Switch, FormControl, FormLabel, TextField, Snackbar } from '@material-ui/core';
+import { Button, TextField, Snackbar } from '@material-ui/core';
 import { useState } from 'react';
+import { create } from '../../../../services/finish-service';
 import useStyles from '../../../style';
 import { useSelector } from "react-redux";
-import { create } from '../../../../services/register-service';
 import { Redirect } from 'react-router-dom';
 
-const Register = () => {
-  const [state, setState] = useState({
-    requestPhoto: false,
-    requestUsername: false,
-  });
+const Finish = () => {
+  const [redirectionLink, setRedirectionLink] = useState("");
+  const [anyText, setAnyText] = useState("");
   const [pageName, setPageName] = useState("");
 
   const [message, setMessage] = useState("");
@@ -24,11 +22,9 @@ const Register = () => {
   // }, [])
 
   const resetValues = () => {
+    setRedirectionLink("");
+    setAnyText("");
     setPageName("");
-    setState({
-      requestPhoto: false,
-      requestUsername: false,
-    })
   };
 
   const handleSubmit = async e => {
@@ -39,19 +35,20 @@ const Register = () => {
       setOpen(true);
     }
 
-    const register = {
+    const finish = {
       templateId: templateId,
       name: pageName,
-      type: "REGISTER",
-      register: {
-        profilePic: state.requestPhoto,
-        username: state.requestUsername,
+      type: "FINISH",
+      finish: {
+        redirectionLink,
+        text: anyText,
       }
     };
+
     try {
-      const { data } = await create(register);
+      const { data } = await create(finish);
       if (data._id) {
-        setMessage("Register Page Successfully created!")
+        setMessage("Finish Page Successfully created!")
         setOpen(true);
         resetValues();
       }
@@ -71,15 +68,11 @@ const Register = () => {
     return <Redirect to="/admin" />;
   }
 
-  const handleChange = (event) => {
-    setState({ ...state, [event.target.name]: event.target.checked });
-  };
-
   return (
     <>
     <div className={classes.paper}>
     <form onSubmit={handleSubmit} className={classes.form}>
-    <TextField
+      <TextField
         className={classes.marginBottom}
         margin="normal"
         required
@@ -89,31 +82,24 @@ const Register = () => {
         onChange={({ target }) => setPageName(target.value)}
         autoFocus
       />
-    <FormControl component="fieldset">
-      <FormLabel component="legend">Please provide additional requests for registrations?</FormLabel>
-    <FormGroup>
-        <FormControlLabel
-          control={<Switch
-            checked={state.requestPhoto}
-            onChange={handleChange}
-            color="primary"
-            name="requestPhoto"
-            inputProps={{ 'aria-label': 'Request photo checkbox' }}
-          />}
-          label="Request Photo"
-        />
-        <FormControlLabel
-          control={<Switch
-            checked={state.requestUsername}
-            onChange={handleChange}
-            color="primary"
-            name="requestUsername"
-            inputProps={{ 'aria-label': 'Request username checkbox' }}
-          />}
-          label="Request Username"
-        />
-      </FormGroup>
-    </FormControl>
+      <TextField
+        variant="outlined"
+        margin="normal"
+        fullWidth
+        id="redirectionLink"
+        label="Provide a redirection link"
+        onChange={({ target }) => setRedirectionLink(target.value)}
+        autoFocus
+      />
+      <TextField
+        variant="outlined"
+        margin="normal"
+        fullWidth
+        id="anyText"
+        label="Provide text to be rendered on last page"
+        onChange={({ target }) => setAnyText(target.value)}
+        autoFocus
+      />
       <Button
         type="submit"
         fullWidth
@@ -131,4 +117,4 @@ const Register = () => {
   )
 }
 
-export default Register;
+export default Finish;

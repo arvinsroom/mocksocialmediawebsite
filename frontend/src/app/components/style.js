@@ -22,6 +22,39 @@ const useStyles = makeStyles((theme) => ({
   marginBottom:{
     marginBottom: '10%'
   },
+  title: {
+    flexGrow: 1,
+  },
+  root: {
+    flexGrow: 1,
+  },
+  rootText: {
+    marginBottom: '20px'
+  },
+  floatRight: {
+    float: 'right',
+    margin: 'auto'
+  },
+  textGrid: {
+    width: '95%',
+    margin: '10px'
+  },
+  floatLeft: {
+    float: 'left',
+    margin: 'auto'
+  },
+  center: {
+    width: '100%'
+  },
+  marginAuto: {
+    margin: 'auto'
+  },
+  marginTenPx: {
+    margin: '10px'
+  },
+  divider: {
+    margin: 20
+  }
 }));
 
 export default useStyles;

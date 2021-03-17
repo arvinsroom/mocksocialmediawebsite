@@ -1,9 +1,10 @@
 export default (sequelize, DataTypes) => {
-	const Question = sequelize.define("FinishScreen", {
+	const Question = sequelize.define("Question", {
     _id: {
       allowNull: false,
       primaryKey: true,
-      type: DataTypes.UUID
+      type: DataTypes.UUID,
+      defaultValue: DataTypes.UUIDV4 // create a default UUIDV4 for each record
     },
     pageId: {
       allowNull: false,
@@ -25,6 +26,19 @@ export default (sequelize, DataTypes) => {
 		freezeTableName: true, // model name equal to table name
     timestamps: false, // enable timestamps
 	});
+
+  Question.associate = (models) => {
+    Question.belongsTo(models.page, {
+      as: 'page',
+      foreignKey: 'pageId'
+    })
+  };
+  
+  Question.associate = (models) => {
+    Question.hasMany(models.McqOption, {
+      as: 'mcqOption',
+    })
+  };
   return Question;
 }
 

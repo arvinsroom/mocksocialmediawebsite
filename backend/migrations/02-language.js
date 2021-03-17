@@ -30,7 +30,7 @@ async function up(queryInterface, DataTypes) {
       type: DataTypes.TEXT
     }
   });
-  // await queryInterface.addIndex('Language', ['templateId', 'name']);
+  await queryInterface.addIndex('Language', ['templateId', 'name']);
 }
 
 module.exports = {

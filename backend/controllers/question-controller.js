@@ -1,11 +1,9 @@
 import page from './create-page';
 import bulkQuestions from './bulk-create-questions';
+import db from "../clients/database-client";
 
-// here we will recieve array of question
-// 1) we need to create a page with specific id and type and tempplate id
-// 2) use that information and create a question and its respective mcq options
-const create = async (req, res) => {
-  const { templateId, type, pageQuestionArr } = req.body; 
+const create = async (req, res, next) => {
+  const { templateId, type, pageQuestionArr } = req.body;
   if (!templateId) {
     res.status(400).send({
       message: "Template Id is required!"
@@ -24,27 +22,45 @@ const create = async (req, res) => {
     });
     return;
   }
-  
-  const result = [];
-  for (let i = 0; i < pageQuestionArr.length; i++) {
-    // create the page with the name within each pageQuestionArray and template Id
-    let retObj = {};
-    const pageObj = {
-      name: pageQuestionArr[i].name,
-      templateId,
-      type
-    };
-    const pageId = await page.pageCreate(pageObj);
-    // add page Id
-    retObj.pageId = pageId;
-    // now create the full page with all the questions
-    const questionIdArr = await bulkQuestions.bulkCreate(pageQuestionArr[i].questions, type, pageId);
-    // add all the questions created array
-    retObj.questions = questionIdArr;
-    result.push(retObj);
+
+  // create the page first
+  let transaction;
+  try {
+    transaction = await db.sequelize.transaction();
+    const result = [];
+    for (let i = 0; i < pageQuestionArr.length; i++) {
+      // create the page with the name within each pageQuestionArray and template Id
+      let retObj = {};
+      const pageObj = {
+        name: pageQuestionArr[i].name,
+        templateId,
+        type
+      };
+      console.log(pageObj);
+      const pageId = await page.pageCreate(pageObj, transaction);
+      // add page Id
+      retObj.pageId = pageId;
+      console.log(pageId)
+      // now create the full page with all the questions
+      const questionIdArr = await bulkQuestions.bulkCreate(pageQuestionArr[i].questions, type, pageId, transaction);
+      // add all the questions created array
+      retObj.questions = questionIdArr;
+      result.push(retObj);
+    }
+    // if we reach here, there were no errors therefore commit the transaction
+    await transaction.commit();
+
+    // add response for _id of all questions with specific page id's
+    res.send(result);
+  } catch (error) {
+    console.log(error.message);
+    // if we reach here, there were some errors thrown, therefore roolback the transaction
+    if (transaction) await transaction.rollback();
+    res.status(500).send({
+      message:
+        error.message || "Some error occurred while creating the Question record."
+    });
   }
-  // add response for _id of all questions with specific page id's
-  res.res(result);
 };
 
 

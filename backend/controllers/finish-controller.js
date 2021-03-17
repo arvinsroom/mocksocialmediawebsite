@@ -1,14 +1,14 @@
 import db from "../clients/database-client";
 import Page from './create-page';
-const Register = db.Register;
+const Finish = db.Finish;
 
-// save a Info and return the _id for the Info created
+// save a finish page recod and return the _id for the finish page created
 const create = async (req, res, next) => {
   const {
     templateId,
     name,
     type,
-    register
+    finish
   } = req.body;
   if (!templateId) {
     res.status(400).send({
@@ -28,29 +28,28 @@ const create = async (req, res, next) => {
     });
     return;
   }
-  if (!register) {
+  if (!finish) {
     res.status(400).send({
-      message: "Register Object is required!"
+      message: "Finish Data is required!"
     });
     return;
   }
 
-  // create  the page first
+  // create the page first
   let transaction;
   try {
     transaction = await db.sequelize.transaction();
-    const pg = { templateId, name, type };
-    const pageId = await Page.pageCreate(pg, transaction); // should return page Id
+    const pageId = await Page.pageCreate({ templateId, name, type }, transaction); // should return page Id
     // now create a entry for register
-    const data = await Register.create({
-      templateId: templateId,
+    const data = await Finish.create({
+      templateId,
       pageId,
-      profilePic: register.profilePic ? register.profilePic : false,
-      username: register.username ? register.username : false,
+      text: finish.text ? finish.text : null,
+      redirectionLink: finish.redirectionLink ? finish.redirectionLink : null
     }, { transaction });
     // if we reach here, there were no errors therefore commit the transaction
     await transaction.commit();
-    // fetch json
+    // send json for info _id
     res.send({
       _id: data._id
     });
@@ -60,11 +59,10 @@ const create = async (req, res, next) => {
     if (transaction) await transaction.rollback();
     res.status(500).send({
       message:
-        error.message || "Some error occurred while creating the Register record."
+        error.message || "Some error occurred while creating the Finish record."
     });
   }
 };
-
 
 export default {
   create,

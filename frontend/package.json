@@ -22,13 +22,12 @@
     "react-scripts": "4.0.3",
     "redux": "^4.0.5",
     "redux-thunk": "^2.3.0",
-    "web-vitals": "^1.1.0",
     "xlsx": "^0.16.9"
   },
   "scripts": {
     "build-prod": "webpack --mode production",
     "build-dev": "webpack --mode development",
-    "start-dev": "webpack serve --mode development",
+    "start-dev": "webpack serve --mode development --port 8081",
     "clean-dist": "rm -rf ./dist && mkdir -p ./dist",
     "copy-server": "cp ./src/index.js ./dist/index.js",
     "dev-server": "npm run clean-dist && npm run build-dev && npm run copy-server && nodemon ./dist/index.js",

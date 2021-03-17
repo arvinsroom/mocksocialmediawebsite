@@ -66,5 +66,36 @@ export default (sequelize, DataTypes) => {
     })
   };
 
+  Template.associate = (models) => {
+    Template.hasMany(models.Register, {
+      as: 'register',
+    })
+  };
+  Template.associate = (models) => {
+    Template.hasMany(models.Page, {
+      as: 'page',
+    })
+  };
+  Template.associate = (models) => {
+    Template.hasMany(models.Finish, {
+      as: 'finish',
+    })
+  };
+  Template.associate = (models) => {
+    Template.hasMany(models.Info, {
+      as: 'info',
+    })
+  };
+  Template.associate = (models) => {
+    Template.hasMany(models.AdminPost, {
+      as: 'adminPost',
+    })
+  };
+  Template.associate = (models) => {
+    Template.hasMany(models.Language, {
+      as: 'language',
+    })
+  };
+
   return Template;
 }

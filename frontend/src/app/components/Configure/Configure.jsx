@@ -9,19 +9,21 @@ import Box from '@material-ui/core/Box';
 import Template from './AdminConfigurePortal/Template/Template';
 import General from './AdminConfigurePortal/General/General';
 import Register from './AdminConfigurePortal/Register/Register';
-import InfoPage from './AdminConfigurePortal/InfoPage/InfoPage';
+import InfoPage from './AdminConfigurePortal/Info/Info';
 import MCQ from './AdminConfigurePortal/MCQ/MCQ';
 import OpenText from './AdminConfigurePortal/OpenText/OpenText';
-import LastPage from './AdminConfigurePortal/LastPage/LastPage';
+import Finish from './AdminConfigurePortal/Finish/Finish';
 import Flow from './AdminConfigurePortal/Flow/Flow';
-import { useState, useEffect } from 'react';
+import { useEffect } from 'react';
 import { useDispatch, useSelector } from "react-redux";
 import Toolbar from '@material-ui/core/Toolbar';
 import Button from '@material-ui/core/Button';
 import { logout } from "../../actions/auth";
 import { useHistory } from "react-router-dom";
 import { clearMessage } from "../../actions/message";
+import { setTemplateId } from "../../actions/template";
 import { Redirect } from 'react-router-dom';
+import useStyles from '../style';
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -59,8 +61,9 @@ function a11yProps(index) {
 const Configure = () => {
   let history = useHistory();
   const [value, setValue] = React.useState(0);
-  const [templateId, setTemplateId] = useState(null); // default null
   const { isLoggedIn } = useSelector(state => state.auth);
+  const { _id: templateId } = useSelector(state => state.template);
+  const classes = useStyles();
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -78,13 +81,24 @@ const Configure = () => {
     return <Redirect to="/admin" />;
   }
 
+  const handleLogout = () => {
+    // TODO: for now you cannot work with same template one you refresh or logout
+    dispatch(setTemplateId(null)); // clear template Id, when changing location
+    dispatch(logout()); // remove user object
+  }
+
   return (
     <>
+    <div className={classes.root}>
       <AppBar position="static">
         <Toolbar>
-          <Button onClick={() => dispatch(logout())} color="inherit">Logout</Button>
+          <Typography variant="h6" className={classes.title}>
+            Current Template ID: {templateId}
+          </Typography>
+          <Button onClick={handleLogout} color="inherit">Logout</Button>
         </Toolbar>
       </AppBar>
+    </div>
 
       <AppBar position="static" color="default">
         <Tabs
@@ -97,38 +111,38 @@ const Configure = () => {
           aria-label="scrollable auto tabs for template settings"
         >
           <Tab label="Template" {...a11yProps(0)} />
-          <Tab label="General" {...a11yProps(1)} disabled={templateId === null ? true : false}/>
-          <Tab label="Register" {...a11yProps(2)} disabled={templateId === null ? true : false}/>
-          <Tab label="InfoPage" {...a11yProps(3)} disabled={templateId === null ? true : false}/>
-          <Tab label="MCQ" {...a11yProps(4)} disabled={templateId === null ? true : false}/>
-          <Tab label="OpenText" {...a11yProps(5)} disabled={templateId === null ? true : false}/>
-          <Tab label="LastPage" {...a11yProps(6)} disabled={templateId === null ? true : false}/>
-          <Tab label="Flow" {...a11yProps(7)} disabled={templateId === null ? true : false}/>
+          <Tab label="General" {...a11yProps(1)} disabled={!templateId ? true : false}/>
+          <Tab label="Register" {...a11yProps(2)} disabled={!templateId ? true : false}/>
+          <Tab label="InfoPage" {...a11yProps(3)} disabled={!templateId ? true : false}/>
+          <Tab label="MCQ" {...a11yProps(4)} disabled={!templateId ? true : false}/>
+          <Tab label="OpenText" {...a11yProps(5)} disabled={!templateId ? true : false}/>
+          <Tab label="Finish" {...a11yProps(6)} disabled={!templateId ? true : false}/>
+          <Tab label="Flow" {...a11yProps(7)} disabled={!templateId ? true : false}/>
         </Tabs>
       </AppBar>
       <TabPanel value={value} index={0}>
-        <Template setTemplateId={setTemplateId}/>
+        <Template />
       </TabPanel>
       <TabPanel value={value} index={1}>
-        <General templateId={templateId}/>
+        <General />
       </TabPanel>
       <TabPanel value={value} index={2}>
-        <Register templateId={templateId}/>
+        <Register />
       </TabPanel>
       <TabPanel value={value} index={3}>
-        <InfoPage templateId={templateId}/>
+        <InfoPage />
       </TabPanel>
       <TabPanel value={value} index={5}>
-        <OpenText templateId={templateId}/>
+        <OpenText />
       </TabPanel>
       <TabPanel value={value} index={4}>
-        <MCQ templateId={templateId}/>
+        <MCQ />
       </TabPanel>
       <TabPanel value={value} index={6}>
-        <LastPage templateId={templateId}/>
+        <Finish />
       </TabPanel>
       <TabPanel value={value} index={7}>
-        <Flow templateId={templateId}/>
+        <Flow />
       </TabPanel>
     </>
   );

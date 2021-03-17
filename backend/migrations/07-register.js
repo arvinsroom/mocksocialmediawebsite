@@ -36,7 +36,7 @@ async function up(queryInterface, DataTypes) {
       type: DataTypes.UUID
     },
   });
-  // await queryInterface.addIndex('Register', ['templateId', 'name']);
+  await queryInterface.addIndex('Register', ['templateId', 'pageId']);
 }
 
 module.exports = {

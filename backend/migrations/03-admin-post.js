@@ -50,7 +50,7 @@ async function up(queryInterface, DataTypes) {
       type: DataTypes.BOOLEAN,
     }
   });
-  // await queryInterface.addIndex('AdminPost', ['templateId', 'type']);
+  await queryInterface.addIndex('AdminPost', ['templateId', 'type']);
 }
 
 module.exports = {

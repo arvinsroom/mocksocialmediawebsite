@@ -1,7 +1,5 @@
-function Home () {
-  return (
-    null
-  )
-}
+const Flow = () => {
 
-export default Home;
+};
+
+export default Flow;
