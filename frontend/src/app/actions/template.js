@@ -3,6 +3,7 @@ import {
   PREV_TEMPLATES_SUCCESS,
   PREV_TEMPLATES_FAIL,
   SNACKBAR_ERROR,
+  SNACKBAR_SUCCESS
 } from "./types";
 
 import * as TemplateService from "../services/template-service";
@@ -47,7 +48,13 @@ export const getPrevTemplate = () => (dispatch) => {
 
 export const deletePrevTemplate = (_id) => (dispatch) => {
   return TemplateService.deletePrevTemplate(_id)
-    .then(() => {
+    .then(({data}) => {
+
+      dispatch({
+        type: SNACKBAR_SUCCESS,
+        payload: data,
+      });
+
       Promise.resolve();
     })
     .catch(error => {

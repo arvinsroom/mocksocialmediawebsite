@@ -89,6 +89,10 @@ const useStyles = makeStyles((theme) => ({
   successSnackbar: {
     backgroundColor: '#4caf50',
     color: '#fff'
+  },
+  paddingTopBottom: {
+    paddingTop: '15px',
+    paddingBottom: '10px'
   }
 }));
 

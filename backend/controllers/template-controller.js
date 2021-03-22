@@ -111,9 +111,7 @@ const deletePrevTemplate = async (req, res, next) => {
     });
     await transaction.commit();
 
-    res.send({
-      data
-    });
+    res.send("Template was successfully deleted.");
   } catch (error) {
     console.log(error.message);
     if (transaction) await transaction.rollback();

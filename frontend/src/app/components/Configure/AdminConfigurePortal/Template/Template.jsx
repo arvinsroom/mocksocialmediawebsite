@@ -78,13 +78,12 @@ const Template = () => {
       qualtricsId: requiredQualtricsId,
     };
     try {
-      // const { data } = await create(template);
-      // if (data._id) {
-      //   // dispatch the event to save template Id in store
-      //   await handleTemplateId(data._id, TEMPLATE.TEMPLATE_SUCCESS);
-      //   resetValues();
-      // }
-    console.log('template: ', template);
+      const { data } = await create(template);
+      if (data._id) {
+        // dispatch the event to save template Id in store
+        await handleTemplateId(data._id, TEMPLATE.TEMPLATE_SUCCESS);
+        resetValues();
+      }
     } catch (error) {
       const resMessage =
         (error.response &&
@@ -116,9 +115,8 @@ const Template = () => {
     setRequiredQualtricsId(e.target.checked);
   };
 
-  const handlePermissions = (event) => {
-    setPermissions({ ...permissions, [event.target.name]: event.target.checked });
-    console.log('handlePermissions: ', permissions);
+  const handlePermissions = (e) => {
+    setPermissions({ ...permissions, [e.target.name]: e.target.checked });
   };
 
   const createMenuItems = () => {
@@ -166,7 +164,7 @@ const Template = () => {
         </Select>
       </FormControl>
       <FormControl component="fieldset">
-        <FormLabel component="legend">{TEMPLATE.ASK_FOR_PERMISSION}</FormLabel>
+        <FormLabel component="legend" className={classes.paddingTopBottom}>{TEMPLATE.ASK_FOR_PERMISSION}</FormLabel>
       </FormControl>
       <FormGroup>
         <FormControlLabel
