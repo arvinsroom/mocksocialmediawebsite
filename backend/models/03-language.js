@@ -3,7 +3,8 @@ export default (sequelize, DataTypes) => {
     _id: {
       allowNull: false,
       primaryKey: true,
-      type: DataTypes.UUID
+      type: DataTypes.UUID,
+      defaultValue: DataTypes.UUIDV4 // create a default UUIDV4 for each record
     },
     name: {
       allowNull: false,
@@ -17,9 +18,13 @@ export default (sequelize, DataTypes) => {
       },
       type: DataTypes.UUID
     },
-    code: {
-      allowNull: true,
-      type: DataTypes.STRING(2) // en, es
+    platform: {
+      allowNull: false,
+      type: DataTypes.STRING
+    },
+    isActive: {
+      allowNull: false,
+      type: DataTypes.BOOLEAN
     },
     translations: {
       allowNull: false,

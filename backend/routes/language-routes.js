@@ -1,11 +1,11 @@
+import language from "../controllers/language-controller";
+var express = require('express');
+var router = express.Router();
 
-module.exports = app => {
-  const template = require("../controllers/template-controller.js");
-  
-  var router = require("express").Router();
+router.post("/", language.create);
 
-  // Create a new Tutorial
-  router.post("/", template.create);
+router.get("/:_id", language.getLanguages);
 
-  app.use('/api/template', router);
-};
+router.put("/", language.updateLanActive);
+
+export default router;

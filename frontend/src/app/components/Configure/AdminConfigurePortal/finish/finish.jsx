@@ -1,25 +1,20 @@
-import { Button, TextField, Snackbar } from '@material-ui/core';
+import { Button, TextField } from '@material-ui/core';
 import { useState } from 'react';
 import { create } from '../../../../services/finish-service';
 import useStyles from '../../../style';
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { Redirect } from 'react-router-dom';
+import { showErrorSnackbar, showSuccessSnackbar } from '../../../../actions/snackbar';
+import { TEMPLATE, FINISH_PAGE } from '../../../../constants';
 
 const Finish = () => {
   const [redirectionLink, setRedirectionLink] = useState("");
   const [anyText, setAnyText] = useState("");
   const [pageName, setPageName] = useState("");
-
-  const [message, setMessage] = useState("");
-  const [open, setOpen] = useState(false);
+  const dispatch = useDispatch();
   const { isLoggedIn } = useSelector(state => state.auth);
   const classes = useStyles();
   const { _id: templateId } = useSelector(state => state.template);
-
-  // on first render check if user logged in, verify server
-  // useEffect({
-
-  // }, [])
 
   const resetValues = () => {
     setRedirectionLink("");
@@ -31,8 +26,7 @@ const Finish = () => {
     e.preventDefault();
 
     if (!templateId) {
-      setMessage("Please make sure Template is created!");
-      setOpen(true);
+      dispatch(showErrorSnackbar(TEMPLATE.SELECT_OR_CREATE_TEMPLATE));
     }
 
     const finish = {
@@ -48,8 +42,7 @@ const Finish = () => {
     try {
       const { data } = await create(finish);
       if (data._id) {
-        setMessage("Finish Page Successfully created!")
-        setOpen(true);
+        dispatch(showSuccessSnackbar(FINISH_PAGE.FINISH_PAGE_SUCCESS));
         resetValues();
       }
     } catch (error) {
@@ -59,8 +52,7 @@ const Finish = () => {
           error.response.data.message) ||
         error.message ||
         error.toString();
-      setMessage(resMessage)
-      setOpen(true);
+        dispatch(showErrorSnackbar(resMessage));
     }
   };
 
@@ -86,6 +78,7 @@ const Finish = () => {
         variant="outlined"
         margin="normal"
         fullWidth
+        value={redirectionLink}
         id="redirectionLink"
         label="Provide a redirection link"
         onChange={({ target }) => setRedirectionLink(target.value)}
@@ -96,22 +89,21 @@ const Finish = () => {
         margin="normal"
         fullWidth
         id="anyText"
+        value={anyText}
         label="Provide text to be rendered on last page"
         onChange={({ target }) => setAnyText(target.value)}
         autoFocus
       />
       <Button
         type="submit"
-        fullWidth
         variant="contained"
         color="primary"
+        fullWidth
         className={classes.submit}
       >
         Save
       </Button>
     </form>
-    <Snackbar open={open} autoHideDuration={2000} message={message}>
-    </Snackbar>
     </div>
     </>
   )

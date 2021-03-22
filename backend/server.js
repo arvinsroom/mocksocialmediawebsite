@@ -12,9 +12,12 @@ import auth from './routes/auth-routes';
 import finish from './routes/finish-routes';
 import info from './routes/info-routes';
 import question from './routes/question-routes';
+import media from './routes/media-routes';
+import language from './routes/language-routes';
+import page from './routes/page-routes';
+import upload from './routes/upload-routes';
 
 const { verifyToken, isAdmin } = require("./middleware/authJwt");
-
 // get the admin model, we can perform operations on this
 const Admin = db.Admin;
 var bcrypt = require("bcryptjs");
@@ -38,20 +41,19 @@ try {
   console.log('Trying to inserting entries for admin user in the database from config.json!');
   // before starting add entries for admin user in the database, only push the first one
   const config = require(__dirname + '/config/config.json')['adminCredentials'][0];
-  console.log(config);
   // Save Admin object from config to the database
   const admin = {
     username: config.username,
     password: bcrypt.hashSync(config.password, 8)
   };
   // Save Admin object in the database
-  // Admin.create(admin)
-  // .then(data => {
-  //   console.log('User Created: ', data);
-  // })
-  // .catch(err => {
-  //   console.log("Some error occurred while creating the Admin Username/Password.", err);
-  // });
+  Admin.create(admin)
+  .then(data => {
+    console.log('User Created: ', data);
+  })
+  .catch(err => {
+    console.log("Some error occurred while creating the Admin Username/Password.", err);
+  });
 
   // create a express server
   const app = express();
@@ -96,11 +98,10 @@ try {
   app.use('/api/info', [verifyToken, isAdmin], info);
   app.use('/api/finish', [verifyToken, isAdmin], finish);
   app.use('/api/questions', [verifyToken, isAdmin], question);
-
-
-  // require("./routes/template-routes")(app);
-  // TemplateRouter(app);
-  // require("./routes/question-routes")(app);
+  app.use('/api/media', [verifyToken, isAdmin], media);
+  app.use('/api/language', [verifyToken, isAdmin], language);
+  app.use('/api/page', [verifyToken, isAdmin], page);
+  app.use('/api/upload', [verifyToken, isAdmin], upload);
 
   // set port, listen for requests
   const PORT = process.env.PORT || 8080;

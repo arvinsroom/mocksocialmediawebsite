@@ -4,7 +4,7 @@ import thunk from "redux-thunk";
 
 const middleware = [thunk];
 
-// FOR DEVELOPMENT, remove production
+// FOR DEVELOPMENT, dev tool
 const store = createStore(rootReducer,
   compose(
     applyMiddleware(...middleware),

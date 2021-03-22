@@ -48,14 +48,6 @@ async function up(queryInterface, DataTypes) {
     qualtricsId: {
       defaultValue: false,
       type: DataTypes.BOOLEAN,
-    },
-    // flow?? is a {
-    //   type: 'of component',
-    //   _id: 'reference to know what to fetch',
-    // }
-    flow: {
-      allowNull: true,
-      type: DataTypes.TEXT, // json object implement sutible getter and setters, if needed
     }
   });
   await queryInterface.addIndex('Template', ['adminId', 'name']);

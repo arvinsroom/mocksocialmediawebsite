@@ -1,9 +1,11 @@
-import { Button, FormControlLabel, FormGroup, Switch, FormControl, FormLabel, TextField, Snackbar } from '@material-ui/core';
+import { Button, FormControlLabel, FormGroup, Switch, FormControl, FormLabel, TextField } from '@material-ui/core';
 import { useState } from 'react';
 import useStyles from '../../../style';
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { create } from '../../../../services/register-service';
 import { Redirect } from 'react-router-dom';
+import { showErrorSnackbar, showSuccessSnackbar } from '../../../../actions/snackbar';
+import { TEMPLATE, REGISTER_PAGE } from '../../../../constants';
 
 const Register = () => {
   const [state, setState] = useState({
@@ -12,16 +14,10 @@ const Register = () => {
   });
   const [pageName, setPageName] = useState("");
 
-  const [message, setMessage] = useState("");
-  const [open, setOpen] = useState(false);
+	const dispatch = useDispatch();
   const { isLoggedIn } = useSelector(state => state.auth);
   const classes = useStyles();
   const { _id: templateId } = useSelector(state => state.template);
-
-  // on first render check if user logged in, verify server
-  // useEffect({
-
-  // }, [])
 
   const resetValues = () => {
     setPageName("");
@@ -35,8 +31,7 @@ const Register = () => {
     e.preventDefault();
 
     if (!templateId) {
-      setMessage("Please make sure Template is created!");
-      setOpen(true);
+      dispatch(showErrorSnackbar(TEMPLATE.SELECT_OR_CREATE_TEMPLATE));
     }
 
     const register = {
@@ -51,8 +46,7 @@ const Register = () => {
     try {
       const { data } = await create(register);
       if (data._id) {
-        setMessage("Register Page Successfully created!")
-        setOpen(true);
+        dispatch(showSuccessSnackbar(REGISTER_PAGE.REGISTER_PAGE_SUCCESS));
         resetValues();
       }
     } catch (error) {
@@ -62,8 +56,8 @@ const Register = () => {
           error.response.data.message) ||
         error.message ||
         error.toString();
-      setMessage(resMessage)
-      setOpen(true);
+        dispatch(showErrorSnackbar(resMessage));
+
     }
   };
 
@@ -90,7 +84,7 @@ const Register = () => {
         autoFocus
       />
     <FormControl component="fieldset">
-      <FormLabel component="legend">Please provide additional requests for registrations?</FormLabel>
+      <FormLabel component="legend">{REGISTER_PAGE.REGISTRATION_DETAILS}</FormLabel>
     <FormGroup>
         <FormControlLabel
           control={<Switch
@@ -116,16 +110,14 @@ const Register = () => {
     </FormControl>
       <Button
         type="submit"
-        fullWidth
         variant="contained"
         color="primary"
+        fullWidth
         className={classes.submit}
       >
         Save
       </Button>
     </form>
-    <Snackbar open={open} autoHideDuration={2000} message={message}>
-    </Snackbar>
     </div>
     </>
   )

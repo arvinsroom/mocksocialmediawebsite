@@ -15,6 +15,7 @@ async function up(queryInterface, DataTypes) {
     },
     templateId: {
       allowNull: false,
+      onDelete: 'CASCADE',
       references: {
         key: '_id',
         model: 'Template'
@@ -22,35 +23,48 @@ async function up(queryInterface, DataTypes) {
       type: DataTypes.UUID
     },
     linkTitle: {
-      allowNull: false,
+      allowNull: true,
       type: DataTypes.STRING(1024)
     },
     link: {
-      allowNull: false,
+      allowNull: true,
       type: DataTypes.STRING(1024)
     },
     thumbnail: {
-      allowNull: false,
+      allowNull: true,
       type: DataTypes.BLOB('long')
     },
     linkPreview: {
-      allowNull: false,
+      allowNull: true,
       type: DataTypes.TEXT
     },
     postMessage: {
-      allowNull: false,
+      allowNull: true,
       type: DataTypes.TEXT
     },
     attachedMedia: {
-      allowNull: false,
+      allowNull: true,
       type: DataTypes.BLOB('long')
     },
-    misinformation: {
-      allowNull: false,
+    isFake: {
+      allowNull: true,
       type: DataTypes.BOOLEAN,
+    },
+    pageId: {
+      allowNull: false,
+      onDelete: 'CASCADE',
+      references: {
+        key: '_id',
+        model: 'Page'
+      },
+      type: DataTypes.UUID
+    },
+    sourceTweet: {
+      allowNull: true,
+      type: DataTypes.TEXT
     }
   });
-  await queryInterface.addIndex('AdminPost', ['templateId', 'type']);
+  await queryInterface.addIndex('AdminPost', ['templateId', 'pageId', 'type']);
 }
 
 module.exports = {

@@ -1,12 +1,31 @@
-import { Button, TextField, FormControl, InputLabel, Select, MenuItem, Switch, FormControlLabel, FormGroup, Snackbar } from '@material-ui/core';
+import { Button,
+  TextField,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
+  Switch,
+  FormControlLabel,
+  FormGroup,
+  IconButton,
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableRow,
+  Box,
+} from '@material-ui/core';
 import { useEffect, useState } from 'react';
 import { TEMPLATE_TYPES } from '../../../../constants';
 import { create } from '../../../../services/template-service';
-
+import DeleteIcon from '@material-ui/icons/Delete';
+import AddIcon from '@material-ui/icons/Add';
 import { useSelector, useDispatch } from "react-redux";
 import { Redirect } from 'react-router-dom';
 import useStyles from '../../../style';
-import { setTemplateId } from "../../../../actions/template";
+import { setTemplateId, getPrevTemplate, deletePrevTemplate } from "../../../../actions/template";
+import { showErrorSnackbar, showSuccessSnackbar } from '../../../../actions/snackbar';
+import { TEMPLATE } from '../../../../constants';
 
 const Template = () => {
   const [templateName, setTemplateName] = useState("");
@@ -18,21 +37,21 @@ const Template = () => {
     requestVideo: false,
     requestCookies: false,
   });
-  const [message, setMessage] = useState("");
-  const [open, setOpen] = useState(false);
   const { isLoggedIn } = useSelector(state => state.auth);
+  const { prevTemplates } = useSelector(state => state.template);
   const classes = useStyles();
-
   const dispatch = useDispatch();
 
+  const retrivePrevTemplates = async () => {
+    await dispatch(getPrevTemplate());
+  }
   // on first render check if user logged in, verify server
   useEffect(() => {
-    // setMessage("");
-    // setTimeout(() => {
-    //   setTemplateId("testing id");
-    // }, 3000);
-  }, [])
+    // on load fetch pevious templates
+    retrivePrevTemplates();
+  }, []);
 
+  // handle this better
   const resetValues = () => {
     setTemplateName("");
     setTemplateType("");
@@ -56,16 +75,12 @@ const Template = () => {
       requestVideo: permissions.requestVideo,
       requestCookies: permissions.requestCookies,
       qualtricsId: requiredQualtricsId,
-      flow: "",
     };
     try {
       const { data } = await create(template);
       if (data._id) {
         // dispatch the event to save template Id in store
-        dispatch(setTemplateId(data._id))
-        setMessage("Template Successfully created!")
-        setOpen(true);
-        resetValues();
+        await handleTemplateId(data._id, TEMPLATE.TEMPLATE_SUCCESS);
       }
     } catch (error) {
       const resMessage =
@@ -74,9 +89,16 @@ const Template = () => {
           error.response.data.message) ||
         error.message ||
         error.toString();
-      setMessage(resMessage)
-      setOpen(true);
+      dispatch(showErrorSnackbar(resMessage));
     }
+  };
+
+  const handleTemplateId = async (_id, message) => {
+    await dispatch(setTemplateId(_id));
+    resetValues();
+    // fetch old templates
+    await retrivePrevTemplates();
+    dispatch(showSuccessSnackbar(message))
   };
 
   const handleChange = (event) => {
@@ -106,6 +128,11 @@ const Template = () => {
   if (!isLoggedIn) {
     return <Redirect to="/admin" />;
   }
+
+  const removeTemplate = async (index) => {
+    await dispatch(deletePrevTemplate(index));
+    await retrivePrevTemplates();
+  };
 
   return (
     <>
@@ -188,17 +215,49 @@ const Template = () => {
       </FormGroup>
       <Button
         type="submit"
-        fullWidth
         variant="contained"
         color="primary"
+        fullWidth
         className={classes.submit}
       >
         Save
       </Button>
     </form>
-    <Snackbar open={open} autoHideDuration={2000} message={message}>
-    </Snackbar>
     </div>
+
+    <Box component="span" className={classes.note} display="block">
+      <b>Note:</b> {TEMPLATE.TEMPLATE_DELETE_NOTE}
+    </Box>
+      <Table aria-label="Previous Template(s)">
+        <TableHead>
+          <TableRow>
+            <TableCell className={classes.body, classes.head} align="center">Template ID</TableCell>
+            <TableCell className={classes.body, classes.head} align="center">Template Name</TableCell>
+            <TableCell className={classes.body, classes.head} align="center">Template Type</TableCell>
+            <TableCell className={classes.body, classes.head} align="center">Delete</TableCell>
+            <TableCell className={classes.body, classes.head} align="center">Set Current Template Id</TableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {prevTemplates && prevTemplates.length > 0 ? prevTemplates.map((row) => (
+            <TableRow key={row._id}>
+              <TableCell align="center">{row._id}</TableCell>
+              <TableCell align="center">{row.name}</TableCell>
+              <TableCell align="center">{row.type}</TableCell>
+              <TableCell align="center">
+                <IconButton aria-label="delete template" onClick={() => removeTemplate(row._id)}>
+                  <DeleteIcon color="primary" />
+                </IconButton>
+              </TableCell>
+              <TableCell align="center">
+                <IconButton aria-label="set template" onClick={() => handleTemplateId(row._id, TEMPLATE.TEMPLATE_CURRENT_SELECT)}>
+                  <AddIcon color="primary" />
+                </IconButton>
+              </TableCell>
+            </TableRow>
+          )) : null}
+        </TableBody>
+      </Table>
     </>
   )
 }

@@ -11,6 +11,7 @@ async function up(queryInterface, DataTypes) {
     },
     templateId: {
       allowNull: false,
+      onDelete: 'CASCADE',
       references: {
         key: '_id',
         model: 'Template'
@@ -19,6 +20,7 @@ async function up(queryInterface, DataTypes) {
     },
     pageId: {
       allowNull: false,
+      onDelete: 'CASCADE',
       references: {
         key: '_id',
         model: 'Page'

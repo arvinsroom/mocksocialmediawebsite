@@ -15,22 +15,27 @@ async function up(queryInterface, DataTypes) {
     },
     templateId: {
       allowNull: false,
+      onDelete: 'CASCADE',
       references: {
         key: '_id',
         model: 'Template'
       },
       type: DataTypes.UUID
     },
-    code: {
-      allowNull: true,
-      type: DataTypes.STRING(2) // en, es
+    isActive: {
+      allowNull: false,
+      type: DataTypes.BOOLEAN
+    },
+    platform: {
+      allowNull: false,
+      type: DataTypes.STRING
     },
     translations: {
       allowNull: false,
       type: DataTypes.TEXT
     }
   });
-  await queryInterface.addIndex('Language', ['templateId', 'name']);
+  await queryInterface.addIndex('Language', ['templateId', 'name', 'platform']);
 }
 
 module.exports = {

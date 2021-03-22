@@ -2,7 +2,7 @@ import {
   LOGIN_SUCCESS,
   LOGIN_FAIL,
   LOGOUT,
-  SET_MESSAGE,
+  SNACKBAR_ERROR,
 } from "./types";
 
 import * as AuthService from "../services/auth-service";
@@ -30,8 +30,8 @@ export const login = (username, password) => (dispatch) => {
       });
 
       dispatch({
-        type: SET_MESSAGE,
-        payload: message, // maybe change this to simple Login Failed
+        type: SNACKBAR_ERROR,
+        payload: message,
       });
 
       return Promise.reject();

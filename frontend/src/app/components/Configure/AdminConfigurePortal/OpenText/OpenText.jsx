@@ -1,26 +1,22 @@
-import { Button, TextField, IconButton, Card, Tooltip, Fab, Grid, Switch, Snackbar } from '@material-ui/core';
+import { Button, TextField, IconButton, Card, Tooltip, Fab, Grid, Switch } from '@material-ui/core';
 import { useState } from 'react';
 import { create } from "../../../../services/questions-service";
 import DeleteIcon from '@material-ui/icons/Delete';
 import AddIcon from '@material-ui/icons/Add';
 import cloneDeep from 'lodash/cloneDeep';
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { Redirect } from 'react-router-dom';
 import useStyles from '../../../style';
+import { showErrorSnackbar, showSuccessSnackbar } from '../../../../actions/snackbar';
+import { TEMPLATE, OPENTEXT_PAGE } from '../../../../constants';
 
 const OpenText = () => {
   const [OpenTextArr, setOpenTextArr] = useState([]);
 
-  const [message, setMessage] = useState("");
-  const [open, setOpen] = useState(false);
+	const dispatch = useDispatch();
   const { isLoggedIn } = useSelector(state => state.auth);
   const classes = useStyles();
   const { _id: templateId } = useSelector(state => state.template);
-
-  // on first render check if user logged in, verify server
-  // useEffect(() => {
-  //   setOpenTextArr(OpenTextArr)
-  // }, [OpenTextArr])
 
   const resetValues = () => {
     setOpenTextArr([]);
@@ -30,8 +26,7 @@ const OpenText = () => {
     e.preventDefault();
 
     if (!templateId) {
-      setMessage("Please make sure Template is created!");
-      setOpen(true);
+      dispatch(showErrorSnackbar(TEMPLATE.SELECT_OR_CREATE_TEMPLATE));
     }
 
     const openText = {
@@ -43,8 +38,7 @@ const OpenText = () => {
     try {
       const { data } = await create(openText);
       if (data) {
-        setMessage("Opentext questions Successfully created!")
-        setOpen(true);
+        dispatch(showSuccessSnackbar(OPENTEXT_PAGE.OPENTEXT_PAGE_SUCCESS));
         resetValues();
       }
     } catch (error) {
@@ -54,8 +48,8 @@ const OpenText = () => {
           error.response.data.message) ||
         error.message ||
         error.toString();
-      setMessage(resMessage)
-      setOpen(true);
+        dispatch(showErrorSnackbar(resMessage));
+
     }
   };
 
@@ -72,7 +66,6 @@ const OpenText = () => {
   // add required field to the question object
   const handleRequiredField = async (question, event) => {
     event.preventDefault();
-    // console.log(event.target.checked);
     question.required = event.target.checked;
     // deep copy OpenTextArr
     let newOpenTextArr = cloneDeep(OpenTextArr);
@@ -207,16 +200,14 @@ const OpenText = () => {
       )) : null}
       <Button
         type="submit"
-        fullWidth
         variant="contained"
         color="primary"
+        fullWidth
         className={classes.submit}
       >
         Save
       </Button>
       </form>
-      <Snackbar open={open} autoHideDuration={2000} message={message}>
-      </Snackbar>
    </>
   )
 }
