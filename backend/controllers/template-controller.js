@@ -25,9 +25,9 @@ const create = async (req, res, next) => {
   // form a template object with required information
   const template = {
     name: req.body.name,
-    videoPermission: req.body.videoPermission,
-    audioPermission: req.body.audioPermission,
-    cookiesPermission: req.body.cookiesPermission,
+    videoPermission: req.body.requestVideo,
+    audioPermission: req.body.requestAudio,
+    cookiesPermission: req.body.requestCookies,
     randomPosts: req.body.randomPosts,
     type: req.body.type,
     flow: req.body.flow,

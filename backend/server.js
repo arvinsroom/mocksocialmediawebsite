@@ -47,13 +47,13 @@ try {
     password: bcrypt.hashSync(config.password, 8)
   };
   // Save Admin object in the database
-  Admin.create(admin)
-  .then(data => {
-    console.log('User Created: ', data);
-  })
-  .catch(err => {
-    console.log("Some error occurred while creating the Admin Username/Password.", err);
-  });
+  // Admin.create(admin)
+  // .then(data => {
+  //   console.log('User Created: ', data);
+  // })
+  // .catch(err => {
+  //   console.log("Some error occurred while creating the Admin Username/Password.", err);
+  // });
 
   // create a express server
   const app = express();

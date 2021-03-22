@@ -10,7 +10,7 @@ function App() {
       <SuccessSnackbar />
       <BrowserRouter>
         <Switch>
-          < Route exact path="/admin/configure">
+          <Route exact path="/admin/configure">
             <Configure />
           </Route>
           <Route exact path="/admin">
