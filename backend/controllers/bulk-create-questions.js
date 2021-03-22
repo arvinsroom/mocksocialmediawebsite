@@ -26,12 +26,15 @@ const mcqBulkCreate = async (mcqOptions, questionId, transaction) => {
 
 // default required to true
 const questionCreate = async (questionText, required, pageId, transaction) => {
-  if (!questionText) throw "Question Text is required!";
+  if (!questionText) throw "Question Text field is required!";
+  // check if required is defined
+  if (typeof required === 'undefined') throw "Required field is required!";
+
   const question = {
     pageId,
-    required : required ? required : true,
+    required,
     questionText
-  }
+  };
   try {
     const data = await Question.create(question, { transaction });
     return data._id;
