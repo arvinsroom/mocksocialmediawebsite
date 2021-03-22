@@ -7,11 +7,12 @@ export const TEMPLATE = Object.freeze({
   TEMPLATE_SUCCESS: "Template Successfully created.",
   TEMPLATE_CURRENT_SELECT: "Template Id set, can modify any page related to current template Id.",
   TEMPLATE_DELETE_NOTE: "Please be very careful when deleting a Template, this will delete every page associated with deleted template Id.",
+  ASK_FOR_PERMISSION: "Configure permissions and other requests:"
 });
 
 export const REGISTER_PAGE = Object.freeze({
   REGISTER_PAGE_SUCCESS: "Register page was successfully created.",
-  REGISTRATION_DETAILS: "Please provide additional requests for registrations?",
+  REGISTRATION_DETAILS: "Provide additional requests for registrations:",
 });
 
 export const FLOW_PAGE = Object.freeze({

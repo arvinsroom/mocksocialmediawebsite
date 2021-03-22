@@ -14,6 +14,7 @@ import { Button,
   TableHead,
   TableRow,
   Box,
+  FormLabel
 } from '@material-ui/core';
 import { useEffect, useState } from 'react';
 import { TEMPLATE_TYPES } from '../../../../constants';
@@ -77,11 +78,13 @@ const Template = () => {
       qualtricsId: requiredQualtricsId,
     };
     try {
-      const { data } = await create(template);
-      if (data._id) {
-        // dispatch the event to save template Id in store
-        await handleTemplateId(data._id, TEMPLATE.TEMPLATE_SUCCESS);
-      }
+      // const { data } = await create(template);
+      // if (data._id) {
+      //   // dispatch the event to save template Id in store
+      //   await handleTemplateId(data._id, TEMPLATE.TEMPLATE_SUCCESS);
+      //   resetValues();
+      // }
+    console.log('template: ', template);
     } catch (error) {
       const resMessage =
         (error.response &&
@@ -115,6 +118,7 @@ const Template = () => {
 
   const handlePermissions = (event) => {
     setPermissions({ ...permissions, [event.target.name]: event.target.checked });
+    console.log('handlePermissions: ', permissions);
   };
 
   const createMenuItems = () => {
@@ -161,57 +165,62 @@ const Template = () => {
           {createMenuItems()}
         </Select>
       </FormControl>
+      <FormControl component="fieldset">
+        <FormLabel component="legend">{TEMPLATE.ASK_FOR_PERMISSION}</FormLabel>
+      </FormControl>
       <FormGroup>
-      <FormControlLabel
+        <FormControlLabel
+            control={<Switch
+              checked={randomPosts}
+              onChange={handleRandomPosts}
+              color="primary"
+              name="randomPosts"
+              inputProps={{ 'aria-label': 'Render ramdom posts on socail media page' }}
+            />}
+            label="Enable random post rendering"
+          />
+        <FormControlLabel
           control={<Switch
-            checked={randomPosts}
-            onChange={handleRandomPosts}
+            checked={requiredQualtricsId}
+            onChange={handleQualtricsId}
             color="primary"
-            name="randomPosts"
-            inputProps={{ 'aria-label': 'Render ramdom posts on socail media page' }}
+            name="requiredQualtricsId"
+            inputProps={{ 'aria-label': 'Request qualtrics code checkbox' }}
           />}
-          label="Enable random post rendering"
+          label="Require qualtrics Id"
         />
-      <FormControlLabel
-        control={<Switch
-          checked={permissions.requestAudio}
-          onChange={handlePermissions}
-          color="primary"
-          name="requestAudio"
-          inputProps={{ 'aria-label': 'Request audio permissions' }}
-        />}
-        label="Request Audio"
-      />
-      <FormControlLabel
-        control={<Switch
-          checked={permissions.requestVideo}
-          onChange={handlePermissions}
-          color="primary"
-          name="requestVideo"
-          inputProps={{ 'aria-label': 'Request Video permission' }}
-        />}
-        label="Request Video"
-      />
-      <FormControlLabel
-        control={<Switch
-          checked={permissions.requestCookies}
-          onChange={handlePermissions}
-          color="primary"
-          name="requestCookies"
-          inputProps={{ 'aria-label': 'Request Cookies permission' }}
-        />}
-        label="Request Cookies"
-      />
-      <FormControlLabel
-        control={<Switch
-          checked={requiredQualtricsId}
-          onChange={handleQualtricsId}
-          color="primary"
-          name="requiredQualtricsId"
-          inputProps={{ 'aria-label': 'Request qualtrics code checkbox' }}
-        />}
-        label="Require Qualtrics Id"
-      />
+      </FormGroup>
+      <FormGroup>
+        <FormControlLabel
+          control={<Switch
+            checked={permissions.requestAudio}
+            onChange={handlePermissions}
+            color="primary"
+            name="requestAudio"
+            inputProps={{ 'aria-label': 'Request audio permissions' }}
+          />}
+          label="Request audio access"
+        />
+        <FormControlLabel
+          control={<Switch
+            checked={permissions.requestVideo}
+            onChange={handlePermissions}
+            color="primary"
+            name="requestVideo"
+            inputProps={{ 'aria-label': 'Request Video permission' }}
+          />}
+          label="Request video access"
+        />
+        <FormControlLabel
+          control={<Switch
+            checked={permissions.requestCookies}
+            onChange={handlePermissions}
+            color="primary"
+            name="requestCookies"
+            inputProps={{ 'aria-label': 'Request Cookies permission' }}
+          />}
+          label="Request cookies"
+        />
       </FormGroup>
       <Button
         type="submit"

@@ -85,29 +85,29 @@ const Register = () => {
       />
     <FormControl component="fieldset">
       <FormLabel component="legend">{REGISTER_PAGE.REGISTRATION_DETAILS}</FormLabel>
-    <FormGroup>
-        <FormControlLabel
-          control={<Switch
-            checked={state.requestPhoto}
-            onChange={handleChange}
-            color="primary"
-            name="requestPhoto"
-            inputProps={{ 'aria-label': 'Request photo checkbox' }}
-          />}
-          label="Request Photo"
-        />
-        <FormControlLabel
-          control={<Switch
-            checked={state.requestUsername}
-            onChange={handleChange}
-            color="primary"
-            name="requestUsername"
-            inputProps={{ 'aria-label': 'Request username checkbox' }}
-          />}
-          label="Request Username"
-        />
-      </FormGroup>
     </FormControl>
+    <FormGroup>
+      <FormControlLabel
+        control={<Switch
+          checked={state.requestPhoto}
+          onChange={handleChange}
+          color="primary"
+          name="requestPhoto"
+          inputProps={{ 'aria-label': 'Request photo checkbox' }}
+        />}
+        label="Request Photo"
+      />
+      <FormControlLabel
+        control={<Switch
+          checked={state.requestUsername}
+          onChange={handleChange}
+          color="primary"
+          name="requestUsername"
+          inputProps={{ 'aria-label': 'Request username checkbox' }}
+        />}
+        label="Request Username"
+      />
+    </FormGroup>
       <Button
         type="submit"
         variant="contained"
