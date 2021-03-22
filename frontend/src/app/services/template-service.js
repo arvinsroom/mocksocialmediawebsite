@@ -7,3 +7,16 @@ export const create = (data) => {
     headers: authHeader()
   });
 }
+
+// get the previous templates
+export const getPrevTemplates = () => {
+  return http.get("/template", {
+    headers: authHeader()
+  });
+}
+
+export const deletePrevTemplate = (_id) => {
+  return http.delete(`/template/${_id}`, {
+    headers: authHeader()
+  });
+}

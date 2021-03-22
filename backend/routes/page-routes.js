@@ -1,11 +1,9 @@
+import page from "../controllers/page-controller";
+var express = require('express');
+var router = express.Router();
 
-module.exports = app => {
-  const template = require("../controllers/template-controller.js");
-  
-  var router = require("express").Router();
+router.get("/:_id", page.getAllPages);
 
-  // Create a new Tutorial
-  router.post("/", template.create);
+router.put("/", page.updatePage);
 
-  app.use('/api/template', router);
-};
+export default router;

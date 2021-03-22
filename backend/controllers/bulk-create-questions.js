@@ -16,9 +16,7 @@ const mcqBulkCreate = async (mcqOptions, questionId, transaction) => {
   }
   
   try {
-    const data = await McqOption.bulkCreate(mcqOptions, { transaction });
-    // return the whole data object
-    console.log('MCQ OPTIONS BULK: ', data);
+    await McqOption.bulkCreate(mcqOptions, { transaction });
     // return data;
     return;
   } catch (error) {
@@ -59,7 +57,6 @@ const bulkCreate = async (questions, type, pageId, transaction) => {
     // then create a single option
     const questionId = await questionCreate(questions[i].questionText, questions[i].required, pageId, transaction);
     result.push(questionId);
-    console.log('questionId: ', questionId)
     if (type === 'MCQ') {
       await mcqBulkCreate(questions[i].mcqOptions, questionId, transaction);
     }

@@ -2,7 +2,7 @@ import { makeStyles } from '@material-ui/core/styles';
 
 const useStyles = makeStyles((theme) => ({
   paper: {
-    marginTop: theme.spacing(8),
+    marginTop: theme.spacing(4),
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
@@ -20,7 +20,7 @@ const useStyles = makeStyles((theme) => ({
     width: '100%'
   },
   marginBottom:{
-    marginBottom: '10%'
+    marginBottom: '5%'
   },
   title: {
     flexGrow: 1,
@@ -32,7 +32,7 @@ const useStyles = makeStyles((theme) => ({
     marginBottom: '20px'
   },
   floatRight: {
-    float: 'right',
+    float: 'right !important',
     margin: 'auto'
   },
   textGrid: {
@@ -54,6 +54,41 @@ const useStyles = makeStyles((theme) => ({
   },
   divider: {
     margin: 20
+  },
+  table: {
+    minWidth: 650,
+  },
+  head: {
+    backgroundColor: 'cornsilk',
+    color: 'black',
+  },
+  body: {
+    fontSize: 14,
+  },
+  marginTopBottom: {
+    float: 'right !important',
+    marginTop: '10px',
+    marginBottom: '10px'
+  },
+  note: {
+    padding: '12px',
+    borderLeft: 'solid 4px #3498db',
+    backgroundColor: '#f0f7fb',
+    lineHeight: '18px',
+    overflow: 'auto',
+    margin: '10px',
+  },
+  errorSnackbar: {
+    backgroundColor: '#f44336',
+    color: '#fff'
+  },
+  infoSnackbar: {
+    backgroundColor: '#2196f3',
+    color: '#fff'
+  },
+  successSnackbar: {
+    backgroundColor: '#4caf50',
+    color: '#fff'
   }
 }));
 

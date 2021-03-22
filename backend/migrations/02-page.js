@@ -15,6 +15,7 @@ async function up(queryInterface, DataTypes) {
     },
     templateId: {
       allowNull: false,
+      onDelete: 'CASCADE',
       references: {
         key: '_id',
         model: 'Template'
@@ -24,6 +25,10 @@ async function up(queryInterface, DataTypes) {
     type: {
       allowNull: false,
       type: DataTypes.ENUM('MCQ', 'OPENTEXT', 'INFO', 'REGISTER', 'FINISH', 'MEDIA')
+    },
+    order: {
+      allowNull: true,
+      type: DataTypes.INTEGER
     },
   });
   await queryInterface.addIndex('Page', ['templateId', 'type']);

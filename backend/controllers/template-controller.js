@@ -5,7 +5,6 @@ const Template = db.Template;
 const create = async (req, res, next) => {
   // fetch the adminId added from middleware
   if (!req.adminId) {
-    console.log('should not print');
     res.status(400).send({
       message: "Invalid Token, please log in again!"
     });
@@ -58,40 +57,74 @@ const create = async (req, res, next) => {
   }
 };
 
-// for now we only need to update the flow
-const update = (req, res) => {
-  // get the id of template
-  const _id = req.params._id;
-
-  // form a template object with required information
-  const template = {
-    flow: req.body.flow,
-  };
-  
-  Template.update(template, {
-    where: {
-      _id
-    }
-  })
-    .then(num => {
-      if (num == 1) {
-        res.send({
-          message: "Template was successfully updated!"
-        });
-      } else {
-        res.send({
-          message: `Cannot update Template with _id=${_id}. Maybe Template was not found or req.body is empty!`
-        });
-      }
-    })
-    .catch(err => {
-      res.status(500).send({
-        message: "Error updating Template with id=" + _id
-      });
+const getPrevTemplates = async (req, res, next) => {
+  // fetch the adminId added from middleware
+  if (!req.adminId) {
+    res.status(400).send({
+      message: "Invalid Token, please log in again!"
     });
+    return;
+  }
+
+  try {
+    const data = await Template.findAll({
+      where: {
+        adminId: req.adminId
+      },
+      attributes: ['_id', 'name', 'type']
+    });
+    res.send(data);
+  } catch (error) {
+    console.log(error.message);
+    res.status(500).send({
+      message: "Some error occurred while fetching templates for current user."
+    });
+  }
+};
+
+const deletePrevTemplate = async (req, res, next) => {
+  // fetch the adminId added from middleware
+  if (!req.adminId) {
+    res.status(400).send({
+      message: "Invalid Token, please log in again!"
+    });
+    return;
+  }
+
+  // fetch template _id from params
+  const _id = req.params._id;
+  if (!_id) {
+    res.status(400).send({
+      message: "Invalid Template Id!"
+    });
+    return;
+  }
+
+  let transaction;
+  try {
+    transaction = await db.sequelize.transaction();
+    const data = await Template.destroy({
+      where: {
+        _id
+      },
+      transaction
+    });
+    await transaction.commit();
+
+    res.send({
+      data
+    });
+  } catch (error) {
+    console.log(error.message);
+    if (transaction) await transaction.rollback();
+    res.status(500).send({
+      message: "Some error occurred while deleting given template."
+    });
+  }
 };
 
 export default {
   create,
-  update
+  getPrevTemplates,
+  deletePrevTemplate,
 }

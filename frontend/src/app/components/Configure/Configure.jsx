@@ -14,13 +14,10 @@ import MCQ from './AdminConfigurePortal/MCQ/MCQ';
 import OpenText from './AdminConfigurePortal/OpenText/OpenText';
 import Finish from './AdminConfigurePortal/Finish/Finish';
 import Flow from './AdminConfigurePortal/Flow/Flow';
-import { useEffect } from 'react';
 import { useDispatch, useSelector } from "react-redux";
 import Toolbar from '@material-ui/core/Toolbar';
 import Button from '@material-ui/core/Button';
 import { logout } from "../../actions/auth";
-import { useHistory } from "react-router-dom";
-import { clearMessage } from "../../actions/message";
 import { setTemplateId } from "../../actions/template";
 import { Redirect } from 'react-router-dom';
 import useStyles from '../style';
@@ -59,23 +56,16 @@ function a11yProps(index) {
 }
 
 const Configure = () => {
-  let history = useHistory();
   const [value, setValue] = React.useState(0);
   const { isLoggedIn } = useSelector(state => state.auth);
   const { _id: templateId } = useSelector(state => state.template);
   const classes = useStyles();
+  const dispatch = useDispatch();
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
 
-  const dispatch = useDispatch();
-
-  useEffect(() => {
-    history.listen((location) => {
-      dispatch(clearMessage()); // clear message when changing location
-    });
-  }, [dispatch, history]);
 
   if (!isLoggedIn) {
     return <Redirect to="/admin" />;

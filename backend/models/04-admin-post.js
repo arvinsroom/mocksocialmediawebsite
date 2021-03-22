@@ -18,32 +18,45 @@ export default (sequelize, DataTypes) => {
       type: DataTypes.UUID
     },
     linkTitle: {
-      allowNull: false,
+      allowNull: true,
       type: DataTypes.STRING(1024)
     },
     link: {
-      allowNull: false,
+      allowNull: true,
       type: DataTypes.STRING(1024)
     },
     thumbnail: {
-      allowNull: false,
+      allowNull: true,
       type: DataTypes.BLOB('long')
     },
     linkPreview: {
-      allowNull: false,
+      allowNull: true,
       type: DataTypes.TEXT
     },
     postMessage: {
-      allowNull: false,
+      allowNull: true,
       type: DataTypes.TEXT
     },
     attachedMedia: {
-      allowNull: false,
+      allowNull: true,
       type: DataTypes.BLOB('long')
     },
-    misinformation: {
-      allowNull: false,
+    isFake: {
+      allowNull: true,
       type: DataTypes.BOOLEAN,
+      defaultValue: false // not fake
+    },
+    pageId: {
+      allowNull: false,
+      references: {
+        key: '_id',
+        model: 'Page'
+      },
+      type: DataTypes.UUID
+    },
+    sourceTweet: {
+      allowNull: true,
+      type: DataTypes.TEXT
     }
   }, {
 		freezeTableName: true, // model name equal to table name
@@ -54,6 +67,12 @@ export default (sequelize, DataTypes) => {
     AdminPost.belongsTo(models.Template, {
       as: 'template',
       foreignKey: 'templateId'
+    })
+  };
+  AdminPost.associate = (models) => {
+    AdminPost.belongsTo(models.Page, {
+      as: 'page',
+      foreignKey: 'pageId'
     })
   };
 

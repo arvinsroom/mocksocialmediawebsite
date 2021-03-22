@@ -1,21 +1,18 @@
 import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
-import { Button, CssBaseline, TextField, Typography, CircularProgress, Snackbar } from '@material-ui/core';
-import { makeStyles } from '@material-ui/core/styles';
+import { Button, CssBaseline, TextField, Typography, CircularProgress } from '@material-ui/core';
 import Container from '@material-ui/core/Container';
 import { useDispatch, useSelector } from "react-redux";
 import { login } from "../../actions/auth";
+import useStyles from '../style';
 
 const Admin = () => {
   let history = useHistory();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const [open, setOpen] = useState(false);
-
+  const classes = useStyles();
   const { isLoggedIn } = useSelector(state => state.auth);
-  const { message } = useSelector(state => state.message);
-
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -32,27 +29,8 @@ const Admin = () => {
       })
       .catch(() => {
         setIsLoading(false);
-        setOpen(true);
       });
   };
-
-  const useStyles = makeStyles((theme) => ({
-    paper: {
-      marginTop: theme.spacing(8),
-      display: 'flex',
-      flexDirection: 'column',
-      alignItems: 'center',
-    },
-    form: {
-      width: '100%', // Fix IE 11 issue.
-      marginTop: theme.spacing(1),
-    },
-    submit: {
-      margin: theme.spacing(3, 0, 2),
-    },
-  }));
-
-  const classes = useStyles();
 
   return (
     <>
@@ -86,8 +64,8 @@ const Admin = () => {
           />
           <Button
             type="submit"
-            fullWidth
             variant="contained"
+            fullWidth
             color="primary"
             className={classes.submit}
           >
@@ -95,8 +73,6 @@ const Admin = () => {
           </Button>
           {isLoading && <CircularProgress />}
         </form>
-      <Snackbar open={open} autoHideDuration={2000} message={message}>
-      </Snackbar>
       </div>
     </Container>
     </>

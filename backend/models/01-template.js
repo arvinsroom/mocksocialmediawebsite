@@ -46,14 +46,6 @@ export default (sequelize, DataTypes) => {
       defaultValue: false,
       type: DataTypes.BOOLEAN,
     },
-    // flow?? is a {
-    //   type: 'of component',
-    //   _id: 'reference to know what to fetch',
-    // }
-    flow: {
-      allowNull: false,
-      type: DataTypes.TEXT, // json object implement sutible getter and setters, if needed
-    }
   }, {
 		freezeTableName: true, // model name equal to table name
     timestamps: false, // enable timestamps

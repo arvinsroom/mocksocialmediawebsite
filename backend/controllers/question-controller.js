@@ -36,11 +36,9 @@ const create = async (req, res, next) => {
         templateId,
         type
       };
-      console.log(pageObj);
       const pageId = await page.pageCreate(pageObj, transaction);
       // add page Id
       retObj.pageId = pageId;
-      console.log(pageId)
       // now create the full page with all the questions
       const questionIdArr = await bulkQuestions.bulkCreate(pageQuestionArr[i].questions, type, pageId, transaction);
       // add all the questions created array

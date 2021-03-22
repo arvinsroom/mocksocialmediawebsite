@@ -22,32 +22,45 @@ export default (sequelize, DataTypes) => {
       allowNull: false,
       type: DataTypes.ENUM('MCQ', 'OPENTEXT', 'INFO', 'REGISTER', 'FINISH', 'MEDIA')
     },
+    order: {
+      allowNull: true,
+      type: DataTypes.INTEGER,
+      defaultValue: null
+    },
   }, {
 		freezeTableName: true, // model name equal to table name
     timestamps: false, // enable timestamps
 	});
 
+  // might need to go over them again
   Page.associate = (models) => {
-    Page.hasOne(models.Register, {
+    Page.hasMany(models.Register, {
       as: 'register',
     })
   };
   Page.associate = (models) => {
-    Page.hasOne(models.Finish, {
+    Page.hasMany(models.Finish, {
       as: 'finish',
     })
   };
   Page.associate = (models) => {
-    Page.hasOne(models.Info, {
+    Page.hasMany(models.Info, {
       as: 'info',
     })
   };
+  Page.associate = (models) => {
+    Page.hasMany(models.AdminPost, {
+      as: 'adminPost',
+    })
+  };
+
   
   Page.associate = (models) => {
     Page.hasMany(models.Question, {
       as: 'question',
     })
   };
+
 
   return Page;
 }

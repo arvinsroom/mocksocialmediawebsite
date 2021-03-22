@@ -1,11 +1,13 @@
 import Admin from './Admin/Admin';
-import Home from './Configure/AdminConfigurePortal/Home/Home';
+import Home from './User/Home/Home';
 import Configure from './Configure/Configure';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
+import SuccessSnackbar from './Snackbar';
 
 function App() {
   return (
     <div className="wrapper">
+      <SuccessSnackbar />
       <BrowserRouter>
         <Switch>
           < Route exact path="/admin/configure">
