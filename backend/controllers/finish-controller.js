@@ -64,6 +64,47 @@ const create = async (req, res, next) => {
   }
 };
 
+const getFinishDetails = async (req, res, next) => {
+  try {
+    // fetch template _id from params
+    const pageId = req.params.pageId;
+    if (!pageId) {
+      res.status(400).send({
+        message: "Invalid Page Id!"
+      });
+      return;
+    }
+
+    if (!req.userId) {
+      res.status(400).send({
+        message: "Invalid User Token, please log in again!"
+      });
+      return;
+    }
+
+
+    const data = await Finish.findOne({
+      where: {
+        pageId: pageId
+      },
+      attributes: ['text', 'redirectionLink']
+    });
+
+    res.send({
+      data: data,
+      userResponse: req.userId
+    });
+
+  } catch (error) {
+    console.log(error.message);
+    res.status(500).send({
+      message:
+        error.message || "Some error occurred while Fetching the Finish details."
+    });
+  }
+};
+
 export default {
   create,
+  getFinishDetails,
 }

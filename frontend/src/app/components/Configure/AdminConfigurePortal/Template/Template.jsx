@@ -38,7 +38,7 @@ const Template = () => {
     requestVideo: false,
     requestCookies: false,
   });
-  const { isLoggedIn } = useSelector(state => state.auth);
+  const { isLoggedInAdmin } = useSelector(state => state.auth);
   const { prevTemplates } = useSelector(state => state.template);
   const classes = useStyles();
   const dispatch = useDispatch();
@@ -127,7 +127,7 @@ const Template = () => {
     return menuItems;
   }
 
-  if (!isLoggedIn) {
+  if (!isLoggedInAdmin) {
     return <Redirect to="/admin" />;
   }
 

@@ -57,7 +57,7 @@ function a11yProps(index) {
 
 const Configure = () => {
   const [value, setValue] = React.useState(0);
-  const { isLoggedIn } = useSelector(state => state.auth);
+  const { isLoggedInAdmin } = useSelector(state => state.auth);
   const { _id: templateId } = useSelector(state => state.template);
   const classes = useStyles();
   const dispatch = useDispatch();
@@ -67,7 +67,7 @@ const Configure = () => {
   };
 
 
-  if (!isLoggedIn) {
+  if (!isLoggedInAdmin) {
     return <Redirect to="/admin" />;
   }
 

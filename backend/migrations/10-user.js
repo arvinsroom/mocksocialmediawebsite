@@ -39,7 +39,7 @@ async function up(queryInterface, DataTypes) {
       type: DataTypes.DATE(3),
     }
   });
-  // await queryInterface.addIndex('User', ['templateId', 'qualtricsId']);
+  await queryInterface.addIndex('User', ['templateId']);
 }
 
 module.exports = {

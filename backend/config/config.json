@@ -19,5 +19,6 @@
       "password": "testtest"
     }
   ],
-  "secret": "some-secret-key"
+  "secret": "some-secret-key",
+  "secretUser": "some-secret-user-key"
 }

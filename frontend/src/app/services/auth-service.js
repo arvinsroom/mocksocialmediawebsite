@@ -7,12 +7,12 @@ export const login = (username, password) => {
   })
     .then(response => {
       if (response.data.accessToken) {
-        localStorage.setItem("user", JSON.stringify(response.data));
+        localStorage.setItem("admin", JSON.stringify(response.data));
       }
       return response.data;
     });
 }
 
 export const logout = () => {
-  localStorage.removeItem("user");
+  localStorage.removeItem("admin");
 };

@@ -1,6 +1,8 @@
 import page from './create-page';
 import bulkQuestions from './bulk-create-questions';
 import db from "../clients/database-client";
+const Question = db.Question;
+const McqOption = db.McqOption;
 
 const create = async (req, res, next) => {
   const { templateId, type, pageQuestionArr } = req.body;
@@ -61,7 +63,66 @@ const create = async (req, res, next) => {
   }
 };
 
+const fetchQ = async (pageId) => {
+  try {
+    const allQuestions = await Question.findAll({
+      where: {
+        pageId
+      },
+      include: [
+        {
+          model: McqOption,
+          as: 'mcqOption',
+          attribute: ['optionText', '_id']
+        }
+      ]
+    })
+    return allQuestions;
+  } catch (error) {
+    throw error;
+  }
+}
+
+// user route
+const fetchAllQuestions = async (req, res, next) => {
+  // fetch template _id from params
+  const pageId = req.params.pageId;
+  const type = req.params.type;
+
+  if (!pageId) {
+    res.status(400).send({
+      message: "Invalid Page Id!"
+    });
+    return;
+  }
+  if (!type) {
+    res.status(400).send({
+      message: "Invalid Page Type!"
+    });
+    return;
+  }
+
+  // for open text,
+  // 1) fetch question object using page Id from question table
+  // let transaction;
+  try {
+    // transaction = await db.sequelize.transaction();
+    const result = await fetchQ(pageId);
+    // await transaction.commit();
+    res.send({
+      result
+    });
+  } catch (error) {
+    console.log(error.message);
+    // if (transaction) await transaction.rollback();
+    res.status(500).send({
+      message: "Some error occurred while fetching questions."
+    });
+  }
+};
+
 
 export default {
   create,
+  fetchAllQuestions,
 }

@@ -35,9 +35,28 @@ const findOne = (req, res) => {
       });
     });
 };
-  
+
+
+// get all pages (flow) data using template Id
+const findAllPages = async (templateId) => {
+  try {
+    const pages = await Page.findAll({
+      where: {
+        templateId
+      },
+      order: [
+        ['order', 'ASC']
+      ]
+    });
+    return pages;
+  } catch (error) {
+    throw error;
+  }
+};
+
 
 export default {
   findOne,
   pageCreate,
+  findAllPages
 }

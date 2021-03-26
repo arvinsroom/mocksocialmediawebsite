@@ -4,9 +4,9 @@ import { Redirect } from 'react-router-dom';
 import { useSelector } from "react-redux";
 
 const General = () => {
-  const { isLoggedIn } = useSelector(state => state.auth);
+  const { isLoggedInAdmin } = useSelector(state => state.auth);
 
-  if (!isLoggedIn) {
+  if (!isLoggedInAdmin) {
     return <Redirect to="/admin" />;
   }
 

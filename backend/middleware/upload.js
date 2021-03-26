@@ -7,4 +7,14 @@ const filter = (req, file, cb) => {
   }
 };
 
+const filterSingleImage = (req, file, cb) => {
+  if (file.mimetype.startsWith("image")) {
+    cb(null, true);
+  } else {
+    cb("Please upload only a image.", false);
+  }
+};
+
+export const uploadImage = multer({ fileFilter: filterSingleImage });
+
 export const uploadFiles = multer({ fileFilter: filter });

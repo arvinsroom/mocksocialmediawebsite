@@ -3,7 +3,8 @@ export default (sequelize, DataTypes) => {
     _id: {
       allowNull: false,
       primaryKey: true,
-      type: DataTypes.UUID
+      type: DataTypes.UUID,
+      defaultValue: DataTypes.UUIDV4 // create a default UUIDV4 for each record
     },
     userId: {
       allowNull: false,
@@ -29,17 +30,20 @@ export default (sequelize, DataTypes) => {
         key: '_id',
         model: 'McqOption'
       },
-      type: DataTypes.UUID
+      type: DataTypes.UUID,
+      defaultValue: null
     },
     // against a userId and a questionId we should either have a simgle opentextAnswerText or
     // multiple or single mcqOptionId's 
     opentextAnswerText: {
       allowNull: true,
-      type: DataTypes.TEXT
+      type: DataTypes.TEXT,
+      defaultValue: null
     }
   }, {
 		freezeTableName: true, // model name equal to table name
     timestamps: false, // enable timestamps
 	});
+
   return UserAnswer;
 }
