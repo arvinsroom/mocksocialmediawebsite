@@ -26,7 +26,7 @@ async function up(queryInterface, DataTypes) {
       type: DataTypes.UUID
     },
   });
-  // await queryInterface.addIndex('UserRegister', ['userId', 'username']);
+  await queryInterface.addIndex('UserRegister', ['userId']);
 }
 
 module.exports = {

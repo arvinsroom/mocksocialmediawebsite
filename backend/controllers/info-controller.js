@@ -63,6 +63,39 @@ const create = async (req, res, next) => {
   }
 };
 
+const getInfoDetails = async (req, res, next) => {
+  try {
+    // fetch template _id from params
+    const pageId = req.params.pageId;
+    if (!pageId) {
+      res.status(400).send({
+        message: "Invalid Page Id!"
+      });
+      return;
+    }
+
+    const data = await Info.findOne({
+      where: {
+        pageId: pageId
+      },
+      attributes: ['richText']
+    });
+
+    res.send({
+      data: data,
+    });
+
+  } catch (error) {
+    console.log(error.message);
+    res.status(500).send({
+      message:
+        error.message || "Some error occurred while Fetching the Info page details."
+    });
+  }
+};
+
+
 export default {
   create,
+  getInfoDetails
 }

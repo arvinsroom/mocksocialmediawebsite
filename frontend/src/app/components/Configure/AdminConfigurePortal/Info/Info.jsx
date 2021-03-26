@@ -15,7 +15,7 @@ const InfoPage = () => {
   const [richData, setRichData] = useState();
   const [pageName, setPageName] = useState("");
 
-  const { isLoggedIn } = useSelector(state => state.auth);
+  const { isLoggedInAdmin } = useSelector(state => state.auth);
   const { _id: templateId } = useSelector(state => state.template);
   const classes = useStyles();
   const editor = useRef(null);
@@ -66,7 +66,7 @@ const InfoPage = () => {
     editor.current?.save();
   };
 
-  if (!isLoggedIn) {
+  if (!isLoggedInAdmin) {
     return <Redirect to="/admin" />;
   }
 

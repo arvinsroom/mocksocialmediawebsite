@@ -6,9 +6,12 @@ import {
   umzugDown
 } from './migrations';
 import db from "./clients/database-client";
+
+import auth from './routes/auth-routes';
+import authUser from './routes/user-auth-routes';
+
 import template from './routes/template-routes';
 import register from './routes/register-routes';
-import auth from './routes/auth-routes';
 import finish from './routes/finish-routes';
 import info from './routes/info-routes';
 import question from './routes/question-routes';
@@ -16,8 +19,16 @@ import media from './routes/media-routes';
 import language from './routes/language-routes';
 import page from './routes/page-routes';
 import upload from './routes/upload-routes';
+import userRegister from './routes/user-register-routes';
+import userFinish from './routes/user-finish-routes';
+import userInfo from './routes/user-info-routes';
+
+import userQuesion from './routes/user-question-routes';
+import userAnswer from './routes/user-answer-routes';
 
 const { verifyToken, isAdmin } = require("./middleware/authJwt");
+const { verifyUserToken, isUser } = require("./middleware//userAuthJwt");
+
 // get the admin model, we can perform operations on this
 const Admin = db.Admin;
 var bcrypt = require("bcryptjs");
@@ -91,6 +102,7 @@ try {
 
   // we do not need middleware here as admin is trying to log in
   app.use('/api/admin/login', auth);
+  app.use('/api/user/login', authUser);
 
   // add middleware to our application
   app.use('/api/template', [verifyToken, isAdmin], template);
@@ -102,6 +114,13 @@ try {
   app.use('/api/language', [verifyToken, isAdmin], language);
   app.use('/api/page', [verifyToken, isAdmin], page);
   app.use('/api/upload', [verifyToken, isAdmin], upload);
+
+  app.use('/api/user/questions', [verifyUserToken, isUser], userQuesion);
+  app.use('/api/user/answer', [verifyUserToken, isUser], userAnswer);
+  app.use('/api/user/register', [verifyUserToken, isUser], userRegister);
+  app.use('/api/user/finish', [verifyUserToken, isUser], userFinish);
+  app.use('/api/user/info', [verifyUserToken, isUser], userInfo);
+  
 
   // set port, listen for requests
   const PORT = process.env.PORT || 8080;

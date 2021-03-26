@@ -14,7 +14,7 @@ const OpenText = () => {
   const [OpenTextArr, setOpenTextArr] = useState([]);
 
 	const dispatch = useDispatch();
-  const { isLoggedIn } = useSelector(state => state.auth);
+  const { isLoggedInAdmin } = useSelector(state => state.auth);
   const classes = useStyles();
   const { _id: templateId } = useSelector(state => state.template);
 
@@ -118,7 +118,7 @@ const OpenText = () => {
     await setOpenTextArr(newOpenTextArr);
   }
 
-  if (!isLoggedIn) {
+  if (!isLoggedInAdmin) {
     return <Redirect to="/admin" />;
   }
 

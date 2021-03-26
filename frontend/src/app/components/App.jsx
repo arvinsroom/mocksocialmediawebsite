@@ -1,5 +1,6 @@
 import Admin from './Admin/Admin';
-import Home from './User/Home/Home';
+import UserLogin from './UserLogin/UserLogin';
+import UserResponse from './UserResponse/UserResponse';
 import Configure from './Configure/Configure';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import SuccessSnackbar from './Snackbar';
@@ -16,8 +17,11 @@ function App() {
           <Route exact path="/admin">
             <Admin />
           </Route>
+          <Route exact path="/user-response">
+            <UserResponse />
+          </Route>
           <Route exact path="/">
-            <Home />
+            <UserLogin />
           </Route>
         </Switch>
       </BrowserRouter>

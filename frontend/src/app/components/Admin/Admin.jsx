@@ -12,12 +12,12 @@ const Admin = () => {
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const classes = useStyles();
-  const { isLoggedIn } = useSelector(state => state.auth);
+  const { isLoggedInAdmin } = useSelector(state => state.auth);
   const dispatch = useDispatch();
 
   useEffect(() => {
-    if (isLoggedIn) history.push("/admin/configure");
-  }, [history, isLoggedIn]);
+    if (isLoggedInAdmin) history.push("/admin/configure");
+  }, [history, isLoggedInAdmin]);
 
   const handleSubmit = async e => {
     e.preventDefault();

@@ -26,7 +26,6 @@ const uploadSingleFile = async (req, res, next) => {
     const adminPostImageData = {
       thumbnail: req.file.buffer
     };
-    console.log(adminPostImageData.thumbnail);
     
     // now create a entry for register
     const data = await AdminPost.update(adminPostImageData, {

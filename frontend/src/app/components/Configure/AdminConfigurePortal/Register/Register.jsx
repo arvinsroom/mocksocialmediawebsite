@@ -15,7 +15,7 @@ const Register = () => {
   const [pageName, setPageName] = useState("");
 
 	const dispatch = useDispatch();
-  const { isLoggedIn } = useSelector(state => state.auth);
+  const { isLoggedInAdmin } = useSelector(state => state.auth);
   const classes = useStyles();
   const { _id: templateId } = useSelector(state => state.template);
 
@@ -61,7 +61,7 @@ const Register = () => {
     }
   };
 
-  if (!isLoggedIn) {
+  if (!isLoggedInAdmin) {
     return <Redirect to="/admin" />;
   }
 

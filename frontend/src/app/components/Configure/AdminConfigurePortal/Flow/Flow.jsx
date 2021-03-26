@@ -17,10 +17,10 @@ import { TEMPLATE, FLOW_PAGE } from '../../../../constants';
 
 const Flow = () => {
   const [pages, setPages] = useState("");
-  const [pageOrderData, setPageOrderData] = useState([]);
+  const [pageOrderData, setPageOrderData] = useState(null);
   const dispatch = useDispatch();
 
-  const { isLoggedIn } = useSelector(state => state.auth);
+  const { isLoggedInAdmin } = useSelector(state => state.auth);
   const classes = useStyles();
   const { _id: templateId } = useSelector(state => state.template);
 
@@ -32,27 +32,18 @@ const Flow = () => {
   useEffect(() => {
     fetchAllPages();
   }, [])
-  
-  const resetValues = () => {
-    setPageOrderData([]);
-  };
 
-  const handleSubmit = async e => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (!templateId) {
       dispatch(showErrorSnackbar(TEMPLATE.SELECT_OR_CREATE_TEMPLATE));
     }
     try {
-      if (pageOrderData && pageOrderData.length > 0) {
-        const { data } = await update({ pageObj: pageOrderData });
-        if (data._id) {
-          dispatch(showSuccessSnackbar(FLOW_PAGE.FLOW_PAGE_SUCCESS));
-          resetValues();
-          // fetch updated pages
-          await fetchAllPages();
-        }
-      }
+      await update({ pageObj: pageOrderData });
+      await setPageOrderData(null);
+      await fetchAllPages();
+      dispatch(showSuccessSnackbar(FLOW_PAGE.FLOW_PAGE_SUCCESS));    
     } catch (error) {
       const resMessage =
         (error.response &&
@@ -64,15 +55,17 @@ const Flow = () => {
     }
   };
 
-  const handleChange = (pageId, e) => {
+  const handleChange = async (pageId, e) => {
+    e.preventDefault();
+
     const newObj = {
       ...pageOrderData,
+      [pageId]: e.target.value
     };
-    newObj[pageId] = e.target.value;
-    setPageOrderData(newObj);
+    await setPageOrderData(newObj);
   };
 
-  if (!isLoggedIn) {
+  if (!isLoggedInAdmin) {
     return <Redirect to="/admin" />;
   }
 
@@ -128,6 +121,7 @@ const Flow = () => {
       variant="contained"
       color="primary"
       fullWidth
+      disabled={!pageOrderData}
       className={classes.submit}
     >
       Save

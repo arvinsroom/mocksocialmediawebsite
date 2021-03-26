@@ -24,7 +24,7 @@ export default (sequelize, DataTypes) => {
 	});
 
   McqOption.associate = (models) => {
-    McqOption.hasOne(models.Question, {
+    McqOption.belongsTo(models.Question, {
       as: 'question',
       foreignKey: 'questionId'
     })

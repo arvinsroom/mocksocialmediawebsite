@@ -1,9 +1,10 @@
 export default (sequelize, DataTypes) => {
-	const User = sequelize.define("FinishScreen", {
+	const User = sequelize.define("User", {
     _id: {
       allowNull: false,
       primaryKey: true,
-      type: DataTypes.UUID
+      type: DataTypes.UUID,
+      defaultValue: DataTypes.UUIDV4 // create a default UUIDV4 for each record
     },
     templateId: {
       allowNull: false,
