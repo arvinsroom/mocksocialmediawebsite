@@ -8,7 +8,7 @@ async function up(queryInterface, DataTypes) {
     _id: {
       allowNull: false,
       primaryKey: true,
-      type: DataTypes.INTEGER
+      type: DataTypes.UUID
     },
     userId: {
       allowNull: false,
@@ -18,11 +18,19 @@ async function up(queryInterface, DataTypes) {
       },
       type: DataTypes.UUID
     },
-    parentPostId: {
-      allowNull: false,
+    parentUserPostId: {
+      allowNull: true,
       references: {
         key: '_id',
         model: 'UserPost'
+      },
+      type: DataTypes.UUID
+    },
+    parentAdminPostId: {
+      allowNull: true,
+      references: {
+        key: '_id',
+        model: 'AdminPost'
       },
       type: DataTypes.INTEGER
     },
@@ -31,7 +39,7 @@ async function up(queryInterface, DataTypes) {
       type: DataTypes.TEXT
     },
   });
-  // await queryInterface.addIndex('UserPostShare', ['userId', 'parentPostId']);
+  await queryInterface.addIndex('UserPostShare', ['userId']);
 }
 
 module.exports = {

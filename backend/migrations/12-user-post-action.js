@@ -7,7 +7,7 @@ async function up(queryInterface, DataTypes) {
     _id: {
       allowNull: false,
       primaryKey: true,
-      type: DataTypes.INTEGER
+      type: DataTypes.UUID
     },
     userId: {
       allowNull: false,
@@ -18,10 +18,18 @@ async function up(queryInterface, DataTypes) {
       type: DataTypes.UUID
     },
     userPostId: {
-      allowNull: false,
+      allowNull: true,
       references: {
         key: '_id',
         model: 'UserPost'
+      },
+      type: DataTypes.UUID
+    },
+    adminPostId: {
+      allowNull: true,
+      references: {
+        key: '_id',
+        model: 'AdminPost'
       },
       type: DataTypes.INTEGER
     },
@@ -38,7 +46,7 @@ async function up(queryInterface, DataTypes) {
       type: DataTypes.TEXT
     },
   });
-  // await queryInterface.addIndex('UserPostAction', ['userId', 'userPostId']);
+  await queryInterface.addIndex('UserPostAction', ['userId']);
 }
 
 module.exports = {

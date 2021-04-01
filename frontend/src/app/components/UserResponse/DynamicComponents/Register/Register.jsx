@@ -5,6 +5,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { Redirect } from 'react-router-dom';
 import useStyles from '../../../style';
 import { showErrorSnackbar, showSuccessSnackbar } from '../../../../actions/snackbar';
+import "./Register.css";
 
 const Register = ({ data }) => {
 
@@ -86,12 +87,17 @@ const Register = ({ data }) => {
    <>
     <form onSubmit={handleSubmit} className={classes.form}>
       {requestState && requestState.profilePic ? 
-      <>
-      <Typography component="h6">
-        Please upload your profile pic: 
-      </Typography>
-      <Input
+      <div className="registerTop">
+        <Typography component="h6" className={classes.title}>
+          Please upload your profile pic below
+        </Typography>
+        <Avatar 
+          src={avatar}
+          className="registerTopAvatar"
+        />
+        <Input
           type="file"
+          className="registerTopInput"
           inputProps={{ multiple: false }}
           accept="image/*"
           name="profilePic"
@@ -99,20 +105,13 @@ const Register = ({ data }) => {
           onChange={onImageChange}
           required
         />
-      <Avatar 
-        src={avatar}
-        style={{
-          margin: "10px",
-          width: "100px",
-          height: "100px",
-        }}
-      />
-      </>
+      </div>
       : null}
 
       {requestState && requestState.username ? 
         <TextField
         className={classes.marginBottom}
+        variant="outlined"
         margin="normal"
         required
         fullWidth

@@ -10,7 +10,7 @@ export const create = (data) => {
 
 // USER Routes
 // fetch what needs to be rendered on finish page
-// this should be the last page rendere
+// this should be the last page rendered
 export const getUserFinishDetails = (pageId) => {
   return http.get(`/user/finish/${pageId}`, {
     headers: userAuthHeader()

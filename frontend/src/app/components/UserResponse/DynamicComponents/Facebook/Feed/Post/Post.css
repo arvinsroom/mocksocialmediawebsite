@@ -1,0 +1,153 @@
+.post {
+  width: 100%;
+  justify-content: center;
+  margin-top: 15px;
+  border-radius: 8px;
+  background-color: white;
+  box-shadow: 0px 5px 7px -7px rgba(0,0,0, 0.75);
+}
+
+/* .postImage > img {
+  width: 100%;
+} */
+
+/* .postImage > video {
+  width: 100%;
+} */
+
+.postTopAvatar {
+  margin-right: 10px
+}
+
+.postTopInfo > h3 {
+  font-size: small;
+}
+
+.postTopInfo > p {
+  font-size: x-small;
+  color: gray;
+}
+/* .postBottom {
+  margin-top: 10px;
+  margin-bottom: 10px;
+  padding: 15px 25px;
+} */
+
+.postTop {
+  display: flex;
+  position: relative;
+  align-items: center;
+  padding-left: 15px;
+}
+
+.postOptions {
+  padding-top: 10px;
+  border-top: 1px solid lightgray;
+  display: flex;
+  justify-content: space-evenly;
+  font-size: medium;
+  color: gray;
+  cursor: pointer;
+  padding: 5px;
+}
+
+.postOption {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 5px;
+  flex: 1;
+}
+
+.postOption > p {
+  margin-left: 10px;
+}
+
+.postOption:hover {
+  background-color: #eff2f5;
+  border-radius: 10px;
+}
+
+
+.og-image > img {
+  width: 100%;
+}
+
+/* .link-preview { */
+  /* display: table-caption; */             
+  /* make text wrap under image  */
+  /* text-decoration: none;
+} */
+
+/* .descriptions {
+  background-color: #F2F3F5;
+  padding: 5px;
+}
+
+a.link-preview .link-area .og-title {
+  font-size: medium;
+  padding-bottom: 15px;
+}
+
+.og-title {
+  font-family: Helvetica, sans-serif;
+  color: #828282;
+}
+
+.og-description {
+  text-overflow: ellipsis;
+  font-family: Helvetica, sans-serif;
+  color: black
+} */
+
+.createComment {
+  display: flex;
+  border-bottom: 1px solid #eff2f5;
+  padding: 15px;
+}
+
+.createComment > form {
+  flex: 1;
+  display: flex;
+}
+
+.createComment > form > input {
+  outline-width: 0;
+  border: none;
+  padding: 5px 20px;
+  margin: 0 10px;
+  border-radius: 999px;
+  background-color: #eff2f5;
+}
+
+.createCommentInputText {
+  flex: 1;
+}
+
+.showComment {
+  border-bottom: 1px solid #eff2f5;
+  padding: 10px;
+  display: flex;
+  margin-left: 5%;
+}
+
+.displayIndividualComment {
+  outline-width: 0;
+  border: none;
+  padding: 5px 20px;
+  margin: 0 10px;
+  border-radius: 999px;
+  background-color: #eff2f5;
+  flex: 1
+}
+
+.postComment {
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 5px;
+  border: none;
+  color: grey;
+  cursor: pointer;
+}

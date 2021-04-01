@@ -23,10 +23,10 @@ export default (sequelize, DataTypes) => {
       defaultValue: false,
       type: DataTypes.BOOLEAN,
     },
-    type: {
-      allowNull: false,
-      type: DataTypes.ENUM('FACEBOOK') // 'REDDIT', 'TWITTER', 'INSTAGRAM'
-    },
+    // type: {
+    //   allowNull: false,
+    //   type: DataTypes.ENUM('FACEBOOK') // 'REDDIT', 'TWITTER', 'INSTAGRAM'
+    // },
     videoPermission: {
       allowNull: false,
       defaultValue: false,

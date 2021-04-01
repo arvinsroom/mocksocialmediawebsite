@@ -6,6 +6,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { Redirect } from 'react-router-dom';
 import useStyles from '../../../style';
 import { showErrorSnackbar, showSuccessSnackbar } from '../../../../actions/snackbar';
+import "./Opentext.css";
 
 const Opentext = ({ data }) => {
 
@@ -65,19 +66,22 @@ const Opentext = ({ data }) => {
     <>
       <form onSubmit={handleSubmit} className={classes.form}>
       {OpentextQuestions && OpentextQuestions.length > 0 ? OpentextQuestions.map((question, index) => (
-          <Card key={index} className={classes.rootText}>
+          <Card key={index} className="eachQuestion">
             <TextField
               className={classes.center}
               id="standard-disabled"
               disabled={true}
-              label={"Q" + (index+1).toString()}
-              defaultValue={question.questionText}
+              defaultValue={question.required ? question.questionText + " (Required)" : question.questionText + " (Not Required)"}
             />
             <TextField
               className={classes.center}
               value={opentextResponse ? opentextResponse[question._id] : ''}
               label="Please provide your answer here"
               onChange={(e) => handleChange(question._id, e)}
+              variant="outlined"
+              margin="normal"
+              fullWidth
+              autoFocus
             />
           </Card>
       )) : null}

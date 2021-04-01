@@ -1,0 +1,24 @@
+.registerTop {
+  margin-left: 20%;
+  margin-right: 20%;
+}
+
+.registerTop > h6 {
+  text-align: center;
+}
+
+.registerTopInput {
+  display: block !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+  width: 50% !important; 
+}
+
+.registerTopAvatar {
+  margin: 10px !important;
+  width: 100px !important;
+  height: 100px !important;
+  display: flex !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+}

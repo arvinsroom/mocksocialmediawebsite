@@ -1,0 +1,26 @@
+.link-preview {
+  /* display: table-caption; */             
+  /* make text wrap under image  */
+  text-decoration: none;
+}
+
+.descriptions {
+  background-color: #F2F3F5;
+  padding: 5px;
+}
+
+a.link-preview .link-area .og-title {
+  font-size: medium;
+  padding-bottom: 15px;
+}
+
+.og-title {
+  font-family: Helvetica, sans-serif;
+  color: #828282;
+}
+
+.og-description {
+  text-overflow: ellipsis;
+  font-family: Helvetica, sans-serif;
+  color: black
+}

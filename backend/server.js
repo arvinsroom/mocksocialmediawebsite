@@ -22,6 +22,8 @@ import upload from './routes/upload-routes';
 import userRegister from './routes/user-register-routes';
 import userFinish from './routes/user-finish-routes';
 import userInfo from './routes/user-info-routes';
+import userMedia from './routes/user-media-routes';
+import userFacebook from './routes/facebook-routes';
 
 import userQuesion from './routes/user-question-routes';
 import userAnswer from './routes/user-answer-routes';
@@ -120,10 +122,11 @@ try {
   app.use('/api/user/register', [verifyUserToken, isUser], userRegister);
   app.use('/api/user/finish', [verifyUserToken, isUser], userFinish);
   app.use('/api/user/info', [verifyUserToken, isUser], userInfo);
-  
+  app.use('/api/user/media', [verifyUserToken, isUser], userMedia);
+  app.use('/api/user/facebook', [verifyUserToken, isUser], userFacebook);
 
   // set port, listen for requests
-  const PORT = process.env.PORT || 8080;
+  const PORT = process.env.PORT || 8082;
   app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}.`);
   });

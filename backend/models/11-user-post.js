@@ -3,7 +3,8 @@ export default (sequelize, DataTypes) => {
     _id: {
       allowNull: false,
       primaryKey: true,
-      type: DataTypes.INTEGER
+      type: DataTypes.UUID,
+      defaultValue: DataTypes.UUIDV4 // create a default UUIDV4 for each record
     },
     type: {
       allowNull: true,
@@ -25,10 +26,6 @@ export default (sequelize, DataTypes) => {
       allowNull: false,
       type: DataTypes.STRING(1024)
     },
-    thumbnail: {
-      allowNull: false,
-      type: DataTypes.BLOB('long')
-    },
     linkPreview: {
       allowNull: false,
       type: DataTypes.TEXT
@@ -36,10 +33,6 @@ export default (sequelize, DataTypes) => {
     postMessage: {
       allowNull: false,
       type: DataTypes.TEXT
-    },
-    attachedMedia: {
-      allowNull: false,
-      type: DataTypes.BLOB('long')
     },
     misinformation: {
       allowNull: false,
@@ -49,6 +42,23 @@ export default (sequelize, DataTypes) => {
 		freezeTableName: true, // model name equal to table name
     timestamps: false, // enable timestamps
 	});
+
+  UserPost.associate = (models) => {
+    UserPost.belongsTo(models.User, {
+      as: 'user',
+      foreignKey: 'userId'
+    })
+  };
+
+  // UserPost.associate = (models) => {
+  //   UserPost.hasMany(models.Media, {
+  //     as: 'attachedMediaUser',
+  //     foreignKey: {
+  //       name: 'userPostId',
+  //       allowNull: true
+  //     }
+  //   })
+  // };
 
   return UserPost;
 }

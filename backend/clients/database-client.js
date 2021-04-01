@@ -14,6 +14,7 @@ import UserPostAction from '../models/12-user-post-action';
 import UserPostShare from '../models/13-user-post-share';
 import UserRegister from '../models/14-user-register';
 import UserAnswer from '../models/15-user-answer';
+import Media from '../models/16-media';
 
 import Sequelize from 'sequelize';
 
@@ -37,6 +38,7 @@ const sequelize = new Sequelize({
   dialect: config.dialect,
   // timezone: '-05:00', // utc, but let the original time be in Universal Coordinated Time
   // logging: (...msg) => console.log(msg),
+  // logging: console.log
 });
 
 const testConnection = async () => {
@@ -68,6 +70,7 @@ const UserPostActionModel = UserPostAction(sequelize, Sequelize);
 const UserPostShareModel = UserPostShare(sequelize, Sequelize);
 const UserRegisterModel = UserRegister(sequelize, Sequelize);
 const UserAnswerModel = UserAnswer(sequelize, Sequelize);
+const MediaModel = Media(sequelize, Sequelize);
 
 db[AdminModel.name] = AdminModel;
 db[TemplateModel.name] = TemplateModel;
@@ -85,6 +88,7 @@ db[UserPostActionModel.name] = UserPostActionModel;
 db[UserPostShareModel.name] = UserPostShareModel;
 db[UserRegisterModel.name] = UserRegisterModel;
 db[UserAnswerModel.name] = UserAnswerModel;
+db[MediaModel.name] = MediaModel;
 
 Object.keys(db).forEach((modelName) => {
   if (db[modelName].associate) {

@@ -25,10 +25,6 @@ export default (sequelize, DataTypes) => {
       allowNull: true,
       type: DataTypes.STRING(1024)
     },
-    thumbnail: {
-      allowNull: true,
-      type: DataTypes.BLOB('long')
-    },
     linkPreview: {
       allowNull: true,
       type: DataTypes.TEXT
@@ -36,10 +32,6 @@ export default (sequelize, DataTypes) => {
     postMessage: {
       allowNull: true,
       type: DataTypes.TEXT
-    },
-    attachedMedia: {
-      allowNull: true,
-      type: DataTypes.BLOB('long')
     },
     isFake: {
       allowNull: true,
@@ -69,10 +61,21 @@ export default (sequelize, DataTypes) => {
       foreignKey: 'templateId'
     })
   };
+
   AdminPost.associate = (models) => {
     AdminPost.belongsTo(models.Page, {
       as: 'page',
       foreignKey: 'pageId'
+    })
+  };
+
+  AdminPost.associate = (models) => {
+    AdminPost.hasMany(models.Media, {
+      as: 'attachedMediaAdmin',
+      foreignKey: {
+        name: 'adminPostId',
+        allowNull: true
+      }
     })
   };
 

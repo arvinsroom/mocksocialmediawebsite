@@ -3,7 +3,7 @@ import authHeader from "./auth-header";
 import userAuthHeader from "./user-auth-header";
 
 export const create = (data) => {
-  return http.post("/register", `data`, {
+  return http.post("/register", data, {
     headers: authHeader()
   });
 }
