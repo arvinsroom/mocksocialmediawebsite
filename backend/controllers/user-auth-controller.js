@@ -20,7 +20,8 @@ export const signInUser = async (req, res, next) => {
     const templateExist = await Template.findOne({
       where: {
         _id: req.body.templateId
-      }
+      },
+      attributes: ['randomPosts', 'videoPermission', 'audioPermission', 'cookiesPermission', 'qualtricsId']
     });
     if (!templateExist) {
       return res.status(404).send({ message: "No template exist with provided ID." });
@@ -41,6 +42,19 @@ export const signInUser = async (req, res, next) => {
       },
       attributes: ['name', 'platform', 'translations']
     });
+    // if no active languages provided fetch throw error
+    if (!translations) {
+      return res.status(404).send({ message: "Language data has not been configured yet." });
+    }
+    // if active exist fetch a fallback template for that platform with English language data
+    const defaultTranslations = await Language.findOne({
+      where: {
+        templateId: templateId,
+        name: 'ENGLISH',
+        platform: translations.platform
+      },
+      attributes: ['name', 'platform', 'translations']
+    });
     // fetch all flow configurations
     const flowConfig = await page.findAllPages(templateId);
 
@@ -53,12 +67,18 @@ export const signInUser = async (req, res, next) => {
 
     res.status(200).send({
       accessToken: token,
-      translations: { 
+      translations: {
         name: translations.name,
         platform: translations.platform,
-        translations: JSON.parse(translations.translations)
+        translations: JSON.parse(translations.translations),
       },
-      flow: flowConfig
+      defaultTranslations: {
+        name: defaultTranslations.name,
+        platform: defaultTranslations.platform,
+        translations: JSON.parse(defaultTranslations.translations),
+      },
+      flow: flowConfig,
+      template: templateExist
     });
 
   } catch (error) {

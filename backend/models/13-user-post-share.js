@@ -4,7 +4,8 @@ export default (sequelize, DataTypes) => {
     _id: {
       allowNull: false,
       primaryKey: true,
-      type: DataTypes.INTEGER
+      type: DataTypes.UUID,
+      defaultValue: DataTypes.UUIDV4 // create a default UUIDV4 for each record
     },
     userId: {
       allowNull: false,
@@ -14,11 +15,19 @@ export default (sequelize, DataTypes) => {
       },
       type: DataTypes.UUID
     },
-    parentPostId: {
-      allowNull: false,
+    parentUserPostId: {
+      allowNull: true,
       references: {
         key: '_id',
         model: 'UserPost'
+      },
+      type: DataTypes.UUID
+    },
+    parentAdminPostId: {
+      allowNull: true,
+      references: {
+        key: '_id',
+        model: 'AdminPost'
       },
       type: DataTypes.INTEGER
     },

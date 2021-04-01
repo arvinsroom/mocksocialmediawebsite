@@ -30,10 +30,6 @@ async function up(queryInterface, DataTypes) {
       allowNull: true,
       type: DataTypes.STRING(1024)
     },
-    thumbnail: {
-      allowNull: true,
-      type: DataTypes.BLOB('long')
-    },
     linkPreview: {
       allowNull: true,
       type: DataTypes.TEXT
@@ -41,10 +37,6 @@ async function up(queryInterface, DataTypes) {
     postMessage: {
       allowNull: true,
       type: DataTypes.TEXT
-    },
-    attachedMedia: {
-      allowNull: true,
-      type: DataTypes.BLOB('long')
     },
     isFake: {
       allowNull: true,

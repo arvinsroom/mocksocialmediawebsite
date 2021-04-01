@@ -1,15 +1,17 @@
 import { useState } from 'react';
 import * as XLSX from 'xlsx';
-import { Button, Typography, Input, Divider, TextField } from '@material-ui/core';
+import { Button, Typography, Input, Divider, TextField, FormControl, MenuItem, InputLabel, Select } from '@material-ui/core';
 import * as media from "../../../../services/mediapost-service";
 import { useSelector, useDispatch } from "react-redux";
 import useStyles from '../../../style';
 import { showErrorSnackbar, showSuccessSnackbar } from '../../../../actions/snackbar';
 import { GENERAL_PAGE, TEMPLATE } from '../../../../constants';
+import { TEMPLATE_TYPES } from '../../../../constants';
 
 const MediaPosts = () => {
   const [mediaJSON, setMediaJSON] = useState(null);
   const [pageName, setPageName] = useState("");
+  const [templateType, setTemplateType] = useState("");
 
   const classes = useStyles();
   const { _id: templateId } = useSelector(state => state.template);
@@ -48,6 +50,7 @@ const MediaPosts = () => {
 
   const resetValues = () => {
     setPageName("");
+    setTemplateType("");
     setMediaJSON(null);
   };
 
@@ -58,7 +61,7 @@ const MediaPosts = () => {
     }
     try {
       if (mediaJSON && pageName) {
-        await media.create({ name: pageName, type: 'MEDIA', templateId: templateId, mediaPosts: mediaJSON});
+        await media.create({ name: pageName, type: templateType, templateId: templateId, mediaPosts: mediaJSON});
         dispatch(showSuccessSnackbar(GENERAL_PAGE.MEDIA_SUCCESS));
         resetValues();  
       }
@@ -72,6 +75,18 @@ const MediaPosts = () => {
         dispatch(showErrorSnackbar(resMessage));
     }
   };
+
+  const handleType = (event) => {
+    setTemplateType(event.target.value);
+  };
+
+  const createMenuItems = () => {
+    let menuItems = [];
+    for (let item in TEMPLATE_TYPES) {
+      menuItems.push(<MenuItem value={item} key={item}>{item}</MenuItem>)
+    }
+    return menuItems;
+  }
 
   return (
     <>
@@ -87,6 +102,19 @@ const MediaPosts = () => {
           onChange={({ target }) => setPageName(target.value)}
           autoFocus
         />
+        <FormControl variant="outlined" className={classes.formControl}>
+          <InputLabel id="demo-simple-select-outlined-label">Choose Social Media Template Type</InputLabel>
+          <Select
+            labelId="demo-simple-select-outlined-label"
+            id="demo-simple-select-outlined"
+            className={classes.marginBottom}
+            value={templateType}
+            onChange={handleType}
+            label="Choose Social Media Template Type"
+          >
+            {createMenuItems()}
+          </Select>
+        </FormControl>
         <Typography component="h6">
           Social Media Post Spreadsheet
         </Typography>

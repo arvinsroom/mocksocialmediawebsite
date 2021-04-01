@@ -17,7 +17,7 @@ import { Button,
   FormLabel
 } from '@material-ui/core';
 import { useEffect, useState } from 'react';
-import { TEMPLATE_TYPES } from '../../../../constants';
+// import { TEMPLATE_TYPES } from '../../../../constants';
 import { create } from '../../../../services/template-service';
 import DeleteIcon from '@material-ui/icons/Delete';
 import AddIcon from '@material-ui/icons/Add';
@@ -30,7 +30,7 @@ import { TEMPLATE } from '../../../../constants';
 
 const Template = () => {
   const [templateName, setTemplateName] = useState("");
-  const [templateType, setTemplateType] = useState("");
+  // const [templateType, setTemplateType] = useState("");
   const [randomPosts, setRandomPosts] = useState(false);
   const [requiredQualtricsId, setRequiredQualtricsId] = useState(false);
   const [permissions, setPermissions] = useState({
@@ -55,7 +55,7 @@ const Template = () => {
   // handle this better
   const resetValues = () => {
     setTemplateName("");
-    setTemplateType("");
+    // setTemplateType("");
     setRandomPosts(false);
     setRequiredQualtricsId(false);
     setPermissions({
@@ -70,7 +70,7 @@ const Template = () => {
 
     const template = {
       name: templateName,
-      type: templateType,
+      // type: templateType,
       randomPosts,
       requestAudio: permissions.requestAudio,
       requestVideo: permissions.requestVideo,
@@ -103,9 +103,9 @@ const Template = () => {
     dispatch(showSuccessSnackbar(message))
   };
 
-  const handleChange = (event) => {
-    setTemplateType(event.target.value);
-  };
+  // const handleChange = (event) => {
+  //   setTemplateType(event.target.value);
+  // };
 
   const handleRandomPosts = (e) => {
     setRandomPosts(e.target.checked);
@@ -119,13 +119,13 @@ const Template = () => {
     setPermissions({ ...permissions, [e.target.name]: e.target.checked });
   };
 
-  const createMenuItems = () => {
-    let menuItems = [];
-    for (let item in TEMPLATE_TYPES) {
-      menuItems.push(<MenuItem value={item} key={item}>{item}</MenuItem>)
-    }
-    return menuItems;
-  }
+  // const createMenuItems = () => {
+  //   let menuItems = [];
+  //   for (let item in TEMPLATE_TYPES) {
+  //     menuItems.push(<MenuItem value={item} key={item}>{item}</MenuItem>)
+  //   }
+  //   return menuItems;
+  // }
 
   if (!isLoggedInAdmin) {
     return <Redirect to="/admin" />;
@@ -151,7 +151,7 @@ const Template = () => {
         onChange={({ target }) => setTemplateName(target.value)}
         autoFocus
       />
-      <FormControl variant="outlined" className={classes.formControl}>
+      {/* <FormControl variant="outlined" className={classes.formControl}>
         <InputLabel id="demo-simple-select-outlined-label">Template Type</InputLabel>
         <Select
           labelId="demo-simple-select-outlined-label"
@@ -162,7 +162,7 @@ const Template = () => {
         >
           {createMenuItems()}
         </Select>
-      </FormControl>
+      </FormControl> */}
       <FormControl component="fieldset">
         <FormLabel component="legend" className={classes.paddingTopBottom}>{TEMPLATE.ASK_FOR_PERMISSION}</FormLabel>
       </FormControl>
@@ -240,7 +240,7 @@ const Template = () => {
           <TableRow>
             <TableCell className={classes.body, classes.head} align="center">Template ID</TableCell>
             <TableCell className={classes.body, classes.head} align="center">Template Name</TableCell>
-            <TableCell className={classes.body, classes.head} align="center">Template Type</TableCell>
+            {/* <TableCell className={classes.body, classes.head} align="center">Template Type</TableCell> */}
             <TableCell className={classes.body, classes.head} align="center">Delete</TableCell>
             <TableCell className={classes.body, classes.head} align="center">Set Current Template Id</TableCell>
           </TableRow>
@@ -250,7 +250,7 @@ const Template = () => {
             <TableRow key={row._id}>
               <TableCell align="center">{row._id}</TableCell>
               <TableCell align="center">{row.name}</TableCell>
-              <TableCell align="center">{row.type}</TableCell>
+              {/* <TableCell align="center">{row.type}</TableCell> */}
               <TableCell align="center">
                 <IconButton aria-label="delete template" onClick={() => removeTemplate(row._id)}>
                   <DeleteIcon color="primary" />

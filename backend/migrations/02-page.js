@@ -24,7 +24,8 @@ async function up(queryInterface, DataTypes) {
     },
     type: {
       allowNull: false,
-      type: DataTypes.ENUM('MCQ', 'OPENTEXT', 'INFO', 'REGISTER', 'FINISH', 'MEDIA')
+      type: DataTypes.ENUM('MCQ', 'OPENTEXT', 'INFO', 'REGISTER', 'FINISH', 'FACEBOOK', 'REDDIT', 'TWITTER', 'INSTAGRAM',
+      'YOUTUBE', 'SLACK', 'TIKTOK')
     },
     order: {
       allowNull: true,

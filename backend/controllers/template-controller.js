@@ -16,12 +16,12 @@ const create = async (req, res, next) => {
     });
     return;
   }
-  if (!req.body.type) {
-    res.status(400).send({
-      message: "Template Type is required!"
-    });
-    return;
-  }
+  // if (!req.body.type) {
+  //   res.status(400).send({
+  //     message: "Template Type is required!"
+  //   });
+  //   return;
+  // }
   // form a template object with required information
   const template = {
     name: req.body.name,
@@ -29,7 +29,7 @@ const create = async (req, res, next) => {
     audioPermission: req.body.requestAudio,
     cookiesPermission: req.body.requestCookies,
     randomPosts: req.body.randomPosts,
-    type: req.body.type,
+    // type: req.body.type,
     flow: req.body.flow,
     qualtricsId: req.body.qualtricsId,
     adminId: req.adminId
@@ -71,7 +71,8 @@ const getPrevTemplates = async (req, res, next) => {
       where: {
         adminId: req.adminId
       },
-      attributes: ['_id', 'name', 'type']
+      // attributes: ['_id', 'name', 'type']
+      attributes: ['_id', 'name']
     });
     res.send(data);
   } catch (error) {

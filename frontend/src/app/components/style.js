@@ -24,6 +24,7 @@ const useStyles = makeStyles((theme) => ({
   },
   title: {
     flexGrow: 1,
+    fontFamily: '"Roboto", "Helvetica", "Arial", sans-serif'
   },
   root: {
     flexGrow: 1,

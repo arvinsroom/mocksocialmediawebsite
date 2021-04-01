@@ -7,7 +7,7 @@ async function up(queryInterface, DataTypes) {
     _id: {
       allowNull: false,
       primaryKey: true,
-      type: DataTypes.INTEGER
+      type: DataTypes.UUID,
     },
     type: {
       allowNull: true,
@@ -15,6 +15,7 @@ async function up(queryInterface, DataTypes) {
     },
     userId: {
       allowNull: false,
+      onDelete: 'CASCADE',
       references: {
         key: '_id',
         model: 'User'
@@ -29,10 +30,6 @@ async function up(queryInterface, DataTypes) {
       allowNull: false,
       type: DataTypes.STRING(1024)
     },
-    thumbnail: {
-      allowNull: false,
-      type: DataTypes.BLOB('long')
-    },
     linkPreview: {
       allowNull: false,
       type: DataTypes.TEXT
@@ -41,16 +38,12 @@ async function up(queryInterface, DataTypes) {
       allowNull: false,
       type: DataTypes.TEXT
     },
-    attachedMedia: {
-      allowNull: false,
-      type: DataTypes.BLOB('long')
-    },
     misinformation: {
       allowNull: false,
       type: DataTypes.BOOLEAN,
     }
   });
-  // await queryInterface.addIndex('UserPost', ['userId', 'linkTitle']);
+  await queryInterface.addIndex('UserPost', ['userId', 'type']);
 }
 
 module.exports = {

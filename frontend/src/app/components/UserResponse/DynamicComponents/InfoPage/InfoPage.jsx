@@ -27,7 +27,7 @@ const InfoPage = ({ data }) => {
 
   return (
    <>
-   <Card className={classes.rootText}>
+   <Card className={classes.form}>
     {richData && richData.richText &&
       <MUIRichTextEditor
         readOnly={true}

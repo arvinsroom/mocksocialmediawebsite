@@ -11,6 +11,7 @@
     "@testing-library/user-event": "^12.8.0",
     "axios": "^0.21.1",
     "body-parser": "^1.19.0",
+    "chance": "^1.1.7",
     "cors": "^2.8.5",
     "draft-js": "^0.11.7",
     "express": "^4.17.1",
@@ -23,6 +24,7 @@
     "react-scripts": "4.0.3",
     "redux": "^4.0.5",
     "redux-thunk": "^2.3.0",
+    "stream": "^0.0.2",
     "xlsx": "^0.16.9"
   },
   "scripts": {

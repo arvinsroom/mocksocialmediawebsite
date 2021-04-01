@@ -1,0 +1,18 @@
+.rootContainer {
+  /* background-color: #F2F3F5; */
+  margin-bottom: 60px; /* facebook posts */
+}
+
+.footer {
+  position: fixed;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  padding: 10px;
+  background-color: #efefef;
+  text-align: center;
+}
+
+.nextButton {
+  float: right;
+}

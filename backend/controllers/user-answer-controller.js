@@ -24,11 +24,13 @@ const createMCQ = async (req, res, next) => {
     transaction = await db.sequelize.transaction();
     let promises = [];
     for (const [key, value] of Object.entries(mcq)) {
-      promises.push(UserAnswer.create({
-        userId: req.userId,
-        questionId: key,
-        mcqOptionId: value,
-      }, { transaction }));
+      if (value) {
+        promises.push(UserAnswer.create({
+          userId: req.userId,
+          questionId: key,
+          mcqOptionId: value,
+        }, { transaction }));
+      }
     }
     const result = await Promise.all(promises);
     // if we reach here, there were no errors therefore commit the transaction
@@ -68,11 +70,13 @@ const createOpentext = async (req, res, next) => {
     transaction = await db.sequelize.transaction();
     let promises = [];
     for (const [key, value] of Object.entries(opentext)) {
-      promises.push(UserAnswer.create({
-        userId: req.userId,
-        questionId: key,
-        opentextAnswerText: value
-      }, { transaction }));
+      if (value) {
+        promises.push(UserAnswer.create({
+          userId: req.userId,
+          questionId: key,
+          opentextAnswerText: value
+        }, { transaction }));
+      }
     }
     const result = await Promise.all(promises);
     // if we reach here, there were no errors therefore commit the transaction

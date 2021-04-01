@@ -1,5 +1,6 @@
 import db from "../clients/database-client";
 const AdminPost = db.AdminPost;
+const Media = db.Media;
 
 const uploadSingleFile = async (req, res, next) => {
   try {
@@ -48,7 +49,29 @@ const uploadSingleFile = async (req, res, next) => {
   }
 };
 
+const toArrayBuffer = (buf) => {
+  var ab = new ArrayBuffer(buf.length);
+  var view = new Uint8Array(ab);
+  for (var i = 0; i < buf.length; ++i) {
+      view[i] = buf[i];
+  }
+  return ab;
+}
+
+const createMedia = async (buff, mimeType, postId, type, transaction,) => {
+  try {
+    // const arrayBuffer = toArrayBuffer(buff);
+
+    return record;
+  } catch (error) {
+    throw error;
+  }
+}
+
 const uploadMultipleFiles = async (req, res, next) => {
+  // create  the page first
+  let transaction;
+
   try {
     const { templateId } = req.body;
     const { files } = req;
@@ -66,24 +89,40 @@ const uploadMultipleFiles = async (req, res, next) => {
       return;
     }
 
-    // create  the page first
-    let transaction;
-
     transaction = await db.sequelize.transaction();
     let promisses = [];
+    // console.log('req.file: ', files);
+    // console.log(typeof files[0].buffer);
 
-    files.forEach(file => {
-      const postId = file.originalname.split(".")[0];
-      const thumbnail = file.buffer;
-      promisses.push(
-        AdminPost.update({ thumbnail }, {
-          where: {
-            templateId: templateId,
-            _id: postId
-          }
-        }, { transaction })
-      );
-    });
+    // window.global = window;
+    // window.Buffer = window.Buffer || require('buffer').Buffer;
+    // let bufferd = window.Buffer.from(buffer.thumbnail.data);
+    // let arraybuffer = Uint8Array.from(bufferd).buffer;
+    for (let i = 0; i < files.length; i++) {
+      const postId = files[i].originalname.split(".")[0];
+      // only create media entry where post id exist
+      const adminPostExistAndType = await AdminPost.findOne({
+        where: {
+          _id: postId,
+          templateId: templateId,
+        },
+        attributes: ['type']
+      });
+
+      // should only create entry if post id exist
+      if (adminPostExistAndType) {
+        // we should add media as a thumbnail
+        promisses.push(Media.create({
+          mimeType: files[i].mimetype,
+          media: files[i].buffer,
+          adminPostId: postId,
+          isThumbnail: adminPostExistAndType.type === 'LINK' ? true : false
+        }, {
+            transaction
+          })
+        );
+      }
+    }
     const data = await Promise.all(promisses);
 
     // if we reach here, there were no errors therefore commit the transaction

@@ -7,6 +7,14 @@ import * as UploadService from "../../../../services/file-upload-service";
 import { showErrorSnackbar, showSuccessSnackbar, showInfoSnackbar } from '../../../../actions/snackbar';
 import { GENERAL_PAGE, TEMPLATE } from '../../../../constants';
 
+const fileToArrayBuffer = (file) => new Promise((resolve, reject) => {
+  const reader = new FileReader();
+  reader.onload = (event) => {
+    resolve(event.target.result)
+  };
+  reader.readAsArrayBuffer(file);
+});
+
 const Upload = ({ currentLanguages }) => {
   const [activeId, setActiveId] = useState("");
   const [selectedFiles, setSelectedFiles] = useState(null);
@@ -64,9 +72,21 @@ const Upload = ({ currentLanguages }) => {
 
   const uploadFiles = async () => {
     let formData = new FormData();
+    // let data = null;
+    // let createBlob = null;
     for (let i = 0; i < selectedFiles.length; i++) {
+      // read the content as array buffer and create a blob with desired array buffer and type information
+      // data = await fileToArrayBuffer(selectedFiles[i]);
+      // createBlob = new Blob([data], {
+      //   type: selectedFiles[i].type
+      // });
+      // console.log('createBlob: ', createBlob);
       formData.append("files", selectedFiles[i]);
     }
+    // formData.append("blobdata", createBlob);
+    // console.log('selectedFiles: ', selectedFiles);
+    // console.log('dataUri: ', blobData);
+    // formData.append("files", selectedFiles[i]);
     formData.append("templateId", templateId);
     return await UploadService.uploadMultipleFiles(formData);
   }
