@@ -2,10 +2,12 @@ import { useEffect, useRef, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import "./Video.css";
 
-const Video = ({ index }) => {
+const Video = ({ attachedMedia }) => {
+    // const singlePost = useSelector(state => selectSubItems(state, id));
+
   // const { posts } = useSelector(state => state.facebookPost);
 
-  const { media } = useSelector(state => state.facebookMedia);
+  // const { media } = useSelector(state => state.facebookMedia);
 
   const videoRef = useRef(null);
 
@@ -37,13 +39,13 @@ const Video = ({ index }) => {
     window.global = window;
     window.Buffer = window.Buffer || require('buffer').Buffer;
     // let bufferd = window.Buffer.from(posts[index].attachedMediaAdmin[0].media.data);
-    if (media && media[index]?.length > 0) {
-      let bufferd = window.Buffer.from(media[index][0].media.data);
+    if (attachedMedia) {
+      let bufferd = window.Buffer.from(attachedMedia.media.data);
       let arraybuffer = Uint8Array.from(bufferd).buffer;
 
       const image = new Blob([arraybuffer], {
         // type: posts[index].attachedMediaAdmin[0].mimeType
-        type: media[index][0].mimeType
+        type: attachedMedia.mimeType
       });
       const url = URL.createObjectURL(image);
       
@@ -57,10 +59,11 @@ const Video = ({ index }) => {
 
   return (
     <>
-    {media &&  media[index]?.length > 0 ? <div className="postImage">
+    {attachedMedia && <div className="postImage">
+    {console.log('inside video')}
       {/* <video ref={videoRef} controls alt="" key={posts[index].attachedMediaAdmin[0]._id} /> */}
-      <video ref={videoRef} controls alt="" key={media[index][0]._id} />
-    </div> : null}
+      <video ref={videoRef} controls alt="" key={attachedMedia._id} />
+    </div>}
     </>
   );
 }

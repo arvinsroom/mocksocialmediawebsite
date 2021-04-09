@@ -12,6 +12,7 @@ async function up(queryInterface, DataTypes) {
     },
     userId: {
       allowNull: false,
+      onDelete: 'CASCADE',
       references: {
         key: '_id',
         model: 'User'
@@ -37,6 +38,10 @@ async function up(queryInterface, DataTypes) {
     shareText: {
       allowNull: true,
       type: DataTypes.TEXT
+    },
+    createdAt: {
+      allowNull: false,
+      type: DataTypes.DATE(3),
     },
   });
   await queryInterface.addIndex('UserPostShare', ['userId']);

@@ -39,16 +39,14 @@ export default (sequelize, DataTypes) => {
 
   Register.associate = (models) => {
     Register.belongsTo(models.Template, {
-      as: 'template',
+      as: 'register',
       foreignKey: 'templateId'
-    })
-  };
-
-  Register.associate = (models) => {
+    });
     Register.belongsTo(models.Page, {
       as: 'page',
       foreignKey: 'pageId'
     })
   };
+
   return Register;
 }

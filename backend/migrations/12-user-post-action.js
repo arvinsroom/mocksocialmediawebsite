@@ -11,6 +11,7 @@ async function up(queryInterface, DataTypes) {
     },
     userId: {
       allowNull: false,
+      onDelete: 'CASCADE',
       references: {
         key: '_id',
         model: 'User'
@@ -33,20 +34,32 @@ async function up(queryInterface, DataTypes) {
       },
       type: DataTypes.INTEGER
     },
+    // sharePostId: {
+    //   allowNull: true,
+    //   references: {
+    //     key: '_id',
+    //     model: 'UserPostShare'
+    //   },
+    //   type: DataTypes.UUID
+    // },
     platform: {
       allowNull: false,
-      type: DataTypes.ENUM('FACEBOOK') // 'REDDIT', 'TWITTER', 'INSTAGRAM'
+      type: DataTypes.ENUM('FACEBOOK', 'REDDIT', 'TWITTER', 'INSTAGRAM', 'YOUTUBE', 'SLACK', 'TIKTOK')
     },
     action: {
       allowNull: false,
-      type: DataTypes.ENUM('LIKE', 'COMMENT') // 'UPVOKE', 'TWEET', 'LOVE'
+      type: DataTypes.ENUM('LIKE', 'COMMENT', 'UPVOKE', 'TWEET', 'LOVE')
     },
     comment: {
       allowNull: true,
       type: DataTypes.TEXT
     },
+    createdAt: {
+      allowNull: false,
+      type: DataTypes.DATE(3),
+    },
   });
-  await queryInterface.addIndex('UserPostAction', ['userId']);
+  await queryInterface.addIndex('UserPostAction', ['userPostId', 'adminPostId']);
 }
 
 module.exports = {

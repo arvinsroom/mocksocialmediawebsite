@@ -11,19 +11,27 @@ import * as UserAuthService from "../services/user-auth-service";
 export const userLogin = (templateId, qualtricsId) => (dispatch) => {
   return UserAuthService.login(templateId, qualtricsId).then(
     (data) => {
+      console.log(data); // default translations
+      if (!data.flow || data.flow.length < 1) {
+        dispatch({
+          type: SET_FLOW_STATE,
+          payload: { flow: [], active: -1, disabled: true }
+        });
+      } else {
       // dispatch a function to set the initial flow state
-      dispatch({
-        type: SET_FLOW_STATE,
-        payload: { flow: data.flow, active: 0 }
-      });
+        dispatch({
+          type: SET_FLOW_STATE,
+          payload: { flow: data.flow, active: 0, disabled: true }
+        });
 
-      // data has user token, flow and translations
-      dispatch({
-        type: USER_LOGIN_SUCCESS,
-        payload: {
-          user: data,
-        },
-      });
+        // data has user token, flow and translations
+        dispatch({
+          type: USER_LOGIN_SUCCESS,
+          payload: {
+            user: data,
+          },
+        });
+      }
 
       return Promise.resolve();
     },

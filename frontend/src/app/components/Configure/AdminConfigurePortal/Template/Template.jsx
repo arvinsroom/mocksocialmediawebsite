@@ -31,7 +31,6 @@ import { TEMPLATE } from '../../../../constants';
 const Template = () => {
   const [templateName, setTemplateName] = useState("");
   // const [templateType, setTemplateType] = useState("");
-  const [randomPosts, setRandomPosts] = useState(false);
   const [requiredQualtricsId, setRequiredQualtricsId] = useState(false);
   const [permissions, setPermissions] = useState({
     requestAudio: false,
@@ -56,7 +55,6 @@ const Template = () => {
   const resetValues = () => {
     setTemplateName("");
     // setTemplateType("");
-    setRandomPosts(false);
     setRequiredQualtricsId(false);
     setPermissions({
       requestAudio: false,
@@ -70,8 +68,6 @@ const Template = () => {
 
     const template = {
       name: templateName,
-      // type: templateType,
-      randomPosts,
       requestAudio: permissions.requestAudio,
       requestVideo: permissions.requestVideo,
       requestCookies: permissions.requestCookies,
@@ -106,10 +102,6 @@ const Template = () => {
   // const handleChange = (event) => {
   //   setTemplateType(event.target.value);
   // };
-
-  const handleRandomPosts = (e) => {
-    setRandomPosts(e.target.checked);
-  };
 
   const handleQualtricsId = (e) => {
     setRequiredQualtricsId(e.target.checked);
@@ -151,32 +143,10 @@ const Template = () => {
         onChange={({ target }) => setTemplateName(target.value)}
         autoFocus
       />
-      {/* <FormControl variant="outlined" className={classes.formControl}>
-        <InputLabel id="demo-simple-select-outlined-label">Template Type</InputLabel>
-        <Select
-          labelId="demo-simple-select-outlined-label"
-          id="demo-simple-select-outlined"
-          value={templateType}
-          onChange={handleChange}
-          label="Template Type"
-        >
-          {createMenuItems()}
-        </Select>
-      </FormControl> */}
       <FormControl component="fieldset">
         <FormLabel component="legend" className={classes.paddingTopBottom}>{TEMPLATE.ASK_FOR_PERMISSION}</FormLabel>
       </FormControl>
       <FormGroup>
-        <FormControlLabel
-            control={<Switch
-              checked={randomPosts}
-              onChange={handleRandomPosts}
-              color="primary"
-              name="randomPosts"
-              inputProps={{ 'aria-label': 'Render ramdom posts on socail media page' }}
-            />}
-            label="Enable random post rendering"
-          />
         <FormControlLabel
           control={<Switch
             checked={requiredQualtricsId}

@@ -45,5 +45,19 @@ export default (sequelize, DataTypes) => {
     timestamps: false, // enable timestamps
 	});
 
+  UserAnswer.associate = (models) => {
+    UserAnswer.belongsTo(models.User, {
+      foreignKey: 'userId'
+    });
+    UserAnswer.belongsTo(models.Question, {
+      as: 'question',
+      foreignKey: 'questionId'
+    });
+    UserAnswer.belongsTo(models.McqOption, {
+      as: 'mcqOption',
+      foreignKey: 'mcqOptionId'
+    })
+  };
+
   return UserAnswer;
 }

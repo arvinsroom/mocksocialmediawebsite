@@ -1,4 +1,4 @@
-import { TextField, Button } from '@material-ui/core';
+import { TextField, Button, FormGroup, FormControlLabel, Switch } from '@material-ui/core';
 import { useState } from 'react';
 import { create } from '../../../../services/info-service';
 import useStyles from '../../../style';
@@ -14,6 +14,7 @@ import { TEMPLATE, INFO_PAGE } from '../../../../constants';
 const InfoPage = () => {
   const [richData, setRichData] = useState();
   const [pageName, setPageName] = useState("");
+  const [consent, setConsent] = useState(false);
 
   const { isLoggedInAdmin } = useSelector(state => state.auth);
   const { _id: templateId } = useSelector(state => state.template);
@@ -29,6 +30,9 @@ const InfoPage = () => {
     setPageName("");
   };
 
+  const handleConsent = (e) => {
+    setConsent(e.target.checked);
+  };
 
   const handleSave = async (data) => {
     if (!templateId) {
@@ -41,7 +45,8 @@ const InfoPage = () => {
       type: "INFO",
       info: {
         richText: data,
-      }
+      },
+      consent: consent
     };
     try {
       const { data } = await create(info);
@@ -128,6 +133,19 @@ const InfoPage = () => {
           ref={editor}
         />
       </MuiThemeProvider>
+
+      <FormGroup>
+        <FormControlLabel
+          control={<Switch
+            checked={consent}
+            onChange={handleConsent}
+            color="primary"
+            name="consent"
+            inputProps={{ 'aria-label': 'Render this page as a Consent Page' }}
+          />}
+          label="Render this page as a Consent Page"
+        />
+      </FormGroup>
       <Button
         type="submit"
         variant="contained"

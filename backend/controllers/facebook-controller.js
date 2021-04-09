@@ -1,6 +1,8 @@
 import db from "../clients/database-client";
 const UserPostAction = db.UserPostAction;
 const UserPostShare = db.UserPostShare;
+const UserPost = db.UserPost;
+const Media = db.Media;
 
 const createAction = async (req, res, next) => {
   let transaction;
@@ -115,7 +117,7 @@ const createSharePost = async (req, res, next) => {
       userId: req.userId,
       parentUserPostId: shareObj.parentUserPostId || null,
       parentAdminPostId: shareObj.parentAdminPostId || null,
-      shareText: shareObj.shareText || null
+      shareText: shareObj.shareText || ""
     };
     transaction = await db.sequelize.transaction();
     const data = await UserPostShare.create(share, { transaction });
@@ -123,7 +125,10 @@ const createSharePost = async (req, res, next) => {
     await transaction.commit();
     // fetch json
     res.send({
-      _id: data._id
+      _id: data._id,
+      parentUserPostId: data.parentUserPostId,
+      parentAdminPostId: data.parentAdminPostId,
+      shareText: data.shareText
     });
   } catch (error) {
     // if we reach here, there were some errors thrown, therefore roolback the transaction
@@ -135,8 +140,76 @@ const createSharePost = async (req, res, next) => {
   }
 };
 
+const createNewPost = async (req, res, next) => {
+  let transaction;
+  try {
+    const { postMessage } = req.body;
+    // fetch userId from middleware
+    if (!req.userId) {
+      res.status(400).send({
+        message: "Invalid User Token, please log in again!"
+      });
+      return;
+    }
+    if (!postMessage && !req.file) {
+      res.status(400).send({
+        message: "Please create a valid post!"
+      });
+      return;
+    }
+
+    // get the postType
+    let postType;
+    if (req.file) {
+      if (req.file.mimetype.includes('image')) postType = 'PHOTO';
+      if (req.file.mimetype.includes('video')) postType = 'VIDEO';
+    } else postType = 'TEXT';
+    const newPost = { 
+      userId: req.userId,
+      type: postType,
+      misinformation: false,
+      postMessage: postMessage || ""
+    };
+    transaction = await db.sequelize.transaction();
+    const data = await UserPost.create(newPost, { transaction });
+
+    let mediaData = null;
+    let attachedMediaAdmin = [];
+    if (req.file) {
+      // put details for the media in Media table
+      const media = {
+        userPostId: data._id,
+        isThumbnail: false,
+        media: req.file ? req.file.buffer : null,
+        mimeType: req.file ? req.file.mimetype : null,
+      };
+      mediaData = await Media.create(media, { transaction });
+      attachedMediaAdmin.push(mediaData);
+    }
+
+    // if we reach here, there were no errors therefore commit the transaction
+    await transaction.commit();
+    // fetch json
+    res.send({
+      _id: data._id, // new post id
+      attachedMediaAdmin,
+      postMessage: data.postMessage,
+      type: data.type,
+    });
+  } catch (error) {
+    console.log(error.message);
+    // if we reach here, there were some errors thrown, therefore roolback the transaction
+    if (transaction) await transaction.rollback();
+    res.status(500).send({
+      message: "Some error occurred while creating the New User post."
+    });
+  }
+};
+
+
 export default {
   createAction,
   deleteAction,
-  createSharePost
+  createSharePost,
+  createNewPost
 };

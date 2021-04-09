@@ -8,7 +8,8 @@ const create = async (req, res, next) => {
     templateId,
     name,
     type,
-    info
+    info,
+    consent
   } = req.body;
   if (!templateId) {
     res.status(400).send({
@@ -45,6 +46,7 @@ const create = async (req, res, next) => {
       templateId,
       pageId,
       richText: info.richText,
+      consent,
     }, { transaction });
     // if we reach here, there were no errors therefore commit the transaction
     await transaction.commit();
@@ -78,7 +80,7 @@ const getInfoDetails = async (req, res, next) => {
       where: {
         pageId: pageId
       },
-      attributes: ['richText']
+      attributes: ['richText', 'consent']
     });
 
     res.send({

@@ -11,7 +11,7 @@ async function up(queryInterface, DataTypes) {
     },
     profilePic: {
       allowNull: true,
-      type: DataTypes.BLOB
+      type: DataTypes.BLOB('long')
     },
     username: {
       allowNull: true,
@@ -19,11 +19,16 @@ async function up(queryInterface, DataTypes) {
     },
     userId: {
       allowNull: false,
+      onDelete: 'CASCADE',
       references: {
         key: '_id',
         model: 'User'
       },
       type: DataTypes.UUID
+    },
+    mimeType: {
+      allowNull: true,
+      type: DataTypes.STRING
     },
   });
   await queryInterface.addIndex('UserRegister', ['userId']);

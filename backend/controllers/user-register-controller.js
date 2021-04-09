@@ -36,7 +36,6 @@ const getRegisterDetails = async (req, res, next) => {
 const createUserRegister = async (req, res, next) => {
   let transaction;
   try {
-    const { username } = req.body;
     if (!req.userId) {
       res.status(400).send({
         message: "Invalid User Token, please log in again!"
@@ -49,10 +48,11 @@ const createUserRegister = async (req, res, next) => {
     // get the post id from the file
     const userRegisterData = {
       profilePic: req.file ? req.file.buffer : null,
-      username: username || null,
+      mimeType: req.file ? req.file.mimetype : null,
+      username: req.body?.username || null,
       userId: req.userId
     };
-    
+
     // now create a entry for register
     const data = await UserRegister.create(userRegisterData, { transaction });
     // if we reach here, there were no errors therefore commit the transaction

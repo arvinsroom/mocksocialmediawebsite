@@ -35,9 +35,29 @@ export default (sequelize, DataTypes) => {
       allowNull: true,
       type: DataTypes.TEXT
     },
+    createdAt: {
+      allowNull: false,
+      type: DataTypes.literal('CURRENT_TIMESTAMP(3)'),
+      defaultValue: DataTypes.literal('CURRENT_TIMESTAMP(3)'),
+    },
   }, {
 		freezeTableName: true, // model name equal to table name
     timestamps: false, // enable timestamps
 	});
+
+  UserPostShare.associate = (models) => {
+    UserPostShare.belongsTo(models.UserPost, {
+      as: 'userPosts',
+      foreignKey: 'parentUserPostId'
+    });
+    UserPostShare.belongsTo(models.AdminPost, {
+      as: 'adminPosts',
+      foreignKey: 'parentAdminPostId'
+    });
+    UserPostShare.belongsTo(models.User, {
+      foreignKey: 'userId'
+    });
+  };
+
   return UserPostShare;
 }

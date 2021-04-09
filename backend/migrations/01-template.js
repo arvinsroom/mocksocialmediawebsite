@@ -21,15 +21,6 @@ async function up(queryInterface, DataTypes) {
       allowNull: false,
       type: DataTypes.STRING(36)
     },
-    randomPosts: {
-      allowNull: false,
-      defaultValue: false,
-      type: DataTypes.BOOLEAN,
-    },
-    // type: {
-    //   allowNull: false,
-    //   type: DataTypes.ENUM('FACEBOOK') // 'REDDIT', 'TWITTER', 'INSTAGRAM'
-    // },
     videoPermission: {
       allowNull: false,
       defaultValue: false,

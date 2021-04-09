@@ -58,16 +58,6 @@ const toArrayBuffer = (buf) => {
   return ab;
 }
 
-const createMedia = async (buff, mimeType, postId, type, transaction,) => {
-  try {
-    // const arrayBuffer = toArrayBuffer(buff);
-
-    return record;
-  } catch (error) {
-    throw error;
-  }
-}
-
 const uploadMultipleFiles = async (req, res, next) => {
   // create  the page first
   let transaction;

@@ -21,3 +21,12 @@ export const shareFbPost = (data) => {
     headers: userAuthHeader()
   });
 }
+
+export const createFbPost = (data) => {
+  return http.post("/user/facebook/new", data, {
+    headers: {
+      ...userAuthHeader(),
+      "Content-Type": "multipart/form-data",
+    }
+  });
+}

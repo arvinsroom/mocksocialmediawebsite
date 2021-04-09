@@ -30,21 +30,53 @@ export default (sequelize, DataTypes) => {
       },
       type: DataTypes.INTEGER
     },
+    // sharePostId: {
+    //   allowNull: true,
+    //   references: {
+    //     key: '_id',
+    //     model: 'UserPostShare'
+    //   },
+    //   type: DataTypes.UUID
+    // },
     platform: {
       allowNull: false,
-      type: DataTypes.ENUM('FACEBOOK') // 'REDDIT', 'TWITTER', 'INSTAGRAM'
+      type: DataTypes.ENUM('FACEBOOK', 'REDDIT', 'TWITTER', 'INSTAGRAM', 'YOUTUBE', 'SLACK', 'TIKTOK')
     },
     action: {
       allowNull: false,
-      type: DataTypes.ENUM('LIKE', 'COMMENT') // 'UPVOKE', 'TWEET', 'LOVE'
+      type: DataTypes.ENUM('LIKE', 'COMMENT', 'UPVOKE', 'TWEET', 'LOVE')
     },
     comment: {
       allowNull: true,
       type: DataTypes.TEXT
     },
+    createdAt: {
+      allowNull: false,
+      type: DataTypes.literal('CURRENT_TIMESTAMP(3)'),
+      defaultValue: DataTypes.literal('CURRENT_TIMESTAMP(3)'),
+    },
   }, {
 		freezeTableName: true, // model name equal to table name
     timestamps: false, // enable timestamps
 	});
+
+  UserPostAction.associate = (models) => {
+    UserPostAction.belongsTo(models.UserPost, {
+      as: 'userPosts',
+      foreignKey: 'userPostId'
+    });
+    UserPostAction.belongsTo(models.AdminPost, {
+      as: 'adminPosts',
+      foreignKey: 'adminPostId',
+    });
+    // UserPostAction.belongsTo(models.AdminPost, {
+    //   as: 'sharePosts',
+    //   foreignKey: 'sharePostId',
+    // });
+    UserPostAction.belongsTo(models.User, {
+      foreignKey: 'userId'
+    });
+  };
+
   return UserPostAction;
 }

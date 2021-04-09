@@ -6,12 +6,13 @@ import { useSelector, useDispatch } from "react-redux";
 import useStyles from '../../../style';
 import { showErrorSnackbar, showSuccessSnackbar } from '../../../../actions/snackbar';
 import { GENERAL_PAGE, TEMPLATE } from '../../../../constants';
-import { TEMPLATE_TYPES } from '../../../../constants';
+import { TEMPLATE_TYPES, ORDER_TYPES } from '../../../../constants';
 
 const MediaPosts = () => {
   const [mediaJSON, setMediaJSON] = useState(null);
   const [pageName, setPageName] = useState("");
   const [templateType, setTemplateType] = useState("");
+  const [orderType, setOrderType] = useState("");
 
   const classes = useStyles();
   const { _id: templateId } = useSelector(state => state.template);
@@ -51,17 +52,19 @@ const MediaPosts = () => {
   const resetValues = () => {
     setPageName("");
     setTemplateType("");
+    setOrderType("");
     setMediaJSON(null);
   };
 
   const handleSubmit = async e => {
     e.preventDefault();
+    console.log(orderType);
     if (!templateId) {
       dispatch(showErrorSnackbar(TEMPLATE.SELECT_OR_CREATE_TEMPLATE));
     }
     try {
       if (mediaJSON && pageName) {
-        await media.create({ name: pageName, type: templateType, templateId: templateId, mediaPosts: mediaJSON});
+        await media.create({ name: pageName, type: templateType, pageDataOrder: orderType, templateId: templateId, mediaPosts: mediaJSON});
         dispatch(showSuccessSnackbar(GENERAL_PAGE.MEDIA_SUCCESS));
         resetValues();  
       }
@@ -83,6 +86,18 @@ const MediaPosts = () => {
   const createMenuItems = () => {
     let menuItems = [];
     for (let item in TEMPLATE_TYPES) {
+      menuItems.push(<MenuItem value={item} key={item}>{item}</MenuItem>)
+    }
+    return menuItems;
+  }
+
+  const handleOrder = (event) => {
+    setOrderType(event.target.value);
+  };
+
+  const createMenuItemsOrder = () => {
+    let menuItems = [];
+    for (let item in ORDER_TYPES) {
       menuItems.push(<MenuItem value={item} key={item}>{item}</MenuItem>)
     }
     return menuItems;
@@ -115,6 +130,21 @@ const MediaPosts = () => {
             {createMenuItems()}
           </Select>
         </FormControl>
+
+        <FormControl variant="outlined" className={classes.formControl}>
+          <InputLabel id="demo-simple-select-outlined-label">Choose Posts Order</InputLabel>
+          <Select
+            labelId="demo-simple-select-outlined-label"
+            id="demo-simple-select-outlined"
+            className={classes.marginBottom}
+            value={orderType}
+            onChange={handleOrder}
+            label="Choose Posts Order"
+          >
+            {createMenuItemsOrder()}
+          </Select>
+        </FormControl>
+
         <Typography component="h6">
           Social Media Post Spreadsheet
         </Typography>

@@ -42,10 +42,7 @@ export default (sequelize, DataTypes) => {
     Finish.belongsTo(models.Template, {
       as: 'template',
       foreignKey: 'templateId'
-    })
-  };
-
-  Finish.associate = (models) => {
+    });
     Finish.belongsTo(models.Page, {
       as: 'page',
       foreignKey: 'pageId'

@@ -28,7 +28,7 @@ const create = async (req, res, next) => {
     videoPermission: req.body.requestVideo,
     audioPermission: req.body.requestAudio,
     cookiesPermission: req.body.requestCookies,
-    randomPosts: req.body.randomPosts,
+    // randomPosts: req.body.randomPosts,
     // type: req.body.type,
     flow: req.body.flow,
     qualtricsId: req.body.qualtricsId,

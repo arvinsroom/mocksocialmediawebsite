@@ -5,27 +5,27 @@ const StoryReel = () => {
   return (
     <div className="storyReel">
       <Story
-        image={"https://images.freeimages.com/images/small-previews/2bb/website-advertisement-1243439.jpg"}
+        image={"https://blog.ispionage.com/wp-content/uploads/2013/11/Link-Building-Tool-Pic.jpg"}
         profilePic={"https://images.freeimages.com/images/large-previews/9a0/glassy-web-2-0-style-vector-icons-1153399.jpg"}
         title={"Website"}
       />
       <Story
-        image ={"https://images.freeimages.com/images/small-previews/e8f/world-wide-web-analogic-1241408.jpg"}
+        image ={"https://www.bigcommerce.com/blog/wp-content/uploads/2017/08/inbound-link-backs-hero.jpg"}
         profilePic={"https://images.freeimages.com/images/small-previews/9e6/letters-web-2-1574746.jpg"}
         title={"https://"}
       />
       <Story
-        image ={"https://images.freeimages.com/images/small-previews/e83/what-u-looking-for-1-1552463.jpg"}
+        image ={"https://images.iconfu.com/sets/8-omni/icons/earth_link_icon.png"}
         profilePic={"https://images.freeimages.com/images/small-previews/e50/blue-3-1424956.jpg"}
         title={"Looking?"}
       />
       <Story
-        image ={"https://images.freeimages.com/images/small-previews/33a/web-design-1243586.jpg"}
+        image ={"https://cdn.hundred.org/uploads/innovation/cover_image/2369/wide_logo-mockup03212020.jpg"}
         profilePic={"https://images.freeimages.com/images/small-previews/268/w-w-w-1506459.jpg"}
         title={"Web-design"}
       />
       <Story
-        image ={"https://images.freeimages.com/images/large-previews/69f/day-dreaming-1437551.jpg"}
+        image ={"https://linksearching.com/wp-content/uploads/2015/12/best-free-online-broken-link-checker-tool.jpg"}
         profilePic={"https://images.freeimages.com/images/small-previews/c02/for-use-on-your-website-please-contact-us-1442088.jpg"}
         title={"Dreaming"}
       />

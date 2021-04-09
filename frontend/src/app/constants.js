@@ -2,6 +2,12 @@ export const TEMPLATE_TYPES = Object.freeze({
   FACEBOOK: "FACEBOOK"
 });
 
+export const ORDER_TYPES = Object.freeze({
+  ASC: "ASC",
+  DESC: "DESC",
+  RANDOM: "RANDOM"
+});
+
 export const TEMPLATE = Object.freeze({
   SELECT_OR_CREATE_TEMPLATE: "Please make sure a template is created or selected.",
   TEMPLATE_SUCCESS: "Template Successfully created.",

@@ -8,10 +8,10 @@
 }
 
 .registerTopInput {
-  display: block !important;
+  display: flex !important;
   margin-left: auto !important;
   margin-right: auto !important;
-  width: 50% !important; 
+  width: 50% !important;
 }
 
 .registerTopAvatar {

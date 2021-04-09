@@ -38,7 +38,8 @@ const sequelize = new Sequelize({
   dialect: config.dialect,
   // timezone: '-05:00', // utc, but let the original time be in Universal Coordinated Time
   // logging: (...msg) => console.log(msg),
-  // logging: console.log
+  logging: console.log,
+  // timezone: "+00:00" // when returning
 });
 
 const testConnection = async () => {

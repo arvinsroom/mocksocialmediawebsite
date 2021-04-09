@@ -25,6 +25,10 @@ export default (sequelize, DataTypes) => {
     richText: {
       allowNull: false,
       type: DataTypes.TEXT
+    },
+    consent: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false,
     }
   }, {
 		freezeTableName: true, // model name equal to table name

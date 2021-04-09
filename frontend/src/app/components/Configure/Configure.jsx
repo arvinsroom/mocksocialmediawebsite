@@ -14,6 +14,8 @@ import MCQ from './AdminConfigurePortal/MCQ/MCQ';
 import OpenText from './AdminConfigurePortal/OpenText/OpenText';
 import Finish from './AdminConfigurePortal/Finish/Finish';
 import Flow from './AdminConfigurePortal/Flow/Flow';
+import Metrics from './AdminConfigurePortal/Metrics/Metrics';
+
 import { useDispatch, useSelector } from "react-redux";
 import Toolbar from '@material-ui/core/Toolbar';
 import Button from '@material-ui/core/Button';
@@ -108,6 +110,7 @@ const Configure = () => {
           <Tab label="OpenText" {...a11yProps(5)} disabled={!templateId ? true : false}/>
           <Tab label="Finish" {...a11yProps(6)} disabled={!templateId ? true : false}/>
           <Tab label="Flow" {...a11yProps(7)} disabled={!templateId ? true : false}/>
+          <Tab label="Metrics" {...a11yProps(8)}/>
         </Tabs>
       </AppBar>
       <TabPanel value={value} index={0}>
@@ -133,6 +136,9 @@ const Configure = () => {
       </TabPanel>
       <TabPanel value={value} index={7}>
         <Flow />
+      </TabPanel>
+      <TabPanel value={value} index={8}>
+        <Metrics />
       </TabPanel>
     </>
   );

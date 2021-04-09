@@ -44,10 +44,12 @@ const Register = () => {
       }
     };
     try {
-      const { data } = await create(register);
-      if (data._id) {
+      if (state.requestPhoto || state.requestUsername) {
+        await create(register);
         dispatch(showSuccessSnackbar(REGISTER_PAGE.REGISTER_PAGE_SUCCESS));
         resetValues();
+      } else {
+        dispatch(showErrorSnackbar("Atleast one of them is required to create a page!"));
       }
     } catch (error) {
       const resMessage =
@@ -57,7 +59,6 @@ const Register = () => {
         error.message ||
         error.toString();
         dispatch(showErrorSnackbar(resMessage));
-
     }
   };
 

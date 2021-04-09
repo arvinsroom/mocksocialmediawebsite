@@ -22,6 +22,7 @@ export default (sequelize, DataTypes) => {
   Admin.associate = (models) => {
     Admin.hasMany(models.Template, {
       as: 'template',
+      foreignKey: 'adminId',
     })
   };
 

@@ -22,14 +22,18 @@ async function up(queryInterface, DataTypes) {
       },
       type: DataTypes.UUID
     },
+    pageDataOrder: {
+      allowNull: true,
+      type: DataTypes.ENUM('DESC', 'ASC', 'RANDOM')
+    },
     type: {
       allowNull: false,
       type: DataTypes.ENUM('MCQ', 'OPENTEXT', 'INFO', 'REGISTER', 'FINISH', 'FACEBOOK', 'REDDIT', 'TWITTER', 'INSTAGRAM',
       'YOUTUBE', 'SLACK', 'TIKTOK')
     },
-    order: {
-      allowNull: true,
-      type: DataTypes.INTEGER
+    flowOrder: {
+      allowNull: false,
+      type: DataTypes.SMALLINT
     },
   });
   await queryInterface.addIndex('Page', ['templateId', 'type']);
