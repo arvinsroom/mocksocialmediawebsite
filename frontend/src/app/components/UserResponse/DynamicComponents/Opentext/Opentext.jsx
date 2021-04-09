@@ -6,12 +6,15 @@ import { useSelector, useDispatch } from "react-redux";
 import { Redirect } from 'react-router-dom';
 import useStyles from '../../../style';
 import { showErrorSnackbar, showSuccessSnackbar } from '../../../../actions/snackbar';
+import { updateFlowDisabledState } from '../../../../actions/flowState';
 import "./Opentext.css";
 
 const Opentext = ({ data }) => {
 
   const [OpentextQuestions, setOpentextQuestions] = useState(null);
   const [opentextResponse, setOpentextResponse] = useState(null);
+  const [required, setRequired] = useState([]);
+  const { isLoggedInUser } = useSelector(state => state.userAuth);
 
   const dispatch = useDispatch();
   const classes = useStyles();
@@ -22,15 +25,21 @@ const Opentext = ({ data }) => {
     if (resultArr) {
       await setOpentextQuestions(ret.data.result);
       let obj = {};
+      let reqObj = [];
       // maintain the response object with key as questionId
       for (let i = 0; i < resultArr.length; i++) {
         obj[resultArr[i]._id] = '';
+        if (resultArr[i].required) {
+          reqObj.push(resultArr[i]._id);
+        }
       }
+      await setRequired(reqObj);
       await setOpentextResponse(obj);
     }
   };
 
   useEffect(() => {
+    if (!isLoggedInUser) return <Redirect to="/" />;
     fetch();
   }, []);
 
@@ -38,14 +47,26 @@ const Opentext = ({ data }) => {
     setOpentextResponse(null);
   };
 
+  const checkAndFilterRequired = () => {
+    for (let i = 0; i < required.length; i++) {
+      if (!opentextResponse[required[i]]) return false;
+    }
+    // here we can remove the empty id's
+    return true;
+  };
+
   const handleSubmit = async e => {
     e.preventDefault();
     
     try {
-      const { data } = await createOpentext({ opentext: opentextResponse });
-      if (data) {
+      // check if all the required answers were submitted
+      if (checkAndFilterRequired()) {
+        await createOpentext({ opentext: opentextResponse });
         dispatch(showSuccessSnackbar("Success! Your OPENTEXT answer(s) were saved! Please follow to the next Page!"));
         resetValues();
+        dispatch(updateFlowDisabledState());
+      } else {
+        dispatch(showErrorSnackbar("Error! Please answer required questions!"));
       }
     } catch (error) {
       const resMessage =
@@ -81,7 +102,6 @@ const Opentext = ({ data }) => {
               variant="outlined"
               margin="normal"
               fullWidth
-              autoFocus
             />
           </Card>
       )) : null}

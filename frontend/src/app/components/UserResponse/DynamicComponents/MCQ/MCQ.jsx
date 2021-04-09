@@ -1,11 +1,12 @@
 import { useEffect, useState } from "react";
 import { getQuestions } from "../../../../services/questions-service";
 import { createMCQ } from "../../../../services/user-answer-service";
-import { Button, FormControl, RadioGroup, Card, FormControlLabel, FormLabel, Radio } from '@material-ui/core';
+import { Button, FormControl, RadioGroup, Card, FormControlLabel, FormLabel, Radio, Divider } from '@material-ui/core';
 import { useSelector, useDispatch } from "react-redux";
 import { Redirect } from 'react-router-dom';
 import useStyles from '../../../style';
 import { showErrorSnackbar, showSuccessSnackbar } from '../../../../actions/snackbar';
+import { updateFlowDisabledState } from '../../../../actions/flowState';
 import "./MCQ.css";
 
 const MCQ = ({ data }) => {
@@ -13,6 +14,7 @@ const MCQ = ({ data }) => {
   const [mcqQuestions, setMcqQuestions] = useState(null);
   const [mcqResponse, setMcqResponse] = useState(null);
   const [required, setRequired] = useState([]);
+  const { isLoggedInUser } = useSelector(state => state.userAuth);
 
   const dispatch = useDispatch();
   const classes = useStyles();
@@ -40,6 +42,7 @@ const MCQ = ({ data }) => {
   };
 
   useEffect(() => {
+    if (!isLoggedInUser) return <Redirect to="/" />;
     fetch();
   }, []);
 
@@ -61,13 +64,12 @@ const MCQ = ({ data }) => {
     try {
       // check if all the required answers were submitted
       if (checkAndFilterRequired()) {
-        const { data } = await createMCQ({ mcq: mcqResponse });
-        if (data) {
-          dispatch(showSuccessSnackbar("Success! Your MCQ answer(s) were saved! Please follow to the next Page!"));
-          resetValues();
-        }
+        await createMCQ({ mcq: mcqResponse });
+        dispatch(showSuccessSnackbar("Success! Your MCQ answer(s) were saved! Please follow to the next Page!"));
+        resetValues();
+        dispatch(updateFlowDisabledState());
       } else {
-        dispatch(showErrorSnackbar("Error! Please answer required answers!"));
+        dispatch(showErrorSnackbar("Error! Please answer required questions!"));
       }
     } catch (error) {
       const resMessage =
@@ -86,18 +88,20 @@ const MCQ = ({ data }) => {
 
   return (
     <>
-      <form onSubmit={handleSubmit} className={classes.form}>
+      <form onSubmit={handleSubmit}>
       {mcqQuestions && mcqQuestions.length > 0 ? mcqQuestions.map((question, index) => (
-          <Card key={index} className="eachQuestion">
+          // <Card key={index} className="eachQuestion">
+          <div key={index} className={classes.form}>
             <FormControl component="fieldset" key={question._id}>
               <FormLabel component="legend">{question.questionText} {question.required ? "(Required)" : "(Not Required)"}</FormLabel>
-                <RadioGroup aria-label="MCQ Questions" name="MCQ" value={mcqResponse ? mcqResponse[question._id] : ''} onChange={e => handleChange(question._id, e)}>
-                {question.mcqOption && question.mcqOption.length > 0 ? question.mcqOption.map((option, optionIndex) => (
-                  <FormControlLabel key={option._id} value={option._id} control={<Radio />} label={option.optionText} />
-                )): null}
-                </RadioGroup>
             </FormControl>
-          </Card>
+            <RadioGroup aria-label="MCQ Questions" name="MCQ" value={mcqResponse ? mcqResponse[question._id] : ''} onChange={e => handleChange(question._id, e)}>
+            {question.mcqOption && question.mcqOption.length > 0 ? question.mcqOption.map((option, optionIndex) => (
+              <FormControlLabel key={option._id} value={option._id} control={<Radio color="primary" />} label={option.optionText} />
+            )): null}
+            </RadioGroup>
+            <Divider className={classes.divider}/>
+          </div>
       )) : null}
       <Button
         type="submit"

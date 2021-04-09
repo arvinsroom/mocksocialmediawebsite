@@ -26,18 +26,19 @@ async function up(queryInterface, DataTypes) {
       defaultValue: false,
       type: DataTypes.BOOLEAN,
     },
-    consentText: {
+    metaData: {
       allowNull: true,
       type: DataTypes.TEXT,
+      defaultValue: null
     },
     startedAt: {
-      allowNull: true,
+      allowNull: false,
       type: DataTypes.DATE(3),
     },
     finishedAt: {
       allowNull: true,
       type: DataTypes.DATE(3),
-    }
+    },
   });
   await queryInterface.addIndex('User', ['templateId']);
 }

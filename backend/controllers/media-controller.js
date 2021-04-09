@@ -3,7 +3,7 @@ import db from "../clients/database-client";
 const AdminPost = db.AdminPost;
 
 const create = async (req, res, next) => {
-  const { templateId, type, name, mediaPosts } = req.body;
+  const { templateId, type, name, mediaPosts, pageDataOrder } = req.body;
   if (!templateId) {
     res.status(400).send({
       message: "Template Id is required!"
@@ -16,7 +16,7 @@ const create = async (req, res, next) => {
     });
     return;
   }
-  if (!type) {// media
+  if (!type) { // FACEBOOK, TWITTER, etc
     res.status(400).send({
       message: "Page type is required!"
     });
@@ -37,7 +37,8 @@ const create = async (req, res, next) => {
     const pageId = await page.pageCreate({
       name: name,
       templateId,
-      type
+      type,
+      pageDataOrder: pageDataOrder || null
     }, transaction);
 
     // modify the media array

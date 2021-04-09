@@ -28,17 +28,16 @@ export default (sequelize, DataTypes) => {
 	});
 
   Question.associate = (models) => {
-    Question.belongsTo(models.page, {
+    Question.belongsTo(models.Page, {
       as: 'page',
       foreignKey: 'pageId'
+    });
+    Question.hasMany(models.McqOption, {
+      as: 'mcqOption',
+      foreignKey: 'questionId'
     })
   };
   
-  Question.associate = (models) => {
-    Question.hasMany(models.McqOption, {
-      as: 'mcqOption',
-    })
-  };
   return Question;
 }
 

@@ -1,5 +1,5 @@
 import { Button, FormControlLabel, FormGroup, Switch, FormControl, FormLabel, TextField, Toolbar, AppBar, Typography } from '@material-ui/core';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 // import { useState } from 'react';
 import useStyles from '../style';
 import { useSelector, useDispatch } from "react-redux";
@@ -14,8 +14,11 @@ import MCQ from './DynamicComponents/MCQ/MCQ';
 import Opentext from './DynamicComponents/Opentext/Opentext';
 import Register from './DynamicComponents/Register/Register';
 import Facebook from './DynamicComponents/Facebook/Facebook';
+import { userLogout } from "../../actions/userAuth";
+import { updateUser } from '../../actions/user';
 
-import { updateFlowActiveState } from '../../actions/flowState';
+import { updateFlowActiveState, clearFlowState } from '../../actions/flowState';
+import { selectActiveLanguage } from '../../selectors/global';
 
 const Components = {
   MCQ: MCQ,
@@ -34,30 +37,42 @@ const Components = {
 
 const UserResponse = () => {
   const dispatch = useDispatch();
-  const [currentActive, setCurrentActive] = useState(0);
+  // const [currentActive, setCurrentActive] = useState(0);
   const { isLoggedInUser } = useSelector(state => state.userAuth);
-  const { translations } = useSelector(state => state.userAuth);
-  const { flow, active } = useSelector(state => state.flowState);
-  
+  const { flow, active, disabled } = useSelector(state => state.flowState);
+  const selectedLanguage = useSelector(state => selectActiveLanguage(state));
+
   const [done, setDone] = useState(false);
     
   const classes = useStyles();
+  useEffect(() => {
+  }, []);
 
-  if (!isLoggedInUser) {
-    return <Redirect to="/" />;
-  }
+  if (!isLoggedInUser && !done) return <Redirect to="/" />;
 
   // active is 0 initailly
-  if (!flow) {
-    console.log('Flow is not configured!');
-  }
+  // if (flow.length === 0) {
+  //   // console.log('Flow is not configured!', flow);
+  //   return (
+  //     <h5>Some Error Occured, Please check back later!</h5>
+  //   );
+  // }
 
   const handleNext = () => {
-    // dispatch(updateFlowActiveState(active + 1));
-    const len = currentActive + 1;
-    // we were at the very end
-    if (len >= flow.length) setDone(true);
-    else setCurrentActive(len);
+    if (active > -1) {
+      const len = active + 1;
+      // we were at the very end
+      if (len >= flow.length) {
+        const utcDateTime = new Date();
+        var utcDateTimeString = utcDateTime.toISOString().replace('Z', '').replace('T', ' ');
+        const data = {
+          finishedAt: utcDateTimeString
+        }
+        dispatch(updateUser({ userObj: data }));
+        setDone(true);
+        dispatch(userLogout());
+      } else dispatch(updateFlowActiveState());
+    }
   };
 
   const block = (currentActive) => {
@@ -85,10 +100,14 @@ const UserResponse = () => {
       </AppBar>
     </div>
     <div className="rootContainer">
-      {block(currentActive)}
-      <div className="footer">
-        <Button className="nextButton" onClick={handleNext}> Next Page </Button>
-      </div>
+      {active > -1 ?
+      <>
+        {block(active)}
+        <div className="footer">
+          <Button className="nextButton" onClick={handleNext} disabled={disabled}>{selectedLanguage && selectedLanguage['continue']}</Button>
+        </div>
+      </>
+      : <h5>No Flow has been configured yet, Please check back later!</h5>}
     </div>
     </>}
     {done && <div className="jumbotron text-center">

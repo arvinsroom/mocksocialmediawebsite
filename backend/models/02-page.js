@@ -23,10 +23,14 @@ export default (sequelize, DataTypes) => {
       type: DataTypes.ENUM('MCQ', 'OPENTEXT', 'INFO', 'REGISTER', 'FINISH', 'FACEBOOK', 'REDDIT', 'TWITTER', 'INSTAGRAM',
       'YOUTUBE', 'SLACK', 'TIKTOK')
     },
-    order: {
+    pageDataOrder: {
       allowNull: true,
-      type: DataTypes.INTEGER,
-      defaultValue: null
+      type: DataTypes.ENUM('DESC', 'ASC', 'RANDOM')
+    },
+    flowOrder: {
+      allowNull: false,
+      type: DataTypes.SMALLINT,
+      defaultValue: 0
     },
   }, {
 		freezeTableName: true, // model name equal to table name
@@ -35,33 +39,46 @@ export default (sequelize, DataTypes) => {
 
   // might need to go over them again
   Page.associate = (models) => {
-    Page.hasMany(models.Register, {
+    Page.belongsTo(models.Template, {
+      as: 'pageFlowConfigurations',
+      foreignKey: 'templateId'
+    });
+    Page.hasOne(models.Register, {
       as: 'register',
-    })
-  };
-  Page.associate = (models) => {
-    Page.hasMany(models.Finish, {
+      foreignKey: {
+        name: 'pageId',
+        allowNull: false
+      }
+    });
+    Page.hasOne(models.Finish, {
       as: 'finish',
-    })
-  };
-  Page.associate = (models) => {
-    Page.hasMany(models.Info, {
+      foreignKey: {
+        name: 'pageId',
+        allowNull: false
+      }
+    });
+    Page.hasOne(models.Info, {
       as: 'info',
-    })
-  };
-  Page.associate = (models) => {
-    Page.hasMany(models.AdminPost, {
+      foreignKey: {
+        name: 'pageId',
+        allowNull: false
+      }
+    });
+    Page.hasOne(models.AdminPost, {
       as: 'adminPost',
-    })
-  };
-
-  
-  Page.associate = (models) => {
+      foreignKey: {
+        name: 'pageId',
+        allowNull: false
+      }
+    });
     Page.hasMany(models.Question, {
       as: 'question',
-    })
+      foreignKey: {
+        name: 'pageId',
+        allowNull: false
+      }
+    });
   };
-
 
   return Page;
 }

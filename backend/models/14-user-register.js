@@ -11,6 +11,10 @@ export default (sequelize, DataTypes) => {
       type: DataTypes.BLOB('long'),
       defaultValue: null
     },
+    mimeType: {
+      allowNull: true,
+      type: DataTypes.STRING
+    },
     username: {
       allowNull: true,
       type: DataTypes.STRING, // 255
@@ -28,5 +32,12 @@ export default (sequelize, DataTypes) => {
 		freezeTableName: true, // model name equal to table name
     timestamps: false, // enable timestamps
 	});
+
+  UserRegister.associate = (models) => {
+    UserRegister.belongsTo(models.User, {
+      foreignKey: 'userId'
+    })
+  };
+
   return UserRegister;
 }

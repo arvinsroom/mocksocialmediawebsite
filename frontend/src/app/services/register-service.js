@@ -17,9 +17,12 @@ export const getUserRegisterDetails = (pageId) => {
 }
 
 // store user response register response
-export const createUserRegister = (data) => {
-  return http.post("/user/register", data, {
-    headers: userAuthHeader()
+export const createUserRegister = (formData) => {
+  return http.post("/user/register", formData, {
+    headers: {
+      ...userAuthHeader(),
+      "Content-Type": "multipart/form-data",
+    }
   });
 }
 

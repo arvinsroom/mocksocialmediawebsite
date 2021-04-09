@@ -18,15 +18,6 @@ export default (sequelize, DataTypes) => {
       allowNull: false,
       type: DataTypes.STRING(36)
     },
-    randomPosts: {
-      allowNull: false,
-      defaultValue: false,
-      type: DataTypes.BOOLEAN,
-    },
-    // type: {
-    //   allowNull: false,
-    //   type: DataTypes.ENUM('FACEBOOK') // 'REDDIT', 'TWITTER', 'INSTAGRAM'
-    // },
     videoPermission: {
       allowNull: false,
       defaultValue: false,
@@ -55,38 +46,35 @@ export default (sequelize, DataTypes) => {
     Template.belongsTo(models.Admin, {
       as: 'admin',
       foreignKey: 'adminId'
-    })
-  };
-
-  Template.associate = (models) => {
+    });
+    Template.hasMany(models.Page, {
+      as: 'pageFlowConfigurations',
+      foreignKey: 'templateId'
+    });
     Template.hasMany(models.Register, {
       as: 'register',
-    })
-  };
-  Template.associate = (models) => {
-    Template.hasMany(models.Page, {
-      as: 'page',
-    })
-  };
-  Template.associate = (models) => {
+      foreignKey: 'templateId'
+    });
     Template.hasMany(models.Finish, {
       as: 'finish',
-    })
-  };
-  Template.associate = (models) => {
+      foreignKey: 'templateId'
+    });
     Template.hasMany(models.Info, {
       as: 'info',
-    })
-  };
-  Template.associate = (models) => {
+      foreignKey: 'templateId'
+    });
     Template.hasMany(models.AdminPost, {
       as: 'adminPost',
-    })
-  };
-  Template.associate = (models) => {
+      foreignKey: 'templateId'
+    });
     Template.hasMany(models.Language, {
       as: 'language',
-    })
+      foreignKey: 'templateId'
+    });
+    Template.hasMany(models.User, {
+      as: 'user',
+      foreignKey: 'templateId'
+    });
   };
 
   return Template;

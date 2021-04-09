@@ -105,6 +105,9 @@ const Language = () => {
     <Box component="span" className={classes.note} display="block">
       <b>Note: </b> {GENERAL_PAGE.UPDATE_LAN_SPREADSHEET_SAME_TEMP_ID}
     </Box>
+    <Box component="span" className={classes.note} display="block">
+      <b>Note: </b> Make sure to have MOCK language data in only one file across multiple language spreadsheet for different templates.
+    </Box>
     <div className={classes.paper}>
       <form onSubmit={handleSubmit} className={classes.form}>
         <Typography component="h6">

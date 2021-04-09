@@ -59,24 +59,32 @@ export default (sequelize, DataTypes) => {
     AdminPost.belongsTo(models.Template, {
       as: 'template',
       foreignKey: 'templateId'
-    })
-  };
-
-  AdminPost.associate = (models) => {
+    });
     AdminPost.belongsTo(models.Page, {
       as: 'page',
       foreignKey: 'pageId'
-    })
-  };
-
-  AdminPost.associate = (models) => {
+    });
+    // AdminPost.hasMany(models.UserPostAction, {
+    //   // as: 'adminPostActions',
+    //   foreignKey: {
+    //     name: 'adminPostId',
+    //     allowNull: true
+    //   }
+    // });
+    // AdminPost.hasMany(models.UserPostShare, {
+    //   as: 'adminPostShares',
+    //   foreignKey: {
+    //     name: 'parentAdminPostId',
+    //     allowNull: true
+    //   }
+    // });
     AdminPost.hasMany(models.Media, {
       as: 'attachedMediaAdmin',
       foreignKey: {
         name: 'adminPostId',
         allowNull: true
       }
-    })
+    });
   };
 
   return AdminPost;

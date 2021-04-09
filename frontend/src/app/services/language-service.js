@@ -21,3 +21,11 @@ export const updateIsActive = (data) => {
     headers: authHeader()
   });
 }
+
+export const getMockAllLanguages = () => {
+  return http.get("/global/language/mock");
+}
+
+export const getMockLanguageWithDefault = (language) => {
+  return http.get(`/global/language/mock/${language}`);
+}

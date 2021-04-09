@@ -12,73 +12,53 @@ import {
   SET_FB_MEDIA_INITIAL_STATE,
   SET_FB_LIKES_INITIAL_STATE,
   SET_FB_TOTAL_INITIAL_STATE,
-  SET_FB_POST_LIKE_NEW
+  SET_FB_POST_LIKE_NEW,
+  SET_FB_READY_STATE
 } from "../actions/types";
+import cloneDeep from 'lodash/cloneDeep';
+import { createCachedSelector } from 're-reselect';
+import { createSelector } from 'reselect';
+
+const selectAllLikesArr = state => state.facebookPost.metaData;
+const selecLikePostID = (state, id) => id;
+
+// function gett() { return }
+export const selectAllLikes = createCachedSelector(
+  [selectAllLikesArr, selecLikePostID],
+  (likesArr, id) => {
+    return likesArr[id];
+  }
+)(
+  (state, id) => id
+);
+
+const selectAllIDs = state => state.facebookPost.allIds;
+// function gett() { return }
+export const selectSubIds = createSelector(
+  [selectAllIDs],
+  (ids) => {
+      return ids; //.map(id => <PostT singlePost={items[id]} />)
+  }
+);
+
+const selectPosts = state => state.facebookPost.posts;
+const selectPostsID = (state, id) => id;
+// function gett() { return }
+export const selectSubItems = createCachedSelector(
+  [selectPosts,
+    selectPostsID],
+  (posts, id) => {
+      return posts[id]; //.map(id => <PostT singlePost={items[id]} />)
+  }
+)(
+  (state, id) => id
+);
 
 const initialPostState = {
-  posts: [],
+  posts: {},
+  allIds: [],
+  metaData: {}
 };
-
-const initialMediaState = {
-  media: []
-};
-
-const initialLikesState = {
-  likes: []
-};
-
-const initialTotalFbState = {
-  posts: 0
-};
-
-export const facebookMedia = (state = initialMediaState, action) => {
-const { type, payload } = action;
-
-switch (type) {
-  case SET_FB_MEDIA_INITIAL_STATE:
-    return {
-      media: payload.media,
-    };
-
-  default:
-    return state;
-  }
-}
-
-export const facebookLikes = (state = initialLikesState, action) => {
-  const { type, payload } = action;
-  
-  switch (type) {
-    case SET_FB_LIKES_INITIAL_STATE:
-      return {
-        likes: payload.likes,
-      };
-    
-    case SET_FB_POST_LIKE_NEW:
-      let newState = { ...state.likes };
-      newState[payload] = true;
-      return {
-        likes: newState
-      }
-  
-    default:
-      return state;
-    }
-  }
-
-export const facebookTotalPosts = (state = initialTotalFbState, action) => {
-  const { type, payload } = action;
-  
-  switch (type) {
-    case SET_FB_TOTAL_INITIAL_STATE:
-      return {
-        totalPosts: payload.totalPosts,
-      };
-  
-    default:
-      return state;
-    }
-  }
 
 // this is bad and goes against whole point of using redux but for
 // now we can use it as it is a standalone component and we do not have seperate states for post component
@@ -90,26 +70,34 @@ export const facebookPost = (state = initialPostState, action) => {
     case SET_FB_INITIAL_STATE:
       return {
         posts: payload.posts,
+        allIds: payload.allIds,
+        metaData: payload.metaData
       };
 
-    case SET_FB_POST_LIKE:
-      // state.posts[payload.index].like = true;
-      return {
-        ...state,
-        posts: state.posts.map((post, i) =>
-        i === payload.index
-          ? {
-              ...post,
-              like: true
+      case SET_FB_POST_LIKE:
+        return {
+          ...state,
+          metaData: {
+            ...state.metaData,
+            [payload.postId]: {
+              ...state.metaData[payload.postId],
+              like: true,
+              actionId: payload.actionId
             }
-          : post
-      )
-      };
+          }
+        };
 
     case SET_FB_POST_UNLIKE:
-      state.posts[payload.index].like = false;
       return {
-        ...state
+        ...state,
+        metaData: {
+          ...state.metaData,
+          [payload.postId]: {
+            ...state.metaData[payload.postId],
+            like: false,
+            actionId: null
+          }
+        }
       };
 
     case SET_FB_POST_LIKE_ACTION_ID:
@@ -125,52 +113,66 @@ export const facebookPost = (state = initialPostState, action) => {
       };
 
     case SET_FB_POST_COMMENT:
-      let newCommentArr = [ payload.comment, ...state.posts[payload.index].comments];
-      state.posts[payload.index].comments = newCommentArr;
       return {
-        ...state
+        ...state,
+        metaData: {
+          ...state.metaData,
+          [payload.postId]: {
+            ...state.metaData[payload.postId],
+            comments: [ payload.comment, ...state.metaData[payload.postId].comments]
+          }
+        }
       };
 
     case CREATE_FB_POST:
-      // create 
       return {
-        ...state
-      }
-
-    case TOGGLE_COMMENT_BOX:
-      state.posts[payload.index].openComments = !state.posts[payload.index].openComments;
-      return {
-        ...state
+        ...state,
+        posts: {
+          [payload._id]: {
+            _id: payload._id,
+            type: payload.type,
+            name: 'New Post',
+            postMessage: payload.postMessage ? payload.postMessage : "",
+            attachedMediaAdmin: payload.attachedMediaAdmin
+          },
+          ...state.posts,
+        },
+        metaData: {
+          [payload._id]: {
+            comments: [],
+            like: false,
+            actionId: null,
+            isAdmin: false,
+          },
+          ...state.metaData,
+        },
+        allIds: [payload._id, ...state.allIds]
       };
 
-    case HANDLE_CHANGE_COMMENT:
-      state.posts[payload.index].currentComment = payload.comment;
-      return {
-        ...state
-      };
-
-    // shareText, parentAdminPostId, parentUserPostId
     case SHARE_FB_POST:
-      console.log('payload.parentAdminPostIndex: ', payload.parentAdminPostIndex);
-      console.log('payload.parentUserPostIndex: ', payload.parentUserPostIndex);
-      const newPost = {
-        _id: payload._id,
-        isAdmin: false,
-        postMessage: payload.shareText,
-        parentAdminPostIndex: (payload.parentAdminPostIndex !== -1) ? (payload.parentAdminPostIndex + 1) : -1,
-        parentUserPostIndex: (payload.parentUserPostIndex !== -1) ? (payload.parentUserPostIndex + 1) : -1,
-        type: 'SHARE',
-        name: 'Shared Post',
-        openComments: false,
-        comments: [],
-        currentComment: '',
-        like: false,
-      }
-      console.log(newPost);
-      // unshift into the post array
-      state.posts.unshift(newPost);
       return {
-        ...state
+        ...state,
+        posts: {
+          [payload._id]: {
+            _id: payload._id,
+            type: 'SHARE',
+            name: 'Shared Post',
+            postMessage: payload.shareText ? payload.shareText : "",
+            parentAdminPostId: payload.parentAdminPostId,
+            parentUserPostId: payload.parentUserPostId
+          },
+          ...state.posts,
+        },
+        metaData: {
+          [payload._id]: {
+            comments: [],
+            like: false,
+            actionId: null,
+            isAdmin: false,
+          },
+          ...state.metaData,
+        },
+        allIds: [payload._id, ...state.allIds]
       };
 
     default:

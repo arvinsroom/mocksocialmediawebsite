@@ -10,6 +10,7 @@ const useStyles = makeStyles((theme) => ({
   form: {
     width: '100%', // Fix IE 11 issue.
     marginTop: theme.spacing(1),
+    padding: '20px'
   },
   submit: {
     margin: theme.spacing(3, 0, 2),
@@ -54,7 +55,8 @@ const useStyles = makeStyles((theme) => ({
     margin: '10px'
   },
   divider: {
-    margin: 20
+    marginLeft: '20px',
+    marginRight: '20px'
   },
   table: {
     minWidth: 650,
@@ -94,6 +96,22 @@ const useStyles = makeStyles((theme) => ({
   paddingTopBottom: {
     paddingTop: '15px',
     paddingBottom: '10px'
+  },
+  feed: {
+    flex: '1',
+    padding: '30px 150px',
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  post: {
+    width: '100%',
+    justifyContent: 'center',
+    marginTop: '15px',
+    borderRadius: '8px',
+    backgroundColor: 'white',
+    boxShadow: 'inset 0 0 0 1px rgba(0, 0, 0, 0.1)'
   }
 }));
 

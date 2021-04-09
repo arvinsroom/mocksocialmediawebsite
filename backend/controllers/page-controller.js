@@ -24,7 +24,7 @@ const getAllPages = async (req, res, next) => {
       where: {
         templateId: _id
       },
-      attributes: ['_id', 'name', 'type', 'order']
+      attributes: ['_id', 'name', 'type', 'flowOrder']
     });
     res.send(data);
   } catch (error) {
@@ -36,7 +36,7 @@ const getAllPages = async (req, res, next) => {
 };
 
 // for now we only need to update the flow
-// {_id: '', order: ''}, {key is page id }
+// {_id: '', flowOrder: ''}, {key is page id }
 const updatePage = async (req, res, next) => {
   const { pageObj } = req.body;
   if (!pageObj) {
@@ -50,9 +50,9 @@ const updatePage = async (req, res, next) => {
   try {
     transaction = await db.sequelize.transaction();
     const promises = [];
-    for (const [page_id, order] of Object.entries(pageObj)) {
+    for (const [page_id, flowOrder] of Object.entries(pageObj)) {
       promises.push(Page.update({
-        order: order
+        flowOrder: flowOrder
       }, {
         where: {
           _id: page_id

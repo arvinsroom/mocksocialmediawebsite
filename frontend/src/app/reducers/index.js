@@ -4,7 +4,8 @@ import template from "./template";
 import snackbar from './snackbar';
 import userAuth from './userAuth';
 import flowState from './flowState';
-import { facebookMedia, facebookPost, facebookLikes, facebookTotalPosts } from './facebook';
+import global from './global';
+import { facebookPost } from './facebook';
 
 export default combineReducers({
   auth,
@@ -12,8 +13,6 @@ export default combineReducers({
   snackbar,
   userAuth,
   flowState,
-  facebookMedia,
   facebookPost,
-  facebookLikes,
-  facebookTotalPosts
+  global
 });

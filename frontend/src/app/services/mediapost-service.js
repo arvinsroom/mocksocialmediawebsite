@@ -11,8 +11,8 @@ export const create = (data) => {
 // USER Routes
 // fetch what needs to be rendered on Social media page
 // depending on the pageID, we should have correct socail media page and its respective data
-export const getMediaPostDetails = (pageId) => {
-  return http.get(`/user/media/${pageId}`, {
+export const getMediaPostDetails = (pageId, order) => {
+  return http.get(`/user/media/${pageId}/${order}`, {
     headers: userAuthHeader()
   });
 }

@@ -92,7 +92,6 @@ const getFinishDetails = async (req, res, next) => {
 
     res.send({
       data: data,
-      userResponse: req.userId
     });
 
   } catch (error) {

@@ -80,8 +80,8 @@ const Flow = () => {
         <TableRow>
           <TableCell className={classes.body, classes.head} align="center">Page Name</TableCell>
           <TableCell className={classes.body, classes.head} align="center">Page Type</TableCell>
-          <TableCell className={classes.body, classes.head} align="center">Order</TableCell>
-          <TableCell className={classes.body, classes.head} align="center">Previous Order</TableCell>
+          <TableCell className={classes.body, classes.head} align="center">Flow Order</TableCell>
+          <TableCell className={classes.body, classes.head} align="center">Previous Flow Order</TableCell>
         </TableRow>
       </TableHead>
       <TableBody>
@@ -94,6 +94,7 @@ const Flow = () => {
                 id="standard-number"
                 label="Number"
                 onChange={e => handleChange(row._id, e)}
+                inputProps={{ min: 0, max: 65535, step: 1 }}
                 type="number"
                 InputLabelProps={{
                   shrink: true,
@@ -105,7 +106,7 @@ const Flow = () => {
                 id="standard-number"
                 label="Number"
                 disabled={true}
-                value={row.order || 0}
+                value={row.flowOrder || 0}
                 type="number"
                 InputLabelProps={{
                   shrink: true,

@@ -17,13 +17,16 @@
     "express": "^4.17.1",
     "lodash": "^4.17.21",
     "mui-rte": "^1.26.2",
+    "re-reselect": "^4.0.0",
     "react": "^17.0.1",
+    "react-csv": "^2.0.3",
     "react-dom": "^17.0.1",
     "react-redux": "^7.2.2",
     "react-router-dom": "^5.2.0",
     "react-scripts": "4.0.3",
     "redux": "^4.0.5",
     "redux-thunk": "^2.3.0",
+    "reselect": "^4.0.0",
     "stream": "^0.0.2",
     "xlsx": "^0.16.9"
   },
@@ -33,8 +36,8 @@
     "start-dev": "webpack serve --mode development --port 8081",
     "clean-dist": "rm -rf ./dist && mkdir -p ./dist",
     "copy-server": "cp ./src/index.js ./dist/index.js",
-    "dev-server": "npm run clean-dist && npm run build-dev && npm run copy-server && nodemon ./dist/index.js",
-    "prod-server": "npm run clean-dist && npm run build-prod && npm run copy-server && nodemon ./dist/index.js"
+    "dev-server": "npm run clean-dist && npm run build-dev && npm run copy-server && nodemon ./dist/index.js 192.168.0.50",
+    "prod-server": "npm run clean-dist && npm run build-prod && npm run copy-server && nodemon ./dist/index.js 192.168.0.50"
   },
   "eslintConfig": {
     "extends": [

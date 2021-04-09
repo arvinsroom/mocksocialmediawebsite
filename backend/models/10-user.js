@@ -18,27 +18,78 @@ export default (sequelize, DataTypes) => {
       allowNull: true,
       type: DataTypes.STRING,
     },
+    // this will be user response
     consent: {
-      allowNull: true,
-      defaultValue: false,
       type: DataTypes.BOOLEAN,
+      defaultValue: false,
     },
-    consentText: {
+    metaData: {
       allowNull: true,
       type: DataTypes.TEXT,
+      defaultValue: null
     },
     startedAt: {
-      allowNull: true,
-      type: DataTypes.DATE(3),
+      allowNull: false,
+      type: DataTypes.literal('CURRENT_TIMESTAMP(3)'),
       defaultValue: DataTypes.literal('CURRENT_TIMESTAMP(3)'),
     },
     finishedAt: {
       allowNull: true,
-      type: DataTypes.DATE(3),
+      type: DataTypes.literal('CURRENT_TIMESTAMP(3)'),
     }
   }, {
 		freezeTableName: true, // model name equal to table name
     timestamps: false, // enable timestamps
 	});
+
+  // User.associate = (models) => {
+  //   User.hasMany(models.AdminPost, {
+  //     as: 'userPost',
+  //     // sourceKey: '_id'
+  //   })
+  // };
+  // user can have many posts and is connected through
+  // userId on target model i.e. UserPost
+  // The source key is the attribute on the source model that the foreign key attribute on the target model points to. 
+  // By default the source key for a hasOne relation will be the source model's primary attribute. To use a custom attribute, 
+  // use the sourceKey option.
+  User.associate = (models) => {
+    User.hasMany(models.UserRegister, {
+      as: 'userRegisterations',
+      foreignKey: {
+        name: 'userId',
+        allowNull: false
+      }
+    });
+    User.hasMany(models.UserAnswer, {
+      as: 'userQuestionAnswers',
+      foreignKey: {
+        name: 'userId',
+        allowNull: false
+      }
+    });
+    // User.hasMany(models.UserPost, {
+    //   as: 'userPosts',
+    //   foreignKey: {
+    //     name: 'userId',
+    //     allowNull: false
+    //   }
+    // });
+    User.hasMany(models.UserPostAction, {
+      as: 'userPostActions',
+      foreignKey: {
+        name: 'userId',
+        allowNull: false
+      },
+    });
+    User.hasMany(models.UserPostShare, {
+      as: 'userPostShares',
+      foreignKey: {
+        name: 'userId',
+        allowNull: false
+      }
+    });
+  };
+
   return User;
 }

@@ -21,7 +21,7 @@ export const signInUser = async (req, res, next) => {
       where: {
         _id: req.body.templateId
       },
-      attributes: ['randomPosts', 'videoPermission', 'audioPermission', 'cookiesPermission', 'qualtricsId']
+      attributes: ['videoPermission', 'audioPermission', 'cookiesPermission', 'qualtricsId']
     });
     if (!templateExist) {
       return res.status(404).send({ message: "No template exist with provided ID." });
@@ -44,7 +44,7 @@ export const signInUser = async (req, res, next) => {
     });
     // if no active languages provided fetch throw error
     if (!translations) {
-      return res.status(404).send({ message: "Language data has not been configured yet." });
+      return res.status(404).send({ message: "Template Language data has not been configured yet." });
     }
     // if active exist fetch a fallback template for that platform with English language data
     const defaultTranslations = await Language.findOne({
@@ -55,6 +55,7 @@ export const signInUser = async (req, res, next) => {
       },
       attributes: ['name', 'platform', 'translations']
     });
+
     // fetch all flow configurations
     const flowConfig = await page.findAllPages(templateId);
 

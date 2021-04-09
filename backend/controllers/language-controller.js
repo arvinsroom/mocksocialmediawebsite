@@ -217,8 +217,70 @@ const updateLanActive = async (req, res, next) => {
   }
 };
 
+const getMockLanguage = async (req, res, next) => {
+  // fetch template _id from params
+  const language = req.params.language;
+  if (!language) {
+    res.status(400).send({
+      message: "Invalid Language Type!"
+    });
+    return;
+  }
+
+  try {
+    const data = await Language.findOne({
+      where: {
+        platform: 'MOCK',
+        name: language.toUpperCase(),
+      },
+      attributes: ['name', 'platform', 'translations']
+    });
+    const defaultData = await Language.findOne({
+      where: {
+        platform: 'MOCK',
+        name: 'ENGLISH',
+      },
+      attributes: ['name', 'platform', 'translations']
+    });
+    res.send({
+      language: data,
+      defaultLanguage: defaultData
+    });
+  } catch (error) {
+    console.log(error.message);
+    res.status(500).send({
+      message: "Some error occurred while fetching all languages for template Id!"
+    });
+  }
+};
+
+const getMockAllLanguages = async (req, res, next) => {
+  try {
+    const data = await Language.findAll({
+      where: {
+        platform: 'MOCK',
+      },
+      attributes: [
+        'name',
+        'translations',
+        '_id'
+      ]
+    });
+    res.send({
+      language: data,
+    });
+  } catch (error) {
+    console.log(error.message);
+    res.status(500).send({
+      message: "Some error occurred while fetching default mock languages!"
+    });
+  }
+};
+
 export default {
   create,
   getLanguages,
   updateLanActive,
+  getMockLanguage,
+  getMockAllLanguages
 }

@@ -30,6 +30,10 @@ async function up(queryInterface, DataTypes) {
     richText: {
       allowNull: false,
       type: DataTypes.TEXT
+    },
+    consent: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false,
     }
   });
   await queryInterface.addIndex('Info', ['templateId', 'pageId']);

@@ -6,7 +6,7 @@ import InsertEmoticonIcon from '@material-ui/icons/InsertEmoticon';
 import { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { makeStyles } from '@material-ui/core/styles';
-import Modal from '@material-ui/core/Modal';
+import NewModal from '../Post/NewModal';
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -22,10 +22,9 @@ const useStyles = makeStyles((theme) => ({
 const StoryCreate = () => {
   // const [input, setInput] = useState('');
   const [modalStyle] = useState(getModalStyle);
-  const [open, setOpen] = useState(false);
+  const [modalOpen , setModalOpen] = useState(false);
   const classes = useStyles();
   const { posts } = useSelector(state => state.facebookPost);
-
 
   function getModalStyle() {
     const top = 50;
@@ -37,14 +36,6 @@ const StoryCreate = () => {
       transform: `translate(-${top}%, -${left}%)`,
     };
   }
-
-  const handleClose = () => {
-    setOpen(false);
-  };
-
-  const handleOpen = () => {
-    setOpen(true);
-  };
 
   // const handleSubmit = (e) => {
   //   e.preventDefault();
@@ -58,6 +49,9 @@ const StoryCreate = () => {
 
   //   setInput(e.target.value);
   // }
+  const openModal = () => {
+    setModalOpen(!modalOpen);
+  };
 
   return (
     <>
@@ -67,7 +61,7 @@ const StoryCreate = () => {
         <form>
           <input
           // value={input}
-          onClick={handleOpen}
+          onClick={openModal}
           className="createStoryInputText"
           type="text"
           placeholder="What's on your mind?" />
@@ -93,22 +87,7 @@ const StoryCreate = () => {
         </div>
       </div>
     </div>
-    <div>
-      <Modal
-        open={open}
-        onClose={handleClose}
-        aria-labelledby="simple-modal-title"
-        aria-describedby="simple-modal-description">
-        {
-          <div style={modalStyle} className={classes.paper}>
-            <h2 id="simple-modal-title">Text in a modal</h2>
-            <p id="simple-modal-description">
-              Duis mollis, est non commodo luctus, nisi erat porttitor ligula.
-            </p>
-          </div>
-        }
-      </Modal>
-      </div>
+    {modalOpen && <NewModal setModalOpen={setModalOpen}/>}
     </>
   );
 }

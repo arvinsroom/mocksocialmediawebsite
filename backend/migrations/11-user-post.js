@@ -23,25 +23,29 @@ async function up(queryInterface, DataTypes) {
       type: DataTypes.UUID
     },
     linkTitle: {
-      allowNull: false,
+      allowNull: true,
       type: DataTypes.STRING(1024)
     },
     link: {
-      allowNull: false,
+      allowNull: true,
       type: DataTypes.STRING(1024)
     },
     linkPreview: {
-      allowNull: false,
+      allowNull: true,
       type: DataTypes.TEXT
     },
     postMessage: {
-      allowNull: false,
+      allowNull: true,
       type: DataTypes.TEXT
     },
     misinformation: {
       allowNull: false,
       type: DataTypes.BOOLEAN,
-    }
+    },
+    createdAt: {
+      allowNull: false,
+      type: DataTypes.DATE(3),
+    },
   });
   await queryInterface.addIndex('UserPost', ['userId', 'type']);
 }

@@ -13,7 +13,8 @@ import {
   SET_FB_MEDIA_INITIAL_STATE,
   SET_FB_LIKES_INITIAL_STATE,
   SET_FB_TOTAL_INITIAL_STATE,
-  SET_FB_POST_LIKE_NEW
+  SET_FB_POST_LIKE_NEW,
+  SET_FB_READY_STATE
  } from "./types";
 import * as MediaPostService from '../services/mediapost-service';
 import * as FacebookPostService from '../services/facebook-service';
@@ -21,28 +22,56 @@ import Chance from 'chance';
 
 const chance = new Chance();
 
-export const getFacebookPosts = (_id) => (dispatch) => {
-  return MediaPostService.getMediaPostDetails(_id).then(
+export const getFacebookPosts = (_id, order) => (dispatch) => {
+  return MediaPostService.getMediaPostDetails(_id, order).then(
     (response) => {
       let postRecords = response.data?.data || [];
+      console.log('postRecords: ', postRecords);
+      // normalize the data
+      let normalizedObj = {
+        posts: {
+          // byId: {
+
+          // },
+          // allIds: []
+        },
+        metaData: {
+
+        }
+      };
+      let allIds = [];
+      for (let i = 0; i < postRecords.length; i++) {
+        const eachId = postRecords[i]._id;
+        // deconstruct postRecords
+        // const { attachedMediaAdmin, ...rest } = postRecords[i];
+        normalizedObj.posts[eachId] = { ...postRecords[i], name: chance.name()};
+        normalizedObj.metaData[eachId] = {
+          like: false,
+          actionId: null,
+          isAdmin: true,
+          comments: []
+        };
+        allIds.push(eachId);
+      }
+      // console.log('normalized postRecords: ', normalizedObj);
       // add additional details for likes and commenting
       // fetch media assets and store via post ID's
-      const media = [];
+      // const media = [];
       // store via post ID
       // const nameObj = {};
       // const likes = [];
       // const cooments = {};
       // const post = {};
-      for (let i = 0; i < postRecords.length; i++) {
-        postRecords[i]['name'] = chance.name();
-        postRecords[i]['comments'] = [];
-        postRecords[i]['openComments'] = false;
-        postRecords[i]['currentComment'] = '';
-        postRecords[i]['isAdmin'] = true;
-        media.push(postRecords[i].attachedMediaAdmin);
-        delete postRecords[i].attachedMediaAdmin;
+      // for (let i = 0; i < postRecords.length; i++) {
+      //   postRecords[i]['name'] = chance.name();
+      //   postRecords[i]['comments'] = [];
+      //   postRecords[i]['openComments'] = false;
+      //   postRecords[i]['currentComment'] = '';
+      //   postRecords[i]['isAdmin'] = true;
+        // media.push(postRecords[i].attachedMediaAdmin);
+        // delete postRecords[i].attachedMediaAdmin;
         // likes.push(false);
-      }
+      // }
       // console.log('posts: ', postRecords);
       // console.log('media: ', media);
       // console.log('likes: ', likes);
@@ -58,17 +87,25 @@ export const getFacebookPosts = (_id) => (dispatch) => {
       dispatch({
         type: SET_FB_INITIAL_STATE,
         payload: {
-          posts: postRecords,
+          posts: normalizedObj.posts,
+          metaData: normalizedObj.metaData,
+          allIds: allIds,
         }
       });
 
-      dispatch({
-        type: SET_FB_MEDIA_INITIAL_STATE,
-        payload: {
-          media: media
-        }
-      });
+      // dispatch({
+      //   type: SET_FB_MEDIA_INITIAL_STATE,
+      //   payload: {
+      //     media: media,
+      //   }
+      // });
 
+      // dispatch({
+      //   type: SET_FB_READY_STATE,
+      //   payload: {
+      //     ready: true
+      //   }
+      // });
       // dispatch({
       //   type: SET_FB_LIKES_INITIAL_STATE,
       //   payload: {
@@ -96,27 +133,37 @@ export const getFacebookPosts = (_id) => (dispatch) => {
   );
 };
 
+// export const likeFbPost = (postId) => (dispatch) => {
+//   dispatch({
+//     type: SET_FB_POST_LIKE,
+//     payload: {
+//       postId
+//     }
+//   });
+// }
+
 // create a action for specific user with 
 // adminPostId, actionType, isAdminPost, userPostId, platformType, comment
-export const likeFbPost = (data, index) => (dispatch) => {
-  console.log(data, index);
-  return FacebookPostService.createFbAction({actionObj: data}).then(
+export const likeFbPost = (data, id) => (dispatch) => {
+  // console.log(data, index);
+  return FacebookPostService.createFbAction({ actionObj: data }).then(
     (response) => {
       // this event should render the like transtion on the UI
       dispatch({
         type: SET_FB_POST_LIKE,
         payload: {
-          index
-        }
-      });
-      // need to link a likeActionId for unliking a post
-      dispatch({
-        type: SET_FB_POST_LIKE_ACTION_ID,
-        payload: {
-          index,
+          postId: id,
           actionId: response.data._id
         }
       });
+      // need to link a likeActionId for unliking a post
+      // dispatch({
+      //   type: SET_FB_POST_LIKE_ACTION_ID,
+      //   payload: {
+      //     index,
+      //     actionId: 
+      //   }
+      // });
 
       return Promise.resolve();
     },
@@ -139,23 +186,23 @@ export const likeFbPost = (data, index) => (dispatch) => {
 };
 
 
-export const unlikeFbPost = (likeActionId, index) => (dispatch) => {
-  return FacebookPostService.deleteFbAction(likeActionId).then(
+export const unlikeFbPost = (actionId, id) => (dispatch) => {
+  return FacebookPostService.deleteFbAction(actionId).then(
     () => {
       // this event should render the unlike transtion on the UI
       dispatch({
         type: SET_FB_POST_UNLIKE,
         payload: {
-          index
+          postId: id,
         }
       });
       // need to de-link the likeActionId for unliking a post
-      dispatch({
-        type: NULLIFY_FB_POST_LIKE_ACTION_ID,
-        payload: {
-          index
-        }
-      });
+      // dispatch({
+      //   type: NULLIFY_FB_POST_LIKE_ACTION_ID,
+      //   payload: {
+      //     index
+      //   }
+      // });
 
       return Promise.resolve();
     },
@@ -179,25 +226,25 @@ export const unlikeFbPost = (likeActionId, index) => (dispatch) => {
 
 // create a action for specific user with 
 // adminPostId, action, userPostId, comment
-export const commentFbPost = (data, index) => (dispatch) => {
-  return FacebookPostService.createFbAction({ actionObj: data}).then(
+export const commentFbPost = (data, id) => (dispatch) => {
+  return FacebookPostService.createFbAction({ actionObj: data }).then(
     () => {
       dispatch({
         type: SET_FB_POST_COMMENT,
         payload: {
-          index,
+          postId: id,
           comment: data.comment
         }
       });
 
       // clear the comment
-      dispatch({
-        type: HANDLE_CHANGE_COMMENT,
-        payload: {
-          index,
-          comment: ""
-        }
-      });
+      // dispatch({
+      //   type: HANDLE_CHANGE_COMMENT,
+      //   payload: {
+      //     index,
+      //     comment: ""
+      //   }
+      // });
 
       return Promise.resolve();
     },
@@ -235,16 +282,16 @@ export const handleFbComment = (index, comment) => ({
 });
 
 // shareText, parentAdminPostId, parentUserPostId
-export const shareFbPost = (data, parentAdminPostIndex, parentUserPostIndex) => (dispatch) => {
+export const shareFbPost = (data) => (dispatch) => {
   return FacebookPostService.shareFbPost({ shareObj: data }).then(
     (response) => {
       // this event should render the new shared post on the UI
       dispatch({
         type: SHARE_FB_POST,
         payload: {
-          parentAdminPostIndex: parentAdminPostIndex,
-          parentUserPostIndex: parentUserPostIndex,
-          shareText: data.shareText,
+          parentAdminPostId: response.data.parentAdminPostId,
+          parentUserPostId: response.data.parentUserPostId,
+          shareText: response.data.shareText,
           _id: response.data._id
         }
       });
@@ -270,35 +317,37 @@ export const shareFbPost = (data, parentAdminPostIndex, parentUserPostIndex) => 
 };
 
 
-
 // media can use multer for sending a image or video file
 // entry for user post, type (text, photo, video), postMessage, link, linkTitle, linkPreview, media
-// export const createFbPost = (data) => (dispatch) => {
-//   return FacebookPostService.createFbPost(data).then(
-//     () => {
-//       dispatch({
-//         type: CREATE_FB_POST,
-//         payload: {
-//           newPost: data
-//         }
-//       });
+export const createFbPost = (data) => (dispatch) => {
+  return FacebookPostService.createFbPost(data).then(
+    (response) => {
+      dispatch({
+        type: CREATE_FB_POST,
+        payload: {
+          type: response.data.type,
+          postMessage: response.data.postMessage,
+          attachedMediaAdmin: response.data.attachedMediaAdmin, // [{ _id: ..., other media details }]
+          _id: response.data._id
+        }
+      });
 
-//       return Promise.resolve();
-//     },
-//     (error) => {
-//       const message =
-//         (error.response &&
-//           error.response.data &&
-//           error.response.data.message) ||
-//         error.message ||
-//         error.toString();
+      return Promise.resolve();
+    },
+    (error) => {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
 
-//       dispatch({
-//         type: SNACKBAR_ERROR,
-//         payload: message,
-//       });
+      dispatch({
+        type: SNACKBAR_ERROR,
+        payload: message,
+      });
 
-//       return Promise.reject();
-//     }
-//   );
-// };
+      return Promise.reject();
+    }
+  );
+};
