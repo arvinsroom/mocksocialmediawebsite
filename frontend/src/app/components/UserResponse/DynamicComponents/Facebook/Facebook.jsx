@@ -8,7 +8,6 @@ import { getFacebookPosts } from "../../../../actions/facebook";
 import { updateFlowDisabledState } from '../../../../actions/flowState';
 
 const Facebook = ({ data }) => {
-  console.log('SocialMedia: ', data);
   const { isLoggedInUser } = useSelector(state => state.userAuth);
   const dispatch = useDispatch();
   const classes = useStyles();

@@ -1,9 +1,7 @@
 import "./Post.css";
-import ThumbUpIcon from '@material-ui/icons/ThumbUp';
-import ChatBubbleOutlineIcon from '@material-ui/icons/ChatBubbleOutline';
-import NearMeIcon from '@material-ui/icons/NearMe';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import AccountCircleIcon from '@material-ui/icons/AccountCircle';
+import ThumbUpOutlinedIcon from '@material-ui/icons/ThumbUpOutlined';
+// import ChatBubbleOutlineIcon from '@material-ui/icons/ChatBubbleOutline';
+// import NearMeIcon from '@material-ui/icons/NearMe';
 import { useSelector, useDispatch } from "react-redux";
 import { likeFbPost, unlikeFbPost, commentFbPost } from "../../../../../../actions/facebook";
 import { selectAllLikes } from '../../../../../../reducers/facebook';
@@ -11,6 +9,10 @@ import { useState } from "react";
 import { Avatar } from "@material-ui/core";
 import { showInfoSnackbar } from "../../../../../../actions/snackbar";
 import ShareModal from './ShareModal';
+import shareLogo from'../../../../../../../../public/assets/icons/share.png';
+import likeLogo from'../../../../../../../../public/assets/icons/like.png';
+import commentLogo from'../../../../../../../../public/assets/icons/comment.png';
+
 
 const PostBottom = ({ id }) => {
   const postMetadata = useSelector(state => selectAllLikes(state, id));
@@ -23,7 +25,6 @@ const PostBottom = ({ id }) => {
   const dispatch = useDispatch();
   // adminPostId, action, userPostId, comment
   const handleLike = () => {
-    console.log('handle-Like');
     const data = {
       action: 'LIKE',
       comment: null,
@@ -34,7 +35,6 @@ const PostBottom = ({ id }) => {
   };
 
   const handleUnlike = () => {
-    console.log('handle-Unlike');
     dispatch(unlikeFbPost(postMetadata.actionId, id));
   };
 
@@ -64,27 +64,25 @@ const PostBottom = ({ id }) => {
   return (
   <>
       <div className="postOptions">
-        {console.log('inside postBottom')}
 
         {!postMetadata.like && <div className="postOption" onClick={handleLike}>
-          <ThumbUpIcon style={{color: 'grey'}} />
-          <p style={{color: 'grey'}}>Like</p>
+          {/* <ThumbUpOutlinedIcon style={{color: 'grey'}} /> */}
+          <img src={likeLogo} style={{ width: '3em', height: '3em', marginRight: '-10px'}} alt="like Logo"/>
+          <p style={{color: 'grey', paddingTop: '4px'}}>Like</p>
         </div>}
         {postMetadata.like && <div className="postOption" onClick={handleUnlike}>
-          <ThumbUpIcon style={{color: '#1877F2' }} />
-          <p style={{color: '#1877F2' }}>Like</p>
+          {/* <ThumbUpOutlinedIcon style={{color: '#1877F2' }} /> */}
+          <img src={likeLogo} style={{ width: '3em', height: '3em', marginRight: '-10px'}} alt="like Logo"/>
+          <p style={{color: '#1877F2', paddingTop: '4px' }}>Like</p>
         </div>}
         <div className="postOption" onClick={toggleComment}>
-          <ChatBubbleOutlineIcon />
+          {/* <ChatBubbleOutlineIcon /> */}
+          <img src={commentLogo} style={{ width: '3em', height: '3em', marginRight: '-10px'}} alt="comment Logo"/>
           <p>Comment</p>
         </div>
         <div className="postOption" onClick={openModal}>
-          <NearMeIcon />
+          <img src={shareLogo} style={{ width: '3em', height: '3em', marginRight: '-10px'}} alt="share Logo"/>
           <p>Share</p>
-        </div>
-        <div className="postOption" >
-          <AccountCircleIcon />
-          <ExpandMoreIcon />
         </div>
     </div>
     {openCommentBox && 

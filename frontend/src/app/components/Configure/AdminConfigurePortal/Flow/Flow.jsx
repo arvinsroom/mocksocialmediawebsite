@@ -106,6 +106,7 @@ const Flow = () => {
                 id="standard-number"
                 label="Number"
                 disabled={true}
+                // InputProps={{ inputProps: { min: 0, max: 65535 } }}
                 value={row.flowOrder || 0}
                 type="number"
                 InputLabelProps={{

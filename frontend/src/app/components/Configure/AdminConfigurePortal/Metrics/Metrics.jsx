@@ -49,7 +49,6 @@ const Template = () => {
   const downloadSpecificTemplate = async (templateId, e) => {
     e.preventDefault();
     const { data } = await fetchTemplateData(templateId);
-    console.log('downloadSpecificTemplate', data);
     if (data) setAllowAllDataDownload(data);
     else setAllowAllDataDownload(null);
   };
@@ -57,7 +56,6 @@ const Template = () => {
   const downloadAllTemplateData = async (e) => {
     e.preventDefault();
     const { data } = await fetchTemplateData();
-    console.log('downloadAllTemplateData', data);
     if (data) setAllowAllDataDownload(data);
     else setAllowAllDataDownload(null);
   }

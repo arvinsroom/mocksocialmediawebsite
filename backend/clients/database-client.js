@@ -1,3 +1,5 @@
+import Sequelize from 'sequelize';
+
 import Admin from '../models/00-admin';
 import Template from '../models/01-template';
 import Language from '../models/03-language';
@@ -15,20 +17,30 @@ import UserPostShare from '../models/13-user-post-share';
 import UserRegister from '../models/14-user-register';
 import UserAnswer from '../models/15-user-answer';
 import Media from '../models/16-media';
+import UserPostTracking from '../models/17-user-post-tracking';
+import UserGlobalTracking from '../models/18-user-global-tracking';
 
-import Sequelize from 'sequelize';
-
-const environment = 'local';
-const config = require(__dirname + '/../config/config.json')[environment];
+let config;
+try {
+  config = require(__dirname + '/../config-' + process.env.NODE_ENV.toString() + '.json')['database'];
+} catch (error) {
+  console.log('Please specify a config-production.json or config-development.json file!')
+}
 
 // get information about local or aws MYSQL credentials 
 const connectionSetting = () => {
   return {
-    database: config.database,
+    database: config.name,
     host: config.host,
     username: config.username,
     password: config.password,
     port: config.port,
+    pool: {
+      acquire: 30000,
+      idle: 10000,
+      max: 5,
+      min: 0,
+    },
   };
 };
 
@@ -72,6 +84,8 @@ const UserPostShareModel = UserPostShare(sequelize, Sequelize);
 const UserRegisterModel = UserRegister(sequelize, Sequelize);
 const UserAnswerModel = UserAnswer(sequelize, Sequelize);
 const MediaModel = Media(sequelize, Sequelize);
+const UserPostTrackingModel = UserPostTracking(sequelize, Sequelize);
+const UserGlobalTrackingModel = UserGlobalTracking(sequelize, Sequelize);
 
 db[AdminModel.name] = AdminModel;
 db[TemplateModel.name] = TemplateModel;
@@ -90,6 +104,8 @@ db[UserPostShareModel.name] = UserPostShareModel;
 db[UserRegisterModel.name] = UserRegisterModel;
 db[UserAnswerModel.name] = UserAnswerModel;
 db[MediaModel.name] = MediaModel;
+db[UserPostTrackingModel.name] = UserPostTrackingModel;
+db[UserGlobalTrackingModel.name] = UserGlobalTrackingModel;
 
 Object.keys(db).forEach((modelName) => {
   if (db[modelName].associate) {

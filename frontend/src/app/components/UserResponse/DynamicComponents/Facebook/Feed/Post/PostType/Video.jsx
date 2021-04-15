@@ -60,7 +60,6 @@ const Video = ({ attachedMedia }) => {
   return (
     <>
     {attachedMedia && <div className="postImage">
-    {console.log('inside video')}
       {/* <video ref={videoRef} controls alt="" key={posts[index].attachedMediaAdmin[0]._id} /> */}
       <video ref={videoRef} controls alt="" key={attachedMedia._id} />
     </div>}

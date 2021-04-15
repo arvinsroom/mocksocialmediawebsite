@@ -34,12 +34,24 @@
 .postOptions {
   padding-top: 10px;
   border-top: 1px solid lightgray;
+  border-bottom: 1px solid lightgray;
   display: flex;
   justify-content: space-evenly;
-  font-size: medium;
   color: gray;
   cursor: pointer;
   padding: 5px;
+  padding-right: 4px;
+  margin-left: -2px;
+  flex-shrink: 0;
+  /* margin-top: -6px; */
+  align-items: stretch;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 4px;
+  margin-right: 12px;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, '.SFNSText-Regular', sans-serif;
+  font-size: 12px;
+  color: #606770;
 }
 
 .postOption {
@@ -48,6 +60,10 @@
   justify-content: center;
   padding: 5px;
   flex: 1;
+  height: 44px;
+  margin-bottom: -6px;
+  padding-top: 0;
+  margin-top: -6px;
 }
 
 .postOption > p {
@@ -55,8 +71,7 @@
 }
 
 .postOption:hover {
-  background-color: #eff2f5;
-  border-radius: 4px;
+  background-color: rgba(0, 0, 0, 0.05);
 }
 
 .selectedFile {
@@ -169,14 +184,19 @@ a.link-preview .link-area .og-title {
 }
 
 .og-title {
-  font-family: Helvetica, sans-serif;
+  /* font-family: Helvetica, sans-serif; */
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, '.SFNSText-Regular', sans-serif;
   color: #828282;
+  font-size: 12px;
 }
 
 .og-description {
   text-overflow: ellipsis;
-  font-family: Helvetica, sans-serif;
-  color: black
+  /* font-family: Helvetica, sans-serif; */
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, '.SFNSText-Regular', sans-serif;
+  color: black;
+  font-size: 12px;
+
 }
 
 

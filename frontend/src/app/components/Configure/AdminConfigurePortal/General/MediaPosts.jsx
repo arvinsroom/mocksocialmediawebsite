@@ -58,7 +58,6 @@ const MediaPosts = () => {
 
   const handleSubmit = async e => {
     e.preventDefault();
-    console.log(orderType);
     if (!templateId) {
       dispatch(showErrorSnackbar(TEMPLATE.SELECT_OR_CREATE_TEMPLATE));
     }

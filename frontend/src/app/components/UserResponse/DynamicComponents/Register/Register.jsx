@@ -153,7 +153,6 @@ const Register = ({ data }) => {
         onChange={handleUsername}
         autoFocus
       />
-      {console.log('username')}
       </>: null }
       
       {registerState && <Button

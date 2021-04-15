@@ -23,7 +23,6 @@ export const getAllLanguagesData = () => (dispatch) => {
           }
         }
       }
-      console.log(normal);
       dispatch({
         type: SET_GLOBAL_LANGUAGES,
         payload: {

@@ -22,7 +22,6 @@ const MCQ = ({ data }) => {
   const fetch = async () => {
     const ret = await getQuestions(data._id, data.type);
     const resultArr = ret.data.result;
-    console.log('Mcq questions: ', resultArr);
     if (resultArr) {
       await setMcqQuestions(ret.data.result);
       let obj = {};
@@ -36,7 +35,6 @@ const MCQ = ({ data }) => {
         }
       }
       await setRequired(reqObj);
-      console.log('These is required questions:', reqObj);
       await setMcqResponse(obj);
     }
   };

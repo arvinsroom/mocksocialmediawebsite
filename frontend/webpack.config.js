@@ -9,7 +9,7 @@ const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 module.exports = function(_env, argv) {
   const isProduction = argv.mode === "production";
   const isDevelopment = !isProduction;
-
+  
   return {
     devtool: isDevelopment && "cheap-module-source-map",
     entry: path.resolve(__dirname, "src/app/index.jsx"),

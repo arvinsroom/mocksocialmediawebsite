@@ -23,11 +23,6 @@ export default (sequelize, DataTypes) => {
       type: DataTypes.BOOLEAN,
       defaultValue: false,
     },
-    metaData: {
-      allowNull: true,
-      type: DataTypes.TEXT,
-      defaultValue: null
-    },
     startedAt: {
       allowNull: false,
       type: DataTypes.literal('CURRENT_TIMESTAMP(3)'),
