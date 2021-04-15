@@ -1,70 +1,35 @@
-# Getting Started with Create React App
+This project is build using Sequilize, Nodejs server and React JS front end.
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+# Run this project locally
 
-## Available Scripts
+## Run React JS frontend
+Step 1: Go to frontend folder and from terminal run ```npm run install```
+Step 2: Run ```npm run prod-server && npm run run-prod-server```
+Step 3: You should be able to go to [http://localhost:3000](http://localhost:3000) to view it in the browser.
 
-In the project directory, you can run:
+But wait, you haven't set anything for the backend. Before you can actually make all requests, you would have to follow some of the following steps:
 
-### `npm start`
+Before running the backend nodejs server, you have to make sure Mysql instance is running in your local machine.
+https://downloads.mysql.com/archives/community/
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+And choose preferebly 8.0.22 version and install it for your local machine.
+Once it is up and running in your local environment you can set up.
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+Please check config-development.json to know which configuration you would need to run your
+database successfull.
 
-### `npm test`
+## Run Node JS server with all database migrations
+Step 1: Go to backend folder and from terminal run ```npm run install```
+Step 2: Run ```npm run prod-server && npm run run-prod-server``` from within backend folder.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+Now you should be able to successfully run this application on your local machine.
 
-### `npm run build`
+# Run and host this project on your AWS etc.
+This is an example of hosting it on AWS.
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+1) Get AWS account
+2) Get a Amazon RDS MySQL instance (8.0.22)
+3) Get Amazon EC2 instance
+4) Configue EC2 instance with database info you created in step 2
+5) run docker-compose up from root of this repo.
+6) copy this image to Amazon EC2 instance.

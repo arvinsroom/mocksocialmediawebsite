@@ -1,0 +1,230 @@
+/* .postImage > img {
+  width: 100%;
+} */
+
+/* .postImage > video {
+  width: 100%;
+} */
+
+.postTopAvatar {
+  margin-right: 10px
+}
+
+.postTopInfo > h3 {
+  font-size: small;
+}
+
+.postTopInfo > p {
+  font-size: x-small;
+  color: gray;
+}
+/* .postBottom {
+  margin-top: 10px;
+  margin-bottom: 10px;
+  padding: 15px 25px;
+} */
+
+.postTop {
+  display: flex;
+  position: relative;
+  align-items: center;
+  padding-left: 15px;
+}
+
+.postOptions {
+  padding-top: 10px;
+  border-top: 1px solid lightgray;
+  border-bottom: 1px solid lightgray;
+  display: flex;
+  justify-content: space-evenly;
+  color: gray;
+  cursor: pointer;
+  padding: 5px;
+  padding-right: 4px;
+  margin-left: -2px;
+  flex-shrink: 0;
+  /* margin-top: -6px; */
+  align-items: stretch;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 4px;
+  margin-right: 12px;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, '.SFNSText-Regular', sans-serif;
+  font-size: 12px;
+  color: #606770;
+}
+
+.postOption {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 5px;
+  flex: 1;
+  height: 44px;
+  margin-bottom: -6px;
+  padding-top: 0;
+  margin-top: -6px;
+}
+
+.postOption > p {
+  margin-left: 10px;
+}
+
+.postOption:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+.selectedFile {
+  width: 100%;
+}
+
+.og-image > img {
+  width: 100%;
+}
+
+/* .link-preview { */
+  /* display: table-caption; */             
+  /* make text wrap under image  */
+  /* text-decoration: none;
+} */
+
+/* .descriptions {
+  background-color: #F2F3F5;
+  padding: 5px;
+}
+
+a.link-preview .link-area .og-title {
+  font-size: medium;
+  padding-bottom: 15px;
+}
+
+.og-title {
+  font-family: Helvetica, sans-serif;
+  color: #828282;
+}
+
+.og-description {
+  text-overflow: ellipsis;
+  font-family: Helvetica, sans-serif;
+  color: black
+} */
+
+.createComment {
+  display: flex;
+  border-bottom: 1px solid #eff2f5;
+  padding: 15px;
+}
+
+.createComment > form {
+  flex: 1;
+  display: flex;
+}
+
+.createComment > form > input {
+  outline-width: 0;
+  border: none;
+  padding: 5px 20px;
+  margin: 0 10px;
+  border-radius: 999px;
+  background-color: #eff2f5;
+}
+
+.createCommentInputText {
+  flex: 1;
+}
+
+.showComment {
+  border-bottom: 1px solid #eff2f5;
+  padding: 10px;
+  display: flex;
+  margin-left: 5%;
+}
+
+.displayIndividualComment {
+  outline-width: 0;
+  border: none;
+  padding: 5px 20px;
+  margin: 0 10px;
+  border-radius: 999px;
+  background-color: #eff2f5;
+  flex: 1
+}
+
+.postComment {
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 5px;
+  border: none;
+  color: grey;
+  cursor: pointer;
+}
+
+
+
+
+
+
+
+.link-preview {
+  /* display: table-caption; */             
+  /* make text wrap under image  */
+  text-decoration: none;
+}
+
+.descriptions {
+  background-color: #F2F3F5;
+  padding: 5px;
+}
+
+a.link-preview .link-area .og-title {
+  font-size: medium;
+  padding-bottom: 15px;
+}
+
+.og-title {
+  /* font-family: Helvetica, sans-serif; */
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, '.SFNSText-Regular', sans-serif;
+  color: #828282;
+  font-size: 12px;
+}
+
+.og-description {
+  text-overflow: ellipsis;
+  /* font-family: Helvetica, sans-serif; */
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, '.SFNSText-Regular', sans-serif;
+  color: black;
+  font-size: 12px;
+
+}
+
+
+.container {
+  position: relative;
+  width: 100%;
+  max-width: 400px;
+}
+
+.container img {
+  width: 100%;
+  height: auto;
+}
+
+.container .btn {
+  position: absolute;
+  color: gray;
+  font-size: 20px;
+  /* padding: 12px 24px; */
+  border: none;
+  cursor: pointer;
+  border-radius: 50%;
+  text-align: center;
+  top: 8px;
+  right: 16px;
+}
+
+.container .btn:hover {
+  background-color: #eff2f5;
+  box-shadow: 0px 0px 1px 1px grey;
+}
