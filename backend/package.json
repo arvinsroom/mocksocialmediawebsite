@@ -4,6 +4,7 @@
   "private": true,
   "main": "server.js",
   "dependencies": {
+    "@babel/runtime": "^7.13.10",
     "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",
     "express": "^4.17.1",
@@ -18,9 +19,10 @@
     "build-dev": "webpack --mode development",
     "start-dev": "webpack serve --mode development",
     "clean-db": "rm -rf ./db && mkdir -p ./db",
-    "dev-server": "npm run clean-db && npm run build-dev && nodemon --inspect ./db/index.js",
+    "dev-server": "npm run clean-db && npm run build-dev",
     "prod-server": "npm run clean-db && npm run build-prod",
-    "run-prod-server": "node ./db/index.js"
+    "run-prod-server": "node ./db/index.js",
+    "run-dev-server": "nodemon --inspect ./db/index.js"
   },
   "eslintConfig": {
     "extends": [
