@@ -1,0 +1,17 @@
+version: '3'
+
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: ./Dockerfile
+    image: "mocksocialmedia/mock-social-media-webiste-backend"
+    ports:
+      - "8081:8081"
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: ./Dockerfile
+    image: "mocksocialmedia/mock-social-media-webiste-frontend"
+    ports:
+      - "8080:8080"

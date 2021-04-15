@@ -1,0 +1,17 @@
+.feed {
+  flex: 1;
+  padding: 30px 150px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.post {
+  width: 100%;
+  justify-content: center;
+  margin-top: 15px;
+  border-radius: 8px;
+  background-color: white;
+  box-shadow: 0px 5px 7px -7px rgba(0,0,0, 0.75);
+}

@@ -1,0 +1,18 @@
+{
+  "database": {
+    "name": "mockwebsitedb",
+    "username": "root",
+    "password": "rootboot",
+    "host": "127.0.0.1",
+    "port": "",
+    "dialect": "mysql"
+  },
+  "adminCredentials": [
+    {
+      "username": "test",
+      "password": "testtest"
+    }
+  ],
+  "secret": "some-secret-key",
+  "secretUser": "some-secret-user-key"
+}
