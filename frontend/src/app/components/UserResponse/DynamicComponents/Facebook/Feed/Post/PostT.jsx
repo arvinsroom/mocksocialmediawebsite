@@ -42,14 +42,12 @@ const PostT = ({ id }) => {
   //   dispatch(likeFbPost(id));
   // };
   const [ss, setSs] = useState(null);
-  console.log(singlePost);
   useEffect(() => {
     setSs(
       <>
       {singlePost && 
           <>
             <div className="postTop">
-            {console.log('inside PostT!')}
               <Avatar
               className="postTopAvatar"
               />

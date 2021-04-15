@@ -1,5 +1,4 @@
 import * as express from "express";
-import bodyParser from "body-parser";
 import cors from "cors";
 import {
   umzugUp,
@@ -31,12 +30,16 @@ import userQuesion from './routes/user-question-routes';
 import userAnswer from './routes/user-answer-routes';
 import userMain from './routes/user-main-routes';
 
+const bcrypt = require("bcryptjs");
 const { verifyToken, isAdmin } = require("./middleware/authJwt");
-const { verifyUserToken, isUser } = require("./middleware//userAuthJwt");
+const { verifyUserToken, isUser } = require("./middleware/userAuthJwt");
 
-// get the admin model, we can perform operations on this
-const Admin = db.Admin;
-var bcrypt = require("bcryptjs");
+let config;
+try {
+  config = require(__dirname + '/config-' + process.env.NODE_ENV.toString() + '.json')['adminCredentials'];
+} catch (error) {
+  console.log('Please specify a config-production.json or config-development.json file!')
+}
 
 // TODO: This should be removed before we go live or production
 // This will drop every single table
@@ -47,6 +50,43 @@ try {
   console.log(err);
 }
 
+const checkAndCreateAdmins = async () => {
+  let transaction;
+  try {
+    transaction = await db.sequelize.transaction();
+    let promisses = [];
+    // Save Admin object from config to the database
+    if (config && config instanceof Array) {
+      for (let i = 0; i < config.length; i++) {
+        // check if user with the username exist, if it exist do not do anything
+        const data = await db.Admin.findOne({
+          where: {
+            username: config[i].username
+          }
+        });
+        if (data) console.log(`Skipping user with name ${config[i].username} as it already exist`);
+        else {
+          const admin = {
+            username: config[i].username,
+            password: bcrypt.hashSync(config[i].password, 8)
+          };
+          promisses.push(db.Admin.create(admin, { transaction }));
+          console.log(`Creating Admin with username: ${config[i].username}`);
+        }
+      }
+    }
+    await Promise.all(promisses);
+    // if we reach here, there were no errors therefore commit the transaction
+    await transaction.commit();
+    console.log("All admin credentials created!");
+  } catch (error) {
+    console.log("Some error occured whicle creating admin credentials: ", error.message);
+    // if we reach here, there were some errors thrown, therefore roolback the transaction
+    if (transaction) await transaction.rollback();
+    console.log("Rolled back all admin credentials!");
+  }
+};
+
 // Later we will use the migrations folder to add any new change to the mysql table
 // example: https://github.com/abelnation/sequelize-migration-hello/blob/master/migrations/01_UserEyeColorAdded.js
 // This will run all the migrations again
@@ -54,37 +94,23 @@ try {
   await umzugUp();
   console.log('Tables Created, Migrations ran successfully!');
 
-  console.log('Trying to inserting entries for admin user in the database from config.json!');
-  // before starting add entries for admin user in the database, only push the first one
-  const config = require(__dirname + '/config/config.json')['adminCredentials'][0];
-  // Save Admin object from config to the database
-  const admin = {
-    username: config.username,
-    password: bcrypt.hashSync(config.password, 8)
-  };
-  // Save Admin object in the database
-  // Admin.create(admin)
-  // .then(data => {
-  //   console.log('User Created: ', data);
-  // })
-  // .catch(err => {
-  //   console.log("Some error occurred while creating the Admin Username/Password.", err);
-  // });
+  console.log('Trying to inserting entries for admin credentials in the database!');
+  await checkAndCreateAdmins();
 
   // create a express server
   const app = express();
 
   var corsOptions = {
-    origin: '*'//"http://localhost:8081"
+    origin: "http://localhost:8080"
   };
 
   app.use(cors(corsOptions));
 
   // parse requests of content-type - application/json
-  app.use(bodyParser.json());
+  app.use(express.json());
 
   // parse requests of content-type - application/x-www-form-urlencoded
-  app.use(bodyParser.urlencoded({
+  app.use(express.urlencoded({
     extended: true
   }));
 
@@ -132,7 +158,7 @@ try {
   app.use('/api/user/main', [verifyUserToken, isUser], userMain);
 
   // set port, listen for requests
-  const PORT = process.env.PORT || 8082;
+  const PORT = process.env.PORT || 8081;
   app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}.`);
   });

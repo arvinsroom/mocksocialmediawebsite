@@ -35,7 +35,6 @@ const Photo = ({ attachedMedia }) => {
   return (
     <>
       {attachedMedia ? <div className="postImage">
-      {console.log('inside photo')}
         {/* <img ref={imageRef} alt="" key={posts[index].attachedMediaAdmin[0]._id} /> */}
         <img ref={imageRef} alt="" key={attachedMedia._id} />
       </div> : null}

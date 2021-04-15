@@ -100,7 +100,7 @@ const randomizeSamePages = (pages, pagesLength) => {
 
 // get all pages (flow) data using template Id
 // have 
-const findAllPages = async (templateId) => {
+const findAllPages = async (templateId, transaction) => {
   try {
     const pages = await Page.findAll({
       where: {
@@ -109,7 +109,7 @@ const findAllPages = async (templateId) => {
       order: [
         ['flowOrder', 'ASC']
       ]
-    });
+    }, { transaction });
 
     const pagesLength = pages.length;
     // if two posts ID are same then using random numbers switch them

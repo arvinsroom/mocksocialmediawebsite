@@ -1,7 +1,11 @@
 import db from "../clients/database-client";
 const jwt = require("jsonwebtoken");
-const secret = require(__dirname + '/../config/config.json')['secretUser'];
-const User = db.User;
+let secret;
+try {
+  secret = require(__dirname + '/../config-' + process.env.NODE_ENV.toString() + '.json')['secretUser'];
+} catch (error) {
+  console.log('Please specify a config-production.json or config-development.json file!')
+}
 
 export const verifyUserToken = (req, res, next) => {
   let token = req.headers["x-access-token"];
@@ -24,7 +28,7 @@ export const verifyUserToken = (req, res, next) => {
 };
 
 export const isUser = (req, res, next) => {
-  User.findByPk(req.userId)
+  db.User.findByPk(req.userId)
     .then(() => {
       next();
   })

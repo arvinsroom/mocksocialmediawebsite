@@ -2,11 +2,13 @@ import db from "../clients/database-client";
 // import Chance from 'chance';
 const AdminPost = db.AdminPost;
 const Media = db.Media;
-const User = db.User;
+const UserGlobalTracking = db.UserGlobalTracking;
 // const chance = new Chance();
 
 const getDefaultPosts = async (req, res, next) => {
+  let transaction;
   try {
+    transaction = await db.sequelize.transaction();
     if (!req.userId) {
       res.status(400).send({
         message: "Invalid User Token, please log in again!"
@@ -37,7 +39,7 @@ const getDefaultPosts = async (req, res, next) => {
             as: 'attachedMediaAdmin',
           }
         ]
-      });
+      }, { transaction });
     } else if (order === 'DESC') {
       data = await AdminPost.findAll({
         where: {
@@ -52,7 +54,7 @@ const getDefaultPosts = async (req, res, next) => {
             as: 'attachedMediaAdmin',
           }
         ]
-      });
+      }, { transaction });
     } else {
       // keep default as ASC or anyotherfallback
       data = await AdminPost.findAll({
@@ -68,7 +70,7 @@ const getDefaultPosts = async (req, res, next) => {
             as: 'attachedMediaAdmin',
           }
         ]
-      });
+      }, { transaction });
     }
     // fetch the renderering order and store that in database
     let postRenderMetadata = [];
@@ -78,13 +80,16 @@ const getDefaultPosts = async (req, res, next) => {
       });
     }
     if (postRenderMetadata.length > 0) {
-      const stringify = JSON.stringify({ postFlowOrder: postRenderMetadata });
-      await User.update({ metaData: stringify }, {
-        where: {
-          _id: req.userId,
-        }
-      });
+      const stringify = JSON.stringify(postRenderMetadata);
+      console.log('Adding to User Global Tracking: ', stringify);
+      await UserGlobalTracking.create({
+        userId: req.userId,
+        pageFlowOrder: stringify,
+        pageId
+      }, { transaction });
     }
+
+    await transaction.commit();
     // add random names for user 
     // if (data) {
     //   data.forEach(element => {
@@ -105,14 +110,14 @@ const getDefaultPosts = async (req, res, next) => {
     res.send({
       data: data,
     });
-  
-    } catch (error) {
-      console.log(error.message);
-      res.status(500).send({
-        message:
-          error.message || "Some error occurred while Fetching default media post(s)."
-      });
-    }
+  } catch (error) {
+    console.log(error.message);
+    if (transaction) await transaction.rollback();
+    res.status(500).send({
+      message:
+        error.message || "Some error occurred while Fetching default media post(s)."
+    });
+  }
 };
 
 export default {

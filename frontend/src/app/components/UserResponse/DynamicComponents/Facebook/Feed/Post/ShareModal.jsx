@@ -74,7 +74,6 @@ const ShareModal = ({ id, isAdmin, setModalOpen }) => {
         >
           {
             <div style={modalStyle} className={classes.paper}>
-              {console.log('inside modal')}
               <form onSubmit={handleSubmit}>
               <h2 id="simple-modal-title">Write Post</h2>
               <div className="createComment">

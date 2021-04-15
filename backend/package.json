@@ -5,7 +5,6 @@
   "main": "server.js",
   "dependencies": {
     "bcryptjs": "^2.4.3",
-    "body-parser": "^1.19.0",
     "cors": "^2.8.5",
     "express": "^4.17.1",
     "jsonwebtoken": "^8.5.1",
@@ -20,7 +19,8 @@
     "start-dev": "webpack serve --mode development",
     "clean-db": "rm -rf ./db && mkdir -p ./db",
     "dev-server": "npm run clean-db && npm run build-dev && nodemon --inspect ./db/index.js",
-    "prod-server": "npm run clean-db && npm run build-prod && node ./db/index.js"
+    "prod-server": "npm run clean-db && npm run build-prod",
+    "run-prod-server": "node ./db/index.js"
   },
   "eslintConfig": {
     "extends": [
@@ -51,6 +51,7 @@
     "@babel/plugin-transform-runtime": "^7.13.8",
     "@babel/preset-env": "^7.13.8",
     "babel-loader": "^8.2.2",
+    "dotenv": "^8.2.0",
     "glob": "^7.1.6",
     "nodemon": "^2.0.7",
     "webpack": "^5.24.2",

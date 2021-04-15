@@ -11,7 +11,6 @@ import * as UserAuthService from "../services/user-auth-service";
 export const userLogin = (templateId, qualtricsId) => (dispatch) => {
   return UserAuthService.login(templateId, qualtricsId).then(
     (data) => {
-      console.log(data); // default translations
       if (!data.flow || data.flow.length < 1) {
         dispatch({
           type: SET_FLOW_STATE,

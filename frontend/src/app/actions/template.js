@@ -19,7 +19,9 @@ export const getPrevTemplate = () => (dispatch) => {
     ({data}) => {
       dispatch({
         type: PREV_TEMPLATES_SUCCESS,
-        payload: { prevTemplates: data },
+        payload: {
+          prevTemplates: data,
+        },
       });
 
       return Promise.resolve();

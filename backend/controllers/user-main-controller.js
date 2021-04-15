@@ -19,7 +19,7 @@ const update = async (req, res, next) => {
       return;
     }
 
-    // create  the page first
+    // create the page first
     transaction = await db.sequelize.transaction();
     // get the post id from the file
     // const userData = {
