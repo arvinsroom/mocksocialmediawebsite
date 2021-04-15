@@ -1,5 +1,6 @@
 import Umzug from 'umzug';
 import db from './clients/database-client';
+const path = require("path");
 
 const umzug = new Umzug({
   storage: 'sequelize',
@@ -11,7 +12,7 @@ const umzug = new Umzug({
         db.sequelize.getQueryInterface(),
         db.Sequelize
       ],
-      path: 'migrations',
+      path: path.resolve(__dirname + '/migrations'),
       pattern: /\.js$/
   },
   logger: console // Change this later
