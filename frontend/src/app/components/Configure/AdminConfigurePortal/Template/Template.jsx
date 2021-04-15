@@ -18,16 +18,16 @@ import { Button,
 } from '@material-ui/core';
 import { useEffect, useState } from 'react';
 // import { TEMPLATE_TYPES } from '../../../../constants';
-import { create } from '../../../../services/template-service';
+import { create, updateTemplate } from '../../../../services/template-service';
 import DeleteIcon from '@material-ui/icons/Delete';
 import AddIcon from '@material-ui/icons/Add';
 import { useSelector, useDispatch } from "react-redux";
 import { Redirect } from 'react-router-dom';
 import useStyles from '../../../style';
 import { setTemplateId, getPrevTemplate, deletePrevTemplate } from "../../../../actions/template";
-import { showErrorSnackbar, showSuccessSnackbar } from '../../../../actions/snackbar';
+import { showErrorSnackbar, showInfoSnackbar, showSuccessSnackbar } from '../../../../actions/snackbar';
 import { TEMPLATE } from '../../../../constants';
-
+import SaveIcon from '@material-ui/icons/Save';
 const Template = () => {
   const [templateName, setTemplateName] = useState("");
   // const [templateType, setTemplateType] = useState("");
@@ -39,6 +39,7 @@ const Template = () => {
   });
   const { isLoggedInAdmin } = useSelector(state => state.auth);
   const { prevTemplates } = useSelector(state => state.template);
+  const [templateCodes, setTemplateCodes] = useState(null);
   const classes = useStyles();
   const dispatch = useDispatch();
 
@@ -128,6 +129,30 @@ const Template = () => {
     await retrivePrevTemplates();
   };
 
+  const handleChange = async (templateId, e) => {
+    e.preventDefault();
+    const newObj = {
+      ...templateCodes,
+      [templateId]: e.target.value
+    };
+    await setTemplateCodes(newObj);
+  };
+
+  const handleTemplateCode = async (templateId) => {
+    const changedTemplateCode = templateCodes[templateId];
+    if (changedTemplateCode && changedTemplateCode >= 100000 && changedTemplateCode <= 999999) {
+      const tempObj = {
+        _id: templateId,
+        templateCode: templateCodes[templateId]
+      };
+      await updateTemplate({ tempObj });
+      await retrivePrevTemplates();
+      setTemplateCodes(null);
+    } else {
+      dispatch(showInfoSnackbar("Please enter valid Template Code i.e. [100000, 999999]"));
+    }
+  };
+
   return (
     <>
     <div className={classes.paper}>
@@ -205,14 +230,16 @@ const Template = () => {
     <Box component="span" className={classes.note} display="block">
       <b>Note:</b> {TEMPLATE.TEMPLATE_DELETE_NOTE}
     </Box>
-      <Table aria-label="Previous Template(s)">
+      <Table aria-label="Template(s)">
         <TableHead>
           <TableRow>
-            <TableCell className={classes.body, classes.head} align="center">Template ID</TableCell>
-            <TableCell className={classes.body, classes.head} align="center">Template Name</TableCell>
+            <TableCell className={classes.body, classes.head} align="center">ID</TableCell>
+            <TableCell className={classes.body, classes.head} align="center">Name</TableCell>
             {/* <TableCell className={classes.body, classes.head} align="center">Template Type</TableCell> */}
             <TableCell className={classes.body, classes.head} align="center">Delete</TableCell>
-            <TableCell className={classes.body, classes.head} align="center">Set Current Template Id</TableCell>
+            <TableCell className={classes.body, classes.head} align="center">Set Current</TableCell>
+            <TableCell className={classes.body, classes.head} align="center">Attach Code</TableCell>
+            <TableCell className={classes.body, classes.head} align="center">Template Code</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -230,6 +257,32 @@ const Template = () => {
                 <IconButton aria-label="set template" onClick={() => handleTemplateId(row._id, TEMPLATE.TEMPLATE_CURRENT_SELECT)}>
                   <AddIcon color="primary" />
                 </IconButton>
+              </TableCell>
+              <TableCell align="center">
+                <TextField
+                  id="standard-number"
+                  onChange={e => handleChange(row._id, e)}
+                  inputProps={{ min: 100000, max: 999999 }}
+                  type="number"
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
+                />
+                <IconButton aria-label="Save template code" onClick={() => handleTemplateCode(row._id)}>
+                  <SaveIcon color="primary" />
+                </IconButton>
+              </TableCell>
+              <TableCell align="center">
+                <TextField
+                  id="standard-number"
+                  // label="Code"
+                  disabled={true}
+                  value={row.templateCode}
+                  type="number"
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
+                />
               </TableCell>
             </TableRow>
           )) : null}

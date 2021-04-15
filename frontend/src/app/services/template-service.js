@@ -20,3 +20,9 @@ export const deletePrevTemplate = (_id) => {
     headers: authHeader()
   });
 }
+
+export const updateTemplate = (data) => {
+  return http.post('/template/update', data, {
+    headers: authHeader()
+  });
+}

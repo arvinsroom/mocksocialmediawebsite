@@ -37,6 +37,10 @@ export default (sequelize, DataTypes) => {
       defaultValue: false,
       type: DataTypes.BOOLEAN,
     },
+    templateCode: {
+      allowNull: false,
+      type: DataTypes.INTEGER
+    }
   }, {
 		freezeTableName: true, // model name equal to table name
     timestamps: false, // enable timestamps

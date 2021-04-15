@@ -97,7 +97,7 @@ const uploadMultipleFiles = async (req, res, next) => {
           templateId: templateId,
         },
         attributes: ['type']
-      });
+      }, { transaction });
 
       // should only create entry if post id exist
       if (adminPostExistAndType) {
@@ -114,7 +114,6 @@ const uploadMultipleFiles = async (req, res, next) => {
       }
     }
     const data = await Promise.all(promisses);
-
     // if we reach here, there were no errors therefore commit the transaction
     await transaction.commit();
     // fetch json

@@ -7,11 +7,12 @@ import { userLogin } from "../../actions/userAuth";
 import useStyles from '../style';
 import { getAllLanguagesData, setActiveLanguage } from '../../actions/global';
 import { selectActiveLanguage, selectAllLanguage } from '../../selectors/global';
+import { showInfoSnackbar } from "../../actions/snackbar";
 
 const UserLogin = () => {
   let history = useHistory();
   const [userLoginState, setUserLoginState] = useState({
-    templateId: "",
+    templateCode: "",
     qualtricsId: "",
   });
   // const [defaultMockLanguages, setDefaultMockLanguages] = useState(null);
@@ -32,17 +33,28 @@ const UserLogin = () => {
     // if (isLoggedInUser) history.push("/user-response");
   }, []);
 
+  const checkValidity = (id) => {
+    if (id && id.length === 6 && Number(id)) return true;
+    else return false;
+  }
+
   const handleSubmit = async e => {
     e.preventDefault();
-    if (userLoginState.templateId) {
+    if (checkValidity(userLoginState.templateCode)) {
+      // && checkValidity(userLoginState.qualtricsId)) { <--- ADD this later 
       // send the username and password to the server
-      dispatch(userLogin(userLoginState.templateId, userLoginState.qualtricsId))
+      const tempCode = Number(userLoginState.templateCode);
+      // const qualCode = Number(userLoginState.qualtricsId);
+      const qualCode = 123456;
+      dispatch(userLogin(tempCode, qualCode))
         .then(() => {
           history.push("/user-response");
         })
         .catch(() => {
           // dispatch should handle error response
         });
+    } else {
+      dispatch(showInfoSnackbar("Please provide a valid Template Code/ Qualtrics Id"));
     }
   };
 
@@ -75,7 +87,6 @@ const UserLogin = () => {
               id="demo-simple-select-outlined"
               value={activeId}
               onChange={handleActiveLanguages}
-              label="choose language for this template"
             >
               {selectMenuOptions?.length > 0 ? selectMenuOptions.map(row => (
                 <MenuItem key={row._id} value={row._id}>{row.name}</MenuItem>
@@ -99,8 +110,8 @@ const UserLogin = () => {
             margin="normal"
             required
             fullWidth
-            name="templateId"
-            label="Template Id"
+            name="templateCode"
+            label="Template Code"
             onChange={({ target }) => setUserLoginState({ ...userLoginState, [target.name]: target.value })}
             autoFocus
           />
@@ -121,7 +132,6 @@ const UserLogin = () => {
             className={classes.submit}
           >
             {selectedLanguage && selectedLanguage['log-in']}
-            {console.log('selectedLanguage: ', selectedLanguage)}
           </Button>
           {/* {isLoading && <CircularProgress />} */}
         </form>

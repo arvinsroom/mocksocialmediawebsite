@@ -92,7 +92,6 @@ const deleteAction = async (req, res, next) => {
   }
 };
 
-
 const createSharePost = async (req, res, next) => {
   let transaction;
 

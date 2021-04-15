@@ -39,9 +39,13 @@ async function up(queryInterface, DataTypes) {
     qualtricsId: {
       defaultValue: false,
       type: DataTypes.BOOLEAN,
+    },
+    templateCode: {
+      allowNull: false,
+      type: DataTypes.INTEGER
     }
   });
-  await queryInterface.addIndex('Template', ['adminId', 'name']);
+  await queryInterface.addIndex('Template', ['adminId', 'templateCode']);
 }
 
 module.exports = {

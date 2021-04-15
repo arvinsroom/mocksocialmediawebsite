@@ -1,9 +1,14 @@
 import db from "../clients/database-client";
+const jwt = require("jsonwebtoken");
+const bcrypt = require("bcryptjs");
 const Admin = db.Admin;
-const secret = require(__dirname + '/../config/config.json')['secret'];
 
-var jwt = require("jsonwebtoken");
-var bcrypt = require("bcryptjs");
+let secret;
+try {
+  secret = require(__dirname + '/../config-' + process.env.NODE_ENV.toString() + '.json')['secret'];
+} catch (error) {
+  console.log('Please specify a config-production.json or config-development.json file!')
+}
 
 export const signInAdmin = (req, res) => {
   Admin.findOne({

@@ -26,11 +26,6 @@ async function up(queryInterface, DataTypes) {
       defaultValue: false,
       type: DataTypes.BOOLEAN,
     },
-    metaData: {
-      allowNull: true,
-      type: DataTypes.TEXT,
-      defaultValue: null
-    },
     startedAt: {
       allowNull: false,
       type: DataTypes.DATE(3),

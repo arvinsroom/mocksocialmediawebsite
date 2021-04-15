@@ -17,7 +17,6 @@ const Share = ({ id }) => {
     if (parentSharedPost) {
     setSs(
     <div className="post">
-      {console.log('share post!')}
         <div className="postTop">
           <Avatar
           className="postTopAvatar"
@@ -28,7 +27,7 @@ const Share = ({ id }) => {
           </div>
         </div>
 
-        <Text postMessage={parentSharedPost.postMessage} link={parentSharedPost.link}/>
+        <Text className="postMessage" postMessage={parentSharedPost.postMessage} link={parentSharedPost.link}/>
 
         {parentSharedPost.type === 'PHOTO' ?
           <Photo attachedMedia={parentSharedPost.attachedMediaAdmin[0]} />
@@ -60,7 +59,6 @@ const Share = ({ id }) => {
     }
   }, [parentSharedPost])
 
-  // console.log(parentSharedPost);
   return (
     <>
           {ss ? ss : null}

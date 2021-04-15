@@ -1,17 +1,11 @@
 {
-  "local": {
-    "database": "mockwebsitedb",
+  "database": {
+    "name": "mockwebsitedb",
     "username": "root",
     "password": "rootboot",
     "host": "127.0.0.1",
     "port": "",
     "dialect": "mysql"
-  },
-  "aws": {
-    "db_instance_identifier": "mockwebsitedb",
-    "db_master_username": "mockwebsiteAdmin",
-    "db_master_password": "rxdH64HCC*zjezgb",
-    "mysql_8_0_20_local_pass": "W9gM*jh?y9VsEZWe"
   },
   "adminCredentials": [
     {

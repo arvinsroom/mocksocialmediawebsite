@@ -1,0 +1,34 @@
+{
+  "database": {
+    "name": "mockwebsitedb",
+    "username": "mockwebsiteAdmin",
+    "password": "rxdH64HCC*zjezgb",
+    "host": "mockwebsitedb.ch8pmurklo7i.ca-central-1.rds.amazonaws.com",
+    "port": "3306",
+    "dialect": "mysql"
+  },
+  "adminCredentials": [
+    {
+      "username": "mockwebsalad",
+      "password": "j5LAFtRjMb"
+    },
+    {
+      "username": "mockwebheat",
+      "password": "qDRW82GGHU"
+    },
+    {
+      "username": "mocktoystory",
+      "password": "ecncFpSfqc"
+    },
+    {
+      "username": "%5drC4*KSRFn",
+      "password": "RZeC7NarzB"
+    },
+    {
+      "username": "4@7Fjq&D6MGp",
+      "password": "m84tQvCaDW"
+    }
+  ],
+  "secret": "EnM3XByu793WvgbVb3XAMg6kbTzz7a8s8jp67VntKVmrkDQarMJBMj10GrsfkD8",
+  "secretUser": "xCmmgfTOd6A6eKSyjPYdeN2NUFcyDoPRkEXA406DhunHItG2RV6JpovSRVmAgO7"
+}

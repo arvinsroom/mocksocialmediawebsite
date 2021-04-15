@@ -4,6 +4,8 @@ var router = express.Router()
 
 router.post("/", template.create);
 
+router.post("/update", template.updateTemplate);
+
 router.get("/", template.getPrevTemplates);
 
 router.delete("/:_id", template.deletePrevTemplate);
