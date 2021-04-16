@@ -1,8 +1,8 @@
-async function down(queryInterface, DataTypes) {
+export async function down(queryInterface, DataTypes) {
   await queryInterface.dropTable('UserPostShare');
 }
 
-async function up(queryInterface, DataTypes) {
+export async function up(queryInterface, DataTypes) {
   await queryInterface.createTable('UserPostShare', {
     // new post ID, when rendering data in future we should check all the entries from this table 
     _id: {
@@ -47,7 +47,3 @@ async function up(queryInterface, DataTypes) {
   await queryInterface.addIndex('UserPostShare', ['userId']);
 }
 
-module.exports = {
-  up,
-  down
-};

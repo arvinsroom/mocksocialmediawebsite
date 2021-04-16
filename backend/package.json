@@ -22,7 +22,7 @@
     "dev-server": "npm run clean-db && npm run build-dev",
     "prod-server": "npm run clean-db && npm run build-prod",
     "run-prod-server": "node ./db/index.js",
-    "run-dev-server": "nodemon --inspect ./db/index.js"
+    "run-dev-server": "nodemon ./db/index.js"
   },
   "eslintConfig": {
     "extends": [

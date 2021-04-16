@@ -3,19 +3,18 @@ const webpack = require("webpack");
 const fs = require('fs');
 const glob = require("glob")
 
+const migrationFiles = glob.sync('./migrations/*');
+const migrationEntries = migrationFiles.reduce((acc, migrationFile) => {
+  const entryName = migrationFile.substring(
+      migrationFile.lastIndexOf('/') + 1,
+      migrationFile.lastIndexOf('.')
+  );
+    acc[entryName] = migrationFile;
+    return acc;
+  }, {});
 
 module.exports = function(_env, argv) {
   const isProduction = argv.mode === "production";
-  const migrationFiles = glob.sync('./migrations/*');
-  const migrationEntries = migrationFiles.reduce((acc, migrationFile) => {
-    const entryName = migrationFile.substring(
-        migrationFile.lastIndexOf('/') + 1,
-        migrationFile.lastIndexOf('.')
-    );
-      acc[entryName] = migrationFile;
-      return acc;
-    }, {});
-    
   var nodeModules = {};
   fs.readdirSync('node_modules')
     .filter(function (x) {
@@ -35,9 +34,10 @@ module.exports = function(_env, argv) {
       path: path.resolve(__dirname, "db"),
       filename: chunkData => {
         if (chunkData.chunk.name === 'index') return './[name].js';
-        if (Object.keys(migrationEntries).includes(chunkData.chunk.name)) return `./migrations/${chunkData.chunk.name}.js`;
+        if (Object.keys(migrationEntries).includes(chunkData.chunk.name)) return `./migrations/[name].js`;
       },
-      publicPath: "/"
+      publicPath: "/",
+      libraryTarget: 'umd'
     },
     externals: nodeModules,
     module: {
