@@ -29,6 +29,7 @@ import userFacebook from './routes/facebook-routes';
 import userQuesion from './routes/user-question-routes';
 import userAnswer from './routes/user-answer-routes';
 import userMain from './routes/user-main-routes';
+const mysql = require('mysql2/promise');
 
 const bcrypt = require("bcryptjs");
 const { verifyToken, isAdmin } = require("./middleware/authJwt");
@@ -41,14 +42,40 @@ try {
   console.log('Please specify a config-production.json or config-development.json file!')
 }
 
+let databaseConfig;
+try {
+  databaseConfig = require(__dirname + '/config-' + process.env.NODE_ENV.toString() + '.json')['database'];
+} catch (error) {
+  console.log('Please specify a config-production.json or config-development.json file!')
+}
+
+
 // TODO: This should be removed before we go live or production
 // This will drop every single table
 // try {
-  // await umzugDown();
+//   await umzugDown();
 //   console.log('Tables Droped, Migrations ran successfully!');
 // } catch (err) {
 //   console.log(err);
 // }
+
+const testConnection = async () => {
+  console.log('Checking if database exit...');
+  try {
+    const connection = await mysql.createConnection({
+      host: databaseConfig.host,
+      port: databaseConfig.port,
+      user: databaseConfig.username,
+      password: databaseConfig.password,
+      debug: false
+    });
+    await connection.query(`CREATE DATABASE IF NOT EXISTS \`${databaseConfig.name}\`;`);
+    console.log('Database has successfully checked/created.');
+  } catch (error) {
+    console.error('Unable to check/create a database: ', error);
+  }
+}
+
 
 const checkAndCreateAdmins = async () => {
   let transaction;
@@ -91,6 +118,8 @@ const checkAndCreateAdmins = async () => {
 // example: https://github.com/abelnation/sequelize-migration-hello/blob/master/migrations/01_UserEyeColorAdded.js
 // This will run all the migrations again
 try {
+  await testConnection();
+
   await umzugUp();
   console.log('Tables Created, Migrations ran successfully!');
 
@@ -130,7 +159,6 @@ try {
   //     message: "Welcome to Mock Website application."
   //   });
   // });
-
   // we do not need middleware here as admin is trying to log in
   app.use('/api/admin/login', auth);
   app.use('/api/user/login', authUser);

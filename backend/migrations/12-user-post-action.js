@@ -1,8 +1,8 @@
-async function down(queryInterface, DataTypes) {
+export async function down(queryInterface, DataTypes) {
   await queryInterface.dropTable('UserPostAction');
 }
 
-async function up(queryInterface, DataTypes) {
+export async function up(queryInterface, DataTypes) {
   await queryInterface.createTable('UserPostAction', {
     _id: {
       allowNull: false,
@@ -62,7 +62,3 @@ async function up(queryInterface, DataTypes) {
   await queryInterface.addIndex('UserPostAction', ['userPostId', 'adminPostId']);
 }
 
-module.exports = {
-  up,
-  down
-};
