@@ -20,8 +20,6 @@ import Media from '../models/16-media';
 import UserPostTracking from '../models/17-user-post-tracking';
 import UserGlobalTracking from '../models/18-user-global-tracking';
 
-const mysql = require('mysql2/promise');
-
 let config;
 try {
   config = require(__dirname + '/../config-' + process.env.NODE_ENV.toString() + '.json')['database'];
@@ -29,66 +27,44 @@ try {
   console.log('Please specify a config-production.json or config-development.json file!')
 }
 
-const checkDatabase = async () => {
-  console.log('Checking if database exit...')
-  try {
-    const connection = await mysql.createConnection({
-      host: config.host,
-      port: config.port,
-      user: config.username,
-      password: config.password,
-      debug: false
-    });
-    await connection.query(`CREATE DATABASE IF NOT EXISTS \`${config.name}\`;`);
-    console.log('Database has successfully checked/created.');
-    await connection.end();
-    console.log('Closed MYSQL connection, and starting sequilize MYSQL connection...');
-  } catch (error) {
-    console.error('Unable to check/create a database: ', error);
-  }
-};
+// console.log('Checking if database exit...');
+// mysql.createConnection({
+//   host: config.host,
+//   port: config.port,
+//   user: config.username,
+//   password: config.password,
+//   debug: false
+// }).then(connection => {
+//   connection.query(`CREATE DATABASE IF NOT EXISTS \`${config.name}\`;`)
+//     .then(() => {
+//       console.log('Database has successfully checked/created.');
+//       connection.end()
+//         .then(() => console.log('Connection ended!'))
+//         .catch(error => console.log('Connection not ended!', error));
+//     })
+//     .catch((error) => console.log('Could not create database.', error));
+// }).catch(error => console.error('Unable to check/create a database: ', error));
+// console.log('Closed MYSQL connection, and starting sequilize MYSQL connection...');
 
-// check to if database exist or not, if not then create it
-checkDatabase();
 
-// get information about local or aws MYSQL credentials 
-const connectionSetting = () => {
-  return {
-    database: config.name,
-    host: config.host,
-    username: config.username,
-    password: config.password,
-    port: config.port,
-    pool: {
-      acquire: 30000,
-      idle: 10000,
-      max: 5,
-      min: 0,
-    },
-  };
-};
-
-const connSetting = connectionSetting();
 const sequelize = new Sequelize({
-  ...connSetting,
+  database: config.name,
+  host: config.host,
+  username: config.username,
+  password: config.password,
+  port: config.port,
+  pool: {
+    acquire: 30000,
+    idle: 10000,
+    max: 5,
+    min: 0,
+  },
   dialect: config.dialect,
   // timezone: '-05:00', // utc, but let the original time be in Universal Coordinated Time
   // logging: (...msg) => console.log(msg),
-  logging: console.log,
+  // logging: console.log,
   // timezone: "+00:00" // when returning
 });
-
-const testConnection = async () => {
-  try {
-    await sequelize.authenticate();
-    console.log('Sequilize connection has been established successfully.');
-  } catch (error) {
-    console.error('Unable to connect to the database:', error);
-  }
-};
-
-// test the connection
-testConnection();
 
 const db = {};
 const AdminModel = Admin(sequelize, Sequelize);
