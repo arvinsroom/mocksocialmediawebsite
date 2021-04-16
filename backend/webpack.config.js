@@ -58,6 +58,10 @@ module.exports = function(_env, argv) {
       //   raw: true,
       //   entryOnly: false,
       // }),
+      new webpack.IgnorePlugin({
+        resourceRegExp: /^cardinal$/,
+        contextRegExp: /./,
+      }),  
       new webpack.DefinePlugin({
         "process.env.NODE_ENV": JSON.stringify(
           isProduction ? "production" : "development"
