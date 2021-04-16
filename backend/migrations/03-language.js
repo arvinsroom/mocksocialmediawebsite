@@ -1,8 +1,8 @@
-async function down(queryInterface, DataTypes) {
+export async function down(queryInterface, DataTypes) {
   await queryInterface.dropTable('Language');
 }
 
-async function up(queryInterface, DataTypes) {
+export async function up(queryInterface, DataTypes) {
   await queryInterface.createTable('Language', {
     _id: {
       allowNull: false,
@@ -38,7 +38,3 @@ async function up(queryInterface, DataTypes) {
   await queryInterface.addIndex('Language', ['templateId', 'name', 'platform']);
 }
 
-module.exports = {
-  up,
-  down
-};
