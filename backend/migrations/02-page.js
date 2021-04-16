@@ -1,8 +1,8 @@
-async function down(queryInterface, DataTypes) {
+export async function down(queryInterface, DataTypes) {
   await queryInterface.dropTable('Page');
 }
 
-async function up(queryInterface, DataTypes) {
+export async function up(queryInterface, DataTypes) {
   await queryInterface.createTable('Page', {
     _id: {
       allowNull: false,
@@ -39,7 +39,3 @@ async function up(queryInterface, DataTypes) {
   await queryInterface.addIndex('Page', ['templateId', 'type']);
 }
 
-module.exports = {
-  up,
-  down
-};

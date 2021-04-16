@@ -40,12 +40,10 @@ const UserLogin = () => {
 
   const handleSubmit = async e => {
     e.preventDefault();
-    if (checkValidity(userLoginState.templateCode)) {
-      // && checkValidity(userLoginState.qualtricsId)) { <--- ADD this later 
+    if (checkValidity(userLoginState.templateCode) && checkValidity(userLoginState.qualtricsId)) { 
       // send the username and password to the server
       const tempCode = Number(userLoginState.templateCode);
-      // const qualCode = Number(userLoginState.qualtricsId);
-      const qualCode = 123456;
+      const qualCode = Number(userLoginState.qualtricsId);
       dispatch(userLogin(tempCode, qualCode))
         .then(() => {
           history.push("/user-response");
@@ -124,15 +122,15 @@ const UserLogin = () => {
             label="Qualtrics Id"
             onChange={({ target }) => setUserLoginState({ ...userLoginState, [target.name]: target.value })}
           />
-          <Button
+          {selectedLanguage && <Button
             type="submit"
             variant="contained"
             fullWidth
             color="primary"
             className={classes.submit}
           >
-            {selectedLanguage && selectedLanguage['log-in']}
-          </Button>
+            {selectedLanguage['log-in']}
+          </Button>}
           {/* {isLoading && <CircularProgress />} */}
         </form>
       </div>
