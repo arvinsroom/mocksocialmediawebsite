@@ -43,12 +43,12 @@ try {
 
 // TODO: This should be removed before we go live or production
 // This will drop every single table
-try {
+// try {
   // await umzugDown();
-  console.log('Tables Droped, Migrations ran successfully!');
-} catch (err) {
-  console.log(err);
-}
+//   console.log('Tables Droped, Migrations ran successfully!');
+// } catch (err) {
+//   console.log(err);
+// }
 
 const checkAndCreateAdmins = async () => {
   let transaction;
