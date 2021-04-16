@@ -20,12 +20,36 @@ import Media from '../models/16-media';
 import UserPostTracking from '../models/17-user-post-tracking';
 import UserGlobalTracking from '../models/18-user-global-tracking';
 
+const mysql = require('mysql2/promise');
+
 let config;
 try {
   config = require(__dirname + '/../config-' + process.env.NODE_ENV.toString() + '.json')['database'];
 } catch (error) {
   console.log('Please specify a config-production.json or config-development.json file!')
 }
+
+const checkDatabase = async () => {
+  console.log('Checking if database exit...')
+  try {
+    const connection = await mysql.createConnection({
+      host: config.host,
+      port: config.port,
+      user: config.username,
+      password: config.password,
+      debug: false
+    });
+    await connection.query(`CREATE DATABASE IF NOT EXISTS \`${config.name}\`;`);
+    console.log('Database has successfully checked/created.');
+    await connection.end();
+    console.log('Closed MYSQL connection, and starting sequilize MYSQL connection...');
+  } catch (error) {
+    console.error('Unable to check/create a database: ', error);
+  }
+};
+
+// check to if database exist or not, if not then create it
+checkDatabase();
 
 // get information about local or aws MYSQL credentials 
 const connectionSetting = () => {
@@ -57,7 +81,7 @@ const sequelize = new Sequelize({
 const testConnection = async () => {
   try {
     await sequelize.authenticate();
-    console.log('Connection has been established successfully.');
+    console.log('Sequilize connection has been established successfully.');
   } catch (error) {
     console.error('Unable to connect to the database:', error);
   }
