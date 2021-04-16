@@ -12,10 +12,10 @@ const umzug = new Umzug({
         db.sequelize.getQueryInterface(),
         db.Sequelize
       ],
-      path: path.resolve(__dirname + '/migrations'),
-      pattern: /\.js$/
+      path: path.resolve(__dirname, './migrations'),
+      pattern: /^\d+[\w-]+\.js$/
   },
-  logger: console // Change this later
+  logger: true, // Change this later
 });
 
 export const umzugUp = async () => await umzug.up();
