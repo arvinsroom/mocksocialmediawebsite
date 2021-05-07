@@ -29,11 +29,11 @@ export async function up(queryInterface, DataTypes) {
     },
     text: {
       allowNull: true,
-      type: DataTypes.TEXT
+      type: DataTypes.STRING(1024)
     },
     redirectionLink: {
       allowNull: true,
-      type: DataTypes.TEXT
+      type: DataTypes.STRING(1024)
     }
     // also output _id of user table for further analysis, everything should be connected to that id
   });

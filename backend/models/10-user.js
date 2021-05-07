@@ -77,13 +77,6 @@ export default (sequelize, DataTypes) => {
         allowNull: false
       },
     });
-    User.hasMany(models.UserPostShare, {
-      as: 'userPostShares',
-      foreignKey: {
-        name: 'userId',
-        allowNull: false
-      }
-    });
   };
 
   return User;

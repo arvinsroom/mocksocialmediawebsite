@@ -1,14 +1,13 @@
 import {
   SET_FLOW_STATE,
   CLEAR_FLOW_STATE,
-  MODIFY_ACTIVE_DISABLED_FLOW_STATE,
-  MODIFY_DISABLED_FLOW_STATE
+  UPDATE_FLOW_STATE,
 } from "../actions/types";
 
 const initialState = {
   flow: [],
   active: -1,
-  disabled: true
+  finished: false,
 };
 
 // eslint-disable-next-line import/no-anonymous-default-export
@@ -19,28 +18,31 @@ export default function (state = initialState, action) {
       return {
         flow: payload.flow,
         active: payload.active,
-        disabled: payload.disabled
+        finished: payload.finished
       };
 
     // when ever we modify the active flow state, initilize disabled prop to be true
-    case MODIFY_ACTIVE_DISABLED_FLOW_STATE:
+    case UPDATE_FLOW_STATE:
+      let nextState = state.active;
+      let finished = false;
+      let flow = [...state.flow];
+      if (nextState >= state.flow.length - 1) {
+        finished = true;
+        nextState = -1;
+        flow = [];
+      } else nextState += 1;
       return {
         ...state,
-        active: state.active + 1,
-        disabled: true,
-      };
-
-    case MODIFY_DISABLED_FLOW_STATE:
-      return {
-        ...state,
-        disabled: false,
+        active: nextState,
+        finished: finished,
+        flow: flow
       };
 
     case CLEAR_FLOW_STATE:
       return {
         flow: [],
         active: -1,
-        disabled: true
+        finished: true
       };
     
     default:

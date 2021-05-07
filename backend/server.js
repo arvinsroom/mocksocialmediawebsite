@@ -8,7 +8,6 @@ import db from "./clients/database-client";
 
 import auth from './routes/auth-routes';
 import authUser from './routes/user-auth-routes';
-import global from './routes/global-routes';
 
 import template from './routes/template-routes';
 import register from './routes/register-routes';
@@ -18,50 +17,42 @@ import question from './routes/question-routes';
 import media from './routes/media-routes';
 import language from './routes/language-routes';
 import page from './routes/page-routes';
-import upload from './routes/upload-routes';
 import metrics from './routes/admin-metrics-routes';
 
 import userRegister from './routes/user-register-routes';
 import userFinish from './routes/user-finish-routes';
 import userInfo from './routes/user-info-routes';
-import userMedia from './routes/user-media-routes';
 import userFacebook from './routes/facebook-routes';
 import userQuesion from './routes/user-question-routes';
 import userAnswer from './routes/user-answer-routes';
 import userMain from './routes/user-main-routes';
+import tracking from './routes/tracking-routes';
+import { databaseConfigurations, adminCredConfigurations } from './utils';
+
 const mysql = require('mysql2/promise');
 
 const bcrypt = require("bcryptjs");
 const { verifyToken, isAdmin } = require("./middleware/authJwt");
 const { verifyUserToken, isUser } = require("./middleware/userAuthJwt");
+const fs = require('fs')
 
-let config;
-try {
-  config = require(__dirname + '/config-' + process.env.NODE_ENV.toString() + '.json')['adminCredentials'];
-} catch (error) {
-  console.log('Please specify a config-production.json or config-development.json file!')
+const checkConfigFileExist = () => {
+  const pathToConfigFile = __dirname + '/config-' + process.env.NODE_ENV.toString() + '.json';
+  try {
+    if (fs.existsSync(pathToConfigFile)) {
+      console.log(`Config file ${pathToConfigFile} exist!`);
+    } else {
+      console.log(`Config file ${pathToConfigFile} doesn\'t exist!`);
+    }
+  } catch(err) {
+    console.error('Please provide a config-production.json or config-development.json file!', err)
+  }
 }
-
-let databaseConfig;
-try {
-  databaseConfig = require(__dirname + '/config-' + process.env.NODE_ENV.toString() + '.json')['database'];
-} catch (error) {
-  console.log('Please specify a config-production.json or config-development.json file!')
-}
-
-
-// TODO: This should be removed before we go live or production
-// This will drop every single table
-// try {
-//   await umzugDown();
-//   console.log('Tables Droped, Migrations ran successfully!');
-// } catch (err) {
-//   console.log(err);
-// }
 
 const testConnection = async () => {
   console.log('Checking if database exit...');
   try {
+    let databaseConfig = databaseConfigurations();
     const connection = await mysql.createConnection({
       host: databaseConfig.host,
       port: databaseConfig.port,
@@ -80,6 +71,7 @@ const testConnection = async () => {
 const checkAndCreateAdmins = async () => {
   let transaction;
   try {
+    let config = adminCredConfigurations();
     transaction = await db.sequelize.transaction();
     let promisses = [];
     // Save Admin object from config to the database
@@ -118,6 +110,8 @@ const checkAndCreateAdmins = async () => {
 // example: https://github.com/abelnation/sequelize-migration-hello/blob/master/migrations/01_UserEyeColorAdded.js
 // This will run all the migrations again
 try {
+  await checkConfigFileExist();
+
   await testConnection();
 
   await umzugUp();
@@ -128,9 +122,12 @@ try {
 
   // create a express server
   const app = express();
+  const IP_ADDRESS = process.env.IP_ADDRESS;
+  console.log('Current IP_ADDRESS: ', IP_ADDRESS);
 
+  // origin: `http://${IP_ADDRESS}:8080`
   var corsOptions = {
-    origin: "http://localhost:8080"
+    origin: `http://${IP_ADDRESS}`
   };
 
   app.use(cors(corsOptions));
@@ -162,7 +159,6 @@ try {
   // we do not need middleware here as admin is trying to log in
   app.use('/api/admin/login', auth);
   app.use('/api/user/login', authUser);
-  app.use('/api/global', global);
 
   // add middleware to our application
   app.use('/api/template', [verifyToken, isAdmin], template);
@@ -170,20 +166,19 @@ try {
   app.use('/api/info', [verifyToken, isAdmin], info);
   app.use('/api/finish', [verifyToken, isAdmin], finish);
   app.use('/api/questions', [verifyToken, isAdmin], question);
-  app.use('/api/media', [verifyToken, isAdmin], media);
   app.use('/api/language', [verifyToken, isAdmin], language);
   app.use('/api/page', [verifyToken, isAdmin], page);
-  app.use('/api/upload', [verifyToken, isAdmin], upload);
-  app.use('/api/metrics',  metrics);
+  app.use('/api/media', [verifyToken, isAdmin], media);  
+  app.use('/api/metrics', [verifyToken, isAdmin], metrics);
 
   app.use('/api/user/questions', [verifyUserToken, isUser], userQuesion);
   app.use('/api/user/answer', [verifyUserToken, isUser], userAnswer);
   app.use('/api/user/register', [verifyUserToken, isUser], userRegister);
   app.use('/api/user/finish', [verifyUserToken, isUser], userFinish);
   app.use('/api/user/info', [verifyUserToken, isUser], userInfo);
-  app.use('/api/user/media', [verifyUserToken, isUser], userMedia);
   app.use('/api/user/facebook', [verifyUserToken, isUser], userFacebook);
   app.use('/api/user/main', [verifyUserToken, isUser], userMain);
+  app.use('/api/user/tracking', [verifyUserToken, isUser], tracking);
 
   // set port, listen for requests
   const PORT = process.env.PORT || 8081;

@@ -31,14 +31,14 @@
     "xlsx": "^0.16.9"
   },
   "scripts": {
-    "build-prod": "webpack --mode production",
-    "build-dev": "webpack --mode development",
-    "start-dev": "webpack serve --mode development --port 8081",
+    "webpack-build-prod": "webpack --mode production",
+    "webpack-build-dev": "webpack --mode development",
+    "start-dev": "webpack serve --mode development --port 8080",
     "clean-dist": "rm -rf ./dist && mkdir -p ./dist",
     "copy-server": "cp ./src/index.js ./dist/index.js",
-    "dev-server": "npm run clean-dist && npm run build-dev && npm run copy-server && nodemon ./dist/index.js",
-    "prod-server": "npm run clean-dist && npm run build-prod && npm run copy-server",
-    "run-prod-server": "node ./dist/index.js"
+    "build-dev": "npm run clean-dist && npm run webpack-build-dev",
+    "build-prod": "npm run clean-dist && npm run webpack-build-prod",
+    "run-node-server": "npm run copy-server && node ./dist/index.js"
   },
   "eslintConfig": {
     "extends": [

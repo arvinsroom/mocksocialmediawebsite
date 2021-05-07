@@ -4,9 +4,12 @@ import {
   USER_LOGOUT,
 } from "../actions/types";
 
-// we do not want to store information,
-// every new sign in will have new response
-const initialState = {}
+const initialState = {
+  isLoggedInUser: false,
+  translations: null,
+  templateId: null,
+  languageName: ""
+}
 
 // eslint-disable-next-line import/no-anonymous-default-export
 export default function (state = initialState, action) {
@@ -17,25 +20,25 @@ export default function (state = initialState, action) {
       return {
         ...state,
         isLoggedInUser: true,
-        user: payload.user.accessToken,
-        translations: payload.user.translations,
-        flow: payload.user.flow
+        translations: payload.user.translations?.translations || null,
+        templateId: payload.user.templateId,
+        languageName: payload.user.translations?.name || "ENGLISH"
       };
     case USER_LOGIN_FAIL:
       return {
         ...state,
         isLoggedInUser: false,
-        user: null,
         translations: null,
-        flow: null,
+        templateId: null,
+        languageName: "ENGLISH"
       };
     case USER_LOGOUT:
       return {
         ...state,
         isLoggedInUser: false,
-        user: null,
         translations: null,
-        flow: null,
+        templateId: null,
+        languageName: ""
       };
     default:
       return state;

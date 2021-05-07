@@ -8,7 +8,7 @@ export default (sequelize, DataTypes) => {
     },
     name: {
       allowNull: false,
-      type: DataTypes.STRING(36)
+      type: DataTypes.STRING
     },
     templateId: {
       allowNull: false,
@@ -59,13 +59,6 @@ export default (sequelize, DataTypes) => {
     });
     Page.hasOne(models.Info, {
       as: 'info',
-      foreignKey: {
-        name: 'pageId',
-        allowNull: false
-      }
-    });
-    Page.hasOne(models.AdminPost, {
-      as: 'adminPost',
       foreignKey: {
         name: 'pageId',
         allowNull: false

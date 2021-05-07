@@ -16,7 +16,7 @@ export default (sequelize, DataTypes) => {
     },
     questionText: {
       allowNull: false,
-      type: DataTypes.TEXT
+      type: DataTypes.STRING(1024)
     },
     required: {
       defaultValue: true,

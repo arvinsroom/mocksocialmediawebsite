@@ -17,14 +17,6 @@ export async function up(queryInterface, DataTypes) {
       },
       type: DataTypes.UUID
     },
-    adminPostId: {
-      allowNull: true,
-      references: {
-        key: '_id',
-        model: 'AdminPost'
-      },
-      type: DataTypes.INTEGER
-    },
     userId: {
       allowNull: false,
       onDelete: 'CASCADE',

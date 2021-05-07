@@ -14,14 +14,6 @@ export default (sequelize, DataTypes) => {
       },
       type: DataTypes.UUID
     },
-    adminPostId: {
-      allowNull: true,
-      references: {
-        key: '_id',
-        model: 'AdminPost'
-      },
-      type: DataTypes.INTEGER
-    },
     userId: {
       allowNull: false,
       onDelete: 'CASCADE',
@@ -49,10 +41,6 @@ export default (sequelize, DataTypes) => {
     UserPostTracking.belongsTo(models.UserPost, {
       as: 'userPosts',
       foreignKey: 'userPostId'
-    });
-    UserPostTracking.belongsTo(models.AdminPost, {
-      as: 'adminPosts',
-      foreignKey: 'adminPostId',
     });
     UserPostTracking.belongsTo(models.User, {
       foreignKey: 'userId'
