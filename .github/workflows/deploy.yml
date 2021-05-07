@@ -12,10 +12,10 @@ jobs:
           - name: AWS SSM Send Command
             uses: peterkimzz/aws-ssm-send-command@1.0.1
             with:
-             aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID  }}
+             aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
              aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
              aws-region: ca-central-1
-             instance-ids: ${{ secrets.INSTANCE_ID  }}
+             instance-ids: ${{ secrets.INSTANCE_ID }}
              comment: Deploy the main branch
              working-directory: /home/ec2-user/
-             command: /bin/sh ./deploy.sh
+             command: /bin/sh deploy.sh
