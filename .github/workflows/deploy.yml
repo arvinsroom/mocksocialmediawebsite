@@ -2,16 +2,13 @@ name: Deploy using AWS SSM Send-Command
 
 on:
     push:
-        branches:
-	  - main
+        branches: [main]
 
 jobs:
     start:
-        runs-on: ubuntu-latest 
-
+        runs-on: ubuntu-latest
         steps:
             - uses: actions/checkout@v2
-
         - name: AWS SSM Send Command
               uses: peterkimzz/aws-ssm-send-command@1.0.1
           with:
