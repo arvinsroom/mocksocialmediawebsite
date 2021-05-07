@@ -12,3 +12,9 @@ export const get = (_id) => {
     headers: authHeader()
   });
 }
+
+export const getSocialMediaPages = (templateId) => {
+  return http.get(`/page/socialmedia/${templateId}`, {
+    headers: authHeader()
+  });
+}

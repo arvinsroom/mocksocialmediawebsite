@@ -62,6 +62,7 @@ const updatePage = async (req, res, next) => {
       ));
     }
     let data = await Promise.all(promises);
+    console.log('data for page', data);
     await transaction.commit();
     res.send({
       data
@@ -75,7 +76,47 @@ const updatePage = async (req, res, next) => {
   }
 };
 
+const getSocialMediaPages = async (req, res, next) => {
+  // fetch the adminId added from middleware
+  if (!req.adminId) {
+    res.status(400).send({
+      message: "Invalid Token, please log in again!"
+    });
+    return;
+  }
+
+  // fetch template _id from params
+  const _id = req.params._id;
+  if (!_id) {
+    res.status(400).send({
+      message: "Invalid Template Id!"
+    });
+    return;
+  }
+
+  try {
+    const socialMediaPages = ['FACEBOOK', 'REDDIT', 'TWITTER', 'INSTAGRAM',
+    'YOUTUBE', 'SLACK', 'TIKTOK'];
+    const data = await Page.findAll({
+      where: {
+        templateId: _id,
+        type: socialMediaPages
+      },
+      attributes: ['_id', 'name']
+    });
+    res.send({
+      data
+    });
+  } catch (error) {
+    console.log(error.message);
+    res.status(500).send({
+      message: "Some error occurred while fetching all pages for given template Id!"
+    });
+  }
+};
+
 export default {
   updatePage,
-  getAllPages
+  getAllPages,
+  getSocialMediaPages
 }

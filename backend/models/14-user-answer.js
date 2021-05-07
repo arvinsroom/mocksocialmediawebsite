@@ -37,7 +37,7 @@ export default (sequelize, DataTypes) => {
     // multiple or single mcqOptionId's 
     opentextAnswerText: {
       allowNull: true,
-      type: DataTypes.TEXT,
+      type: DataTypes.STRING(1024),
       defaultValue: null
     }
   }, {

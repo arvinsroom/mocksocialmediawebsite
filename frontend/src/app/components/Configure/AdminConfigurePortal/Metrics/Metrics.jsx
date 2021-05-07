@@ -8,6 +8,7 @@ import {
   Box,
   Tooltip,
   Fab,
+  Container
 } from '@material-ui/core';
 import { useEffect, useState } from 'react';
 import { getAdminTemplatesWithUserCount, fetchTemplateData } from '../../../../services/metrics-service';
@@ -18,6 +19,7 @@ import { Redirect } from 'react-router-dom';
 import useStyles from '../../../style';
 import { showErrorSnackbar, showInfoSnackbar } from '../../../../actions/snackbar';
 import { CSVDownload } from "react-csv";
+import { DATA_PAGE } from '../../../../constants';
 
 const Template = () => {
   const { isLoggedInAdmin } = useSelector(state => state.auth);
@@ -61,10 +63,10 @@ const Template = () => {
   }
 
   return (
-    <>
+    <Container component="main" maxWidth="lg" className={classes.card}>
     <div className={classes.form}>
       <Box component="span" className={classes.note} display="block">
-        <b>Note:</b> You can download all template data from the botton below. You can also download the data specific to each template from the below table.
+        {DATA_PAGE.DATA_PAGE_NOTE}
       </Box>
       <Tooltip title="Download All templates with all their user data." aria-label="Add Page">
         <Fab color="default" onClick={downloadAllTemplateData} className={classes.marginTenPx}>
@@ -76,9 +78,9 @@ const Template = () => {
         <Table aria-label="Template(s) with User(s) Information">
           <TableHead>
             <TableRow>
-              <TableCell className={classes.body, classes.head} align="center">Template ID</TableCell>
-              <TableCell className={classes.body, classes.head} align="center">Template Name</TableCell>
-              <TableCell className={classes.body, classes.head} align="center">Total Users</TableCell>
+              <TableCell className={classes.body, classes.head} align="center">{DATA_PAGE.CONDITION_ID}</TableCell>
+              <TableCell className={classes.body, classes.head} align="center">{DATA_PAGE.CONDITION_NAME}</TableCell>
+              <TableCell className={classes.body, classes.head} align="center">{DATA_PAGE.RESPONSES}</TableCell>
               <TableCell className={classes.body, classes.head} align="center">Download</TableCell>
             </TableRow>
           </TableHead>
@@ -97,10 +99,10 @@ const Template = () => {
             ))}
           </TableBody>
         </Table>
-        {!tempWithUsersCount && <h5 style={{textAlign: 'center'}}> No Templates and/or Users yet!</h5>}
+        {!tempWithUsersCount && <h5 style={{textAlign: 'center'}}>{DATA_PAGE.NO_RESPONSE_YET}</h5>}
         {allowAllDataDownload !== null ? <CSVDownload data={allowAllDataDownload} target="_blank" /> : null}
       </div>
-    </>
+    </Container>
   )
 }
 

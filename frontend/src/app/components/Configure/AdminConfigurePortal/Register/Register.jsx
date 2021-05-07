@@ -1,10 +1,10 @@
-import { Button, FormControlLabel, FormGroup, Switch, FormControl, FormLabel, TextField } from '@material-ui/core';
+import { Button, FormControlLabel, FormGroup, Switch, FormControl, FormLabel, TextField, Container } from '@material-ui/core';
 import { useState } from 'react';
 import useStyles from '../../../style';
 import { useSelector, useDispatch } from "react-redux";
 import { create } from '../../../../services/register-service';
 import { Redirect } from 'react-router-dom';
-import { showErrorSnackbar, showSuccessSnackbar } from '../../../../actions/snackbar';
+import { showErrorSnackbar, showSuccessSnackbar, showInfoSnackbar } from '../../../../actions/snackbar';
 import { TEMPLATE, REGISTER_PAGE } from '../../../../constants';
 
 const Register = () => {
@@ -31,7 +31,7 @@ const Register = () => {
     e.preventDefault();
 
     if (!templateId) {
-      dispatch(showErrorSnackbar(TEMPLATE.SELECT_OR_CREATE_TEMPLATE));
+      dispatch(showInfoSnackbar(TEMPLATE.SELECT_OR_CREATE_TEMPLATE));
     }
 
     const register = {
@@ -46,10 +46,10 @@ const Register = () => {
     try {
       if (state.requestPhoto || state.requestUsername) {
         await create(register);
-        dispatch(showSuccessSnackbar(REGISTER_PAGE.REGISTER_PAGE_SUCCESS));
+        dispatch(showSuccessSnackbar(REGISTER_PAGE.SUCCESSFULLY_CREATED_REGISTRATION_PAGE));
         resetValues();
       } else {
-        dispatch(showErrorSnackbar("Atleast one of them is required to create a page!"));
+        dispatch(showInfoSnackbar(REGISTER_PAGE.PLEASE_ENTER_A_VALID_RESPONSE));
       }
     } catch (error) {
       const resMessage =
@@ -72,7 +72,7 @@ const Register = () => {
 
   return (
     <>
-    <div className={classes.paper}>
+    <Container component="main" maxWidth="lg" className={classes.card}>
     <form onSubmit={handleSubmit} className={classes.form}>
     <TextField
         className={classes.marginBottom}
@@ -80,12 +80,12 @@ const Register = () => {
         required
         fullWidth
         value={pageName}
-        label="Provide a unique page name"
+        label={REGISTER_PAGE.PROVIDE_A_UNIQUE_PAGE_NAME}
         onChange={({ target }) => setPageName(target.value)}
         autoFocus
       />
     <FormControl component="fieldset">
-      <FormLabel component="legend">{REGISTER_PAGE.REGISTRATION_DETAILS}</FormLabel>
+      <FormLabel component="legend">{REGISTER_PAGE.SELECT_INFORMATION_REQUESTED_OF_PARTICIPANTS}</FormLabel>
     </FormControl>
     <FormGroup>
       <FormControlLabel
@@ -96,7 +96,7 @@ const Register = () => {
           name="requestPhoto"
           inputProps={{ 'aria-label': 'Request photo checkbox' }}
         />}
-        label="Request Photo"
+        label={REGISTER_PAGE.PROFILE_PHOTO}
       />
       <FormControlLabel
         control={<Switch
@@ -106,7 +106,7 @@ const Register = () => {
           name="requestUsername"
           inputProps={{ 'aria-label': 'Request username checkbox' }}
         />}
-        label="Request Username"
+        label={REGISTER_PAGE.USERNAME}
       />
     </FormGroup>
       <Button
@@ -119,7 +119,7 @@ const Register = () => {
         Save
       </Button>
     </form>
-    </div>
+    </Container>
     </>
   )
 }

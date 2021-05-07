@@ -1,5 +1,5 @@
 # multi-stage docker for build and then run production specific
-FROM node:13.12.0-alpine as builder
+FROM node:13.12.0-alpine as builder1
 
 # this will be temporary working directory
 WORKDIR /app/temp
@@ -13,10 +13,10 @@ RUN npm install --development
 COPY . .
 
 # build a prod executable
-RUN npm run prod-server
+RUN npm run build-prod
 
 
-FROM node:13.12.0-alpine
+FROM node:13.12.0-alpine as builder2
 
 # this will current working directory
 WORKDIR /app/frontend
@@ -27,8 +27,19 @@ COPY package*.json ./
 RUN npm install --production
 
 # only copy the prod executables in final image
-COPY --from=builder /app/temp/dist/ dist/
+COPY --from=builder1 /app/temp/dist/ dist/
 
-EXPOSE 8080
 
-CMD [ "npm", "run", "run-prod-server" ]
+FROM nginx:alpine
+
+COPY ./nginx.conf /etc/nginx/conf.d/default.conf
+
+## Remove default nginx index page
+RUN rm -rf /usr/share/nginx/html/*
+
+# copy all the compiled production code to nginx html file from react
+COPY --from=builder2 /app/frontend/ /usr/share/nginx/html
+
+EXPOSE 80
+
+ENTRYPOINT ["nginx", "-g", "daemon off;"]

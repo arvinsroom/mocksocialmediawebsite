@@ -34,6 +34,14 @@ export async function up(queryInterface, DataTypes) {
     consent: {
       type: DataTypes.BOOLEAN,
       defaultValue: false,
+    },
+    socialMediaPageId: {
+      allowNull: true,
+      references: {
+        key: '_id',
+        model: 'Page'
+      },
+      type: DataTypes.UUID
     }
   });
   await queryInterface.addIndex('Info', ['templateId', 'pageId']);

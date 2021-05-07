@@ -1,16 +1,23 @@
 import {
   SET_TEMPLATE_ID,
   PREV_TEMPLATES_SUCCESS,
-  PREV_TEMPLATES_FAIL,
+  CLEAR_TEMPLATE_STATE,
   SNACKBAR_ERROR,
   SNACKBAR_SUCCESS
 } from "./types";
 
 import * as TemplateService from "../services/template-service";
 
-export const setTemplateId = (_id) => ({
+export const setTemplateId = (template) => ({
   type: SET_TEMPLATE_ID,
-  payload: _id,
+  payload: {
+    _id: template._id,
+    name: template.name
+  },
+});
+
+export const clearTemplate = () => ({
+  type: CLEAR_TEMPLATE_STATE
 });
 
 // fetch using admin _id
@@ -35,7 +42,7 @@ export const getPrevTemplate = () => (dispatch) => {
         error.toString();
 
       dispatch({
-        type: PREV_TEMPLATES_FAIL,
+        type: CLEAR_TEMPLATE_STATE,
       });
 
       dispatch({
@@ -50,6 +57,35 @@ export const getPrevTemplate = () => (dispatch) => {
 
 export const deletePrevTemplate = (_id) => (dispatch) => {
   return TemplateService.deletePrevTemplate(_id)
+    .then(({data}) => {
+
+      dispatch({
+        type: SNACKBAR_SUCCESS,
+        payload: data,
+      });
+
+      Promise.resolve();
+    })
+    .catch(error => {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+
+      dispatch({
+        type: SNACKBAR_ERROR,
+        payload: message,
+      });
+
+      return Promise.reject();
+    }
+  );
+};
+
+export const updateTemplate = (data) => (dispatch) => {
+  return TemplateService.updateTemplate(data)
     .then(({data}) => {
 
       dispatch({

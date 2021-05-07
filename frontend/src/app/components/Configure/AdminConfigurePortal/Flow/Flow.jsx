@@ -5,14 +5,15 @@ import { Button,
   TableBody,
   TableCell,
   TableHead,
-  TableRow
+  TableRow,
+  Container
 } from '@material-ui/core';
 import { useEffect, useState } from 'react';
 import { update, get } from '../../../../services/page-service';
 import { useSelector, useDispatch } from "react-redux";
 import { Redirect } from 'react-router-dom';
 import useStyles from '../../../style';
-import { showErrorSnackbar, showSuccessSnackbar } from '../../../../actions/snackbar';
+import { showErrorSnackbar, showSuccessSnackbar, showInfoSnackbar } from '../../../../actions/snackbar';
 import { TEMPLATE, FLOW_PAGE } from '../../../../constants';
 
 const Flow = () => {
@@ -37,7 +38,7 @@ const Flow = () => {
     e.preventDefault();
 
     if (!templateId) {
-      dispatch(showErrorSnackbar(TEMPLATE.SELECT_OR_CREATE_TEMPLATE));
+      dispatch(showInfoSnackbar(TEMPLATE.SELECT_OR_CREATE_TEMPLATE));
     }
     try {
       await update({ pageObj: pageOrderData });
@@ -70,18 +71,18 @@ const Flow = () => {
   }
 
   return (
-    <>
+    <Container component="main" maxWidth="lg" className={classes.card}>
     <Box component="span" className={classes.note} display="block">
-      <b>Note:</b> {FLOW_PAGE.FLOW_CONFIG_NOTE}
+      {FLOW_PAGE.FLOW_CONFIG_NOTE}
     </Box>
     <form onSubmit={handleSubmit} className={classes.form}>
       <Table aria-label="Configure Page Ordering">
       <TableHead>
         <TableRow>
-          <TableCell className={classes.body, classes.head} align="center">Page Name</TableCell>
-          <TableCell className={classes.body, classes.head} align="center">Page Type</TableCell>
-          <TableCell className={classes.body, classes.head} align="center">Flow Order</TableCell>
-          <TableCell className={classes.body, classes.head} align="center">Previous Flow Order</TableCell>
+          <TableCell className={classes.body, classes.head} align="center">{FLOW_PAGE.PAGE_NAME}</TableCell>
+          <TableCell className={classes.body, classes.head} align="center">{FLOW_PAGE.PAGE_TYPE}</TableCell>
+          <TableCell className={classes.body, classes.head} align="center">{FLOW_PAGE.SET_FLOW_ORDER}</TableCell>
+          <TableCell className={classes.body, classes.head} align="center">{FLOW_PAGE.CURRENT_FLOW_ORDER}</TableCell>
         </TableRow>
       </TableHead>
       <TableBody>
@@ -92,7 +93,6 @@ const Flow = () => {
             <TableCell align="center">
               <TextField
                 id="standard-number"
-                label="Number"
                 onChange={e => handleChange(row._id, e)}
                 inputProps={{ min: 0, max: 65535, step: 1 }}
                 type="number"
@@ -104,7 +104,6 @@ const Flow = () => {
             <TableCell align="center">
               <TextField
                 id="standard-number"
-                label="Number"
                 disabled={true}
                 // InputProps={{ inputProps: { min: 0, max: 65535 } }}
                 value={row.flowOrder || 0}
@@ -129,7 +128,7 @@ const Flow = () => {
       Save
     </Button>
     </form>
-    </>
+    </Container>
   );
 };
 

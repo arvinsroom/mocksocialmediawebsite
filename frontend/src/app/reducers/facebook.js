@@ -1,63 +1,29 @@
 import {
-  SET_FB_INITIAL_STATE,
+  STACK_FB_STATE,
   SET_FB_POST_LIKE,
   SET_FB_POST_UNLIKE,
-  SET_FB_POST_LIKE_ACTION_ID,
-  NULLIFY_FB_POST_LIKE_ACTION_ID,
   SET_FB_POST_COMMENT,
   CREATE_FB_POST,
-  TOGGLE_COMMENT_BOX,
-  HANDLE_CHANGE_COMMENT,
-  SHARE_FB_POST,
-  SET_FB_MEDIA_INITIAL_STATE,
-  SET_FB_LIKES_INITIAL_STATE,
-  SET_FB_TOTAL_INITIAL_STATE,
-  SET_FB_POST_LIKE_NEW,
-  SET_FB_READY_STATE
+  SET_FB_LOADING,
+  SET_FB_POST_IDS_AND_COUNT,
+  SET_FB_POST_FETCH_FINISH,
+  UPDATE_FACEBOOK_PAGE_STATE,
+  CLEAR_FB_STATE
 } from "../actions/types";
-import cloneDeep from 'lodash/cloneDeep';
-import { createCachedSelector } from 're-reselect';
-import { createSelector } from 'reselect';
-
-const selectAllLikesArr = state => state.facebookPost.metaData;
-const selecLikePostID = (state, id) => id;
-
-// function gett() { return }
-export const selectAllLikes = createCachedSelector(
-  [selectAllLikesArr, selecLikePostID],
-  (likesArr, id) => {
-    return likesArr[id];
-  }
-)(
-  (state, id) => id
-);
-
-const selectAllIDs = state => state.facebookPost.allIds;
-// function gett() { return }
-export const selectSubIds = createSelector(
-  [selectAllIDs],
-  (ids) => {
-      return ids; //.map(id => <PostT singlePost={items[id]} />)
-  }
-);
-
-const selectPosts = state => state.facebookPost.posts;
-const selectPostsID = (state, id) => id;
-// function gett() { return }
-export const selectSubItems = createCachedSelector(
-  [selectPosts,
-    selectPostsID],
-  (posts, id) => {
-      return posts[id]; //.map(id => <PostT singlePost={items[id]} />)
-  }
-)(
-  (state, id) => id
-);
 
 const initialPostState = {
   posts: {},
+  metaData: {},
   allIds: [],
-  metaData: {}
+  name: "",
+  isLoading: false,
+  pageId: null,
+  totalPostCount: 0,
+  currentPostPage: 0,
+  postEachPage: 5,
+  totalPostIds: [],
+  finish: false,
+  fbTranslations: null
 };
 
 // this is bad and goes against whole point of using redux but for
@@ -67,12 +33,60 @@ export const facebookPost = (state = initialPostState, action) => {
   const { type, payload } = action;
 
   switch (type) {
-    case SET_FB_INITIAL_STATE:
+    case SET_FB_POST_IDS_AND_COUNT:
       return {
-        posts: payload.posts,
-        allIds: payload.allIds,
-        metaData: payload.metaData
+        // ...state,
+        totalPostCount: payload.totalPostCount,
+        currentPostPage: 0,
+        postEachPage: 5,
+        totalPostIds: payload.totalPostIds,
+        pageId: payload.pageId,
+        name: payload.name,
+        posts: {},
+        metaData: {},
+        allIds: [],
+        isLoading: false,
+        finish: false,
+        fbTranslations: payload.fbTranslations || null
       };
+
+    case STACK_FB_STATE:
+      return {
+        ...state,
+        posts: {
+          ...state.posts,
+          ...payload.posts,
+        },
+        metaData: {
+          ...state.metaData,
+          ...payload.metaData,
+        },
+        allIds: [
+          ...state.allIds,
+          ...payload.allIds,
+        ],
+        isLoading: payload.isLoading,
+      };
+
+      case SET_FB_POST_FETCH_FINISH:
+        return {
+          ...state,
+          finish: true
+        }
+
+      case UPDATE_FACEBOOK_PAGE_STATE:
+        let nextCurrentPostPage = state.currentPostPage;
+        let finish = false;
+        if ((nextCurrentPostPage+1) * 5 < state.totalPostCount) {
+          nextCurrentPostPage++;
+        } else {
+          finish = true;
+        }
+        return {
+          ...state,
+          currentPostPage: nextCurrentPostPage,
+          finish,
+        };
 
       case SET_FB_POST_LIKE:
         return {
@@ -100,18 +114,6 @@ export const facebookPost = (state = initialPostState, action) => {
         }
       };
 
-    case SET_FB_POST_LIKE_ACTION_ID:
-      state.posts[payload.index].actionId = payload.actionId;
-      return {
-        ...state
-      };
-
-    case NULLIFY_FB_POST_LIKE_ACTION_ID:
-      state.posts[payload.index].actionId = null;
-      return {
-        ...state
-      };
-
     case SET_FB_POST_COMMENT:
       return {
         ...state,
@@ -125,15 +127,17 @@ export const facebookPost = (state = initialPostState, action) => {
       };
 
     case CREATE_FB_POST:
+      const { type, parentPostId, postMessage } = payload.post;
       return {
         ...state,
         posts: {
           [payload._id]: {
             _id: payload._id,
-            type: payload.type,
-            name: 'New Post',
-            postMessage: payload.postMessage ? payload.postMessage : "",
-            attachedMediaAdmin: payload.attachedMediaAdmin
+            type: type,
+            name: state.name,
+            postMessage: postMessage,
+            parentPostId: parentPostId,
+            attachedMedia: payload.attachedMedia
           },
           ...state.posts,
         },
@@ -142,39 +146,36 @@ export const facebookPost = (state = initialPostState, action) => {
             comments: [],
             like: false,
             actionId: null,
-            isAdmin: false,
+            parentPostId: parentPostId,
           },
           ...state.metaData,
         },
         allIds: [payload._id, ...state.allIds]
       };
 
-    case SHARE_FB_POST:
+    case SET_FB_LOADING:
       return {
         ...state,
-        posts: {
-          [payload._id]: {
-            _id: payload._id,
-            type: 'SHARE',
-            name: 'Shared Post',
-            postMessage: payload.shareText ? payload.shareText : "",
-            parentAdminPostId: payload.parentAdminPostId,
-            parentUserPostId: payload.parentUserPostId
-          },
-          ...state.posts,
-        },
-        metaData: {
-          [payload._id]: {
-            comments: [],
-            like: false,
-            actionId: null,
-            isAdmin: false,
-          },
-          ...state.metaData,
-        },
-        allIds: [payload._id, ...state.allIds]
+        isLoading: payload.isLoading
       };
-
+    
+    case CLEAR_FB_STATE:
+      return {
+        ...state,
+        posts: {},
+        metaData: {},
+        allIds: [],
+        name: "",
+        isLoading: false,
+        pageId: null,
+        totalPostCount: 0,
+        currentPostPage: 0,
+        postEachPage: 5,
+        totalPostIds: [],
+        finish: false,
+        fbTranslations: null
+      }
+    
     default:
       return state;
   }

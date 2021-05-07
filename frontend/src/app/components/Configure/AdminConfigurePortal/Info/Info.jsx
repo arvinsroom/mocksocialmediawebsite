@@ -1,6 +1,19 @@
-import { TextField, Button, FormGroup, FormControlLabel, Switch } from '@material-ui/core';
-import { useState } from 'react';
+import {
+  TextField,
+  Button,
+  FormGroup,
+  FormControlLabel,
+  Switch,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
+  Box,
+  Container
+} from '@material-ui/core';
+import { useEffect, useState } from 'react';
 import { create } from '../../../../services/info-service';
+import { getSocialMediaPages } from '../../../../services/page-service';
 import useStyles from '../../../style';
 import { useSelector, useDispatch } from "react-redux";
 import { Redirect } from 'react-router-dom';
@@ -8,26 +21,39 @@ import React, { useRef} from 'react';
 import MUIRichTextEditor from 'mui-rte';
 import { EditorState, convertToRaw } from 'draft-js'
 import { createMuiTheme, MuiThemeProvider } from '@material-ui/core/styles'
-import { showErrorSnackbar, showSuccessSnackbar } from '../../../../actions/snackbar';
+import { showErrorSnackbar, showSuccessSnackbar, showInfoSnackbar } from '../../../../actions/snackbar';
 import { TEMPLATE, INFO_PAGE } from '../../../../constants';
 
 const InfoPage = () => {
   const [richData, setRichData] = useState();
   const [pageName, setPageName] = useState("");
   const [consent, setConsent] = useState(false);
+  const [active, setActive] = useState("");
+  const [socialMediaPages, setSocialMediaPages] = useState(null);
 
   const { isLoggedInAdmin } = useSelector(state => state.auth);
   const { _id: templateId } = useSelector(state => state.template);
   const classes = useStyles();
   const editor = useRef(null);
   const defaultTheme = createMuiTheme();
-	const dispatch = useDispatch();
+  const dispatch = useDispatch();
+
+  const fetchSocialMediaPages = async () => {
+    const { data } = await getSocialMediaPages(templateId);
+    setSocialMediaPages(data.data);
+  };
+
+  useEffect(() => {
+    fetchSocialMediaPages();
+  }, []);
 
   const resetValues = () => {
     const emplyObj = JSON.stringify(
       convertToRaw(EditorState.createEmpty().getCurrentContent()));
     setRichData(emplyObj);
     setPageName("");
+    setConsent(false);
+    setActive("");
   };
 
   const handleConsent = (e) => {
@@ -36,9 +62,8 @@ const InfoPage = () => {
 
   const handleSave = async (data) => {
     if (!templateId) {
-      dispatch(showErrorSnackbar(TEMPLATE.SELECT_OR_CREATE_TEMPLATE));
+      dispatch(showInfoSnackbar(TEMPLATE.SELECT_OR_CREATE_TEMPLATE));
     }
-
     const info = {
       templateId: templateId,
       name: pageName,
@@ -46,12 +71,13 @@ const InfoPage = () => {
       info: {
         richText: data,
       },
-      consent: consent
+      consent: consent,
+      socialMediaPageId: active
     };
     try {
       const { data } = await create(info);
       if (data._id) {
-        dispatch(showSuccessSnackbar(INFO_PAGE.INFO_PAGE_SUCCESS));
+        dispatch(showSuccessSnackbar(INFO_PAGE.SUCCESSFULLY_CREATED_INFORMATION_PAGE));
         resetValues();
       }
     } catch (error) {
@@ -62,7 +88,6 @@ const InfoPage = () => {
         error.message ||
         error.toString();
         dispatch(showErrorSnackbar(resMessage));
-
     }
   };
 
@@ -112,15 +137,18 @@ const InfoPage = () => {
     }
   });
 
+  const handleSocialMediaPage = async (e) => {
+    await setActive(e.target.value);
+  };
+
   return (
-    <>
-    <div>
+    <Container component="main" maxWidth="lg" className={classes.card}>
       <TextField
         margin="normal"
         required
         fullWidth
         value={pageName}
-        label="Provide a unique Info page name"
+        label={INFO_PAGE.PROVIDE_A_UNIQUE_PAGE_NAME}
         onChange={({ target }) => setPageName(target.value)}
         autoFocus
       />
@@ -134,7 +162,7 @@ const InfoPage = () => {
         />
       </MuiThemeProvider>
 
-      <FormGroup>
+      <FormGroup  style={{ padding: '15px' }}>
         <FormControlLabel
           control={<Switch
             checked={consent}
@@ -143,9 +171,29 @@ const InfoPage = () => {
             name="consent"
             inputProps={{ 'aria-label': 'Render this page as a Consent Page' }}
           />}
-          label="Render this page as a Consent Page"
+          label={INFO_PAGE.ADD_I_CONSENT_AND_I_DO_NOT_CONSENT_TO_THE_BOTTOM}
         />
       </FormGroup>
+
+      <Box component="span" className={classes.note} display="block">
+        {INFO_PAGE.ADD_FAKE_POSTS_TO_THE_BOTTOM}
+      </Box>
+
+      <FormControl variant="outlined" className={classes.formControl}>
+        <InputLabel id="demo-simple-select-outlined-label">{INFO_PAGE.SELECT_SOCIAL_MEDIA_PAGE}</InputLabel>
+        <Select
+          labelId="demo-simple-select-outlined-label"
+          id="demo-simple-select-outlined"
+          value={active}
+          onChange={handleSocialMediaPage}
+          label={INFO_PAGE.SELECT_SOCIAL_MEDIA_PAGE}
+        >
+          {socialMediaPages?.length > 0 ? socialMediaPages.map(page => (
+            <MenuItem key={page._id} value={page._id}>{page.name}</MenuItem>
+          )) : null}
+        </Select>
+      </FormControl>
+
       <Button
         type="submit"
         variant="contained"
@@ -156,8 +204,7 @@ const InfoPage = () => {
       >
       Save
       </Button>
-      </div>
-    </>
+    </Container>
   )
 }
 
