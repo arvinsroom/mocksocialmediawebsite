@@ -15,14 +15,16 @@
     "umzug": "^2.3.0"
   },
   "scripts": {
-    "build-prod": "webpack --mode production",
-    "build-dev": "webpack --mode development",
+    "webpack-build-prod": "webpack --mode production",
+    "webpack-build-dev": "webpack --mode development",
     "start-dev": "webpack serve --mode development",
     "clean-db": "rm -rf ./db && mkdir -p ./db",
-    "dev-server": "npm run clean-db && npm run build-dev",
-    "prod-server": "npm run clean-db && npm run build-prod",
-    "run-prod-server": "node ./db/index.js",
-    "run-dev-server": "nodemon ./db/index.js"
+    "copy-dev-config": "cp ./config-development.json ./db/config-development.json",
+    "copy-prod-config": "cp ./config-production.json ./db/config-production.json",
+    "build-dev": "npm run clean-db && npm run copy-dev-config && npm run webpack-build-dev",
+    "build-prod": "npm run clean-db && npm run copy-prod-config && npm run webpack-build-prod",
+    "run-server": "node ./db/index.js",
+    "run-dev-server": "nodemon -L ./db/index.js"
   },
   "eslintConfig": {
     "extends": [

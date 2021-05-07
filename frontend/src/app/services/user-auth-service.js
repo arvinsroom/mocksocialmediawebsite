@@ -1,9 +1,8 @@
 import http from "../../http-common";
 
-export const login = (templateId, qualtricsId) => {
+export const login = (templateId) => {
   return http.post("/user/login", {
     templateId,
-    qualtricsId
   })
     .then(response => {
       if (response.data.accessToken) {

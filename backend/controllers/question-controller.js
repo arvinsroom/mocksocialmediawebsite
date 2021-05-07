@@ -5,7 +5,7 @@ const Question = db.Question;
 const McqOption = db.McqOption;
 
 const create = async (req, res, next) => {
-  const { templateId, type, pageQuestionArr } = req.body;
+  const { templateId, type, pageName, pageQuestionArr } = req.body;
   if (!templateId) {
     res.status(400).send({
       message: "Template Id is required!"
@@ -18,9 +18,15 @@ const create = async (req, res, next) => {
     });
     return;
   }
+  if (!pageName) {
+    res.status(400).send({
+      message: "Page Name is required!"
+    });
+    return;
+  }
   if (!pageQuestionArr && Array.isArray(pageQuestionArr)) {
     res.status(400).send({
-      message: "Page and question data array required!"
+      message: "Question data array required!"
     });
     return;
   }
@@ -29,29 +35,25 @@ const create = async (req, res, next) => {
   let transaction;
   try {
     transaction = await db.sequelize.transaction();
-    const result = [];
-    for (let i = 0; i < pageQuestionArr.length; i++) {
-      // create the page with the name within each pageQuestionArray and template Id
-      let retObj = {};
-      const pageObj = {
-        name: pageQuestionArr[i].name,
-        templateId,
-        type
-      };
-      const pageId = await page.pageCreate(pageObj, transaction);
-      // add page Id
-      retObj.pageId = pageId;
-      // now create the full page with all the questions
-      const questionIdArr = await bulkQuestions.bulkCreate(pageQuestionArr[i].questions, type, pageId, transaction);
-      // add all the questions created array
-      retObj.questions = questionIdArr;
-      result.push(retObj);
-    }
+    // create the page with the name and template Id
+    const pageObj = {
+      name: pageName,
+      templateId,
+      type
+    };
+    const pageId = await page.pageCreate(pageObj, transaction);
+    // add page Id
+    // now create the full page with all the questions
+    await bulkQuestions.bulkCreate(pageQuestionArr, type, pageId, transaction);
+
     // if we reach here, there were no errors therefore commit the transaction
     await transaction.commit();
 
     // add response for _id of all questions with specific page id's
-    res.send(result);
+    res.status(200).send({
+      message: "Questions Created."
+    });
+
   } catch (error) {
     console.log(error.message);
     // if we reach here, there were some errors thrown, therefore roolback the transaction

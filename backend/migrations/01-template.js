@@ -19,7 +19,7 @@ export async function up(queryInterface, DataTypes) {
     },
     name: {
       allowNull: false,
-      type: DataTypes.STRING(36)
+      type: DataTypes.STRING
     },
     videoPermission: {
       allowNull: false,
@@ -43,6 +43,10 @@ export async function up(queryInterface, DataTypes) {
     templateCode: {
       allowNull: false,
       type: DataTypes.INTEGER
+    },
+    language: {
+      allowNull: true,
+      type: DataTypes.STRING
     }
   });
   await queryInterface.addIndex('Template', ['adminId', 'templateCode']);

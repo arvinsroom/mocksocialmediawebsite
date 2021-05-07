@@ -1,20 +1,23 @@
 import { useEffect, useState } from "react";
 import { getQuestions } from "../../../../services/questions-service";
 import { createMCQ } from "../../../../services/user-answer-service";
-import { Button, FormControl, RadioGroup, Card, FormControlLabel, FormLabel, Radio, Divider } from '@material-ui/core';
+import { Button, RadioGroup, Container, FormControlLabel, Radio } from '@material-ui/core';
 import { useSelector, useDispatch } from "react-redux";
 import { Redirect } from 'react-router-dom';
 import useStyles from '../../../style';
-import { showErrorSnackbar, showSuccessSnackbar } from '../../../../actions/snackbar';
-import { updateFlowDisabledState } from '../../../../actions/flowState';
+import { showErrorSnackbar, showInfoSnackbar, showSuccessSnackbar } from '../../../../actions/snackbar';
+import { updateFlowActiveState } from '../../../../actions/flowState';
 import "./MCQ.css";
+import ArrowForwardIosIcon from '@material-ui/icons/ArrowForwardIos';
+import Progress from '../../../Progress';
+import { USER_TRANSLATIONS_DEFAULT } from '../../../../constants';
 
 const MCQ = ({ data }) => {
-
+  const [isLoading, setIsLoading] = useState(false);
   const [mcqQuestions, setMcqQuestions] = useState(null);
   const [mcqResponse, setMcqResponse] = useState(null);
   const [required, setRequired] = useState([]);
-  const { isLoggedInUser } = useSelector(state => state.userAuth);
+  const { isLoggedInUser, translations } = useSelector(state => state.userAuth);
 
   const dispatch = useDispatch();
   const classes = useStyles();
@@ -37,16 +40,14 @@ const MCQ = ({ data }) => {
       await setRequired(reqObj);
       await setMcqResponse(obj);
     }
+    setIsLoading(false);
   };
 
   useEffect(() => {
     if (!isLoggedInUser) return <Redirect to="/" />;
+    setIsLoading(true);
     fetch();
   }, []);
-
-  const resetValues = () => {
-    setMcqResponse(null);
-  };
 
   const checkAndFilterRequired = () => {
     for (let i = 0; i < required.length; i++) {
@@ -56,18 +57,17 @@ const MCQ = ({ data }) => {
     return true;
   };
 
-  const handleSubmit = async e => {
+  const handleClick = async e => {
     e.preventDefault();
     
     try {
       // check if all the required answers were submitted
       if (checkAndFilterRequired()) {
         await createMCQ({ mcq: mcqResponse });
-        dispatch(showSuccessSnackbar("Success! Your MCQ answer(s) were saved! Please follow to the next Page!"));
-        resetValues();
-        dispatch(updateFlowDisabledState());
+        dispatch(showSuccessSnackbar((translations?.responses_saved) || USER_TRANSLATIONS_DEFAULT.RESPONSES_SAVED));
+        dispatch(updateFlowActiveState());
       } else {
-        dispatch(showErrorSnackbar("Error! Please answer required questions!"));
+        dispatch(showInfoSnackbar((translations?.please_answer_all_required_questions_to_continue) || USER_TRANSLATIONS_DEFAULT.ENTER_REQUIRED_INFO));
       }
     } catch (error) {
       const resMessage =
@@ -86,31 +86,29 @@ const MCQ = ({ data }) => {
 
   return (
     <>
-      <form onSubmit={handleSubmit}>
-      {mcqQuestions && mcqQuestions.length > 0 ? mcqQuestions.map((question, index) => (
-          // <Card key={index} className="eachQuestion">
-          <div key={index} className={classes.form}>
-            <FormControl component="fieldset" key={question._id}>
-              <FormLabel component="legend">{question.questionText} {question.required ? "(Required)" : "(Not Required)"}</FormLabel>
-            </FormControl>
+      <Container component="main" maxWidth="md" className={classes.card}>
+        {mcqQuestions && mcqQuestions.length > 0 ? mcqQuestions.map((question, index) => (
+          <Container component="main" maxWidth="md" key={index} className={classes.card}>
+            <p className="mcqText">{question.questionText}</p>
             <RadioGroup aria-label="MCQ Questions" name="MCQ" value={mcqResponse ? mcqResponse[question._id] : ''} onChange={e => handleChange(question._id, e)}>
             {question.mcqOption && question.mcqOption.length > 0 ? question.mcqOption.map((option, optionIndex) => (
-              <FormControlLabel key={option._id} value={option._id} control={<Radio color="primary" />} label={option.optionText} />
+              <FormControlLabel key={option._id} value={option._id} control={<Radio color="primary" />} label={<p className="mcqText">{option.optionText}</p>} />
             )): null}
             </RadioGroup>
-            <Divider className={classes.divider}/>
-          </div>
-      )) : null}
-      <Button
-        type="submit"
-        variant="contained"
-        color="primary"
-        fullWidth
-        className={classes.submit}
-      >
-        Save
-      </Button>
-      </form>
+          </Container>
+        )) : null}
+        {isLoading && <Progress />}
+        <Button
+          type="submit"
+          variant="contained"
+          color="primary"
+          style={{ float: 'right', width: '25%'}}
+          onClick={handleClick}
+          className={classes.submit}
+        >
+          <ArrowForwardIosIcon style={{ fontSize: 15 }} />
+        </Button>
+      </Container>
    </>
   )
 };

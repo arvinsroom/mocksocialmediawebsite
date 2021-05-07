@@ -3,8 +3,8 @@
     "name": "mockwebsitedb",
     "username": "root",
     "password": "rootboot",
-    "host": "127.0.0.1",
-    "port": "",
+    "host": "localhost", 
+    "port": "3306",
     "dialect": "mysql"
   },
   "adminCredentials": [

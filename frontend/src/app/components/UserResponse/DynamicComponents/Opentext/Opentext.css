@@ -1,4 +1,5 @@
-.eachQuestion {
-  padding: 20px;
-  margin-bottom: 20px; /* seperate each box */
+.questionText {
+  font-family: 'Open Sans', sans-serif;
+  font-size: 15px;
+  font-weight: 200;
 }

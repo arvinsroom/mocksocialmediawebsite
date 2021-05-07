@@ -20,7 +20,7 @@ export async function up(queryInterface, DataTypes) {
     },
     questionText: {
       allowNull: false,
-      type: DataTypes.TEXT
+      type: DataTypes.STRING
     },
     required: {
       defaultValue: true,

@@ -1,56 +1,20 @@
 import "./StoryCreate.css";
 import { Avatar } from "@material-ui/core";
-import VideocamIcon from '@material-ui/icons/Videocam';
-import PhotoLibraryIcon from '@material-ui/icons/PhotoLibrary';
 import InsertEmoticonIcon from '@material-ui/icons/InsertEmoticon';
 import { useState } from "react";
-import { useSelector, useDispatch } from "react-redux";
-import { makeStyles } from '@material-ui/core/styles';
 import NewModal from '../Post/NewModal';
-
-const useStyles = makeStyles((theme) => ({
-  paper: {
-    position: 'absolute',
-    width: 400,
-    backgroundColor: theme.palette.background.paper,
-    border: '2px solid #000',
-    boxShadow: theme.shadows[5],
-    padding: theme.spacing(2, 4, 3),
-  },
-}));
+import PhotoLibraryIcon from '@material-ui/icons/PhotoLibrary';
+import PersonAddIcon from '@material-ui/icons/PersonAdd';
 
 const StoryCreate = () => {
-  // const [input, setInput] = useState('');
-  const [modalStyle] = useState(getModalStyle);
   const [modalOpen , setModalOpen] = useState(false);
-  const classes = useStyles();
-  const { posts } = useSelector(state => state.facebookPost);
 
-  function getModalStyle() {
-    const top = 50;
-    const left = 50;
-  
-    return {
-      top: `${top}%`,
-      left: `${left}%`,
-      transform: `translate(-${top}%, -${left}%)`,
-    };
-  }
-
-  // const handleSubmit = (e) => {
-  //   e.preventDefault();
-
-  //   // db stuff
-  //   setInput("");
-  // }
-
-  // const handleInput = (e) => {
-  //   e.preventDefault();
-
-  //   setInput(e.target.value);
-  // }
   const openModal = () => {
     setModalOpen(!modalOpen);
+  };
+
+  const handlePhotoVideo = (e) => {
+    e.preventDefault();
   };
 
   return (
@@ -60,32 +24,26 @@ const StoryCreate = () => {
         <Avatar />
         <form>
           <input
-          // value={input}
           onClick={openModal}
           className="createStoryInputText"
-          type="text"
           placeholder="What's on your mind?" />
-
-          {/* <button hidden={true} onClick={handleSubmit} type="submit">
-            Hidden submit
-          </button> */}
         </form>
       </div>
 
-      <div className="storyCreateBottom">
-        <div className="storyCreateOption">
-          <VideocamIcon style={{ color: "red" }} />
-          <h3>Live Video</h3>
+      <div className="postOptions">
+        {<div className="postOption" onClick={handlePhotoVideo}>
+          <PhotoLibraryIcon style={{ color: '#31A24C' }}/>
+          <p style={{color: 'grey', paddingTop: '4px'}}>Photo/Video</p>
+        </div>}
+        <div className="postOption">
+          <PersonAddIcon style={{ color: '#1877F2' }}/>
+          <p>Tag Friends</p>
         </div>
-        <div className="storyCreateOption">
-          <PhotoLibraryIcon style={{ color: "green" }} />
-          <h3>Photo/Video</h3>
+        <div className="postOption onlyLargeScreen">
+          <InsertEmoticonIcon style={{ color: '#F5C33B' }} />
+          <p>Feeling/Activity</p>
         </div>
-        <div className="storyCreateOption">
-          <InsertEmoticonIcon style={{ color: "orange" }} />
-          <h3>Feeling/Activity</h3>
-        </div>
-      </div>
+    </div>
     </div>
     {modalOpen && <NewModal setModalOpen={setModalOpen}/>}
     </>

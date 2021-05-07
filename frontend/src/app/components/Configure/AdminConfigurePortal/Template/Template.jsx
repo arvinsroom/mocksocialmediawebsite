@@ -1,9 +1,6 @@
 import { Button,
   TextField,
   FormControl,
-  InputLabel,
-  Select,
-  MenuItem,
   Switch,
   FormControlLabel,
   FormGroup,
@@ -14,7 +11,8 @@ import { Button,
   TableHead,
   TableRow,
   Box,
-  FormLabel
+  FormLabel,
+  Container
 } from '@material-ui/core';
 import { useEffect, useState } from 'react';
 // import { TEMPLATE_TYPES } from '../../../../constants';
@@ -28,10 +26,11 @@ import { setTemplateId, getPrevTemplate, deletePrevTemplate } from "../../../../
 import { showErrorSnackbar, showInfoSnackbar, showSuccessSnackbar } from '../../../../actions/snackbar';
 import { TEMPLATE } from '../../../../constants';
 import SaveIcon from '@material-ui/icons/Save';
+
 const Template = () => {
   const [templateName, setTemplateName] = useState("");
   // const [templateType, setTemplateType] = useState("");
-  const [requiredQualtricsId, setRequiredQualtricsId] = useState(false);
+  // const [requiredQualtricsId, setRequiredQualtricsId] = useState(false);
   const [permissions, setPermissions] = useState({
     requestAudio: false,
     requestVideo: false,
@@ -39,7 +38,7 @@ const Template = () => {
   });
   const { isLoggedInAdmin } = useSelector(state => state.auth);
   const { prevTemplates } = useSelector(state => state.template);
-  const [templateCodes, setTemplateCodes] = useState(null);
+  const [templateCodes, setTemplateCodes] = useState({});
   const classes = useStyles();
   const dispatch = useDispatch();
 
@@ -56,12 +55,13 @@ const Template = () => {
   const resetValues = () => {
     setTemplateName("");
     // setTemplateType("");
-    setRequiredQualtricsId(false);
+    // setRequiredQualtricsId(false);
     setPermissions({
       requestAudio: false,
       requestVideo: false,
       requestCookies: false,
-    })
+    });
+    setTemplateCodes({});
   };
 
   const handleSubmit = async e => {
@@ -72,13 +72,13 @@ const Template = () => {
       requestAudio: permissions.requestAudio,
       requestVideo: permissions.requestVideo,
       requestCookies: permissions.requestCookies,
-      qualtricsId: requiredQualtricsId,
+      // qualtricsId: requiredQualtricsId,
     };
     try {
       const { data } = await create(template);
       if (data._id) {
         // dispatch the event to save template Id in store
-        await handleTemplateId(data._id, TEMPLATE.TEMPLATE_SUCCESS);
+        await handleTemplateId(data._id, data.name, TEMPLATE.TEMPLATE_SUCCESS);
         resetValues();
       }
     } catch (error) {
@@ -92,33 +92,21 @@ const Template = () => {
     }
   };
 
-  const handleTemplateId = async (_id, message) => {
-    await dispatch(setTemplateId(_id));
+  const handleTemplateId = async (_id, name, message) => {
+    await dispatch(setTemplateId({ _id, name }));
     resetValues();
     // fetch old templates
     await retrivePrevTemplates();
     dispatch(showSuccessSnackbar(message))
   };
 
-  // const handleChange = (event) => {
-  //   setTemplateType(event.target.value);
+  // const handleQualtricsId = (e) => {
+  //   setRequiredQualtricsId(e.target.checked);
   // };
-
-  const handleQualtricsId = (e) => {
-    setRequiredQualtricsId(e.target.checked);
-  };
 
   const handlePermissions = (e) => {
     setPermissions({ ...permissions, [e.target.name]: e.target.checked });
   };
-
-  // const createMenuItems = () => {
-  //   let menuItems = [];
-  //   for (let item in TEMPLATE_TYPES) {
-  //     menuItems.push(<MenuItem value={item} key={item}>{item}</MenuItem>)
-  //   }
-  //   return menuItems;
-  // }
 
   if (!isLoggedInAdmin) {
     return <Redirect to="/admin" />;
@@ -140,22 +128,23 @@ const Template = () => {
 
   const handleTemplateCode = async (templateId) => {
     const changedTemplateCode = templateCodes[templateId];
-    if (changedTemplateCode && changedTemplateCode >= 100000 && changedTemplateCode <= 999999) {
+    if (Number(changedTemplateCode) && changedTemplateCode >= 100000 && changedTemplateCode <= 999999) {
       const tempObj = {
         _id: templateId,
         templateCode: templateCodes[templateId]
       };
       await updateTemplate({ tempObj });
+      setTemplateCodes({});
+      dispatch(showInfoSnackbar("Access code successfully updated"));
       await retrivePrevTemplates();
-      setTemplateCodes(null);
     } else {
-      dispatch(showInfoSnackbar("Please enter valid Template Code i.e. [100000, 999999]"));
+      dispatch(showInfoSnackbar("Please enter valid Access Code i.e. [100000, 999999]"));
     }
   };
 
   return (
     <>
-    <div className={classes.paper}>
+    <Container component="main" maxWidth="lg" className={classes.card}>
     <form onSubmit={handleSubmit} className={classes.form}>
       <TextField
         variant="outlined"
@@ -164,14 +153,12 @@ const Template = () => {
         fullWidth
         id="templateName"
         value={templateName}
-        label="Provide a template name"
+        label={TEMPLATE.PROVIDE_A_CONDITION_NAME}
         onChange={({ target }) => setTemplateName(target.value)}
         autoFocus
       />
-      <FormControl component="fieldset">
-        <FormLabel component="legend" className={classes.paddingTopBottom}>{TEMPLATE.ASK_FOR_PERMISSION}</FormLabel>
-      </FormControl>
-      <FormGroup>
+      <p>{TEMPLATE.ASK_FOR_PERMISSION}</p>
+      {/* <FormGroup>
         <FormControlLabel
           control={<Switch
             checked={requiredQualtricsId}
@@ -180,9 +167,9 @@ const Template = () => {
             name="requiredQualtricsId"
             inputProps={{ 'aria-label': 'Request qualtrics code checkbox' }}
           />}
-          label="Require qualtrics Id"
+          label={TEMPLATE.REQUIRE_PARTICIPANT_ID}
         />
-      </FormGroup>
+      </FormGroup> */}
       <FormGroup>
         <FormControlLabel
           control={<Switch
@@ -225,42 +212,32 @@ const Template = () => {
         Save
       </Button>
     </form>
-    </div>
+    </Container>
 
+    <Container component="main" maxWidth="lg" className={classes.card}>
     <Box component="span" className={classes.note} display="block">
-      <b>Note:</b> {TEMPLATE.TEMPLATE_DELETE_NOTE}
+      {TEMPLATE.TEMPLATE_DELETE_NOTE}
     </Box>
       <Table aria-label="Template(s)">
         <TableHead>
           <TableRow>
-            <TableCell className={classes.body, classes.head} align="center">ID</TableCell>
-            <TableCell className={classes.body, classes.head} align="center">Name</TableCell>
-            {/* <TableCell className={classes.body, classes.head} align="center">Template Type</TableCell> */}
-            <TableCell className={classes.body, classes.head} align="center">Delete</TableCell>
-            <TableCell className={classes.body, classes.head} align="center">Set Current</TableCell>
-            <TableCell className={classes.body, classes.head} align="center">Attach Code</TableCell>
-            <TableCell className={classes.body, classes.head} align="center">Template Code</TableCell>
+            <TableCell className={classes.body, classes.head} align="center">{TEMPLATE.CONDITION_NAME}</TableCell>
+            <TableCell className={classes.body, classes.head} align="center">{TEMPLATE.LANGUAGE}</TableCell>
+            <TableCell className={classes.body, classes.head} align="center">{TEMPLATE.CHANGE_ACCESS_CODE}</TableCell>
+            <TableCell className={classes.body, classes.head} align="center">{TEMPLATE.ACCESS_CODE}</TableCell>
+            <TableCell className={classes.body, classes.head} align="center">{TEMPLATE.SET_AS_ACTIVE}</TableCell>
+            <TableCell className={classes.body, classes.head} align="center">{TEMPLATE.DELETE}</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
           {prevTemplates && prevTemplates.length > 0 ? prevTemplates.map((row) => (
             <TableRow key={row._id}>
-              <TableCell align="center">{row._id}</TableCell>
               <TableCell align="center">{row.name}</TableCell>
-              {/* <TableCell align="center">{row.type}</TableCell> */}
-              <TableCell align="center">
-                <IconButton aria-label="delete template" onClick={() => removeTemplate(row._id)}>
-                  <DeleteIcon color="primary" />
-                </IconButton>
-              </TableCell>
-              <TableCell align="center">
-                <IconButton aria-label="set template" onClick={() => handleTemplateId(row._id, TEMPLATE.TEMPLATE_CURRENT_SELECT)}>
-                  <AddIcon color="primary" />
-                </IconButton>
-              </TableCell>
+              <TableCell align="center">{row.language}</TableCell>
               <TableCell align="center">
                 <TextField
                   id="standard-number"
+                  value={templateCodes[row._id] || ""}
                   onChange={e => handleChange(row._id, e)}
                   inputProps={{ min: 100000, max: 999999 }}
                   type="number"
@@ -273,21 +250,23 @@ const Template = () => {
                 </IconButton>
               </TableCell>
               <TableCell align="center">
-                <TextField
-                  id="standard-number"
-                  // label="Code"
-                  disabled={true}
-                  value={row.templateCode}
-                  type="number"
-                  InputLabelProps={{
-                    shrink: true,
-                  }}
-                />
+                <p style={{ textAlign: 'center' }}>{row.templateCode}</p>
+              </TableCell>
+              <TableCell align="center">
+                <IconButton aria-label="set template" onClick={() => handleTemplateId(row._id, row.name, TEMPLATE.TEMPLATE_CURRENT_SELECT)}>
+                  <AddIcon color="primary" />
+                </IconButton>
+              </TableCell>
+              <TableCell align="center">
+                <IconButton aria-label="delete template" onClick={() => removeTemplate(row._id)}>
+                  <DeleteIcon color="primary" />
+                </IconButton>
               </TableCell>
             </TableRow>
           )) : null}
         </TableBody>
       </Table>
+    </Container>
     </>
   )
 }
