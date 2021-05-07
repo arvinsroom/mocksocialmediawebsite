@@ -16,7 +16,7 @@ export default (sequelize, DataTypes) => {
     },
     name: {
       allowNull: false,
-      type: DataTypes.STRING(36)
+      type: DataTypes.STRING
     },
     videoPermission: {
       allowNull: false,
@@ -40,6 +40,10 @@ export default (sequelize, DataTypes) => {
     templateCode: {
       allowNull: false,
       type: DataTypes.INTEGER
+    },
+    language: {
+      allowNull: true,
+      type: DataTypes.STRING
     }
   }, {
 		freezeTableName: true, // model name equal to table name
@@ -67,12 +71,8 @@ export default (sequelize, DataTypes) => {
       as: 'info',
       foreignKey: 'templateId'
     });
-    Template.hasMany(models.AdminPost, {
-      as: 'adminPost',
-      foreignKey: 'templateId'
-    });
     Template.hasMany(models.Language, {
-      as: 'language',
+      as: 'languages',
       foreignKey: 'templateId'
     });
     Template.hasMany(models.User, {

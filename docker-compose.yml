@@ -2,16 +2,16 @@ version: '3'
 
 services:
   backend:
+    restart: always
     build:
       context: ./backend
       dockerfile: ./Dockerfile
-    image: "mocksocialmedia/mock-social-media-webiste-backend"
     ports:
       - "8081:8081"
   frontend:
+    restart: always
     build:
       context: ./frontend
       dockerfile: ./Dockerfile
-    image: "mocksocialmedia/mock-social-media-webiste-frontend"
     ports:
-      - "8080:8080"
+      - "80:80"

@@ -84,7 +84,7 @@ const getUserData = async (req, res, next) => {
                   // include: [
                   //   {
                   //     model: db.Media,
-                  //     as: 'attachedMediaAdmin',
+                  //     as: 'attachedMedia',
                   //     attributes: {
                   //       exclude: ['media', 'adminPostId', 'userPostId']
                   //     }
@@ -92,13 +92,6 @@ const getUserData = async (req, res, next) => {
                   // ],
                 },
               ]
-            },
-            {
-              model: db.UserPostShare,
-              as: 'userPostShares',
-              attributes: {
-                exclude: ['_id', 'userId']
-              },
             },
             {
               model: db.UserRegister,

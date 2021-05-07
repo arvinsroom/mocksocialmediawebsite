@@ -4,9 +4,13 @@ import { uploadFiles } from "../middleware/upload";
 var express = require('express')
 var router = express.Router()
 
-router.post("/action", facebook.createAction);
+router.post("/posts", facebook.getFacebookPostWithDetails);
 
-router.post("/share", facebook.createSharePost);
+router.get("/:templateId/:platform/:language/:pageId/:order", facebook.getFacebookPostIds);
+
+router.get("/fake/actions/:pageId", facebook.getFacebookFakeActionPosts);
+
+router.post("/action", facebook.createAction);
 
 router.post("/new", uploadFiles.single("file"), facebook.createNewPost);
 

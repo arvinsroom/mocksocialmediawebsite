@@ -24,12 +24,12 @@ export default (sequelize, DataTypes) => {
     },
     text: {
       allowNull: true,
-      type: DataTypes.TEXT,
+      type: DataTypes.STRING(1024),
       defaultValue: null
     },
     redirectionLink: {
       allowNull: true,
-      type: DataTypes.TEXT,
+      type: DataTypes.STRING(1024),
       defaultValue: null
     }
     // also output _id of user table for further analysis, everything should be connected to that id
