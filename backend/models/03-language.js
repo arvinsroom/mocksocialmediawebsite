@@ -22,13 +22,12 @@ export default (sequelize, DataTypes) => {
       allowNull: false,
       type: DataTypes.STRING
     },
-    isActive: {
-      allowNull: false,
-      type: DataTypes.BOOLEAN
-    },
     translations: {
       allowNull: false,
-      type: DataTypes.TEXT
+      type: DataTypes.TEXT,
+      get () {
+        return JSON.parse(this.getDataValue('translations'));
+      },
     }
   }, {
 		freezeTableName: true, // model name equal to table name

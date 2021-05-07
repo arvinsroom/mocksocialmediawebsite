@@ -1,19 +1,9 @@
-.finish {
-  padding: 20px;
-  margin-top: 10px;
-}
-
-.finishTopLink {
-  text-align: center;
-  padding: 20px;
-  font-size: large;
-  font-family: '"Roboto", "Helvetica", "Arial", sans-serif';
-}
-
-.finishBottom > h6 {
+.finishLink {
   text-align: center;
 }
 
-.finishTop {
-  margin-bottom: 8%;
+.finishText {
+  font-family: 'Open Sans', sans-serif;
+  font-size: 15px;
+  font-weight: 200;
 }

@@ -3,7 +3,6 @@ import Sequelize from 'sequelize';
 import Admin from '../models/00-admin';
 import Template from '../models/01-template';
 import Language from '../models/03-language';
-import AdminPost from '../models/04-admin-post';
 import Page from '../models/02-page';
 import Info from '../models/05-info';
 import Finish from '../models/06-finish';
@@ -13,43 +12,18 @@ import McqOption from '../models/09-mcq-option';
 import User from '../models/10-user';
 import UserPost from '../models/11-user-post';
 import UserPostAction from '../models/12-user-post-action';
-import UserPostShare from '../models/13-user-post-share';
-import UserRegister from '../models/14-user-register';
-import UserAnswer from '../models/15-user-answer';
-import Media from '../models/16-media';
-import UserPostTracking from '../models/17-user-post-tracking';
-import UserGlobalTracking from '../models/18-user-global-tracking';
+import UserRegister from '../models/13-user-register';
+import UserAnswer from '../models/14-user-answer';
+import Media from '../models/15-media';
+import UserPostTracking from '../models/16-user-post-tracking';
+import UserGlobalTracking from '../models/17-user-global-tracking';
+import { databaseConfigurations } from '../utils';
 
-let config;
-try {
-  config = require(__dirname + '/../config-' + process.env.NODE_ENV.toString() + '.json')['database'];
-} catch (error) {
-  console.log('Please specify a config-production.json or config-development.json file!')
-}
-
-// console.log('Checking if database exit...');
-// mysql.createConnection({
-//   host: config.host,
-//   port: config.port,
-//   user: config.username,
-//   password: config.password,
-//   debug: false
-// }).then(connection => {
-//   connection.query(`CREATE DATABASE IF NOT EXISTS \`${config.name}\`;`)
-//     .then(() => {
-//       console.log('Database has successfully checked/created.');
-//       connection.end()
-//         .then(() => console.log('Connection ended!'))
-//         .catch(error => console.log('Connection not ended!', error));
-//     })
-//     .catch((error) => console.log('Could not create database.', error));
-// }).catch(error => console.error('Unable to check/create a database: ', error));
-// console.log('Closed MYSQL connection, and starting sequilize MYSQL connection...');
-
+const config = databaseConfigurations();
 
 const sequelize = new Sequelize({
   database: config.name,
-  host: config.host,
+  host: process.env.MYSQL_HOST || config.host,
   username: config.username,
   password: config.password,
   port: config.port,
@@ -70,7 +44,6 @@ const db = {};
 const AdminModel = Admin(sequelize, Sequelize);
 const TemplateModel = Template(sequelize, Sequelize);
 const LanguageModel = Language(sequelize, Sequelize);
-const AdminPostModel = AdminPost(sequelize, Sequelize);
 const PageModel = Page(sequelize, Sequelize);
 const InfoModel = Info(sequelize, Sequelize);
 const FinishModel = Finish(sequelize, Sequelize);
@@ -80,7 +53,6 @@ const McqOptionModel = McqOption(sequelize, Sequelize);
 const UserModel = User(sequelize, Sequelize);
 const UserPostModel = UserPost(sequelize, Sequelize);
 const UserPostActionModel = UserPostAction(sequelize, Sequelize);
-const UserPostShareModel = UserPostShare(sequelize, Sequelize);
 const UserRegisterModel = UserRegister(sequelize, Sequelize);
 const UserAnswerModel = UserAnswer(sequelize, Sequelize);
 const MediaModel = Media(sequelize, Sequelize);
@@ -90,7 +62,6 @@ const UserGlobalTrackingModel = UserGlobalTracking(sequelize, Sequelize);
 db[AdminModel.name] = AdminModel;
 db[TemplateModel.name] = TemplateModel;
 db[LanguageModel.name] = LanguageModel;
-db[AdminPostModel.name] = AdminPostModel;
 db[PageModel.name] = PageModel;
 db[InfoModel.name] = InfoModel;
 db[FinishModel.name] = FinishModel;
@@ -100,7 +71,6 @@ db[McqOptionModel.name] = McqOptionModel;
 db[UserModel.name] = UserModel;
 db[UserPostModel.name] = UserPostModel;
 db[UserPostActionModel.name] = UserPostActionModel;
-db[UserPostShareModel.name] = UserPostShareModel;
 db[UserRegisterModel.name] = UserRegisterModel;
 db[UserAnswerModel.name] = UserAnswerModel;
 db[MediaModel.name] = MediaModel;

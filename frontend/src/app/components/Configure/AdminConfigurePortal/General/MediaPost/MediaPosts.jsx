@@ -1,21 +1,21 @@
 import { useState } from 'react';
 import * as XLSX from 'xlsx';
 import { Button, Typography, Input, Divider, TextField, FormControl, MenuItem, InputLabel, Select } from '@material-ui/core';
-import * as media from "../../../../services/mediapost-service";
-import { useSelector, useDispatch } from "react-redux";
-import useStyles from '../../../style';
-import { showErrorSnackbar, showSuccessSnackbar } from '../../../../actions/snackbar';
-import { GENERAL_PAGE, TEMPLATE } from '../../../../constants';
-import { TEMPLATE_TYPES, ORDER_TYPES } from '../../../../constants';
+import { create } from "../../../../../services/media-service";
+import { useDispatch } from "react-redux";
+import useStyles from '../../../../style';
+import { showErrorSnackbar, showInfoSnackbar, showSuccessSnackbar } from '../../../../../actions/snackbar';
+import { GENERAL_PAGE, TEMPLATE, TEMPLATE_TYPES, ORDER_TYPES } from '../../../../../constants';
+import Upload from './Upload';
 
-const MediaPosts = () => {
+const MediaPosts = ({ templateId }) => {
   const [mediaJSON, setMediaJSON] = useState(null);
   const [pageName, setPageName] = useState("");
   const [templateType, setTemplateType] = useState("");
   const [orderType, setOrderType] = useState("");
+  const [postMetaData, setPostMetaData] = useState(null);
 
   const classes = useStyles();
-  const { _id: templateId } = useSelector(state => state.template);
   const dispatch = useDispatch();
 
   /* list of supported file types */
@@ -59,13 +59,16 @@ const MediaPosts = () => {
   const handleSubmit = async e => {
     e.preventDefault();
     if (!templateId) {
-      dispatch(showErrorSnackbar(TEMPLATE.SELECT_OR_CREATE_TEMPLATE));
+      dispatch(showInfoSnackbar(TEMPLATE.SELECT_OR_CREATE_TEMPLATE));
     }
     try {
       if (mediaJSON && pageName) {
-        await media.create({ name: pageName, type: templateType, pageDataOrder: orderType, templateId: templateId, mediaPosts: mediaJSON});
-        dispatch(showSuccessSnackbar(GENERAL_PAGE.MEDIA_SUCCESS));
-        resetValues();  
+        const { data } = await create({ name: pageName, type: templateType, pageDataOrder: orderType, templateId: templateId, mediaPosts: mediaJSON});
+        setPostMetaData(data.postMetaData || null);
+        dispatch(showSuccessSnackbar(GENERAL_PAGE.SUCCESSFULLY_UPLOADED_SOCAIL_MEDIA_SPREADSHEET));
+        resetValues();
+      } else {
+        dispatch(showInfoSnackbar(GENERAL_PAGE.PLEASE_ENTER_A_VALID_RESPONSE))
       }
     } catch (error) {
       const resMessage =
@@ -96,56 +99,55 @@ const MediaPosts = () => {
 
   const createMenuItemsOrder = () => {
     let menuItems = [];
-    for (let item in ORDER_TYPES) {
-      menuItems.push(<MenuItem value={item} key={item}>{item}</MenuItem>)
+    for (const [key, value] of Object.entries(ORDER_TYPES)) {
+      menuItems.push(<MenuItem value={key} key={key}>{value}</MenuItem>)
     }
     return menuItems;
   }
 
   return (
     <>
-    <div className={classes.paper}>
-      <form onSubmit={handleSubmit} className={classes.form}>
+      <form onSubmit={handleSubmit}>
         <TextField
           className={classes.marginBottom}
           margin="normal"
           required
           fullWidth
           value={pageName}
-          label="Provide a unique Social Media page name"
+          label={GENERAL_PAGE.PROVIDE_A_UNIQUE_NAME_FOR_SOCIAL_MEDIA}
           onChange={({ target }) => setPageName(target.value)}
           autoFocus
         />
         <FormControl variant="outlined" className={classes.formControl}>
-          <InputLabel id="demo-simple-select-outlined-label">Choose Social Media Template Type</InputLabel>
+          <InputLabel id="demo-simple-select-outlined-label">{GENERAL_PAGE.SELECT_SOCIAL_MEDIA_LAYOUT}</InputLabel>
           <Select
             labelId="demo-simple-select-outlined-label"
             id="demo-simple-select-outlined"
             className={classes.marginBottom}
             value={templateType}
             onChange={handleType}
-            label="Choose Social Media Template Type"
+            label={GENERAL_PAGE.SELECT_SOCIAL_MEDIA_LAYOUT}
           >
             {createMenuItems()}
           </Select>
         </FormControl>
 
         <FormControl variant="outlined" className={classes.formControl}>
-          <InputLabel id="demo-simple-select-outlined-label">Choose Posts Order</InputLabel>
+          <InputLabel id="demo-simple-select-outlined-label">{GENERAL_PAGE.SELECT_ORDER_OF_PRESENTATION_OF_POSTS}</InputLabel>
           <Select
             labelId="demo-simple-select-outlined-label"
             id="demo-simple-select-outlined"
             className={classes.marginBottom}
             value={orderType}
             onChange={handleOrder}
-            label="Choose Posts Order"
+            label={GENERAL_PAGE.SELECT_ORDER_OF_PRESENTATION_OF_POSTS}
           >
             {createMenuItemsOrder()}
           </Select>
         </FormControl>
 
         <Typography component="h6">
-          Social Media Post Spreadsheet
+          {GENERAL_PAGE.UPLOAD_SPREADSHEET_OF_SOCIAL_MEDIA_POSTS}
         </Typography>
         <Input
           type="file"
@@ -162,10 +164,10 @@ const MediaPosts = () => {
           disabled={!pageName && !mediaJSON}
           className={classes.submit}
         >
-          Save
+          {GENERAL_PAGE.SAVE_RESPONSES}
         </Button>    
       </form>
-    </div>
+      {<Upload postMetaData={postMetaData}/>}
     </>
   );
 };

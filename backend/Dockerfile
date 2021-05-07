@@ -14,7 +14,7 @@ RUN npm install --development
 COPY . .
 
 # build a prod executable
-RUN npm run prod-server
+RUN npm run build-prod
 
 FROM node:13.12.0-alpine
 

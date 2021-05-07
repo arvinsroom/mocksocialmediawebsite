@@ -16,16 +16,8 @@ export default (sequelize, DataTypes) => {
     },
     isThumbnail: {
       allowNull: false,
-      type: DataTypes.BOOLEAN
-    },
-    adminPostId: {
-      allowNull: true,
-      references: {
-        key: '_id',
-        model: 'AdminPost'
-      },
-      type: DataTypes.INTEGER,
-      defaultValue: null
+      type: DataTypes.BOOLEAN,
+      defaultValue: false,
     },
     userPostId: {
       allowNull: true,
@@ -42,15 +34,8 @@ export default (sequelize, DataTypes) => {
 	});
 
   Media.associate = (models) => {
-    Media.belongsTo(models.AdminPost, {
-      as: 'attachedMediaAdmin',
-      foreignKey: 'adminPostId'
-    })
-  };
-
-  Media.associate = (models) => {
     Media.belongsTo(models.UserPost, {
-      as: 'attachedMediaUser',
+      as: 'attachedMedia',
       foreignKey: 'userPostId'
     })
   };

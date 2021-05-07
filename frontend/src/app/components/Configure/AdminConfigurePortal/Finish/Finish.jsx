@@ -1,10 +1,10 @@
-import { Button, TextField } from '@material-ui/core';
+import { Button, TextField, Container } from '@material-ui/core';
 import { useState } from 'react';
 import { create } from '../../../../services/finish-service';
 import useStyles from '../../../style';
 import { useSelector, useDispatch } from "react-redux";
 import { Redirect } from 'react-router-dom';
-import { showErrorSnackbar, showSuccessSnackbar } from '../../../../actions/snackbar';
+import { showErrorSnackbar, showSuccessSnackbar, showInfoSnackbar } from '../../../../actions/snackbar';
 import { TEMPLATE, FINISH_PAGE } from '../../../../constants';
 
 const Finish = () => {
@@ -26,7 +26,7 @@ const Finish = () => {
     e.preventDefault();
 
     if (!templateId) {
-      dispatch(showErrorSnackbar(TEMPLATE.SELECT_OR_CREATE_TEMPLATE));
+      dispatch(showInfoSnackbar(TEMPLATE.SELECT_OR_CREATE_TEMPLATE));
     }
 
     const finish = {
@@ -42,7 +42,7 @@ const Finish = () => {
     try {
       const { data } = await create(finish);
       if (data._id) {
-        dispatch(showSuccessSnackbar(FINISH_PAGE.FINISH_PAGE_SUCCESS));
+        dispatch(showSuccessSnackbar(FINISH_PAGE.SUCCESSFULLY_CREATED_REDIRECT_PAGE));
         resetValues();
       }
     } catch (error) {
@@ -61,8 +61,7 @@ const Finish = () => {
   }
 
   return (
-    <>
-    <div className={classes.paper}>
+    <Container component="main" maxWidth="lg" className={classes.card}>
     <form onSubmit={handleSubmit} className={classes.form}>
       <TextField
         className={classes.marginBottom}
@@ -70,7 +69,7 @@ const Finish = () => {
         required
         fullWidth
         value={pageName}
-        label="Provide a unique page name"
+        label={FINISH_PAGE.PROVIDE_A_UNIQUE_PAGE_NAME}
         onChange={({ target }) => setPageName(target.value)}
         autoFocus
       />
@@ -80,7 +79,7 @@ const Finish = () => {
         fullWidth
         value={redirectionLink}
         id="redirectionLink"
-        label="Provide a redirection link"
+        label={FINISH_PAGE.PROVIDE_A_REDIRECTION_LINK}
         onChange={({ target }) => setRedirectionLink(target.value)}
         autoFocus
       />
@@ -90,7 +89,7 @@ const Finish = () => {
         fullWidth
         id="anyText"
         value={anyText}
-        label="Provide text to be rendered on last page"
+        label={FINISH_PAGE.TYPE_TEXT_ALONGSIDE_REDIRECTION_LINK}
         onChange={({ target }) => setAnyText(target.value)}
         autoFocus
       />
@@ -104,8 +103,7 @@ const Finish = () => {
         Save
       </Button>
     </form>
-    </div>
-    </>
+    </Container>
   )
 }
 

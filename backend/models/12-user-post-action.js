@@ -15,32 +15,12 @@ export default (sequelize, DataTypes) => {
       type: DataTypes.UUID
     },
     userPostId: {
-      allowNull: true,
+      allowNull: false,
       references: {
         key: '_id',
         model: 'UserPost'
       },
       type: DataTypes.UUID
-    },
-    adminPostId: {
-      allowNull: true,
-      references: {
-        key: '_id',
-        model: 'AdminPost'
-      },
-      type: DataTypes.INTEGER
-    },
-    // sharePostId: {
-    //   allowNull: true,
-    //   references: {
-    //     key: '_id',
-    //     model: 'UserPostShare'
-    //   },
-    //   type: DataTypes.UUID
-    // },
-    platform: {
-      allowNull: false,
-      type: DataTypes.ENUM('FACEBOOK', 'REDDIT', 'TWITTER', 'INSTAGRAM', 'YOUTUBE', 'SLACK', 'TIKTOK')
     },
     action: {
       allowNull: false,
@@ -48,7 +28,7 @@ export default (sequelize, DataTypes) => {
     },
     comment: {
       allowNull: true,
-      type: DataTypes.TEXT
+      type: DataTypes.STRING
     },
     createdAt: {
       allowNull: false,
@@ -65,14 +45,6 @@ export default (sequelize, DataTypes) => {
       as: 'userPosts',
       foreignKey: 'userPostId'
     });
-    UserPostAction.belongsTo(models.AdminPost, {
-      as: 'adminPosts',
-      foreignKey: 'adminPostId',
-    });
-    // UserPostAction.belongsTo(models.AdminPost, {
-    //   as: 'sharePosts',
-    //   foreignKey: 'sharePostId',
-    // });
     UserPostAction.belongsTo(models.User, {
       foreignKey: 'userId'
     });
