@@ -1,3 +1,5 @@
-.eachQuestion {
-  margin-bottom: 20px; /* seperate each box */
+.mcqText {
+  font-family: 'Open Sans', sans-serif;
+  font-size: 15px;
+  font-weight: 200;
 }

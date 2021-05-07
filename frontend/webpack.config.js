@@ -83,7 +83,10 @@ module.exports = function(_env, argv) {
       new webpack.DefinePlugin({
         "process.env.NODE_ENV": JSON.stringify(
           isProduction ? "production" : "development"
-        )
+        ),
+        "process.env.IP_ADDRESS": JSON.stringify(
+          isProduction ? "3.97.196.198" : "localhost"
+        ),
       })
     ].filter(Boolean),
     optimization: {

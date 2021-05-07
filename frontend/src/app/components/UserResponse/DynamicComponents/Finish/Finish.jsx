@@ -1,18 +1,20 @@
 import { getUserFinishDetails } from '../../../../services/finish-service';
 import { useEffect, useState } from "react";
-import { Button, TextField, Card, Link, Typography } from '@material-ui/core';
+import { Button, Container, TextField, Card, Link, Typography } from '@material-ui/core';
 import { useSelector, useDispatch } from "react-redux";
 import { Redirect } from 'react-router-dom';
 import useStyles from '../../../style';
 import { showErrorSnackbar, showSuccessSnackbar } from '../../../../actions/snackbar';
 import "./Finish.css";
-import { updateFlowDisabledState } from '../../../../actions/flowState';
+import { updateFlowActiveState } from '../../../../actions/flowState';
+import ArrowForwardIosIcon from '@material-ui/icons/ArrowForwardIos';
+import { USER_TRANSLATIONS_DEFAULT } from '../../../../constants';
 
 const Finish = ({ data }) => {
   const [finishObj, setFinishObj] = useState(null);
   const dispatch = useDispatch();
   const classes = useStyles();
-  const { isLoggedInUser } = useSelector(state => state.userAuth);
+  const { isLoggedInUser, translations } = useSelector(state => state.userAuth);
 
   const fetch = async () => {
     const ret = await getUserFinishDetails(data._id);
@@ -24,35 +26,45 @@ const Finish = ({ data }) => {
   useEffect(() => {
     if (!isLoggedInUser) return <Redirect to="/" />;
     fetch();
-    dispatch(updateFlowDisabledState());
   }, []);
 
   const getRedirectionLink = (link) => {
+    if (!link) return;
     return link.startsWith("http://") || link.startsWith("https://") ?
       link : `https://${link}`
   };
 
+  const handleClick = () => {
+    dispatch(updateFlowActiveState());
+  };
+
   return (
    <>
-    <Card className="finish">
+    <Container component="main" maxWidth="md" className={classes.card}>
       {finishObj ? 
-        <div className="finishTop">
-          <TextField
-            className={classes.center}
-            id="standard-disabled"
-            disabled={true}
-            defaultValue={finishObj.text ? finishObj.text : ""}
-          />
-        </div>
+        <>
+          <p className='finishText'>{finishObj.text ? finishObj.text : ""}</p>
+          {finishObj.redirectionLink &&
+          <div className='finishLink'>
+            <Link href={getRedirectionLink(finishObj.redirectionLink)} rel="noopener noreferrer" target="_blank">
+              {translations?.click_here_to_continue_to_the_next_part_of_this_study || USER_TRANSLATIONS_DEFAULT.CLICK_TO_CONTINUE_STUDY}
+            </Link>
+          </div>
+          }
+        </>
       : null}
 
-      {finishObj ? 
-        <div className="finishTopLink">
-          <Link href={getRedirectionLink(finishObj.redirectionLink ? finishObj.redirectionLink : '')} rel="noopener noreferrer" target="_blank">
-            Please Follow this Link!
-          </Link>
-        </div> : null}
-      </Card>
+      <Button
+        type="submit"
+        variant="contained"
+        color="primary"
+        style={{ float: 'right', width: '25%'}}
+        onClick={handleClick}
+        className={classes.submit}
+      >
+        <ArrowForwardIosIcon style={{ fontSize: 15 }} />
+      </Button>
+      </Container>
     </>
   );
 };

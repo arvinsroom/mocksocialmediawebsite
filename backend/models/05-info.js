@@ -29,6 +29,14 @@ export default (sequelize, DataTypes) => {
     consent: {
       type: DataTypes.BOOLEAN,
       defaultValue: false,
+    },
+    socialMediaPageId: {
+      allowNull: true,
+      references: {
+        key: '_id',
+        model: 'Page'
+      },
+      type: DataTypes.UUID
     }
   }, {
 		freezeTableName: true, // model name equal to table name
@@ -49,5 +57,11 @@ export default (sequelize, DataTypes) => {
     })
   };
 
+  Info.associate = (models) => {
+    Info.belongsTo(models.Page, {
+      as: 'socialMediaPage',
+      foreignKey: 'socialMediaPageId'
+    })
+  };
   return Info;
 }

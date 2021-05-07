@@ -5,7 +5,7 @@ const Text = ({ postMessage, link }) => {
     <>
       <div className="postBottom">
         <p>{postMessage ? postMessage : ""}</p>
-        <p>{link ? link : ""}</p>
+        {/* <p>{link ? link : ""}</p> */}
       </div>
     </>
   );

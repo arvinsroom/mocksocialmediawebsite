@@ -22,10 +22,6 @@ export async function up(queryInterface, DataTypes) {
       },
       type: DataTypes.UUID
     },
-    isActive: {
-      allowNull: false,
-      type: DataTypes.BOOLEAN
-    },
     platform: {
       allowNull: false,
       type: DataTypes.STRING
