@@ -16,7 +16,7 @@ export default (sequelize, DataTypes) => {
     },
     optionText: {
       allowNull: true,
-      type: DataTypes.TEXT
+      type: DataTypes.STRING(1024)
     },
   }, {
 		freezeTableName: true, // model name equal to table name

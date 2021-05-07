@@ -3,24 +3,33 @@ import {
   USER_LOGIN_FAIL,
   USER_LOGOUT,
   SNACKBAR_ERROR,
-  SET_FLOW_STATE
+  SET_FLOW_STATE,
 } from "./types";
 
 import * as UserAuthService from "../services/user-auth-service";
 
-export const userLogin = (templateId, qualtricsId) => (dispatch) => {
-  return UserAuthService.login(templateId, qualtricsId).then(
+export const userLogin = (templateCode) => (dispatch) => {
+  return UserAuthService.login(templateCode).then(
     (data) => {
-      if (!data.flow || data.flow.length < 1) {
+      if (!data.flow && data.flow.length < 1) {
         dispatch({
           type: SET_FLOW_STATE,
-          payload: { flow: [], active: -1, disabled: true }
+          payload: {
+            flow: [],
+            active: -1,
+            finished: true,
+          }
         });
-      } else {
-      // dispatch a function to set the initial flow state
+      }
+      else {
+        // dispatch a function to set the initial flow state
         dispatch({
           type: SET_FLOW_STATE,
-          payload: { flow: data.flow, active: 0, disabled: true }
+          payload: {
+            flow: data.flow,
+            active: 0,
+            finished: false,
+          }
         });
 
         // data has user token, flow and translations

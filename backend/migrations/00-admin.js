@@ -11,7 +11,7 @@ export async function up(queryInterface, DataTypes) {
     },
     username: {
       allowNull: false,
-      type: DataTypes.STRING(36)
+      type: DataTypes.STRING
     },
     password: {
       allowNull: false,

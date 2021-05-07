@@ -21,20 +21,15 @@ const update = async (req, res, next) => {
 
     // create the page first
     transaction = await db.sequelize.transaction();
-    // get the post id from the file
-    // const userData = {
-    //   consent: userObj.consent || null,
-    //   username: username || null,
-    //   userId: req.userId
-    // };
 
     const userData = {};
     // create update object
     if (userObj.consent) userData['consent'] = userObj.consent;
     if (userObj.finishedAt) userData['finishedAt'] = userObj.finishedAt;
-    
+    if (userData.qualtricsId) userData['qualtricsId'] = userData.qualtricsId;
+
     // now create a entry for register
-    const data = await User.update(userData,
+    await User.update(userData,
       {
         where: {
           _id: req.userId
@@ -44,7 +39,7 @@ const update = async (req, res, next) => {
     // if we reach here, there were no errors therefore commit the transaction
     await transaction.commit();
     // fetch json
-    res.send(data);
+    res.send("Success!");
   } catch (error) {
     console.log(error.message);
     // if we reach here, there were some errors thrown, therefore roolback the transaction

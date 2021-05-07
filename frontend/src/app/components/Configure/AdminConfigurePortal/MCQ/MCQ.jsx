@@ -1,4 +1,4 @@
-import { Button, TextField, IconButton, Card, Tooltip, Fab, Grid, Switch } from '@material-ui/core';
+import { Button, TextField, IconButton, Container, Tooltip, Fab, Grid, Switch } from '@material-ui/core';
 import { useState } from 'react';
 import { create } from "../../../../services/questions-service";
 import DeleteIcon from '@material-ui/icons/Delete';
@@ -7,11 +7,12 @@ import cloneDeep from 'lodash/cloneDeep';
 import { useSelector, useDispatch } from "react-redux";
 import { Redirect } from 'react-router-dom';
 import useStyles from '../../../style';
-import { showErrorSnackbar, showSuccessSnackbar } from '../../../../actions/snackbar';
+import { showErrorSnackbar, showSuccessSnackbar, showInfoSnackbar } from '../../../../actions/snackbar';
 import { TEMPLATE, MCQ_PAGE } from '../../../../constants';
 
 const MCQ = () => {
   const [OpenTextArr, setOpenTextArr] = useState([]);
+  const [pageName, setPageName] = useState("");
 
 	const dispatch = useDispatch();
   const { isLoggedInAdmin } = useSelector(state => state.auth);
@@ -20,23 +21,24 @@ const MCQ = () => {
 
   const resetValues = () => {
     setOpenTextArr([]);
+    setPageName("");
   };
 
   const handleSubmit = async e => {
     e.preventDefault();
     if (!templateId) {
-      dispatch(showErrorSnackbar(TEMPLATE.SELECT_OR_CREATE_TEMPLATE));
+      dispatch(showInfoSnackbar(TEMPLATE.SELECT_OR_CREATE_TEMPLATE));
     }
     const mcq = {
       templateId,
       type: 'MCQ',
+      pageName: pageName,
       pageQuestionArr: OpenTextArr
     };
-
     try {
       const { data } = await create(mcq);
       if (data) {
-        dispatch(showSuccessSnackbar(MCQ_PAGE.MCQ_PAGE_SUCCESS));
+        dispatch(showSuccessSnackbar(MCQ_PAGE.SUCCESSFULLY_CREATED_MULTIPLE_CHOICE_PAGE));
         resetValues();
       }
     } catch (error) {
@@ -80,66 +82,35 @@ const MCQ = () => {
     await setOpenTextArr(newOpenTextArr);
   };
 
-  // BAD: maybe change in future
-  const handlePageName = async (pg, event) => {
-    event.preventDefault();
-    // update the current object name
-    pg.name = event.target.value;
-    // deep copy OpenTextArr
-    let newOpenTextArr = cloneDeep(OpenTextArr);
-    // make this new OpenTextArr
-    await setOpenTextArr(newOpenTextArr);
-  }
-
-  const addPage = async () => {
-    let pageObj = {
-      name: "",
-      questions: []
-    };
-    let newOpenTextArr = cloneDeep(OpenTextArr);
-    newOpenTextArr.push(pageObj);
-    await setOpenTextArr(newOpenTextArr);
-  }
-
-  const removePage = async (index) => {
-    let newOpenTextArr = cloneDeep(OpenTextArr);
-    newOpenTextArr.splice(index, 1);
-    await setOpenTextArr(newOpenTextArr);
-  }
-
-  const addQuestion = async (index) => {
+  const addQuestion = async () => {
     let obj = {
       questionText: "",
       required: false,
       mcqOptions: []
     };
     let newOpenTextArr = cloneDeep(OpenTextArr);
-    if (!newOpenTextArr[index].questions) {
-      newOpenTextArr[index].questions = [obj]
-    } else newOpenTextArr[index].questions.push(obj);
+    newOpenTextArr.push(obj);
     await setOpenTextArr(newOpenTextArr);
   }
 
-  const addMcqOption = async (index, questionIndex) => {
+  const addMcqOption = async (questionIndex) => {
     let obj = {
       optionText: "",
     };
     let newOpenTextArr = cloneDeep(OpenTextArr);
-    if (!newOpenTextArr[index].questions[questionIndex].mcqOptions) {
-      newOpenTextArr[index].questions[questionIndex].mcqOptions = [obj]
-    } else newOpenTextArr[index].questions[questionIndex].mcqOptions.push(obj);
+    newOpenTextArr[questionIndex].mcqOptions.push(obj);
     await setOpenTextArr(newOpenTextArr);
   }
 
-  const removeQuestion = async (pgIndex, questionIndex) => {
+  const removeQuestion = async (questionIndex) => {
     let newOpenTextArr = cloneDeep(OpenTextArr);
-    newOpenTextArr[pgIndex].questions.splice(questionIndex, 1);
+    newOpenTextArr.splice(questionIndex, 1);
     await setOpenTextArr(newOpenTextArr);
   }
 
-  const removeMcqOption = async (pgIndex, questionIndex, optionIndex) => {
+  const removeMcqOption = async (questionIndex, optionIndex) => {
     let newOpenTextArr = cloneDeep(OpenTextArr);
-    newOpenTextArr[pgIndex].questions[questionIndex].mcqOptions.splice(optionIndex, 1);
+    newOpenTextArr[questionIndex].mcqOptions.splice(optionIndex, 1);
     await setOpenTextArr(newOpenTextArr);
   }
 
@@ -148,44 +119,24 @@ const MCQ = () => {
   }
 
   return (
-    <>
+    <Container component="main" maxWidth="lg" className={classes.card}>
       <form onSubmit={handleSubmit} className={classes.form}>
-      <Tooltip title="Add Page" aria-label="Add Page">
-        <Fab color="default" onClick={() => addPage()} className={classes.marginTenPx}>
-          <AddIcon />
-        </Fab>
-      </Tooltip>
-      {OpenTextArr && OpenTextArr.length > 0 ? OpenTextArr.map((pg, index) => (
-          <Card key={index} className={classes.rootText}>
-            <Grid container spacing={3}>
-              <Grid item xs={2}>
-                <Tooltip title="Add Quesion" aria-label="Add Quesion" >
-                  <Fab color="primary" onClick={() => addQuestion(index)} className={classes.marginTenPx}>
-                    <AddIcon />
-                  </Fab>
-                </Tooltip>
-              </Grid>
-              <Grid item xs={8}>
-                <TextField
-                  className={classes.center}
-                  margin="normal"
-                  required
-                  value={pg.name}
-                  label="Provide a unique page name"
-                  onChange={(e) => handlePageName(pg, e)}
-                  autoFocus
-                />
-              </Grid>
-              <Grid item xs={2} className={classes.floatRight}>
-                <Tooltip title="Delete Page" aria-label="Delete Page">
-                  <IconButton aria-label="delete page"  onClick={() => removePage(index)} className={classes.floatRight}>
-                    <DeleteIcon color="primary" />
-                  </IconButton>
-                </Tooltip>
-              </Grid>
-            </Grid>
-            {OpenTextArr[index].questions && OpenTextArr[index].questions.length > 0 ? OpenTextArr[index].questions.map((question, questionIndex) => (
-              <div key={questionIndex} className={classes.rootText}>
+        <TextField
+          margin="normal"
+          required
+          fullWidth
+          value={pageName}
+          label={MCQ_PAGE.PROVIDE_A_UNIQUE_PAGE_NAME}
+          onChange={({ target }) => setPageName(target.value)}
+          autoFocus
+        />
+        <Tooltip title="Add Quesion" aria-label="Add Quesion" >
+          <Fab color="primary" onClick={() => addQuestion()} className={classes.marginTenPx}>
+            <AddIcon />
+          </Fab>
+        </Tooltip>
+        {OpenTextArr?.length > 0 ? OpenTextArr.map((question, questionIndex) => (
+              <div key={questionIndex} className={classes.card}>
                 <Grid container spacing={4}>
                   <Grid item xs={10}>
                     <TextField
@@ -194,7 +145,7 @@ const MCQ = () => {
                       margin="normal"
                       required
                       value={question.questionText}
-                      label="Please type in your question below"
+                      label={MCQ_PAGE.TYPE_QUESTION_HERE}
                       onChange={(e) => handleQuestionText(question, e)}
                       autoFocus
                     />
@@ -212,22 +163,22 @@ const MCQ = () => {
                   </Grid>
                   <Grid item xs={1} className={classes.floatRight}>
                     <Tooltip title="Delete question">
-                      <IconButton aria-label="delete question" className={classes.floatRight} onClick={() => removeQuestion(index, questionIndex)}>
+                      <IconButton aria-label="delete question" className={classes.floatRight} onClick={() => removeQuestion(questionIndex)}>
                         <DeleteIcon />
                       </IconButton>
                     </Tooltip>
                   </Grid>
                   <Grid item xs={12}>
                     <Tooltip title="Add MCQ Option">
-                      <IconButton aria-label="Add MCQ Option" className={classes.floatLeft} onClick={() => addMcqOption(index, questionIndex)}>
+                      <IconButton aria-label="Add MCQ Option" className={classes.floatLeft} onClick={() => addMcqOption(questionIndex)}>
                         <AddIcon />
                       </IconButton>
                     </Tooltip>
                   </Grid>
                 </Grid>
-                  {OpenTextArr[index].questions[questionIndex].mcqOptions && 
-                    OpenTextArr[index].questions[questionIndex].mcqOptions.length > 0 ? 
-                    OpenTextArr[index].questions[questionIndex].mcqOptions.map((option, mcqOptionIndex) => (
+                  {OpenTextArr[questionIndex].mcqOptions && 
+                    OpenTextArr[questionIndex].mcqOptions.length > 0 ? 
+                    OpenTextArr[questionIndex].mcqOptions.map((option, mcqOptionIndex) => (
                       <Grid key={mcqOptionIndex} container spacing={1}>
                         <Grid item xs={10}>
                           <TextField
@@ -236,14 +187,14 @@ const MCQ = () => {
                             margin="normal"
                             required
                             value={option.optionText}
-                            label="Please type in your mcq option below"
+                            label={MCQ_PAGE.TYPE_RESPONSE_OPTION_HERE}
                             onChange={(e) => handleMcqOption(option, e)}
                             autoFocus
                           />
                         </Grid>
                         <Grid item xs={2} className={classes.floatRight}>
                           <Tooltip title="Delete Mcq Option">
-                            <IconButton aria-label="Delete Mcq Option" className={classes.floatRight} onClick={() => removeMcqOption(index, questionIndex, mcqOptionIndex)}>
+                            <IconButton aria-label="Delete Mcq Option" className={classes.floatRight} onClick={() => removeMcqOption(questionIndex, mcqOptionIndex)}>
                               <DeleteIcon />
                             </IconButton>
                           </Tooltip>
@@ -252,8 +203,6 @@ const MCQ = () => {
                   )) : null}
               </div>
             )) : null}
-          </Card>
-      )) : null}
       <Button
         type="submit"
         variant="contained"
@@ -264,7 +213,7 @@ const MCQ = () => {
         Save
       </Button>
       </form>
-   </>
+      </Container>
   )
 }
 

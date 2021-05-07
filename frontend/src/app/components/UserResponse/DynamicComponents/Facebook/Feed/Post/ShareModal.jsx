@@ -1,54 +1,27 @@
 import "./Post.css";
-import ThumbUpIcon from '@material-ui/icons/ThumbUp';
-import ChatBubbleOutlineIcon from '@material-ui/icons/ChatBubbleOutline';
-import NearMeIcon from '@material-ui/icons/NearMe';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import AccountCircleIcon from '@material-ui/icons/AccountCircle';
-import { useSelector, useDispatch } from "react-redux";
-import { shareFbPost } from "../../../../../../actions/facebook";
-import { selectAllLikes } from '../../../../../../reducers/facebook';
-import { useEffect, useState } from "react";
-import { Avatar } from "@material-ui/core";
+import { useDispatch, useSelector } from "react-redux";
+import { createFbPost } from "../../../../../../actions/facebook";
+import { useState } from "react";
+import { Avatar, Container } from "@material-ui/core";
 import { showSuccessSnackbar } from "../../../../../../actions/snackbar";
-import { selectSubItems } from '../../../../../../reducers/facebook';
-import { makeStyles } from '@material-ui/core/styles';
 import Modal from '@material-ui/core/Modal';
-import PostT from './PostT';
 import { Button } from "@material-ui/core";
 import Share from './PostType/Share';
-import { shallowEqual } from "react-redux";
+import PhotoLibraryIcon from '@material-ui/icons/PhotoLibrary';
+import ClearIcon from '@material-ui/icons/Clear';
+import InsertEmoticonIcon from '@material-ui/icons/InsertEmoticon';
+import PersonAddIcon from '@material-ui/icons/PersonAdd';
+import MoreHorizIcon from '@material-ui/icons/MoreHoriz';
+import RoomIcon from '@material-ui/icons/Room';
+import GifIcon from '@material-ui/icons/Gif';
+import { FB_TRANSLATIONS_DEFAULT } from '../../../../../../constants';
 
-const ShareModal = ({ id, isAdmin, setModalOpen }) => {
-  // select parentPost from cache 
-  // const parentPost = useSelector(state => selectSubItems(state, parentPostId));
-  const parentSharedPost = useSelector(state => state.facebookPost.posts[id], shallowEqual);
-  const [renderOnce, setRenderOnce] = useState(false);
-  
-  const [modalStyle] = useState(getModalStyle);
+const ShareModal = ({ id, setModalOpen }) => {
+  const fbTranslations = useSelector(state => state.facebookPost.fbTranslations);
   const [sharePostText, setSharePostText] = useState("");
-  const useStyles = makeStyles((theme) => ({
-    paper: {
-      position: 'absolute',
-      width: 400,
-      backgroundColor: theme.palette.background.paper,
-      border: '2px solid #000',
-      boxShadow: theme.shadows[5],
-      padding: theme.spacing(2, 4, 3),
-    },
-  }));
-  const classes = useStyles();
   const dispatch = useDispatch();
-  
-  function getModalStyle() {
-    const top = 50;
-    const left = 50;
-  
-    return {
-      top: `${top}%`,
-      left: `${left}%`,
-      transform: `translate(-${top}%, -${left}%)`,
-    };
-  }
+  // const userName = useSelector(state => state.facebookPost.name);
+  const pageId = useSelector(state => state.facebookPost.pageId);
 
   const handleClose = () => {
     setModalOpen(false)
@@ -56,66 +29,101 @@ const ShareModal = ({ id, isAdmin, setModalOpen }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    let data = {};
-    data['parentUserPostId'] = isAdmin ? null : id;
-    data['parentAdminPostId'] = isAdmin ? id : null;
-    data['shareText'] = sharePostText;
-    dispatch(shareFbPost(data));
+    // create formdata for select image or video
+    const postObj = {
+      postMessage: sharePostText || null,
+      parentPostId: id,
+      type: 'SHARE',
+      pageId
+    };
+    dispatch(createFbPost({ postObj: JSON.stringify(postObj) }));
+    dispatch(showSuccessSnackbar("Post successfully shared!"));
     setModalOpen(false);
-    dispatch(showSuccessSnackbar("Post Sucessfully shared"));
-  }  
+  }
 
   return (
-      <Modal
-          open={true}
-          onClose={handleClose}
-          aria-labelledby="simple-modal-title"
-          aria-describedby="simple-modal-description"
-        >
-          {
-            <div style={modalStyle} className={classes.paper}>
-              <form onSubmit={handleSubmit}>
-              <h2 id="simple-modal-title">Write Post</h2>
-              <div className="createComment">
-                <Avatar />
-                  <input
-                  value={sharePostText}
-                  onChange={({ target }) => setSharePostText(target.value)}
-                  className="createCommentInputText"
-                  type="text"
-                  placeholder="What's on your mind?" />
-             </div>
-            
-             <Share id={id}/>
+    <Modal
+      open={true}
+      onClose={handleClose}
+      aria-labelledby="simple-modal-title"
+      aria-describedby="simple-modal-description"
+    >
+      {
+        <Container component="main" className="modalContainerShare" maxWidth="sm">
+          <div className="modalContainerPaper">
+          <form onSubmit={handleSubmit}>
+            <div className="modalTop">
+              <h2 className="modalTopFont">{fbTranslations?.write_post || FB_TRANSLATIONS_DEFAULT.WRITE_POST}</h2>
+              <div className="modalTopBtn">
+                <ClearIcon className="btn" onClick={handleClose} />
+              </div>
+            </div>
+
+            <div className="postTop">
+              <Avatar
+                className="postTopAvatar"
+              />
+              <div className="postTopInfo">
+                {/* <h3>{userName}</h3>
+                <p>{"2h"}</p> */}
+              </div>
+            </div>
+
+            <div className="createComment">
+              <textarea
+                value={sharePostText}
+                autoFocus={true}
+                onChange={({ target }) => setSharePostText(target.value)}
+                className="newFeedInputAreaShare"
+                type="text"
+                // placeholder={`What's on your mind, ${userName.split(' ')[0]}?`} />
+                placeholder={fbTranslations?.["what's_on_your_mind"] || FB_TRANSLATIONS_DEFAULT.WHATS_ON_YOUR_MIND} />
+            </div>
+
+            <div className="sharePreview">
+              <Share id={id} />
+            </div>
+
+            <div className="newModalBottom">
+                <div className="newModalOption newModalWidth1">
+                  <p>{fbTranslations?.add_to_your_post || FB_TRANSLATIONS_DEFAULT.ADD_TO_YOUR_POST}</p>
+                </div>
+                <div className="newModalWidth2">
+                  <div className="newModalOption">
+                    <PhotoLibraryIcon color='disabled' />
+                  </div>
+                  <div className="newModalOption">
+                    <PersonAddIcon style={{ color: '#1877F2' }}/>
+                  </div>
+                  <div className="newModalOption">
+                    <InsertEmoticonIcon style={{ color: '#F5C33B' }} />
+                  </div>
+                  <div className="newModalOption">
+                    <RoomIcon style={{ color: '#FA383E' }} />
+                  </div>
+                  <div className="newModalOption">
+                    <GifIcon color='disabled' />
+                  </div>
+                  <div className="newModalOption">
+                    <MoreHorizIcon />
+                  </div>
+                </div>
+            </div>
 
             <Button
               type="submit"
               variant="contained"
               color="primary"
               fullWidth
-              className={classes.submit}
             >
-              Share
+              {fbTranslations?.share || FB_TRANSLATIONS_DEFAULT.SHARE}
             </Button>
-            </form>
-          </div>
-        }
-        </Modal>
-
+          </form>
+        </div>
+        </Container>
+      }
+    </Modal>
   );
 };
-
-// const ShareModal = ({ id, isAdmin, setModalOpen }) => {
-//   const [ss, setSs] = useState(null);
-//   useEffect(() => {
-//     setSs(<ShareM id={id} isAdmin={isAdmin} setModalOpen={setModalOpen} />);
-//   }, [id])
-
-//   return (
-//     <>
-//       {ss ? ss : null}
-//     </>
-//   );
-// };
 
 export default ShareModal;
