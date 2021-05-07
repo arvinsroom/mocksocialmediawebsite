@@ -1,5 +1,6 @@
 import db from "../clients/database-client";
 const Language = db.Language;
+const GlobalLanguage = db.GlobalLanguage;
 
 const create = async (req, res, next) => {
   const { templateId, languageData } = req.body;
@@ -60,11 +61,11 @@ const create = async (req, res, next) => {
         lanObj.templateId = templateId;
         lanObj.name = language;
         lanObj.translations = JSON.stringify(translations);
-        lanObj.isActive = 0; // default nothing is active
         languageArr.push(lanObj);
       }
     }
     // destroy all records for given template ID before creating,
+    // just a check
     await Language.destroy({
       where: {
         templateId: templateId
@@ -75,18 +76,18 @@ const create = async (req, res, next) => {
     // create the language records
     const data = await Language.bulkCreate(languageArr, {
       transaction,
-      updateOnDuplicate: ["templateId"]
     });
-    // fetch all the ids created for post
-    const ids = data.map(item => {
-      return item._id;
+    // select all the Unique languages
+    const uniqueLanguages = new Set([]);
+    data.map(item => {
+      uniqueLanguages.add(item.name);
     });
+    const lanArr = [...uniqueLanguages];
     // if we reach here, there were no errors therefore commit the transaction
     await transaction.commit();
-
     // add response for _id of all questions with specific page id's
     res.send({
-      ids
+      languages: lanArr
     });
   } catch (error) {
     console.log(error.message);
@@ -121,7 +122,7 @@ const getLanguages = async (req, res, next) => {
       where: {
         templateId: _id
       },
-      attributes: ['_id', 'name', 'platform', 'isActive']
+      attributes: ['_id', 'name', 'platform']
     });
     res.send(data);
   } catch (error) {
@@ -132,155 +133,7 @@ const getLanguages = async (req, res, next) => {
   }
 };
 
-const updateLanActive = async (req, res, next) => {
-  const { templateId, currentActive } = req.body;
-
-  // fetch template _id from params
-  if (!templateId) {
-    res.status(400).send({
-      message: "Templpate Id is required!"
-    });
-    return;
-  }
-  if (!currentActive) {
-    res.status(400).send({
-      message: "Selection of updated language is required!"
-    });
-    return;
-  }
-
-  // form a template object with required information
-  let transaction;
-  try {
-    transaction = await db.sequelize.transaction();
-    // fetch all language _id of previous data associated with this template Id
-    const prevResult = await Language.findOne({
-      where: {
-        templateId: templateId,
-        isActive: true,
-      },
-      attributes: ['_id']
-    });
-    let promises = [];
-    if (!prevResult) {
-      // null, first time case  just update the given language _id record
-      promises.push(Language.update({
-          isActive: true
-        }, {
-          where: {
-            _id: currentActive,
-            templateId: templateId
-          },
-          transaction
-        })
-      );
-    }
-    else if (prevResult && prevResult._id === currentActive) {
-      // same secord already exist, no need to change
-      res.send("Current Active is already set, nothing done!");
-    }
-    else {
-      // set the new language _id as active, true
-      promises.push(Language.update({
-          isActive: true
-        }, {
-          where: {
-            _id: currentActive,
-            templateId: templateId
-          },
-          transaction
-        })
-      );
-      // set the old language _id as active, false
-      promises.push(Language.update({
-          isActive: false
-        }, {
-          where: {
-            _id: prevResult._id,
-            templateId: templateId
-          },
-          transaction
-        })
-      );
-    }
-    let data = await Promise.all(promises);
-    await transaction.commit();
-    res.send({
-      data
-    });
-  } catch (error) {
-    console.log(error.message);
-    if (transaction) await transaction.rollback();
-    res.status(500).send({
-      message: "Some error occurred while updating orders!"
-    });
-  }
-};
-
-const getMockLanguage = async (req, res, next) => {
-  // fetch template _id from params
-  const language = req.params.language;
-  if (!language) {
-    res.status(400).send({
-      message: "Invalid Language Type!"
-    });
-    return;
-  }
-
-  try {
-    const data = await Language.findOne({
-      where: {
-        platform: 'MOCK',
-        name: language.toUpperCase(),
-      },
-      attributes: ['name', 'platform', 'translations']
-    });
-    const defaultData = await Language.findOne({
-      where: {
-        platform: 'MOCK',
-        name: 'ENGLISH',
-      },
-      attributes: ['name', 'platform', 'translations']
-    });
-    res.send({
-      language: data,
-      defaultLanguage: defaultData
-    });
-  } catch (error) {
-    console.log(error.message);
-    res.status(500).send({
-      message: "Some error occurred while fetching all languages for template Id!"
-    });
-  }
-};
-
-const getMockAllLanguages = async (req, res, next) => {
-  try {
-    const data = await Language.findAll({
-      where: {
-        platform: 'MOCK',
-      },
-      attributes: [
-        'name',
-        'translations',
-        '_id'
-      ]
-    });
-    res.send({
-      language: data,
-    });
-  } catch (error) {
-    console.log(error.message);
-    res.status(500).send({
-      message: "Some error occurred while fetching default mock languages!"
-    });
-  }
-};
-
 export default {
   create,
-  getLanguages,
-  updateLanActive,
-  getMockLanguage,
-  getMockAllLanguages
+  getLanguages
 }

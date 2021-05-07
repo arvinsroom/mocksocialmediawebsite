@@ -6,17 +6,13 @@ export default (sequelize, DataTypes) => {
       type: DataTypes.UUID,
       defaultValue: DataTypes.UUIDV4 // create a default UUIDV4 for each record
     },
+    adminPostId: {
+      allowNull: true,
+      type: DataTypes.INTEGER
+    },
     type: {
       allowNull: true,
-      type: DataTypes.ENUM('LINK', 'VIDEO', 'PHOTO', 'TEXT')
-    },
-    userId: {
-      allowNull: false,
-      references: {
-        key: '_id',
-        model: 'User'
-      },
-      type: DataTypes.UUID
+      type: DataTypes.ENUM('LINK', 'VIDEO', 'PHOTO', 'TEXT', 'SHARE')
     },
     linkTitle: {
       allowNull: true,
@@ -28,15 +24,47 @@ export default (sequelize, DataTypes) => {
     },
     linkPreview: {
       allowNull: true,
-      type: DataTypes.TEXT
+      type: DataTypes.STRING(1024)
     },
     postMessage: {
       allowNull: true,
-      type: DataTypes.TEXT
+      type: DataTypes.STRING(1024)
     },
-    misinformation: {
+    isFake: {
       allowNull: false,
       type: DataTypes.BOOLEAN,
+      defaultValue: false
+    },
+    sourceTweet: {
+      allowNull: true,
+      type: DataTypes.STRING(1024),
+      defaultValue: null
+    },
+    userId: {
+      allowNull: true,
+      onDelete: 'CASCADE',
+      references: {
+        key: '_id',
+        model: 'User'
+      },
+      type: DataTypes.UUID
+    },
+    parentPostId: {
+      allowNull: true,
+      references: {
+        key: '_id',
+        model: 'UserPost'
+      },
+      type: DataTypes.UUID
+    },
+    pageId: {
+      allowNull: false,
+      onDelete: 'CASCADE',
+      references: {
+        key: '_id',
+        model: 'Page'
+      },
+      type: DataTypes.UUID
     },
     createdAt: {
       allowNull: false,
@@ -54,10 +82,21 @@ export default (sequelize, DataTypes) => {
 
   UserPost.associate = (models) => {
     UserPost.belongsTo(models.User, {
-      foreignKey: 'userId',
+      foreignKey: {
+        name: 'userId',
+        allowNull: true
+      }
+    });
+    UserPost.belongsTo(models.UserPost, {
+      as: 'userPosts',
+      foreignKey: 'parentPostId'
+    });
+    UserPost.belongsTo(models.Page, {
+      as: 'page',
+      foreignKey: 'pageId'
     });
     UserPost.hasMany(models.Media, {
-      as: 'attachedMediaUser',
+      as: 'attachedMedia',
       foreignKey: {
         name: 'userPostId',
         allowNull: true

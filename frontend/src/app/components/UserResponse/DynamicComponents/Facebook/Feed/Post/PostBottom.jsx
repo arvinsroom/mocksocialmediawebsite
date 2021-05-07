@@ -1,40 +1,35 @@
 import "./Post.css";
-import ThumbUpOutlinedIcon from '@material-ui/icons/ThumbUpOutlined';
-// import ChatBubbleOutlineIcon from '@material-ui/icons/ChatBubbleOutline';
-// import NearMeIcon from '@material-ui/icons/NearMe';
 import { useSelector, useDispatch } from "react-redux";
 import { likeFbPost, unlikeFbPost, commentFbPost } from "../../../../../../actions/facebook";
-import { selectAllLikes } from '../../../../../../reducers/facebook';
+import { selectPostsMetadata } from '../../../../../../selectors/facebook';
 import { useState } from "react";
 import { Avatar } from "@material-ui/core";
 import { showInfoSnackbar } from "../../../../../../actions/snackbar";
 import ShareModal from './ShareModal';
-import shareLogo from'../../../../../../../../public/assets/icons/share.png';
-import likeLogo from'../../../../../../../../public/assets/icons/like.png';
-import commentLogo from'../../../../../../../../public/assets/icons/comment.png';
-
+import shareLogo from '../../../../../../../../public/assets/icons/share.png';
+import likeLogo from '../../../../../../../../public/assets/icons/like.png';
+import commentLogo from '../../../../../../../../public/assets/icons/comment.png';
+import { FB_TRANSLATIONS_DEFAULT } from '../../../../../../constants';
 
 const PostBottom = ({ id }) => {
-  const postMetadata = useSelector(state => selectAllLikes(state, id));
+  const postMetadata = useSelector(state => selectPostsMetadata(state, id));
+  const fbTranslations = useSelector(state => state.facebookPost.fbTranslations);
   const [openCommentBox, setOpenCommentBox] = useState(false);
   const [currentComment, setCurrentComment] = useState("");
   const [modalOpen , setModalOpen] = useState(false);
-
-  // const singlePost = useSelector(state => selectSubItems(state, id));
-
   const dispatch = useDispatch();
-  // adminPostId, action, userPostId, comment
-  const handleLike = () => {
+  const handleLike = (e) => {
+    e.preventDefault();
     const data = {
       action: 'LIKE',
       comment: null,
-      adminPostId: postMetadata.isAdmin ? id : null,
-      userPostId: postMetadata.isAdmin ? null : id
+      userPostId: id,
     };
     dispatch(likeFbPost(data, id));
   };
 
-  const handleUnlike = () => {
+  const handleUnlike = (e) => {
+    e.preventDefault();
     dispatch(unlikeFbPost(postMetadata.actionId, id));
   };
 
@@ -44,13 +39,12 @@ const PostBottom = ({ id }) => {
 
   const handleSubmitComment = (e) => {
     e.preventDefault();
-    const data = {
-      action: 'COMMENT',
-      comment: currentComment,
-      adminPostId: postMetadata.isAdmin ? id : null,
-      userPostId: postMetadata.isAdmin ? null : id
-    };
     if (currentComment) {
+      const data = {
+        action: 'COMMENT',
+        comment: currentComment,
+        userPostId: id
+      };
       dispatch(commentFbPost(data, id));
       setCurrentComment("");
     }
@@ -64,25 +58,21 @@ const PostBottom = ({ id }) => {
   return (
   <>
       <div className="postOptions">
-
-        {!postMetadata.like && <div className="postOption" onClick={handleLike}>
-          {/* <ThumbUpOutlinedIcon style={{color: 'grey'}} /> */}
-          <img src={likeLogo} style={{ width: '3em', height: '3em', marginRight: '-10px'}} alt="like Logo"/>
-          <p style={{color: 'grey', paddingTop: '4px'}}>Like</p>
+        {!postMetadata.like && <div className="postOption" onClick={e => handleLike(e)}>
+          <img src={likeLogo} style={{ color: 'grey', width: '3em', height: '3em', marginRight: '-10px'}} alt="like Logo"/>
+          <p style={{color: 'grey', paddingTop: '4px'}}>{fbTranslations?.like || FB_TRANSLATIONS_DEFAULT.LIKE}</p>
         </div>}
-        {postMetadata.like && <div className="postOption" onClick={handleUnlike}>
-          {/* <ThumbUpOutlinedIcon style={{color: '#1877F2' }} /> */}
-          <img src={likeLogo} style={{ width: '3em', height: '3em', marginRight: '-10px'}} alt="like Logo"/>
-          <p style={{color: '#1877F2', paddingTop: '4px' }}>Like</p>
+        {postMetadata.like && <div className="postOption" onClick={e => handleUnlike(e)}>
+          <img src={likeLogo} style={{ color: '#1877F2', width: '3em', height: '3em', marginRight: '-10px'}} alt="like Logo"/>
+          <p style={{color: '#1877F2', paddingTop: '4px' }}>{fbTranslations?.like || FB_TRANSLATIONS_DEFAULT.LIKE}</p>
         </div>}
         <div className="postOption" onClick={toggleComment}>
-          {/* <ChatBubbleOutlineIcon /> */}
           <img src={commentLogo} style={{ width: '3em', height: '3em', marginRight: '-10px'}} alt="comment Logo"/>
-          <p>Comment</p>
+          <p>{fbTranslations?.comment || FB_TRANSLATIONS_DEFAULT.COMMENT}</p>
         </div>
         <div className="postOption" onClick={openModal}>
           <img src={shareLogo} style={{ width: '3em', height: '3em', marginRight: '-10px'}} alt="share Logo"/>
-          <p>Share</p>
+          <p>{fbTranslations?.share || FB_TRANSLATIONS_DEFAULT.SHARE}</p>
         </div>
     </div>
     {openCommentBox && 
@@ -95,10 +85,10 @@ const PostBottom = ({ id }) => {
             onChange={({ target }) => setCurrentComment(target.value)}
             className="createCommentInputText"
             type="text"
-            placeholder="Write a comment..." />
+            placeholder={fbTranslations?.write_a_comment || FB_TRANSLATIONS_DEFAULT.WRITE_A_COMMENT} />
 
             <button className="postComment" onClick={e => handleSubmitComment(e)} type="submit">
-              Post
+              {fbTranslations?.post || FB_TRANSLATIONS_DEFAULT.POST}
             </button>
           </form>
         </div>
@@ -110,7 +100,8 @@ const PostBottom = ({ id }) => {
           </div>
         )) : null}
       </div>}
-      {modalOpen && <ShareModal id={id} isAdmin={postMetadata.isAdmin} setModalOpen={setModalOpen}/>}
+      {/* preserve the parent post data */}
+      {modalOpen && <ShareModal id={postMetadata.parentPostId || id} setModalOpen={setModalOpen}/>}
   </>
   );
 };

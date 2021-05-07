@@ -1,44 +1,21 @@
 import { useState, useEffect } from 'react';
 import * as XLSX from 'xlsx';
 import { Button, Typography, Input, Divider, Box } from '@material-ui/core';
-import * as language from "../../../../services/language-service";
+import { create } from "../../../../../services/language-service";
 import { useSelector, useDispatch } from "react-redux";
-import useStyles from '../../../style';
-import Upload from './Upload';
-import { showErrorSnackbar, showSuccessSnackbar } from '../../../../actions/snackbar';
-import { GENERAL_PAGE, TEMPLATE } from '../../../../constants';
+import useStyles from '../../../../style';
+import SelectLanguage from './SelectLanguage';
+import { showErrorSnackbar, showInfoSnackbar, showSuccessSnackbar } from '../../../../../actions/snackbar';
+import { GENERAL_PAGE, TEMPLATE } from '../../../../../constants';
 
-const Language = () => {
+const Language = ({ disable, templateId }) => {
   const [languageJSON, setLanguageJSON] = useState(null);
-  const [currentLanguages, setCurrentLanguages] = useState([]);
-  const [prevActive, setPrevActive] = useState("");
+  const [currentLanguages, setCurrentLanguages] = useState(null);
 
   const classes = useStyles();
-  const { _id: templateId } = useSelector(state => state.template);
   const dispatch = useDispatch();
 
-  const fetchAllLanguages = async () => {
-    const { data } = await language.getLanguages(templateId);
-    // add a empty object at the beginning
-    data?.unshift({
-      _id: "-1",
-      name: "None",
-      platform: "",
-      isActive: null
-    });
-    await setCurrentLanguages(data);
-
-    // set the prev language update if any
-    data.forEach(element => {
-      if (element.isActive) {
-        setPrevActive(element._id);
-        return;
-      }
-    });
-  }
-
   useEffect(() => {
-    fetchAllLanguages();
   }, []);
 
   /* list of supported file types */
@@ -79,15 +56,17 @@ const Language = () => {
   const handleSubmit = async e => {
     e.preventDefault();
     if (!templateId) {
-      dispatch(showErrorSnackbar(TEMPLATE.SELECT_OR_CREATE_TEMPLATE));
+      dispatch(showInfoSnackbar(TEMPLATE.SELECT_OR_CREATE_TEMPLATE));
     }
     try {
       if (languageJSON) {
-        await language.create({ templateId: templateId, languageData: languageJSON});
-        dispatch(showSuccessSnackbar(GENERAL_PAGE.LANGUAGE_SUCCESS));
-        resetValues();  
-        // fetch all the updated languages
-        await fetchAllLanguages();
+        const { data } = await create({ templateId: templateId, languageData: languageJSON});
+        // data has languages array
+        await setCurrentLanguages(data?.languages || null);
+        dispatch(showSuccessSnackbar(GENERAL_PAGE.SUCCESSFULLY_UPLOADED_LANGUAGE_SPREADSHEET));
+        resetValues();
+      } else {
+        dispatch(showInfoSnackbar(GENERAL_PAGE.PLEASE_ENTER_A_VALID_RESPONSE));
       }
     } catch (error) {
       const resMessage =
@@ -103,15 +82,11 @@ const Language = () => {
   return (
     <>
     <Box component="span" className={classes.note} display="block">
-      <b>Note: </b> {GENERAL_PAGE.UPDATE_LAN_SPREADSHEET_SAME_TEMP_ID}
+      {GENERAL_PAGE.UPLOADING_A_NEW_SPREADSHEET_WILL_OVERWRITE}
     </Box>
-    <Box component="span" className={classes.note} display="block">
-      <b>Note: </b> Make sure to have MOCK language data in only one file across multiple language spreadsheet for different templates.
-    </Box>
-    <div className={classes.paper}>
-      <form onSubmit={handleSubmit} className={classes.form}>
+      <form onSubmit={handleSubmit}>
         <Typography component="h6">
-          Language Spreadsheet
+          {GENERAL_PAGE.UPLOAD_LANGUAGE_SPREADSHEET}
         </Typography>
         <Input
           type="file"
@@ -128,18 +103,10 @@ const Language = () => {
           disabled={!languageJSON}
           className={classes.submit}
         >
-          Save
+          {GENERAL_PAGE.SAVE_RESPONSES}
         </Button>
       </form>
-      </div>
-      <Box component="span" className={classes.note} display="block">
-        <b>Note: </b> {GENERAL_PAGE.SELECT_LANGUAGE_DATA_APPEAR}
-      </Box>
-      <Box component="span" className={classes.note} display="block">
-        <b>Note: </b> {GENERAL_PAGE.SELECT_LANGUAGE_OVERWRIGHT_NOTE}
-      </Box>
-      {currentLanguages && 
-      <Upload currentLanguages={currentLanguages}/>}
+      {<SelectLanguage currentLanguages={currentLanguages} templateId={templateId}/>}
     </>
   );
 };

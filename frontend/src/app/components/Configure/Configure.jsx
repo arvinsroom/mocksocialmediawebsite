@@ -5,6 +5,7 @@ import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
+import { ADMIN_TAB_NAMES, TEMPLATE } from '../../constants';
 
 import Template from './AdminConfigurePortal/Template/Template';
 import General from './AdminConfigurePortal/General/General';
@@ -20,7 +21,7 @@ import { useDispatch, useSelector } from "react-redux";
 import Toolbar from '@material-ui/core/Toolbar';
 import Button from '@material-ui/core/Button';
 import { logout } from "../../actions/auth";
-import { setTemplateId } from "../../actions/template";
+import { clearTemplate } from "../../actions/template";
 import { Redirect } from 'react-router-dom';
 import useStyles from '../style';
 
@@ -60,7 +61,7 @@ function a11yProps(index) {
 const Configure = () => {
   const [value, setValue] = React.useState(0);
   const { isLoggedInAdmin } = useSelector(state => state.auth);
-  const { _id: templateId } = useSelector(state => state.template);
+  const { _id: templateId, name } = useSelector(state => state.template);
   const classes = useStyles();
   const dispatch = useDispatch();
 
@@ -75,7 +76,7 @@ const Configure = () => {
 
   const handleLogout = () => {
     // TODO: for now you cannot work with same template one you refresh or logout
-    dispatch(setTemplateId(null)); // clear template Id, when changing location
+    dispatch(clearTemplate()); // clear template Id, when changing location
     dispatch(logout()); // remove user object
   }
 
@@ -85,7 +86,7 @@ const Configure = () => {
       <AppBar position="static">
         <Toolbar>
           <Typography variant="h6" className={classes.title}>
-            Current Template ID: {templateId}
+            {TEMPLATE.CURRENT_ACTIVE_CONDITION}: {name}
           </Typography>
           <Button onClick={handleLogout} color="inherit">Logout</Button>
         </Toolbar>
@@ -102,15 +103,15 @@ const Configure = () => {
           scrollButtons="auto"
           aria-label="scrollable auto tabs for template settings"
         >
-          <Tab label="Template" {...a11yProps(0)} />
-          <Tab label="General" {...a11yProps(1)} disabled={!templateId ? true : false}/>
-          <Tab label="Register" {...a11yProps(2)} disabled={!templateId ? true : false}/>
-          <Tab label="InfoPage" {...a11yProps(3)} disabled={!templateId ? true : false}/>
-          <Tab label="MCQ" {...a11yProps(4)} disabled={!templateId ? true : false}/>
-          <Tab label="OpenText" {...a11yProps(5)} disabled={!templateId ? true : false}/>
-          <Tab label="Finish" {...a11yProps(6)} disabled={!templateId ? true : false}/>
-          <Tab label="Flow" {...a11yProps(7)} disabled={!templateId ? true : false}/>
-          <Tab label="Metrics" {...a11yProps(8)}/>
+          <Tab label={ADMIN_TAB_NAMES.CONDITION_SETTINGS} {...a11yProps(0)} />
+          <Tab label={ADMIN_TAB_NAMES.SOCIAL_MEDIA} {...a11yProps(1)} disabled={!templateId ? true : false}/>
+          <Tab label={ADMIN_TAB_NAMES.REGISTRATION} {...a11yProps(2)} disabled={!templateId ? true : false}/>
+          <Tab label={ADMIN_TAB_NAMES.INFORMATION} {...a11yProps(3)} disabled={!templateId ? true : false}/>
+          <Tab label={ADMIN_TAB_NAMES.MULTIPLE_CHOICE} {...a11yProps(4)} disabled={!templateId ? true : false}/>
+          <Tab label={ADMIN_TAB_NAMES.OPEN_TEXT} {...a11yProps(5)} disabled={!templateId ? true : false}/>
+          <Tab label={ADMIN_TAB_NAMES.REDIRECT} {...a11yProps(6)} disabled={!templateId ? true : false}/>
+          <Tab label={ADMIN_TAB_NAMES.STUDY_FLOW} {...a11yProps(7)} disabled={!templateId ? true : false}/>
+          <Tab label={ADMIN_TAB_NAMES.DATA} {...a11yProps(8)}/>
         </Tabs>
       </AppBar>
       <TabPanel value={value} index={0}>

@@ -1,7 +1,6 @@
 import {
   SNACKBAR_ERROR,
   SNACKBAR_SUCCESS,
-  MODIFY_DISABLED_FLOW_STATE
  } from "./types";
 
 import * as UserMainService from '../services/user-main-service';
@@ -12,10 +11,6 @@ export const updateUser = (data) => (dispatch) => {
       dispatch({
         type: SNACKBAR_SUCCESS,
         payload: "Response successfully saved!",
-      });
-
-      dispatch({
-        type: MODIFY_DISABLED_FLOW_STATE
       });
 
       return Promise.resolve();

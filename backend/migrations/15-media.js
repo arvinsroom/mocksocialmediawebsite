@@ -21,15 +21,6 @@ export async function up(queryInterface, DataTypes) {
       allowNull: false,
       type: DataTypes.BOOLEAN
     },
-    adminPostId: {
-      allowNull: true,
-      onDelete: 'CASCADE',
-      references: {
-        key: '_id',
-        model: 'AdminPost'
-      },
-      type: DataTypes.INTEGER
-    },
     userPostId: {
       allowNull: true,
       onDelete: 'CASCADE',
@@ -40,6 +31,6 @@ export async function up(queryInterface, DataTypes) {
       type: DataTypes.UUID
     }
   });
-  await queryInterface.addIndex('Media', ['adminPostId', 'userPostId']);
+  await queryInterface.addIndex('Media', ['userPostId']);
 }
 

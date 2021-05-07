@@ -54,7 +54,7 @@ const create = async (req, res, next) => {
       audioPermission: req.body.requestAudio,
       cookiesPermission: req.body.requestCookies,
       flow: req.body.flow,
-      qualtricsId: req.body.qualtricsId,
+      qualtricsId: req.body.qualtricsId || 1,
       adminId: req.adminId,
       templateCode: code
     };
@@ -64,7 +64,8 @@ const create = async (req, res, next) => {
     await transaction.commit();
     // fetch json
     res.send({
-      _id: data._id
+      _id: data._id,
+      name: data.name
     });
   } catch (error) {
     console.log(error.message);
@@ -90,7 +91,7 @@ const getPrevTemplates = async (req, res, next) => {
       where: {
         adminId: req.adminId
       },
-      attributes: ['_id', 'name', 'templateCode']
+      attributes: ['_id', 'name', 'templateCode', 'language']
     });
     res.send(data);
   } catch (error) {
@@ -135,7 +136,7 @@ const deletePrevTemplate = async (req, res, next) => {
     console.log(error.message);
     if (transaction) await transaction.rollback();
     res.status(500).send({
-      message: "Some error occurred while deleting given template."
+      message: "Error occurred when deleting condition."
     });
   }
 };
@@ -148,21 +149,24 @@ const updateTemplate = async (req, res, next) => {
     return;
   }
   const { tempObj } = req.body;
-  if (!tempObj) {
+  if (!tempObj || !tempObj._id) {
     res.status(400).send({
       message: "Template update data required!"
     });
     return;
   }
-
+  const { _id, templateCode, language } = tempObj;
   let transaction;
   try {
     transaction = await db.sequelize.transaction();
-    const data = await Template.update({
-      templateCode: tempObj.templateCode
-    }, {
+    // create a update object
+    const updateObj = {};
+    if (templateCode) updateObj['templateCode'] = templateCode;
+    if (language) updateObj['language'] = language;
+
+    const data = await Template.update(updateObj, {
       where: {
-        _id: tempObj._id
+        _id
       },
       transaction
     });

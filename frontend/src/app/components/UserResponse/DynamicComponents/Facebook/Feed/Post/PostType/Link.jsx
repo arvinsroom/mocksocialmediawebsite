@@ -5,7 +5,6 @@ import "./Link.css";
 const Link = ({ index }) => {
   const { posts } = useSelector(state => state.facebookPost);
 
-
   return (
     <a href={posts[index].link} className="link-preview" target="_blank" rel="noopener noreferrer">
     <div className="link-area">
