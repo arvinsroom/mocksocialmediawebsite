@@ -10,7 +10,7 @@ export const ORDER_TYPES = Object.freeze({
 
 export const TEMPLATE = Object.freeze({
   SELECT_OR_CREATE_TEMPLATE: "Please make sure a template is created or selected.",
-  TEMPLATE_SUCCESS: "Template successfully created.",
+  CONDITION_SUCCESS: "Condition successfully created.",
   ASK_FOR_PERMISSION: "Configure permissions and other requests:",
   TEMPLATE_CURRENT_SELECT: "Successfully changed the active condition",
   TEMPLATE_DELETE_NOTE: "If you delete a condition, you will delete every page associated with that condition as well.",
