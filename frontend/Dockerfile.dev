@@ -37,7 +37,7 @@ RUN rm -rf node_modules/swagger-ui-dist/*.map
 # final stage
 FROM nginx:alpine
 
-COPY ./nginx.conf /etc/nginx/conf.d/default.conf
+COPY ./nginx.dev.conf /etc/nginx/conf.d/default.conf
 
 ## Remove default nginx index page
 RUN rm -rf /usr/share/nginx/html/*
