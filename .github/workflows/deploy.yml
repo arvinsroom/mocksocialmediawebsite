@@ -17,5 +17,5 @@ jobs:
              aws-region: ca-central-1
              instance-ids: ${{ secrets.INSTANCE_ID }}
              comment: Deploy the main branch
-             working-directory: /home/ubuntu/
+             working-directory: /home/ec2-user/
              command: /bin/sh deploy.sh
