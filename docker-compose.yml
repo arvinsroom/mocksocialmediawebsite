@@ -14,7 +14,7 @@ services:
       context: ./frontend
       dockerfile: ./Dockerfile
     volumes:
-      - /home/ec2-user/certs-data/:/data/letsencrypt/
+      - /etc/letsencrypt/:/etc/letsencrypt/
     ports:
       - "80:80"
       - "443:443"
