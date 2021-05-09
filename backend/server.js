@@ -61,9 +61,9 @@ const testConnection = async () => {
       debug: false
     });
     await connection.query(`CREATE DATABASE IF NOT EXISTS \`${databaseConfig.name}\`;`);
-    console.log('Database has successfully checked/created.');
+    console.log('Database has been successfully checked and/or created.');
   } catch (error) {
-    console.error('Unable to check/create a database: ', error);
+    console.error('Unable to check and/or create a database: ', error);
   }
 }
 
@@ -122,16 +122,10 @@ try {
 
   // create a express server
   const app = express();
-  const IP_ADDRESS = process.env.IP_ADDRESS;
-  console.log('Current IP_ADDRESS: ', IP_ADDRESS);
-
-  // origin: `http://${IP_ADDRESS}:8080`
+  const environment = process.env.NODE_ENV;
   var corsOptions = {
-    origin: [
-      `https://${IP_ADDRESS}`,
-      'https://www.studysocial.media',
-      'https://studysocial.media'
-    ]
+    origin: '*'
+    // origin: environment === 'development' ? 'http://localhost' : 'https://studysocial.media',
   };
 
   app.use(cors(corsOptions));
