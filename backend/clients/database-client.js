@@ -21,9 +21,10 @@ import { databaseConfigurations } from '../utils';
 
 const config = databaseConfigurations();
 
+// MYSQL_HOST is only injected through docker-compose.dev file when running in local development mode
 const sequelize = new Sequelize({
   database: config.name,
-  host: process.env.MYSQL_HOST || config.host,
+  host: config.host,
   username: config.username,
   password: config.password,
   port: config.port,
