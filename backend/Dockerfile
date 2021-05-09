@@ -7,29 +7,43 @@ WORKDIR /app/temp
 # use docker caching for node_modules
 COPY package*.json ./
 
-# install only development dependences
-RUN npm install --development
+# install all dependencies
+RUN npm install
 
 # copy everything for compiling the prod exec
 COPY . .
 
-# build a prod executable
+# build a development executable
 RUN npm run build-prod
+
+# delete dev dependencies
+RUN npm prune --production
+
+# install node-prune globally
+RUN npm install -g node-prune
+
+# install bash shell in docker
+RUN apk update && apk add bash
+
+# run node prune script, remove all unused or required files from node_modules
+RUN /usr/local/bin/node-prune
+
+# remove more unused dependencies
+RUN rm -rf node_modules/rxjs/src/
+RUN rm -rf node_modules/rxjs/bundles/
+RUN rm -rf node_modules/rxjs/_esm5/
+RUN rm -rf node_modules/rxjs/_esm2015/
+RUN rm -rf node_modules/swagger-ui-dist/*.map
 
 FROM node:13.12.0-alpine
 
 # this will be working directory
 WORKDIR /app/backend
 
-# use docker caching 
-COPY package*.json ./
-
-# install only the production dependencies
-RUN npm install --production
-
-# only copy the prod executables in final image
-COPY --from=builder /app/temp/db/ db/
+# copy all the compiled production code
+COPY --from=builder /app/temp/db db
+COPY --from=builder /app/temp/node_modules node_modules
 
 EXPOSE 8081
 
-CMD [ "npm", "run", "run-prod-server" ]
+CMD [ "npm", "run", "run-server" ]
