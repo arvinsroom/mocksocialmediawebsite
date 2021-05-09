@@ -1,45 +1,51 @@
 # multi-stage docker for build and then run production specific
-FROM node:13.12.0-alpine as builder1
+FROM node:13.12.0-alpine as builder
 
 # this will be temporary working directory
-WORKDIR /app/temp
+WORKDIR /app/frontend
 
 # use docker caching for node_modules
 COPY package*.json ./
 
-# install only development dependences
-RUN npm install --development
+# install all dependences
+RUN npm install
 
 COPY . .
 
 # build a development executable
 RUN npm run build-dev
 
+# delete dev dependencies
+RUN npm prune --production
 
-FROM node:13.12.0-alpine as builder2
+# install node-prune globally
+RUN npm install -g node-prune
 
-# this will current working directory
-WORKDIR /app/frontend
+# install bash shell in docker
+RUN apk update && apk add bash
 
-COPY package*.json ./
+# run node prune script, remove all unused or required files from node_modules
+RUN /usr/local/bin/node-prune
 
-# install only the production dependencies
-RUN npm install --production
+# remove more unused dependencies
+RUN rm -rf node_modules/rxjs/src/
+RUN rm -rf node_modules/rxjs/bundles/
+RUN rm -rf node_modules/rxjs/_esm5/
+RUN rm -rf node_modules/rxjs/_esm2015/
+RUN rm -rf node_modules/swagger-ui-dist/*.map
 
-# only copy the prod executables in final image
-COPY --from=builder1 /app/temp/dist/ dist/
-
-
+# final stage
 FROM nginx:alpine
 
 COPY ./nginx.conf /etc/nginx/conf.d/default.conf
 
 ## Remove default nginx index page
-# RUN rm -rf /usr/share/nginx/html/*
+RUN rm -rf /usr/share/nginx/html/*
 
 # copy all the compiled production code to nginx html file from react
-COPY --from=builder2 /app/frontend/ /usr/share/nginx/html
+COPY --from=builder /app/frontend/dist /usr/share/nginx/html/dist
+COPY --from=builder /app/frontend/node_modules /usr/share/nginx/html/node_modules
 
-EXPOSE 80
+EXPOSE 80 443
 
 ENTRYPOINT ["nginx", "-g", "daemon off;"]

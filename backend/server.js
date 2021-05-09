@@ -127,7 +127,11 @@ try {
 
   // origin: `http://${IP_ADDRESS}:8080`
   var corsOptions = {
-    origin: `http://${IP_ADDRESS}`
+    origin: [
+      `https://${IP_ADDRESS}`,
+      'https://www.studysocial.media',
+      'https://studysocial.media'
+    ]
   };
 
   app.use(cors(corsOptions));

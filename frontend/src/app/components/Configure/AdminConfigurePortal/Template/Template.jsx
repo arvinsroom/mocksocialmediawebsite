@@ -78,7 +78,7 @@ const Template = () => {
       const { data } = await create(template);
       if (data._id) {
         // dispatch the event to save template Id in store
-        await handleTemplateId(data._id, data.name, TEMPLATE.TEMPLATE_SUCCESS);
+        await handleTemplateId(data._id, data.name, TEMPLATE.CONDITION_SUCCESS);
         resetValues();
       }
     } catch (error) {
