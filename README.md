@@ -76,5 +76,106 @@ Perform these steps in Amazon Linux 2 (From: https://aws.amazon.com/blogs/comput
 ``` wget -O epel.rpm –nv https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm ```
 ``` sudo yum install -y ./epel.rpm ```
 
-``` sudo yum install -y certbot ``` (python2-certbot-nginx)
+``` sudo yum install -y certbot ``` (python3-certbot-nginx)
 
+Once certbot is installed
+
+1) we need to setup the volume from docker container to talk to the ec2 instance:
+   Ad this to docker-compose.yml frontend file:
+volumes:
+- /home/ec2-user/certs-data/:/data/letsencrypt/
+
+1) Assuming ec2-user is the user you created when setting up the Amazon AMI Linux 2
+   Change the ngnix.conf file to:
+```
+server {
+  listen 80 default_server;
+  # listen 443 ssl default_server;
+  server_name studysocial.media www.studysocial.media;
+
+  location ^~ /.well-known {
+    allow all;
+    root  /data/letsencrypt/;
+  }
+  # host static front-end files
+  location / {
+    root /usr/share/nginx/html/dist;
+    try_files $uri /index.html;
+  }
+
+  # node api reverse proxy
+  location /api/ {
+    # forward any request which has /api/ to a proxied server with following address
+    proxy_pass http://studysocial.media:8081;
+
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header Host $http_host;
+    proxy_set_header X-NginX-Proxy true;
+    proxy_http_version 1.1;
+    proxy_set_header Upgrade $http_upgrade;
+    proxy_set_header Connection 'upgrade';
+    proxy_set_header Host $host;
+    proxy_cache_bypass $http_upgrade;
+  }
+}
+```
+
+3) Run the command ```docker-compose up -d --no-deps --build```
+
+4) before generating the certificates make sure to create the certs-data and folder in user directory
+```cd /home/ec2-user```
+```mkdir certs-data```
+```cd certs-data```
+```mkdir .well-known```
+```cd .well-known```
+6) Once it is successful run ``` sudo certbot certonly --webroot -w /home/ec2-user/certs-data/ -d studysocial.media -d www.studysocial.media ```
+
+7) After finished, change the step 1 volume to mount on the same location as docker
+volumes:
+- /etc/letsencrypt/:/etc/letsencrypt/
+
+8) Now we can add the ssl certificates in NGINX config
+   This is how your ngnix file should look like before publishing...
+```
+server {
+  listen 80;
+  server_name studysocial.media www.studysocial.media;
+  location ^~ /.well-known {
+    allow all;
+    root  /data/letsencrypt/;
+  }
+  location / {
+    # redirect any traffic on http to https
+    return 301 https://$host$request_uri;
+  }
+}
+
+server {
+  listen 443 ssl default_server;
+  server_name studysocial.media www.studysocial.media;
+  ssl_certificate /etc/letsencrypt/live/studysocial.media/fullchain.pem;
+  ssl_certificate_key /etc/letsencrypt/live/studysocial.media/privkey.pem;
+
+  # host static front-end files
+  location / {
+    root /usr/share/nginx/html/dist;
+    try_files $uri /index.html;
+  }
+
+  # node api reverse proxy
+  location /api/ {
+    # forward any request which has /api/ to a proxied server with following address
+    proxy_pass http://studysocial.media:8081;
+
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header Host $http_host;
+    proxy_set_header X-NginX-Proxy true;
+    proxy_http_version 1.1;
+    proxy_set_header Upgrade $http_upgrade;
+    proxy_set_header Connection 'upgrade';
+    proxy_set_header Host $host;
+    proxy_cache_bypass $http_upgrade;
+  }
+}
+
+```
