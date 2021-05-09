@@ -46,4 +46,4 @@ COPY --from=builder /app/temp/node_modules node_modules
 
 EXPOSE 8081
 
-CMD [ "npm", "run", "run-server" ]
+CMD [ "node", "./db/index.js" ]

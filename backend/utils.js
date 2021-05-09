@@ -2,8 +2,14 @@ const environment = process.env.NODE_ENV;
 const config = require(__dirname + '/config-' + environment.toString() + '.json');
 
 export const databaseConfigurations = () => {
-  if (config.database) return config.database;
-  else console.log('Please provide a database object!')
+  if (!config.database) console.log('Please provide a database object');
+  let db = {
+    ...config.database
+  };
+  if (environment === 'development') {
+    if (process.env.MYSQL_HOST) return { ...db, host: process.env.MYSQL_HOST }
+  }
+  return db;
 }
 
 export const adminCredConfigurations = () => {
