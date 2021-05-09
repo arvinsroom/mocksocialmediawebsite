@@ -17,5 +17,5 @@ jobs:
              aws-region: ca-central-1
              instance-ids: ${{ secrets.INSTANCE_ID }}
              comment: Deploy the main branch
-             working-directory: /home/ec2-user/
+             working-directory: /home/ec2-user/mocksocialmediawebsite
              command: /bin/sh deploy.sh
