@@ -1,9 +1,9 @@
 This project is build using Sequilize, Nodejs server and React JS front end.
 
 ## These steps include
-# Running a version of this project for development only. This one is strictly while developing code
-# Running a version of this project for development only. This one can be used to host this project locally
-# Running a version of this project for production. With all the optimizations...
+### Running a version of this project for development only. This one is strictly while developing code
+### Running a version of this project for development only. This one can be used to host this project locally
+### Running a version of this project for production. With all the optimizations...
 
 ## Run React JS frontend (only for development purposes)
 This is for local development as it uses webpack server and also serve the static content using node, and any change you make to the any frontend file it should automatically build and start (module.hot reloading) the server.
@@ -67,3 +67,14 @@ This is an example of hosting it on AWS.
 4) Configue EC2 instance with database info you created in step 2
 5) run docker-compose up from root of this repo.
 6) copy this image to Amazon EC2 instance.
+
+
+## Configure certbot for https
+
+Perform these steps in Amazon Linux 2 (From: https://aws.amazon.com/blogs/compute/extending-amazon-linux-2-with-epel-and-lets-encrypt/ )
+``` cd /tmp ```
+``` wget -O epel.rpm –nv https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm ```
+``` sudo yum install -y ./epel.rpm ```
+
+``` sudo yum install -y certbot ``` (python2-certbot-nginx)
+
