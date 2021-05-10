@@ -126,7 +126,8 @@ const Template = () => {
     await setTemplateCodes(newObj);
   };
 
-  const handleTemplateCode = async (templateId) => {
+  const handleTemplateCode = async (templateId, e) => {
+    e.preventDefault();
     const changedTemplateCode = templateCodes[templateId];
     if (Number(changedTemplateCode) && changedTemplateCode >= 100000 && changedTemplateCode <= 999999) {
       const tempObj = {
@@ -245,7 +246,7 @@ const Template = () => {
                     shrink: true,
                   }}
                 />
-                <IconButton aria-label="Save template code" onClick={() => handleTemplateCode(row._id)}>
+                <IconButton aria-label="Save template code" onClick={(e) => handleTemplateCode(row._id, e)}>
                   <SaveIcon color="primary" />
                 </IconButton>
               </TableCell>
