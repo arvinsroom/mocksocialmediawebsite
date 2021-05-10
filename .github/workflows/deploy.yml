@@ -11,6 +11,7 @@ jobs:
           - uses: actions/checkout@v2
           - name: AWS SSM Send Command
             uses: peterkimzz/aws-ssm-send-command@1.0.1
+            id: ssm
             with:
              aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
              aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
@@ -18,4 +19,4 @@ jobs:
              instance-ids: ${{ secrets.INSTANCE_ID }}
              comment: Deploy the main branch
              working-directory: /home/ec2-user/mocksocialmediawebsite
-             command: /bin/sh deploy.sh
+             command: /bin/sh /home/ec2-user/deploy.sh

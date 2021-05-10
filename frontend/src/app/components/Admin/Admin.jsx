@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
-import { Button, CssBaseline, TextField, Typography, CircularProgress } from '@material-ui/core';
+import { Button, CssBaseline, TextField, Typography } from '@material-ui/core';
 import Container from '@material-ui/core/Container';
 import { useDispatch, useSelector } from "react-redux";
 import { login } from "../../actions/auth";
 import useStyles from '../style';
+import Progress from '../Progress';
 
 const Admin = () => {
   let history = useHistory();
@@ -62,6 +63,7 @@ const Admin = () => {
             id="password"
             onChange={({ target }) => setPassword(target.value)}
           />
+          {isLoading && <Progress />}
           <Button
             type="submit"
             variant="contained"
@@ -71,7 +73,6 @@ const Admin = () => {
           >
             Sign In
           </Button>
-          {isLoading && <CircularProgress />}
         </form>
       </div>
     </Container>
