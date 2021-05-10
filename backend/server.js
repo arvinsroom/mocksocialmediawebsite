@@ -128,7 +128,7 @@ try {
   // no port or 80 is for local development using decker dec
   // origin: 'http://localhost'
   var corsOptions = {
-    origin: environment === 'development' ? 'http://localhost' : 'https://studysocial.media',
+    origin: environment === 'development' ? 'http://localhost' : ['https://studysocial.media', 'https://www.studysocial.media'],
   };
 
   app.use(cors(corsOptions));
