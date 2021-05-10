@@ -61,7 +61,7 @@ const UserResponse = () => {
         </Container>
       );  
     }
-    else if (currentActive !== -1 && typeof Components[flow[currentActive].type] !== "undefined") {
+    else if (currentActive !== -1 && typeof Components[flow[currentActive]?.type] !== "undefined") {
       return React.createElement(Components[flow[currentActive].type], {
         key: flow[currentActive]._id,
         data: flow[currentActive],
