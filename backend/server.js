@@ -124,8 +124,7 @@ try {
   const app = express();
   const environment = process.env.NODE_ENV;
   var corsOptions = {
-    origin: '*'
-    // origin: environment === 'development' ? 'http://localhost' : 'https://studysocial.media',
+    origin: environment === 'development' ? 'http://localhost' : 'https://studysocial.media',
   };
 
   app.use(cors(corsOptions));
