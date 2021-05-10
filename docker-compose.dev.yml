@@ -17,3 +17,5 @@ services:
       dockerfile: ./Dockerfile.dev
     ports:
       - "80:80"
+    links:
+      - "backend:local"
