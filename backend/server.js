@@ -123,6 +123,10 @@ try {
   // create a express server
   const app = express();
   const environment = process.env.NODE_ENV;
+  // 8080 is for local development
+  // origin: 'http://localhost:8080'
+  // no port or 80 is for local development using decker dec
+  // origin: 'http://localhost'
   var corsOptions = {
     origin: environment === 'development' ? 'http://localhost' : 'https://studysocial.media',
   };
