@@ -57,11 +57,11 @@ export const getPrevTemplate = () => (dispatch) => {
 
 export const deletePrevTemplate = (_id) => (dispatch) => {
   return TemplateService.deletePrevTemplate(_id)
-    .then(({data}) => {
+    .then(() => {
 
       dispatch({
         type: SNACKBAR_SUCCESS,
-        payload: data,
+        payload: "Condition was successfully deleted",
       });
 
       Promise.resolve();
@@ -84,13 +84,13 @@ export const deletePrevTemplate = (_id) => (dispatch) => {
   );
 };
 
-export const updateTemplate = (data) => (dispatch) => {
+export const updateTemplate = (data, message) => (dispatch) => {
   return TemplateService.updateTemplate(data)
-    .then(({data}) => {
+    .then(() => {
 
       dispatch({
         type: SNACKBAR_SUCCESS,
-        payload: data,
+        payload: message,
       });
 
       Promise.resolve();

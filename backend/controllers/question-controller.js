@@ -26,7 +26,7 @@ const create = async (req, res, next) => {
   }
   if (!pageQuestionArr && Array.isArray(pageQuestionArr)) {
     res.status(400).send({
-      message: "Question data array required!"
+      message: "Question data is required!"
     });
     return;
   }
@@ -36,12 +36,11 @@ const create = async (req, res, next) => {
   try {
     transaction = await db.sequelize.transaction();
     // create the page with the name and template Id
-    const pageObj = {
+    const pageId = await page.pageCreate({
       name: pageName,
       templateId,
       type
-    };
-    const pageId = await page.pageCreate(pageObj, transaction);
+    }, transaction);
     // add page Id
     // now create the full page with all the questions
     await bulkQuestions.bulkCreate(pageQuestionArr, type, pageId, transaction);

@@ -179,3 +179,20 @@ server {
 }
 
 ```
+
+Connecting to MYSQLfrom EC2 instance:
+
+Step 1: ```mysql -h mockwebsitedb.ch8pmurklo7i.ca-central-1.rds.amazonaws.com -P 3306 -u mockwebsiteAdmin -p```
+Step 2: Then enter the password
+
+
+From MySQL 8.X server or client the largest possible packet that can be trasmitted at once is 1GB. We however allow no more than 20MB.
+
+Changes made to the local MySQL instance.
+1) Go to cmd line and login to your mysql instance ``` mysql -h localhost -u root -p ```
+2) If you see an error similar to ``` command not found: mysql ``` try running ```export PATH=${PATH}:/usr/local/mysql/bin/```
+3) Then enter your password
+4) run ``` SET GLOBAL max_allowed_packet=20000000;```
+
+
+Changes made to the AWS MYSQL RDS instance.

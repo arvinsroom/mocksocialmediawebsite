@@ -34,7 +34,9 @@ const create = async (req, res, next) => {
     // if we reach here, there were no errors therefore commit the transaction
     await transaction.commit();
     // fetch json
-    res.send("Success");
+    res.send({
+      message: "Success"
+    });
   } catch (error) {
     console.log(error.message);
     // if we reach here, there were some errors thrown, therefore roolback the transaction

@@ -115,8 +115,51 @@ const getSocialMediaPages = async (req, res, next) => {
   }
 };
 
+const deletePage = async (req, res, next) => {
+  // fetch the adminId added from middleware
+  if (!req.adminId) {
+    res.status(400).send({
+      message: "Invalid Token, please log in again!"
+    });
+    return;
+  }
+
+  // fetch template _id from params
+  const _id = req.params._id;
+  if (!_id) {
+    res.status(400).send({
+      message: "Invalid Page Id!"
+    });
+    return;
+  }
+
+  let transaction;
+  try {
+    transaction = await db.sequelize.transaction();
+    await Page.destroy({
+      where: {
+        _id
+      },
+      transaction
+    });
+    await transaction.commit();
+
+    res.send({
+      message: "Page was successfully deleted."
+    });
+  } catch (error) {
+    console.log(error.message);
+    if (transaction) await transaction.rollback();
+    res.status(500).send({
+      message: "Error occurred when deleting given Page."
+    });
+  }
+};
+
+
 export default {
   updatePage,
   getAllPages,
-  getSocialMediaPages
+  getSocialMediaPages,
+  deletePage
 }

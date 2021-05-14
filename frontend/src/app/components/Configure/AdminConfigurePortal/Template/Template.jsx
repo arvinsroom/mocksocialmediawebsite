@@ -1,6 +1,5 @@
 import { Button,
   TextField,
-  FormControl,
   Switch,
   FormControlLabel,
   FormGroup,
@@ -11,12 +10,17 @@ import { Button,
   TableHead,
   TableRow,
   Box,
-  FormLabel,
-  Container
+  Dialog,
+  Container,
+  DialogContent,
+  DialogActions,
+  DialogContentText,
+  DialogTitle
 } from '@material-ui/core';
 import { useEffect, useState } from 'react';
 // import { TEMPLATE_TYPES } from '../../../../constants';
-import { create, updateTemplate } from '../../../../services/template-service';
+import { create } from '../../../../services/template-service';
+import { updateTemplate } from '../../../../actions/template';
 import DeleteIcon from '@material-ui/icons/Delete';
 import AddIcon from '@material-ui/icons/Add';
 import { useSelector, useDispatch } from "react-redux";
@@ -29,6 +33,11 @@ import SaveIcon from '@material-ui/icons/Save';
 
 const Template = () => {
   const [templateName, setTemplateName] = useState("");
+  const [templateDialogBox, setTemplateDialogBox] = useState({
+    open: false,
+    templateId: null,
+    name: ""
+  });
   // const [templateType, setTemplateType] = useState("");
   // const [requiredQualtricsId, setRequiredQualtricsId] = useState(false);
   const [permissions, setPermissions] = useState({
@@ -112,9 +121,12 @@ const Template = () => {
     return <Redirect to="/admin" />;
   }
 
-  const removeTemplate = async (index) => {
-    await dispatch(deletePrevTemplate(index));
-    await retrivePrevTemplates();
+  const removeTemplate = async () => {
+    if (templateDialogBox.templateId) {
+      await dispatch(deletePrevTemplate(templateDialogBox.templateId));
+      handleClose();
+      await retrivePrevTemplates();
+    }
   };
 
   const handleChange = async (templateId, e) => {
@@ -134,13 +146,21 @@ const Template = () => {
         _id: templateId,
         templateCode: templateCodes[templateId]
       };
-      await updateTemplate({ tempObj });
+      await dispatch(updateTemplate({ tempObj }, "Access code successfully updated."));
       setTemplateCodes({});
-      dispatch(showInfoSnackbar("Access code successfully updated"));
       await retrivePrevTemplates();
     } else {
       dispatch(showInfoSnackbar("Please enter valid Access Code i.e. [100000, 999999]"));
     }
+  };
+
+  const handleClickOpen = (tempId, name, e) => {
+    e.preventDefault();
+    setTemplateDialogBox({ open: true, templateId: tempId, name: name });
+  };
+
+  const handleClose = () => {
+    setTemplateDialogBox({ open: false, templateId: null, name: "" });
   };
 
   return (
@@ -259,7 +279,7 @@ const Template = () => {
                 </IconButton>
               </TableCell>
               <TableCell align="center">
-                <IconButton aria-label="delete template" onClick={() => removeTemplate(row._id)}>
+                <IconButton aria-label="delete template" onClick={(e) => handleClickOpen(row._id, row.name, e)}>
                   <DeleteIcon color="primary" />
                 </IconButton>
               </TableCell>
@@ -268,6 +288,31 @@ const Template = () => {
         </TableBody>
       </Table>
     </Container>
+
+    <Dialog
+        open={templateDialogBox.open}
+        onClose={handleClose}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle>{"Are you sure you want to delete this Condition?"}</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            Deleting this condition will also delete all the responses attached to this condition.
+            You can check all the responses on the Data tab and make sure to download the data before hand. This action cannot be undone.
+            <br></br><br></br>
+            <b>Condition being deleted: {templateDialogBox.name}</b>
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClose} color="primary" autoFocus>
+            No
+          </Button>
+          <Button onClick={removeTemplate} color="primary" >
+            Yes
+          </Button>
+        </DialogActions>
+      </Dialog>
     </>
   )
 }

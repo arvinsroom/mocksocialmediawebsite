@@ -39,10 +39,12 @@ const OpenText = () => {
     };
 
     try {
-      const { data } = await create(openText);
-      if (data) {
+      if (OpenTextArr.length > 0) {
+        await create(openText);
         dispatch(showSuccessSnackbar(OPENTEXT_PAGE.SUCCESSFULLY_CREATED_OPENTEXT_PAGE));
         resetValues();
+      } else {
+        dispatch(showInfoSnackbar(OPENTEXT_PAGE.PLEASE_ENTER_A_VALID_RESPONSE));
       }
     } catch (error) {
       const resMessage =
@@ -127,7 +129,7 @@ const OpenText = () => {
                 autoFocus
               />
             </Grid>
-            <Grid item xs={1} className={classes.marginAuto}>
+            <Grid item xs={1} className={classes.flexCenter}>
               <Tooltip title="Question Required?">
                 <Switch
                   checked={question.required}
@@ -138,7 +140,7 @@ const OpenText = () => {
                 />
               </Tooltip>
             </Grid>
-            <Grid item xs={1} className={classes.floatRight}>
+            <Grid item xs={1} className={classes.floatRight, classes.flexCenter}>
               <Tooltip title="Delete question">
                 <IconButton aria-label="delete question" className={classes.floatRight} onClick={() => removeQuestion(questionIndex)}>
                   <DeleteIcon />

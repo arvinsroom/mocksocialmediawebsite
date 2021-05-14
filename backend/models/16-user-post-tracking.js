@@ -16,7 +16,6 @@ export default (sequelize, DataTypes) => {
     },
     userId: {
       allowNull: false,
-      onDelete: 'CASCADE',
       references: {
         key: '_id',
         model: 'User'
