@@ -10,17 +10,16 @@ import {
   clearFacebookState
 } from "../../../../actions/facebook";
 import { updateFlowActiveState } from '../../../../actions/flowState';
-import Progress from '../../../Progress';
 import { Button, Container } from '@material-ui/core';
 import ArrowForwardIosIcon from '@material-ui/icons/ArrowForwardIos';
+import StoryCreate from "./Feed/StoryCreate/StoryCreate";
 
 const Facebook = ({ data }) => {
   const { isLoggedInUser, languageName } = useSelector(state => state.userAuth);
-  const isLoading = useSelector(state => state.facebookPost.isLoading);
 
-  const totalPostCount = useSelector(state => state.facebookPost.totalPostCount);
-  const allIds = useSelector(state => state.facebookPost.allIds);
-  
+  const totalPostCount = useSelector(state => state.facebook.totalPostCount);
+  const allIds = useSelector(state => state.facebook.allIds);
+
   const dispatch = useDispatch();
   const classes = useStyles();
 
@@ -50,11 +49,11 @@ const Facebook = ({ data }) => {
   return (
     <>
       <Container component="main" maxWidth="sm">
+        <StoryCreate />
+
         <div className="facebookMainBody">
-          {totalPostCount > 0 && <Feed />}
-          {totalPostCount === 0 && <h4>No Posts Exists!</h4>}
+          {totalPostCount && totalPostCount > 0 ? <Feed /> : <p>No Posts Exists!</p>}
         </div>
-        {isLoading && <Progress />}
         <Button
             type="submit"
             variant="contained"

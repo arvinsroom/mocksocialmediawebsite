@@ -6,14 +6,12 @@ import { useDispatch } from "react-redux";
 import useStyles from '../../../../style';
 import { showErrorSnackbar, showInfoSnackbar, showSuccessSnackbar } from '../../../../../actions/snackbar';
 import { GENERAL_PAGE, TEMPLATE, TEMPLATE_TYPES, ORDER_TYPES } from '../../../../../constants';
-import Upload from './Upload';
 
 const MediaPosts = ({ templateId }) => {
   const [mediaJSON, setMediaJSON] = useState(null);
   const [pageName, setPageName] = useState("");
   const [templateType, setTemplateType] = useState("");
   const [orderType, setOrderType] = useState("");
-  const [postMetaData, setPostMetaData] = useState(null);
 
   const classes = useStyles();
   const dispatch = useDispatch();
@@ -26,26 +24,28 @@ const MediaPosts = ({ templateId }) => {
 
   const handleChange = (e) => {
     e.preventDefault();
-
-    let files = e.target.files;
-    if (files && files.length > 0) {
-      let f = files[0];
-      let reader = new FileReader();
-      reader.onload = function (e) {
-        var data = e.target.result;
-        let readedData = XLSX.read(data, {type: 'binary'});
-        /* Get first worksheet */
-        const wsname = readedData.SheetNames[0];
-        const ws = readedData.Sheets[wsname];
-
-        /* Convert array to json*/
-        let dataParse = XLSX.utils.sheet_to_json(ws, {header:1});
-        // filter excel, here only checking rows
-        dataParse = dataParse.filter(arr => arr && arr.length > 0);
-        /* Update state */
-        setMediaJSON(dataParse);
-      };
-      reader.readAsBinaryString(f)
+    let file = e.target.files ? e.target.files[0] : null;
+    if (file) {
+      if (file.size > 20e6) {
+        dispatch(showInfoSnackbar("Please upload file of size less than 20MB."));
+      } else {
+        let reader = new FileReader();
+        reader.onload = function (e) {
+          var data = e.target.result;
+          let readedData = XLSX.read(data, {type: 'binary'});
+          /* Get first worksheet */
+          const wsname = readedData.SheetNames[0];
+          const ws = readedData.Sheets[wsname];
+  
+          /* Convert array to json*/
+          let dataParse = XLSX.utils.sheet_to_json(ws, {header:1});
+          // filter excel, here only checking rows
+          dataParse = dataParse.filter(arr => arr && arr.length > 0);
+          /* Update state */
+          setMediaJSON(dataParse);
+        };
+        reader.readAsBinaryString(file);
+      }
     }
   }
 
@@ -63,8 +63,7 @@ const MediaPosts = ({ templateId }) => {
     }
     try {
       if (mediaJSON && pageName) {
-        const { data } = await create({ name: pageName, type: templateType, pageDataOrder: orderType, templateId: templateId, mediaPosts: mediaJSON});
-        setPostMetaData(data.postMetaData || null);
+        await create({ name: pageName, type: templateType, pageDataOrder: orderType, templateId: templateId, mediaPosts: mediaJSON});
         dispatch(showSuccessSnackbar(GENERAL_PAGE.SUCCESSFULLY_UPLOADED_SOCAIL_MEDIA_SPREADSHEET));
         resetValues();
       } else {
@@ -167,7 +166,6 @@ const MediaPosts = ({ templateId }) => {
           {GENERAL_PAGE.SAVE_RESPONSES}
         </Button>    
       </form>
-      {<Upload postMetaData={postMetaData}/>}
     </>
   );
 };

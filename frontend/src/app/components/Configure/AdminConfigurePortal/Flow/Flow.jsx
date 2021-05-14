@@ -6,20 +6,32 @@ import { Button,
   TableCell,
   TableHead,
   TableRow,
-  Container
+  Container,
+  Dialog,
+  DialogContent,
+  DialogActions,
+  DialogContentText,
+  DialogTitle,
+  IconButton
 } from '@material-ui/core';
 import { useEffect, useState } from 'react';
-import { update, get } from '../../../../services/page-service';
+import { update, get, deletePage } from '../../../../services/page-service';
 import { useSelector, useDispatch } from "react-redux";
 import { Redirect } from 'react-router-dom';
 import useStyles from '../../../style';
 import { showErrorSnackbar, showSuccessSnackbar, showInfoSnackbar } from '../../../../actions/snackbar';
 import { TEMPLATE, FLOW_PAGE } from '../../../../constants';
+import DeleteIcon from '@material-ui/icons/Delete';
 
 const Flow = () => {
   const [pages, setPages] = useState("");
   const [pageOrderData, setPageOrderData] = useState(null);
   const dispatch = useDispatch();
+  const [flowDialogBox, setFlowDialogBox] = useState({
+    open: false,
+    pageId: null,
+    name: ""
+  });
 
   const { isLoggedInAdmin } = useSelector(state => state.auth);
   const classes = useStyles();
@@ -70,7 +82,24 @@ const Flow = () => {
     return <Redirect to="/admin" />;
   }
 
+  const handleClickOpen = (pageId, name, e) => {
+    e.preventDefault();
+    setFlowDialogBox({ open: true, pageId: pageId, name: name });
+  };
+
+  const handleClose = () => {
+    setFlowDialogBox({ open: false, pageId: null, name: "" });
+  };
+
+  const removePage = async () => {
+    if (flowDialogBox.pageId) {
+      await deletePage(flowDialogBox.pageId);
+      handleClose();
+      await fetchAllPages();
+    }
+  };
   return (
+    <>
     <Container component="main" maxWidth="lg" className={classes.card}>
     <Box component="span" className={classes.note} display="block">
       {FLOW_PAGE.FLOW_CONFIG_NOTE}
@@ -83,6 +112,7 @@ const Flow = () => {
           <TableCell className={classes.body, classes.head} align="center">{FLOW_PAGE.PAGE_TYPE}</TableCell>
           <TableCell className={classes.body, classes.head} align="center">{FLOW_PAGE.SET_FLOW_ORDER}</TableCell>
           <TableCell className={classes.body, classes.head} align="center">{FLOW_PAGE.CURRENT_FLOW_ORDER}</TableCell>
+          <TableCell className={classes.body, classes.head} align="center">{"Delete Page"}</TableCell>
         </TableRow>
       </TableHead>
       <TableBody>
@@ -113,6 +143,11 @@ const Flow = () => {
                 }}
               />
             </TableCell>
+            <TableCell align="center">
+                <IconButton aria-label="delete template" onClick={(e) => handleClickOpen(row._id, row.name, e)}>
+                  <DeleteIcon color="primary" />
+                </IconButton>
+              </TableCell>
           </TableRow>
         )) : null}
       </TableBody>
@@ -128,7 +163,32 @@ const Flow = () => {
       Save
     </Button>
     </form>
+
     </Container>
+        <Dialog
+        open={flowDialogBox.open}
+        onClose={handleClose}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle>{"Are you sure you want to delete this Page?"}</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            Deleting this Page will also delete all the responses attached to this Page.
+            <br></br><br></br>
+            <b>Page being deleted: {flowDialogBox.name}</b>
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClose} color="primary" autoFocus>
+            No
+          </Button>
+          <Button onClick={removePage} color="primary" >
+            Yes
+          </Button>
+        </DialogActions>
+      </Dialog>
+      </>
   );
 };
 
