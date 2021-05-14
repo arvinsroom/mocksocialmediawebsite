@@ -22,8 +22,6 @@ export default (sequelize, DataTypes) => {
       },
       type: DataTypes.UUID
     },
-    // this will have a reference to multiple rows in mcqAnswer
-    // these entries are selected by user to be true
     mcqOptionId: {
       allowNull: true,
       references: {
@@ -33,13 +31,16 @@ export default (sequelize, DataTypes) => {
       type: DataTypes.UUID,
       defaultValue: null
     },
-    // against a userId and a questionId we should either have a simgle opentextAnswerText or
-    // multiple or single mcqOptionId's 
     opentextAnswerText: {
       allowNull: true,
       type: DataTypes.STRING(1024),
       defaultValue: null
-    }
+    },
+    finishedAt: {
+      allowNull: false,
+      type: DataTypes.literal('CURRENT_TIMESTAMP(3)'),
+      defaultValue: DataTypes.literal('CURRENT_TIMESTAMP(3)'),
+    },
   }, {
 		freezeTableName: true, // model name equal to table name
     timestamps: false, // enable timestamps

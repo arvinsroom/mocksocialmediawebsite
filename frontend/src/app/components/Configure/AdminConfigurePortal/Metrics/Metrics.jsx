@@ -33,7 +33,8 @@ const Template = () => {
       const { data } = await getAdminTemplatesWithUserCount();
       // we have data.data, data.userPosts, data.adminPosts
       // console.log('getAdminTemplatesWithUserCount: ', data);
-      // if (data?) setTempWithUsersCount(data);
+      const res = data?.response || null;
+      setTempWithUsersCount(res);
     } catch (error) {
       dispatch(showErrorSnackbar("Some error occured while fetching template and user information. Please Refresh the page!"))
     }
@@ -78,7 +79,6 @@ const Template = () => {
         <Table aria-label="Template(s) with User(s) Information">
           <TableHead>
             <TableRow>
-              <TableCell className={classes.body, classes.head} align="center">{DATA_PAGE.CONDITION_ID}</TableCell>
               <TableCell className={classes.body, classes.head} align="center">{DATA_PAGE.CONDITION_NAME}</TableCell>
               <TableCell className={classes.body, classes.head} align="center">{DATA_PAGE.RESPONSES}</TableCell>
               <TableCell className={classes.body, classes.head} align="center">Download</TableCell>
@@ -87,7 +87,6 @@ const Template = () => {
           <TableBody>
             {tempWithUsersCount?.length && tempWithUsersCount.map((row) => (
               <TableRow key={row.templateId}>
-                <TableCell align="center">{row.templateId}</TableCell>
                 <TableCell align="center">{row.templateName}</TableCell>
                 <TableCell align="center">{row.userEntries}</TableCell>
                 <TableCell align="center">

@@ -17,11 +17,11 @@ import GifIcon from '@material-ui/icons/Gif';
 import { FB_TRANSLATIONS_DEFAULT } from '../../../../../../constants';
 
 const ShareModal = ({ id, setModalOpen }) => {
-  const fbTranslations = useSelector(state => state.facebookPost.fbTranslations);
+  const fbTranslations = useSelector(state => state.facebook.fbTranslations);
   const [sharePostText, setSharePostText] = useState("");
   const dispatch = useDispatch();
-  // const userName = useSelector(state => state.facebookPost.name);
-  const pageId = useSelector(state => state.facebookPost.pageId);
+  // const userName = useSelector(state => state.facebook.name);
+  const pageId = useSelector(state => state.facebook.pageId);
 
   const handleClose = () => {
     setModalOpen(false)

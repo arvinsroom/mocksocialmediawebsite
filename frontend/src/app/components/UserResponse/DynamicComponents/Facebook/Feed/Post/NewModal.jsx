@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { createFbPost } from "../../../../../../actions/facebook";
 import { useState, useRef } from "react";
 import { Avatar, Container } from "@material-ui/core";
-import { showSuccessSnackbar } from "../../../../../../actions/snackbar";
+import { showInfoSnackbar, showSuccessSnackbar } from "../../../../../../actions/snackbar";
 import Modal from '@material-ui/core/Modal';
 import { Button, Input } from "@material-ui/core";
 import PhotoLibraryIcon from '@material-ui/icons/PhotoLibrary';
@@ -16,12 +16,12 @@ import GifIcon from '@material-ui/icons/Gif';
 import { FB_TRANSLATIONS_DEFAULT } from '../../../../../../constants';
 
 const NewModal = ({ setModalOpen }) => {
-  const fbTranslations = useSelector(state => state.facebookPost.fbTranslations);
+  const fbTranslations = useSelector(state => state.facebook.fbTranslations);
   const [avatar, setAvatar] = useState(null);
   const [videoAvatar, setVideoAvatar] = useState(null);
   const [type, setType] = useState("TEXT");
-  // const userName = useSelector(state => state.facebookPost.name);
-  const pageId = useSelector(state => state.facebookPost.pageId);
+  // const userName = useSelector(state => state.facebook.name);
+  const pageId = useSelector(state => state.facebook.pageId);
 
   const [file, setFile] = useState(null);
   // const [modalStyle] = useState(getModalStyle);
@@ -48,17 +48,22 @@ const NewModal = ({ setModalOpen }) => {
     if (!file && !postMessage) {
       dispatch(showSuccessSnackbar("Please enter a valid response!"));
     } else {
-      const postObj = {
-        postMessage: postMessage || null,
-        type: type,
-        pageId,
-      };
-      let formData = new FormData();
-      formData.append("file", file || null);
-      formData.append("postObj", JSON.stringify(postObj));
-      dispatch(createFbPost(formData));
-      dispatch(showSuccessSnackbar("Post successfully created"));
-      setModalOpen(false);
+      const totalFileSize = file.size;
+      // less than 20 MB
+      if (totalFileSize <= 20e6) {
+        const postObj = {
+          postMessage: postMessage || null,
+          type: type,
+          pageId,
+        };  
+        let formData = new FormData();
+        formData.append("file", file || null);
+        formData.append("postObj", JSON.stringify(postObj));
+        dispatch(createFbPost(formData));
+        setModalOpen(false);
+      } else {
+        dispatch(showInfoSnackbar("Please upload file of size less than 20MB."))
+      }
     }
   }
 

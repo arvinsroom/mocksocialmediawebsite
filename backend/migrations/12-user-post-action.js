@@ -9,6 +9,18 @@ export async function up(queryInterface, DataTypes) {
       primaryKey: true,
       type: DataTypes.UUID
     },
+    action: {
+      allowNull: false,
+      type: DataTypes.ENUM('LIKE', 'COMMENT', 'UPVOKE', 'TWEET', 'LOVE')
+    },
+    comment: {
+      allowNull: true,
+      type: DataTypes.STRING
+    },
+    createdAt: {
+      allowNull: false,
+      type: DataTypes.DATE(3),
+    },
     userId: {
       allowNull: false,
       onDelete: 'CASCADE',
@@ -26,19 +38,7 @@ export async function up(queryInterface, DataTypes) {
         model: 'UserPost'
       },
       type: DataTypes.UUID
-    },
-    action: {
-      allowNull: false,
-      type: DataTypes.ENUM('LIKE', 'COMMENT', 'UPVOKE', 'TWEET', 'LOVE')
-    },
-    comment: {
-      allowNull: true,
-      type: DataTypes.STRING
-    },
-    createdAt: {
-      allowNull: false,
-      type: DataTypes.DATE(3),
-    },
+    }
   });
   await queryInterface.addIndex('UserPostAction', ['userPostId']);
 }
