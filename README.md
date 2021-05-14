@@ -196,3 +196,4 @@ Changes made to the local MySQL instance.
 
 
 Changes made to the AWS MYSQL RDS instance.
+https://www.codementor.io/@krupalpatel/how-to-modify-mysql-database-configuration-in-aws-rds-ncjrbcpwq
