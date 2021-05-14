@@ -11,20 +11,22 @@
     "jsonwebtoken": "^8.5.1",
     "multer": "^1.4.2",
     "mysql2": "^2.2.5",
+    "pm2": "^4.5.6",
     "sequelize": "^6.5.0",
     "umzug": "^2.3.0"
   },
   "scripts": {
     "webpack-build-prod": "webpack --mode production",
     "webpack-build-dev": "webpack --mode development",
+    "watch:webpack-build-dev": "webpack --watch --mode development",
     "start-dev": "webpack serve --mode development",
     "clean-db": "rm -rf ./db && mkdir -p ./db",
     "copy-dev-config": "cp ./config-development.json ./db/config-development.json",
     "copy-prod-config": "cp ./config-production.json ./db/config-production.json",
     "build-dev": "npm run clean-db && npm run copy-dev-config && npm run webpack-build-dev",
     "build-prod": "npm run clean-db && npm run copy-prod-config && npm run webpack-build-prod",
-    "run-server": "node ./db/index.js",
-    "run-dev-server": "nodemon -L ./db/index.js"
+    "pm2": "pm2 start ./db/index.js",
+    "local-dev": "npm run clean-db && npm run copy-dev-config && npm run watch:webpack-build-dev"
   },
   "eslintConfig": {
     "extends": [
@@ -57,7 +59,7 @@
     "babel-loader": "^8.2.2",
     "dotenv": "^8.2.0",
     "glob": "^7.1.6",
-    "nodemon": "^2.0.7",
+    "nodemon-webpack-plugin": "^4.5.2",
     "webpack": "^5.24.2",
     "webpack-cli": "^4.5.0",
     "webpack-dev-server": "^3.11.2"

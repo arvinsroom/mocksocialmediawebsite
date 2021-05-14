@@ -49,6 +49,7 @@ const Admin = () => {
             fullWidth
             id="usename"
             label="Username"
+            autoComplete="username"
             onChange={({ target }) => setUsername(target.value)}
             autoFocus
           />
@@ -61,6 +62,7 @@ const Admin = () => {
             label="Password"
             type="password"
             id="password"
+            autoComplete="current-password"
             onChange={({ target }) => setPassword(target.value)}
           />
           {isLoading && <Progress />}

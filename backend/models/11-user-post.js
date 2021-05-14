@@ -42,7 +42,6 @@ export default (sequelize, DataTypes) => {
     },
     userId: {
       allowNull: true,
-      onDelete: 'CASCADE',
       references: {
         key: '_id',
         model: 'User'
@@ -59,7 +58,6 @@ export default (sequelize, DataTypes) => {
     },
     pageId: {
       allowNull: false,
-      onDelete: 'CASCADE',
       references: {
         key: '_id',
         model: 'Page'

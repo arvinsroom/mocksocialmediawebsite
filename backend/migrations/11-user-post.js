@@ -41,17 +41,9 @@ export async function up(queryInterface, DataTypes) {
       allowNull: true,
       type: DataTypes.STRING(1024)
     },
-    userId: {
-      allowNull: true,
-      onDelete: 'CASCADE',
-      references: {
-        key: '_id',
-        model: 'User'
-      },
-      type: DataTypes.UUID
-    },
     parentPostId: {
       allowNull: true,
+      onDelete: 'CASCADE',
       references: {
         key: '_id',
         model: 'UserPost'
@@ -64,6 +56,15 @@ export async function up(queryInterface, DataTypes) {
       references: {
         key: '_id',
         model: 'Page'
+      },
+      type: DataTypes.UUID
+    },
+    userId: {
+      allowNull: true,
+      onDelete: 'CASCADE',
+      references: {
+        key: '_id',
+        model: 'User'
       },
       type: DataTypes.UUID
     },

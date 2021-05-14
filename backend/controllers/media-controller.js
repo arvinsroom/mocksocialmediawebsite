@@ -63,17 +63,13 @@ const create = async (req, res, next) => {
     }
 
     // create the Post records
-    const data = await UserPost.bulkCreate(mediaArr, { transaction });
-    const postMetaData = {};
-    data.forEach(post => {
-      postMetaData[post.adminPostId] = post._id;
-    });
+    await UserPost.bulkCreate(mediaArr, { transaction });
     // if we reach here, there were no errors therefore commit the transaction
     await transaction.commit();
 
     // return the pageId with the request
     res.send({
-      postMetaData: postMetaData || null
+      response: "Success"
     });
   } catch (error) {
     console.log(error.message);
@@ -88,9 +84,8 @@ const create = async (req, res, next) => {
 const uploadMultipleFiles = async (req, res, next) => {
   // create the page first
   let transaction;
-
   try {
-    const postMetaData = JSON.parse(req.body.postMetaData);
+    const { pageId } = req.body;
     const { files } = req;
     if (!files) {
       res.status(400).send({
@@ -98,32 +93,49 @@ const uploadMultipleFiles = async (req, res, next) => {
       });
       return;
     }
-    if (!postMetaData) {
+    if (!pageId) {
       res.status(400).send({
-        message: "Post Meta data is required!"
+        message: "Page Id is required!"
       });
       return;
     }
 
     transaction = await db.sequelize.transaction();
+
+    // fetch all the posts for that specific social media page
+    const posts = await UserPost.findAll({
+      where: {
+        pageId
+      },
+      attributes: ['_id', 'adminPostId']
+    }, { transaction });
+
+    const postData = {};
+    posts.forEach(post => {
+      postData[post.adminPostId] = post._id;
+    });
+
     const mediaArr = [];
     for (let i = 0; i < files.length; i++) {
       // fetch the id from file name
       const postId = files[i].originalname.split(".")[0];
       // should only create entry if post id exist
-      if (postMetaData[postId]) {
+      if (postData[postId]) {
         mediaArr.push({
           mimeType: files[i].mimetype,
           media: files[i].buffer,
-          userPostId: postMetaData[postId],
+          userPostId: postData[postId],
         });
       }
     }
     await Media.bulkCreate(mediaArr, { transaction });
     // if we reach here, there were no errors therefore commit the transaction
     await transaction.commit();
-    // fetch json
-    res.send("Done!");
+
+    // send json
+    res.send({
+      response: "Success"
+    });
   } catch (error) {
     console.log(error.message);
     // if we reach here, there were some errors thrown, therefore roolback the transaction

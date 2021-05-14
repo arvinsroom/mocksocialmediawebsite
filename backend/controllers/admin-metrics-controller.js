@@ -221,7 +221,9 @@ const getTemplatesWithUserCounts = async (req, res, next) => {
       ]
     });
 
-    res.send(data);
+    res.send({
+      response: data
+    });
   } catch (error) {
     console.log(error.message);
     res.status(500).send({
