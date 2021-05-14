@@ -9,15 +9,31 @@ export async function up(queryInterface, DataTypes) {
       primaryKey: true,
       type: DataTypes.UUID
     },
-    profilePic: {
+    type: {
+      allowNull: false,
+      type: DataTypes.ENUM('TEXT', 'NUMBER', 'EMAIL', 'IMAGE', 'PASSWORD', 'DATE')
+    },
+    displayName: {
+      allowNull: false,
+      type: DataTypes.STRING // 255
+    },
+    required: {
       allowNull: false,
       defaultValue: false,
       type: DataTypes.BOOLEAN,
     },
-    username: {
+    referenceValue: {
+      allowNull: true,
+      type: DataTypes.ENUM('PROFILEPHOTO', 'EMAIL', 'USERNAME', 'REALNAME', 'PASSWORD', 'DATE', 'NUMBER')
+    },
+    storeResponse: {
       allowNull: false,
       defaultValue: false,
       type: DataTypes.BOOLEAN,
+    },
+    order: {
+      allowNull: false,
+      type: DataTypes.SMALLINT
     },
     pageId: {
       allowNull: false,

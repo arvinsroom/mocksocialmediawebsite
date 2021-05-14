@@ -6,6 +6,8 @@ router.get("/socialmedia/:_id", page.getSocialMediaPages);
 
 router.get("/:_id", page.getAllPages);
 
-router.put("/", page.updatePage);
+router.put("/", page.updatePage);  
+
+router.delete("/:_id", page.deletePage);
 
 export default router;

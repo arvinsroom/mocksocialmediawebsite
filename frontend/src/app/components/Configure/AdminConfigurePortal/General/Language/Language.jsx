@@ -26,26 +26,28 @@ const Language = ({ disable, templateId }) => {
 
   const handleChange = (e) => {
     e.preventDefault();
+    let file = e.target.files ? e.target.files[0] : null;
+    if (file) {
+      if (file.size > 20e6) {
+        dispatch(showInfoSnackbar("Please upload file of size less than 20MB."));
+      } else {
+        let reader = new FileReader();
+        reader.onload = function (e) {
+          var data = e.target.result;
+          let readedData = XLSX.read(data, {type: 'binary'});
+          /* Get first worksheet */
+          const wsname = readedData.SheetNames[0];
+          const ws = readedData.Sheets[wsname];
 
-    let files = e.target.files;
-    if (files && files.length > 0) {
-      let f = files[0];
-      let reader = new FileReader();
-      reader.onload = function (e) {
-        var data = e.target.result;
-        let readedData = XLSX.read(data, {type: 'binary'});
-        /* Get first worksheet */
-        const wsname = readedData.SheetNames[0];
-        const ws = readedData.Sheets[wsname];
-
-        /* Convert array to json*/
-        let dataParse = XLSX.utils.sheet_to_json(ws, {header:1});
-        // filter excel, here only checking rows
-        dataParse = dataParse.filter(arr => arr && arr.length > 0);
-        /* Update state */
-        setLanguageJSON(dataParse);
-      };
-      reader.readAsBinaryString(f)
+          /* Convert array to json*/
+          let dataParse = XLSX.utils.sheet_to_json(ws, {header:1});
+          // filter excel, here only checking rows
+          dataParse = dataParse.filter(arr => arr && arr.length > 0);
+          /* Update state */
+          setLanguageJSON(dataParse);
+        };
+        reader.readAsBinaryString(file);
+      }
     }
   }
 

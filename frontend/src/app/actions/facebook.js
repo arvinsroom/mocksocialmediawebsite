@@ -3,6 +3,7 @@ import {
   SET_FB_POST_LIKE,
   SET_FB_POST_UNLIKE,
   SNACKBAR_ERROR,
+  SNACKBAR_SUCCESS,
   SET_FB_POST_COMMENT,
   CREATE_FB_POST,
   SET_FB_LOADING,
@@ -58,6 +59,10 @@ export const getFacebookPostsCount = (data) => (dispatch) => {
       dispatch({
         type: SNACKBAR_ERROR,
         payload: message,
+      });
+
+      dispatch({
+        type: CLEAR_FB_STATE
       });
       return Promise.reject();
     }
@@ -123,6 +128,10 @@ export const getFacebookPosts = (data) => (dispatch) => {
         payload: {
           isLoading: false,
         }
+      });
+
+      dispatch({
+        type: CLEAR_FB_STATE
       });
       return Promise.reject();
     }
@@ -231,6 +240,12 @@ export const commentFbPost = (data, id) => (dispatch) => {
 // media can use multer for sending a image or video file
 // entry for user post, type (text, photo, video), postMessage, link, linkTitle, linkPreview, media
 export const createFbPost = (data) => (dispatch) => {
+  dispatch({
+    type: SET_FB_LOADING,
+    payload: {
+      isLoading: true,
+    }
+  });
   return FacebookPostService.createFbPost(data).then(
     (response) => {
       dispatch({
@@ -239,6 +254,18 @@ export const createFbPost = (data) => (dispatch) => {
           _id: response.data._id,
           post: response.data.post,
           attachedMedia: response.data.attachedMedia, // [{ _id: ..., other media details }]
+        }
+      });
+
+      dispatch({
+        type: SNACKBAR_SUCCESS,
+        payload: "Post successfully created",
+      });
+
+      dispatch({
+        type: SET_FB_LOADING,
+        payload: {
+          isLoading: false,
         }
       });
 
@@ -252,6 +279,13 @@ export const createFbPost = (data) => (dispatch) => {
         error.message ||
         error.toString();
 
+      dispatch({
+        type: SET_FB_LOADING,
+        payload: {
+          isLoading: false,
+        }
+      });
+      
       dispatch({
         type: SNACKBAR_ERROR,
         payload: message,

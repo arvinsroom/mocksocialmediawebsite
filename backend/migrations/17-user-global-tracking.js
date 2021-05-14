@@ -11,6 +11,7 @@ export async function up(queryInterface, DataTypes) {
     },
     pageId: {
       allowNull: true,
+      onDelete: 'CASCADE',
       references: {
         key: '_id',
         model: 'Page'
@@ -19,6 +20,7 @@ export async function up(queryInterface, DataTypes) {
     },
     activeTemplateId: {
       allowNull: true,
+      onDelete: 'CASCADE',
       references: {
         key: '_id',
         model: 'Template'
