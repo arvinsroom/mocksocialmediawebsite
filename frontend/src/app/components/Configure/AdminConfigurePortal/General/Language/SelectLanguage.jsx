@@ -1,7 +1,7 @@
-import { FormControl, InputLabel, Select, MenuItem, Box, Button, Input, Typography } from '@material-ui/core';
-import { updateTemplate } from "../../../../../services/template-service";
-import { useSelector, useDispatch } from "react-redux";
-import { showErrorSnackbar, showSuccessSnackbar, showInfoSnackbar } from '../../../../../actions/snackbar';
+import { FormControl, InputLabel, Select, MenuItem, Button } from '@material-ui/core';
+import { updateTemplate } from "../../../../../actions/template";
+import { useDispatch } from "react-redux";
+import { showErrorSnackbar, showInfoSnackbar } from '../../../../../actions/snackbar';
 import { GENERAL_PAGE, TEMPLATE } from '../../../../../constants';
 import { useState } from 'react';
 import useStyles from '../../../../style';
@@ -31,8 +31,7 @@ const SelectLanguage = ({ currentLanguages, templateId }) => {
         language: active
       };
       if (active) {
-        await updateTemplate({ tempObj: data });
-        dispatch(showSuccessSnackbar("Language has been selected successfully!"));
+        await dispatch(updateTemplate({ tempObj: data }, "Language has been selected successfully!"));
         resetValues();
       } else dispatch(showInfoSnackbar("Please select a language!"));
     } catch (error) {
@@ -59,7 +58,7 @@ const SelectLanguage = ({ currentLanguages, templateId }) => {
           onChange={handleActiveLanguages}
           label="choose language for this template"
         >
-          {currentLanguages && currentLanguages.length > 0 ? currentLanguages.map(name => (
+          {currentLanguages?.length > 0 ? currentLanguages.map(name => (
             <MenuItem key={name} value={name}>{name}</MenuItem>
           )) : null}
         </Select>

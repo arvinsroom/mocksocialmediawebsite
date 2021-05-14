@@ -48,9 +48,9 @@ const useStyles = makeStyles((theme) => ({
   center: {
     width: '100%'
   },
-  marginAuto: {
-    margin: 'auto'
-  },
+  // marginAuto: {
+  //   margin: 'auto'
+  // },
   marginTenPx: {
     margin: '10px'
   },
@@ -140,6 +140,11 @@ const useStyles = makeStyles((theme) => ({
     width: '25%',
     float: 'right',
     margin: theme.spacing(3, 0, 2),
+  },
+  flexCenter: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center'
   }
 }));
 

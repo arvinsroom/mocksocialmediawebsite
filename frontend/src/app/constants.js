@@ -8,6 +8,25 @@ export const ORDER_TYPES = Object.freeze({
   RANDOM: "Random"
 });
 
+export const REGISTER_PAGE_CUSTOM_FIELDS = Object.freeze({
+  TEXT: "Text Field",
+  NUMBER: "Number Field",
+  EMAIL: "Email Field",
+  IMAGE: 'Image Field',
+  PASSWORD: 'Password Field',
+  DATE: 'Date Field'
+});
+
+export const REGISTER_PAGE_CUSTOM_REFERENCES = Object.freeze({
+  PROFILEPHOTO: "Profile Photo",
+  EMAIL: "Email",
+  USERNAME: "Username",
+  REALNAME: "Real Name",
+  PASSWORD: "Password",
+  DATE: "Date",
+  NUMBER: "Number"
+});
+
 export const TEMPLATE = Object.freeze({
   SELECT_OR_CREATE_TEMPLATE: "Please make sure a template is created or selected.",
   CONDITION_SUCCESS: "Condition successfully created.",
@@ -58,6 +77,7 @@ export const MCQ_PAGE = Object.freeze({
   TYPE_RESPONSE_OPTION_HERE: 'Type response option here',
   SUCCESSFULLY_CREATED_MULTIPLE_CHOICE_PAGE: 'Successfully created multiple-choice page',
   ANSWER_REQUIRED_QUESTIONS_TO_CONTINUE: 'Please answer all required questions to continue',
+  PLEASE_ENTER_A_VALID_RESPONSE: 'Please enter a valid response.'
 });
 
 export const OPENTEXT_PAGE = Object.freeze({
@@ -65,6 +85,7 @@ export const OPENTEXT_PAGE = Object.freeze({
   TYPE_QUESTION_HERE: 'Type question here',
   SUCCESSFULLY_CREATED_OPENTEXT_PAGE: 'Successfully created open-text question page',
   ANSWER_REQUIRED_QUESTIONS_TO_CONTINUE: 'Please answer all required questions to continue',
+  PLEASE_ENTER_A_VALID_RESPONSE: 'Please enter a valid response.'
 });
 
 export const INFO_PAGE = Object.freeze({
@@ -136,8 +157,10 @@ export const FB_TRANSLATIONS_DEFAULT = Object.freeze({
   WRITE_POST: 'Write Post',
   CREATE_POST: 'Create Post',
   TAG_FRIENDS: 'Tag Friends',
-  PHOTO_VIDEO: 'Photo/Video',
-  FEELING_ACTIVITY: 'Feeling/Activity',
+  PHOTO: 'Photo',
+  VIDEO: 'Video',
+  FEELING: 'Feeling',
+  ACTIVITY: 'Activity',
   ADD_TO_YOUR_POST: 'Add to Your Post'
 });
 

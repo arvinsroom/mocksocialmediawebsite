@@ -276,7 +276,8 @@ const getFacebookPostWithDetails = async (req, res, next) => {
       where: {
         _id: postIds,
       },
-      order: db.sequelize.literal("FIND_IN_SET(userPost._id,'"+postIds.join(',')+"')"),
+      // attributes: ,
+      order: db.sequelize.literal("FIND_IN_SET(UserPost._id,'"+postIds.join(',')+"')"),
       include: [
         {
           model: Media,

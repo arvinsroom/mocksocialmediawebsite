@@ -11,6 +11,7 @@ export async function up(queryInterface, DataTypes) {
     },
     userPostId: {
       allowNull: true,
+      onDelete: 'CASCADE',
       references: {
         key: '_id',
         model: 'UserPost'

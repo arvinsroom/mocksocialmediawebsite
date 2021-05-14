@@ -46,4 +46,5 @@ COPY --from=builder /app/temp/node_modules node_modules
 
 EXPOSE 8081
 
-CMD [ "node", "./db/index.js" ]
+# manage service down in production
+CMD [ "npx", "pm2", "start", "./db/index.js" ]

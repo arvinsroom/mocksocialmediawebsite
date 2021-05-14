@@ -2,6 +2,8 @@ const path = require("path");
 const webpack = require("webpack");
 const fs = require('fs');
 const glob = require("glob")
+// only when webpack is in watch mode
+const NodemonPlugin = require('nodemon-webpack-plugin');
 
 const migrationFiles = glob.sync('./migrations/*');
 const migrationEntries = migrationFiles.reduce((acc, migrationFile) => {
@@ -69,7 +71,8 @@ module.exports = function(_env, argv) {
         "process.env.IP_ADDRESS": JSON.stringify(
           isProduction ? "3.97.196.198" : "localhost"
         ),
-      })
+      }),
+      new NodemonPlugin(),
     ],
     experiments: {
       topLevelAwait: true

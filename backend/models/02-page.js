@@ -32,6 +32,11 @@ export default (sequelize, DataTypes) => {
       type: DataTypes.SMALLINT,
       defaultValue: 0
     },
+    appearTime: {
+      allowNull: false,
+      type: DataTypes.SMALLINT,
+      defaultValue: 0
+    }
   }, {
 		freezeTableName: true, // model name equal to table name
     timestamps: false, // enable timestamps
