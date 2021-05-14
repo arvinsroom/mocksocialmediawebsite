@@ -11,6 +11,7 @@ export async function up(queryInterface, DataTypes) {
     },
     templateId: {
       allowNull: false,
+      onDelete: 'CASCADE',
       references: {
         key: '_id',
         model: 'Template'

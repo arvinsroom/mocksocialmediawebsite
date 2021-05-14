@@ -11,7 +11,7 @@ import {
   CLEAR_FB_STATE
 } from "../actions/types";
 
-const initialPostState = {
+const initialState = {
   posts: {},
   metaData: {},
   allIds: [],
@@ -29,13 +29,12 @@ const initialPostState = {
 // this is bad and goes against whole point of using redux but for
 // now we can use it as it is a standalone component and we do not have seperate states for post component
 // eslint-disable-next-line import/no-anonymous-default-export
-export const facebookPost = (state = initialPostState, action) => {
+export default function (state = initialState, action) {
   const { type, payload } = action;
 
   switch (type) {
     case SET_FB_POST_IDS_AND_COUNT:
       return {
-        // ...state,
         totalPostCount: payload.totalPostCount,
         currentPostPage: 0,
         postEachPage: 5,

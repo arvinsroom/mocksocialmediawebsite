@@ -4,16 +4,11 @@ import {
   FormGroup,
   FormControlLabel,
   Switch,
-  FormControl,
-  InputLabel,
-  Select,
-  MenuItem,
   Box,
   Container
 } from '@material-ui/core';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { create } from '../../../../services/info-service';
-import { getSocialMediaPages } from '../../../../services/page-service';
 import useStyles from '../../../style';
 import { useSelector, useDispatch } from "react-redux";
 import { Redirect } from 'react-router-dom';
@@ -23,13 +18,13 @@ import { EditorState, convertToRaw } from 'draft-js'
 import { createMuiTheme, MuiThemeProvider } from '@material-ui/core/styles'
 import { showErrorSnackbar, showSuccessSnackbar, showInfoSnackbar } from '../../../../actions/snackbar';
 import { TEMPLATE, INFO_PAGE } from '../../../../constants';
+import SocialMediaPages from '../../../socialMediaPages';
 
 const InfoPage = () => {
   const [richData, setRichData] = useState();
   const [pageName, setPageName] = useState("");
   const [consent, setConsent] = useState(false);
   const [active, setActive] = useState("");
-  const [socialMediaPages, setSocialMediaPages] = useState(null);
 
   const { isLoggedInAdmin } = useSelector(state => state.auth);
   const { _id: templateId } = useSelector(state => state.template);
@@ -37,15 +32,6 @@ const InfoPage = () => {
   const editor = useRef(null);
   const defaultTheme = createMuiTheme();
   const dispatch = useDispatch();
-
-  const fetchSocialMediaPages = async () => {
-    const { data } = await getSocialMediaPages(templateId);
-    setSocialMediaPages(data.data);
-  };
-
-  useEffect(() => {
-    fetchSocialMediaPages();
-  }, []);
 
   const resetValues = () => {
     const emplyObj = JSON.stringify(
@@ -74,6 +60,7 @@ const InfoPage = () => {
       consent: consent,
       socialMediaPageId: active
     };
+
     try {
       const { data } = await create(info);
       if (data._id) {
@@ -137,10 +124,6 @@ const InfoPage = () => {
     }
   });
 
-  const handleSocialMediaPage = async (e) => {
-    await setActive(e.target.value);
-  };
-
   return (
     <Container component="main" maxWidth="lg" className={classes.card}>
       <TextField
@@ -178,21 +161,8 @@ const InfoPage = () => {
       <Box component="span" className={classes.note} display="block">
         {INFO_PAGE.ADD_FAKE_POSTS_TO_THE_BOTTOM}
       </Box>
-
-      <FormControl variant="outlined" className={classes.formControl}>
-        <InputLabel id="demo-simple-select-outlined-label">{INFO_PAGE.SELECT_SOCIAL_MEDIA_PAGE}</InputLabel>
-        <Select
-          labelId="demo-simple-select-outlined-label"
-          id="demo-simple-select-outlined"
-          value={active}
-          onChange={handleSocialMediaPage}
-          label={INFO_PAGE.SELECT_SOCIAL_MEDIA_PAGE}
-        >
-          {socialMediaPages?.length > 0 ? socialMediaPages.map(page => (
-            <MenuItem key={page._id} value={page._id}>{page.name}</MenuItem>
-          )) : null}
-        </Select>
-      </FormControl>
+      
+      <SocialMediaPages active={active} setActive={setActive} templateId={templateId}/>
 
       <Button
         type="submit"
