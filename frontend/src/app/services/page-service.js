@@ -18,3 +18,9 @@ export const getSocialMediaPages = (templateId) => {
     headers: authHeader()
   });
 }
+
+export const deletePage = (_id) => {
+  return http.delete(`/page/${_id}`, {
+    headers: authHeader()
+  });
+}

@@ -35,6 +35,10 @@ export async function up(queryInterface, DataTypes) {
       allowNull: false,
       type: DataTypes.SMALLINT
     },
+    appearTime: {
+      allowNull: false,
+      type: DataTypes.SMALLINT
+    }
   });
   await queryInterface.addIndex('Page', ['templateId', 'type']);
 }

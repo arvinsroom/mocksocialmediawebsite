@@ -6,15 +6,32 @@ export default (sequelize, DataTypes) => {
       type: DataTypes.UUID,
       defaultValue: DataTypes.UUIDV4 // create a default UUIDV4 for each record
     },
-    profilePic: {
+    type: {
+      allowNull: false,
+      type: DataTypes.ENUM('TEXT', 'NUMBER', 'EMAIL', 'IMAGE', 'PASSWORD', 'DATE')
+    },
+    displayName: {
+      allowNull: false,
+      type: DataTypes.STRING // 255
+    },
+    required: {
       allowNull: false,
       defaultValue: false,
       type: DataTypes.BOOLEAN,
     },
-    username: {
+    referenceValue: {
+      allowNull: true,
+      type: DataTypes.ENUM('PROFILEPHOTO', 'EMAIL', 'USERNAME', 'REALNAME', 'PASSWORD', 'DATE', 'NUMBER')
+    },
+    storeResponse: {
       allowNull: false,
       defaultValue: false,
       type: DataTypes.BOOLEAN,
+    },
+    order: {
+      allowNull: false,
+      defaultValue: 0,
+      type: DataTypes.SMALLINT
     },
     pageId: {
       allowNull: false,

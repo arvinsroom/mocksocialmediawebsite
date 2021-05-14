@@ -13,7 +13,7 @@ import { FB_TRANSLATIONS_DEFAULT } from '../../../../../../constants';
 
 const PostBottom = ({ id }) => {
   const postMetadata = useSelector(state => selectPostsMetadata(state, id));
-  const fbTranslations = useSelector(state => state.facebookPost.fbTranslations);
+  const fbTranslations = useSelector(state => state.facebook.fbTranslations);
   const [openCommentBox, setOpenCommentBox] = useState(false);
   const [currentComment, setCurrentComment] = useState("");
   const [modalOpen , setModalOpen] = useState(false);

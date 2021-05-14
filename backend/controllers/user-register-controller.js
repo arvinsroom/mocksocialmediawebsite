@@ -4,8 +4,15 @@ const Register = db.Register;
 
 const getRegisterDetails = async (req, res, next) => {
   try {
+    if (!req.userId) {
+      res.status(400).send({
+        message: "Invalid User Token, please log in again!"
+      });
+      return;
+    }
     // fetch template _id from params
     const pageId = req.params.pageId;
+
     if (!pageId) {
       res.status(400).send({
         message: "Invalid Page Id!"
@@ -13,24 +20,25 @@ const getRegisterDetails = async (req, res, next) => {
       return;
     }
   
-    const data = await Register.findOne({
+    const data = await Register.findAll({
       where: {
         pageId: pageId
       },
-      attributes: ['profilePic', 'username']
+      order: [
+        ['order', 'ASC']
+      ],
     });
-  
+
     res.send({
-      data: data,
+      response: data,
     });
-  
-    } catch (error) {
-      console.log(error.message);
-      res.status(500).send({
-        message:
-          error.message || "Some error occurred while Fetching the Register details."
-      });
-    }
+  } catch (error) {
+    console.log(error.message);
+    res.status(500).send({
+      message:
+        error.message || "Some error occurred while Fetching the Register details."
+    });
+  }
 };
 
 const createUserRegister = async (req, res, next) => {

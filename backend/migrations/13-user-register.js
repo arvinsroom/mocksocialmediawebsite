@@ -9,13 +9,26 @@ export async function up(queryInterface, DataTypes) {
       primaryKey: true,
       type: DataTypes.UUID
     },
-    profilePic: {
+    image: {
       allowNull: true,
       type: DataTypes.BLOB('long')
     },
-    username: {
+    mimeType: {
       allowNull: true,
-      type: DataTypes.STRING, // 255
+      type: DataTypes.STRING
+    },
+    generalFieldValue: {
+      allowNull: true,
+      type: DataTypes.STRING(1024),
+    },
+    registerId: {
+      allowNull: false,
+      onDelete: 'CASCADE',
+      references: {
+        key: '_id',
+        model: 'Register'
+      },
+      type: DataTypes.UUID
     },
     userId: {
       allowNull: false,
@@ -26,11 +39,11 @@ export async function up(queryInterface, DataTypes) {
       },
       type: DataTypes.UUID
     },
-    mimeType: {
-      allowNull: true,
-      type: DataTypes.STRING
+    finishedAt: {
+      allowNull: false,
+      type: DataTypes.DATE(3),
     },
   });
-  await queryInterface.addIndex('UserRegister', ['userId']);
+  await queryInterface.addIndex('UserRegister', ['userId', 'registerId']);
 }
 

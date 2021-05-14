@@ -6,19 +6,26 @@ export default (sequelize, DataTypes) => {
       type: DataTypes.UUID,
       defaultValue: DataTypes.UUIDV4 // create a default UUIDV4 for each record
     },
-    profilePic: {
+    image: {
       allowNull: true,
-      type: DataTypes.BLOB('long'),
-      defaultValue: null
+      type: DataTypes.BLOB('long')
     },
     mimeType: {
       allowNull: true,
       type: DataTypes.STRING
     },
-    username: {
+    generalFieldValue: {
       allowNull: true,
-      type: DataTypes.STRING, // 255
-      defaultValue: null
+      type: DataTypes.STRING(1024),
+    },
+    registerId: {
+      allowNull: false,
+      onDelete: 'CASCADE',
+      references: {
+        key: '_id',
+        model: 'Register'
+      },
+      type: DataTypes.UUID
     },
     userId: {
       allowNull: false,
@@ -28,6 +35,11 @@ export default (sequelize, DataTypes) => {
       },
       type: DataTypes.UUID,
     },
+    finishedAt: {
+      allowNull: false,
+      type: DataTypes.literal('CURRENT_TIMESTAMP(3)'),
+      defaultValue: DataTypes.literal('CURRENT_TIMESTAMP(3)'),
+    },
   }, {
 		freezeTableName: true, // model name equal to table name
     timestamps: false, // enable timestamps
@@ -36,6 +48,9 @@ export default (sequelize, DataTypes) => {
   UserRegister.associate = (models) => {
     UserRegister.belongsTo(models.User, {
       foreignKey: 'userId'
+    }),
+    UserRegister.belongsTo(models.Register, {
+      foreignKey: 'registerId'
     })
   };
 

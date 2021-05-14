@@ -36,10 +36,12 @@ const MCQ = () => {
       pageQuestionArr: OpenTextArr
     };
     try {
-      const { data } = await create(mcq);
-      if (data) {
+      if (OpenTextArr.length > 0) {
+        await create(mcq);
         dispatch(showSuccessSnackbar(MCQ_PAGE.SUCCESSFULLY_CREATED_MULTIPLE_CHOICE_PAGE));
         resetValues();
+      } else {
+        dispatch(showInfoSnackbar(MCQ_PAGE.PLEASE_ENTER_A_VALID_RESPONSE));
       }
     } catch (error) {
       const resMessage =
@@ -136,73 +138,73 @@ const MCQ = () => {
           </Fab>
         </Tooltip>
         {OpenTextArr?.length > 0 ? OpenTextArr.map((question, questionIndex) => (
-              <div key={questionIndex} className={classes.card}>
-                <Grid container spacing={4}>
-                  <Grid item xs={10}>
-                    <TextField
-                      className={classes.textGrid}
-                      variant="outlined"
-                      margin="normal"
-                      required
-                      value={question.questionText}
-                      label={MCQ_PAGE.TYPE_QUESTION_HERE}
-                      onChange={(e) => handleQuestionText(question, e)}
-                      autoFocus
-                    />
-                  </Grid>
-                  <Grid item xs={1} className={classes.marginAuto}>
-                    <Tooltip title="Question Required?">
-                      <Switch
-                        checked={question.required}
-                        onChange={(e) => handleRequiredField(question, e)}
-                        color="primary"
-                        name="requiredField"
-                        inputProps={{ 'aria-label': 'Question/Answer Required' }}
+          <div key={questionIndex} className={classes.card}>
+            <Grid container spacing={4}>
+              <Grid item xs={10}>
+                <TextField
+                  className={classes.textGrid}
+                  variant="outlined"
+                  margin="normal"
+                  required
+                  value={question.questionText}
+                  label={MCQ_PAGE.TYPE_QUESTION_HERE}
+                  onChange={(e) => handleQuestionText(question, e)}
+                  autoFocus
+                />
+              </Grid>
+              <Grid item xs={1} className={classes.flexCenter}>
+                <Tooltip title="Question Required?">
+                  <Switch
+                    checked={question.required}
+                    onChange={(e) => handleRequiredField(question, e)}
+                    color="primary"
+                    name="requiredField"
+                    inputProps={{ 'aria-label': 'Question/Answer Required' }}
+                  />
+                </Tooltip>
+              </Grid>
+              <Grid item xs={1} className={classes.floatRight, classes.flexCenter}>
+                <Tooltip title="Delete question">
+                  <IconButton aria-label="delete question" className={classes.floatRight} onClick={() => removeQuestion(questionIndex)}>
+                    <DeleteIcon />
+                  </IconButton>
+                </Tooltip>
+              </Grid>
+              <Grid item xs={12}>
+                <Tooltip title="Add MCQ Option">
+                  <IconButton aria-label="Add MCQ Option" className={classes.floatLeft} onClick={() => addMcqOption(questionIndex)}>
+                    <AddIcon />
+                  </IconButton>
+                </Tooltip>
+              </Grid>
+            </Grid>
+              {OpenTextArr[questionIndex].mcqOptions && 
+                OpenTextArr[questionIndex].mcqOptions.length > 0 ? 
+                OpenTextArr[questionIndex].mcqOptions.map((option, mcqOptionIndex) => (
+                  <Grid key={mcqOptionIndex} container spacing={1}>
+                    <Grid item xs={10}>
+                      <TextField
+                        className={classes.textGrid}
+                        variant="outlined"
+                        margin="normal"
+                        required
+                        value={option.optionText}
+                        label={MCQ_PAGE.TYPE_RESPONSE_OPTION_HERE}
+                        onChange={(e) => handleMcqOption(option, e)}
+                        autoFocus
                       />
-                    </Tooltip>
+                    </Grid>
+                    <Grid item xs={2} className={classes.floatRight}>
+                      <Tooltip title="Delete Mcq Option">
+                        <IconButton aria-label="Delete Mcq Option" className={classes.floatRight} onClick={() => removeMcqOption(questionIndex, mcqOptionIndex)}>
+                          <DeleteIcon />
+                        </IconButton>
+                      </Tooltip>
+                    </Grid>
                   </Grid>
-                  <Grid item xs={1} className={classes.floatRight}>
-                    <Tooltip title="Delete question">
-                      <IconButton aria-label="delete question" className={classes.floatRight} onClick={() => removeQuestion(questionIndex)}>
-                        <DeleteIcon />
-                      </IconButton>
-                    </Tooltip>
-                  </Grid>
-                  <Grid item xs={12}>
-                    <Tooltip title="Add MCQ Option">
-                      <IconButton aria-label="Add MCQ Option" className={classes.floatLeft} onClick={() => addMcqOption(questionIndex)}>
-                        <AddIcon />
-                      </IconButton>
-                    </Tooltip>
-                  </Grid>
-                </Grid>
-                  {OpenTextArr[questionIndex].mcqOptions && 
-                    OpenTextArr[questionIndex].mcqOptions.length > 0 ? 
-                    OpenTextArr[questionIndex].mcqOptions.map((option, mcqOptionIndex) => (
-                      <Grid key={mcqOptionIndex} container spacing={1}>
-                        <Grid item xs={10}>
-                          <TextField
-                            className={classes.textGrid}
-                            variant="outlined"
-                            margin="normal"
-                            required
-                            value={option.optionText}
-                            label={MCQ_PAGE.TYPE_RESPONSE_OPTION_HERE}
-                            onChange={(e) => handleMcqOption(option, e)}
-                            autoFocus
-                          />
-                        </Grid>
-                        <Grid item xs={2} className={classes.floatRight}>
-                          <Tooltip title="Delete Mcq Option">
-                            <IconButton aria-label="Delete Mcq Option" className={classes.floatRight} onClick={() => removeMcqOption(questionIndex, mcqOptionIndex)}>
-                              <DeleteIcon />
-                            </IconButton>
-                          </Tooltip>
-                        </Grid>
-                      </Grid>
-                  )) : null}
-              </div>
-            )) : null}
+              )) : null}
+          </div>
+        )) : null}
       <Button
         type="submit"
         variant="contained"

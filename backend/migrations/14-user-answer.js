@@ -20,6 +20,7 @@ export async function up(queryInterface, DataTypes) {
     },
     questionId: {
       allowNull: false,
+      onDelete: 'CASCADE',
       references: {
         key: '_id',
         model: 'Question'
@@ -41,8 +42,12 @@ export async function up(queryInterface, DataTypes) {
     opentextAnswerText: {
       allowNull: true,
       type: DataTypes.STRING(1024)
-    }
+    },
+    finishedAt: {
+      allowNull: false,
+      type: DataTypes.DATE(3),
+    },
   });
-  // await queryInterface.addIndex('UserAnswer', ['userId', 'questionId']);
+  await queryInterface.addIndex('UserAnswer', ['userId', 'questionId', 'mcqOptionId']);
 }
 

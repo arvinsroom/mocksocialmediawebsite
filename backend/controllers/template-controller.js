@@ -123,7 +123,7 @@ const deletePrevTemplate = async (req, res, next) => {
   let transaction;
   try {
     transaction = await db.sequelize.transaction();
-    const data = await Template.destroy({
+    await Template.destroy({
       where: {
         _id
       },
@@ -131,7 +131,9 @@ const deletePrevTemplate = async (req, res, next) => {
     });
     await transaction.commit();
 
-    res.send("Template was successfully deleted.");
+    res.send({
+      message: "Condition was successfully deleted."
+    });
   } catch (error) {
     console.log(error.message);
     if (transaction) await transaction.rollback();
@@ -164,7 +166,7 @@ const updateTemplate = async (req, res, next) => {
     if (templateCode) updateObj['templateCode'] = templateCode;
     if (language) updateObj['language'] = language;
 
-    const data = await Template.update(updateObj, {
+    await Template.update(updateObj, {
       where: {
         _id
       },
@@ -172,7 +174,9 @@ const updateTemplate = async (req, res, next) => {
     });
     await transaction.commit();
 
-    res.send(data);
+    res.send({
+      message: "Success"
+    });
   } catch (error) {
     console.log(error.message);
     if (transaction) await transaction.rollback();
