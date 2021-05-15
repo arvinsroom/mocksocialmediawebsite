@@ -43,11 +43,10 @@ WORKDIR /app/backend
 # copy all the compiled production code
 COPY --from=builder /app/temp/db db
 COPY --from=builder /app/temp/node_modules node_modules
-
-# global install pm2
-RUN npm install pm2 -g
+COPY --from=builder /app/temp/package.json package.json
+COPY --from=builder /app/temp/processes.json processes.json
 
 EXPOSE 8081
 
 # manage service down in production
-CMD [ "pm2-runtime", "./db/index.js" ]
+CMD [ "npm", "run", "pm2" ]
