@@ -44,7 +44,10 @@ WORKDIR /app/backend
 COPY --from=builder /app/temp/db db
 COPY --from=builder /app/temp/node_modules node_modules
 
+# global install pm2
+RUN npm install pm2 -g
+
 EXPOSE 8081
 
 # manage service down in production
-CMD [ "npx", "pm2", "start", "./db/index.js" ]
+CMD [ "pm2-runtime", "./db/index.js" ]
