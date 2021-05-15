@@ -72,7 +72,7 @@ const createUserRegister = async (req, res, next) => {
     // if we reach here, there were some errors thrown, therefore roolback the transaction
     if (transaction) await transaction.rollback();
     res.status(500).send({
-      message: "Some error occurred while saving user registration deatils."
+      message: "Some error occurred while saving user registration details."
     });
   }
 };

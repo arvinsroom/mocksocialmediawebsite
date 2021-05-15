@@ -48,12 +48,12 @@ const create = async (req, res, next) => {
     const bulkRegisterRecords = [];
     for (let i = 0; i < register.length; i++) {
       bulkRegisterRecords.push({
-        referenceValue: register[i].reference,
+        referenceName: register[i].referenceName,
         displayName: register[i].displayName,
         required: register[i].required,
         type: register[i].type,
         storeResponse: register[i].response,
-        order: register[i].order,
+        order: Number(register[i].order) || 0,
         pageId,
         templateId
       });
