@@ -101,9 +101,10 @@ const Register = () => {
     let obj = {
       type: "",
       displayName: "",
-      reference: "",
+      referenceName: "",
       required: false,
       response: false,
+      order: ""
     };
     let newCustomFieldArr = cloneDeep(customFieldArr);
     newCustomFieldArr.push(obj);
@@ -228,8 +229,8 @@ const Register = () => {
               labelId="demo-simple-select-outlined-label"
               id="demo-simple-select-outlined"
               className={classes.marginBottom}
-              value={customField.reference}
-              onChange={(e) => handleCustomField(customField, 'reference', e)}
+              value={customField.referenceName}
+              onChange={(e) => handleCustomField(customField, 'referenceName', e)}
               label={"Please select the Custom Field Reference Name"}
             >
               {customRefs}

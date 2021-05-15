@@ -62,7 +62,6 @@ const updatePage = async (req, res, next) => {
       ));
     }
     let data = await Promise.all(promises);
-    console.log('data for page', data);
     await transaction.commit();
     res.send({
       data
