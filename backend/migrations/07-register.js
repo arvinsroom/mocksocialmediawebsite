@@ -22,7 +22,7 @@ export async function up(queryInterface, DataTypes) {
       defaultValue: false,
       type: DataTypes.BOOLEAN,
     },
-    referenceValue: {
+    referenceName: {
       allowNull: true,
       type: DataTypes.ENUM('PROFILEPHOTO', 'EMAIL', 'USERNAME', 'REALNAME', 'PASSWORD', 'DATE', 'NUMBER')
     },
