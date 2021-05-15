@@ -30,7 +30,7 @@ const Register = ({ data }) => {
       for (let i = 0; i < registerStateArr.length; i++) {
         response[registerStateArr[i]._id] = {
           displayName: registerStateArr[i].displayName,
-          referenceValue: registerStateArr[i].referenceValue,
+          referenceName: registerStateArr[i].referenceName,
           required: registerStateArr[i].required,
           storeResponse: registerStateArr[i].storeResponse,
           value: ""
@@ -152,7 +152,7 @@ const Register = ({ data }) => {
           fullWidth
           type={field.type.toLowerCase()}
           required={field.required}
-          name={field.referenceValue}
+          name={field.referenceName}
           value={registerState.username}
           label={field.displayName}
           onChange={(e) => handleTextField(field._id, e)}
