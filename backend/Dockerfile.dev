@@ -43,8 +43,10 @@ WORKDIR /app/backend
 # copy all the compiled production code
 COPY --from=builder /app/temp/db db
 COPY --from=builder /app/temp/node_modules node_modules
+COPY --from=builder /app/temp/package.json package.json
+COPY --from=builder /app/temp/processes.json processes.json
 
 EXPOSE 8081
 
 # manage service down in production
-CMD [ "npx", "pm2", "start", "./db/index.js" ]
+CMD [ "npm", "run", "pm2" ]
