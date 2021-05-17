@@ -1,4 +1,4 @@
-.feed {
+/* .feed {
   flex: 1;
   display: flex;
   flex-direction: column;
@@ -13,4 +13,9 @@
   border-radius: 8px;
   background-color: white;
   box-shadow: 0px 5px 7px -7px rgba(0,0,0, 0.75);
+} */
+
+.paddingTop {
+  margin-top: 20px !important;
+  margin-bottom: -10% !important;
 }
