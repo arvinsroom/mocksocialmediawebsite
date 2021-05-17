@@ -1,4 +1,4 @@
-import { useEffect, useRef, useCallback } from "react";
+import { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import useStyles from '../../../style';
 import Feed from './Feed/Feed';
@@ -6,7 +6,6 @@ import { Redirect } from 'react-router-dom';
 import "./Facebook.css";
 import {
   getFacebookPostsCount,
-  getFacebookPosts,
   clearFacebookState
 } from "../../../../actions/facebook";
 import { updateFlowActiveState } from '../../../../actions/flowState';
