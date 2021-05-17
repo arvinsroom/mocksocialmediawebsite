@@ -8,6 +8,7 @@ import {
   getFacebookPosts
 } from "../../../../../actions/facebook";
 import Progress from '../../../../Progress';
+import "./Feed.css";
 
 const Feed = () => {
   const allIds = useSelector(state => selectAllPostIds(state));
@@ -43,22 +44,26 @@ const Feed = () => {
   }, [isLoading, finish, currentPostPage, postEachPage, totalPostIds, dispatch])
 
   return (
-    <div className={classes.feed}>
-      {isLoading && <Progress />}
-      {allIds.map((postId, index) => {
-        if (allIds.length === index + 1) {
-          return (<div key={postId} ref={lastPostRef} className={classes.post}>
-            <PostTop id={postId}/>
-            <PostBottom id={postId} />
-          </div>)
-        } else {
-          return (<div key={postId} className={classes.post}>
-            <PostTop id={postId}/>
-            <PostBottom id={postId} />
-          </div>)
-        }
-      })}
-    </div>
+    <>
+      <div className={classes.feed}>
+        {allIds.map((postId, index) => {
+          if (allIds.length === index + 1) {
+            return (<div key={postId} ref={lastPostRef} className={classes.post}>
+              <PostTop id={postId}/>
+              <PostBottom id={postId} />
+            </div>)
+          } else {
+            return (<div key={postId} className={classes.post}>
+              <PostTop id={postId}/>
+              <PostBottom id={postId} />
+            </div>)
+          }
+        })}
+      </div>
+      <div className="paddingTop">
+        {isLoading && <Progress />}
+      </div>
+    </>
   );
 };
 

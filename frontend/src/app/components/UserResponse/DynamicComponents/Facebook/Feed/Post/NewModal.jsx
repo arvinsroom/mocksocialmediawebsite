@@ -119,7 +119,7 @@ const NewModal = ({ setModalOpen }) => {
                   className="newFeedInputArea"
                   type="text"
                   // placeholder={`What's on your mind, ${userName.split(' ')[0]}?`} />
-                  placeholder={fbTranslations?.["what's_on_your_mind"] || FB_TRANSLATIONS_DEFAULT.WHATS_ON_YOUR_MIND} />
+                  placeholder={fbTranslations?.["what's_on_your_mind?"] || FB_TRANSLATIONS_DEFAULT.WHATS_ON_YOUR_MIND} />
               </div>
 
               {avatar &&
