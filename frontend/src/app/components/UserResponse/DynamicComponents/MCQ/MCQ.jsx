@@ -67,7 +67,7 @@ const MCQ = ({ data }) => {
         dispatch(showSuccessSnackbar((translations?.responses_saved) || USER_TRANSLATIONS_DEFAULT.RESPONSES_SAVED));
         dispatch(updateFlowActiveState());
       } else {
-        dispatch(showInfoSnackbar((translations?.please_answer_all_required_questions_to_continue) || USER_TRANSLATIONS_DEFAULT.ENTER_REQUIRED_INFO));
+        dispatch(showInfoSnackbar((translations?.['please_answer_all_required_questions_to_continue.']) || USER_TRANSLATIONS_DEFAULT.ENTER_REQUIRED_INFO));
       }
     } catch (error) {
       const resMessage =
