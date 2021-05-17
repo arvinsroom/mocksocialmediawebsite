@@ -31,6 +31,7 @@ export async function up(queryInterface, DataTypes) {
     // these entries are selected by user to be true
     mcqOptionId: {
       allowNull: true,
+      onDelete: 'CASCADE',
       references: {
         key: '_id',
         model: 'McqOption'

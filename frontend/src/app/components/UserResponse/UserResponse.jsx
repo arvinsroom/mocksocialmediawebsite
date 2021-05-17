@@ -49,12 +49,12 @@ const UserResponse = () => {
     if (finished) {
       return React.createElement(
         () =>
-        <Container component="main" maxWidth="sm" className={classes.centerCard}>
+        <Container component="main" maxWidth="md" className={classes.centerCard}>
           <div>
             <h1>{(translations && translations['thank_you!']) || 'Thank You!'}</h1>
             <p className="lead">
             <strong>
-              {translations?.['your_response_has_been_recorded,_and_you_can_safely_close_this_page'] || USER_TRANSLATIONS_DEFAULT.RESPONSE_SUCCESSFULLY_RECORDED_CLOSE_TAB}
+              {translations?.['your_response_has_been_recorded,_and_you_can_safely_close_this_page.'] || USER_TRANSLATIONS_DEFAULT.RESPONSE_SUCCESSFULLY_RECORDED_CLOSE_TAB}
             </strong>
             </p>
           </div>
