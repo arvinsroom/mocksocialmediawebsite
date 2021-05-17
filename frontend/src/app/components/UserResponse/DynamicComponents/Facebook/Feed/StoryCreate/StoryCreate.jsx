@@ -37,7 +37,7 @@ const StoryCreate = () => {
           <input
           onClick={openModal}
           className="createStoryInputText"
-          placeholder={fbTranslations?.["what's_on_your_mind"] || FB_TRANSLATIONS_DEFAULT.WHATS_ON_YOUR_MIND} />
+          placeholder={fbTranslations?.["what's_on_your_mind?"] || FB_TRANSLATIONS_DEFAULT.WHATS_ON_YOUR_MIND} />
         </form>
       </div>
 
