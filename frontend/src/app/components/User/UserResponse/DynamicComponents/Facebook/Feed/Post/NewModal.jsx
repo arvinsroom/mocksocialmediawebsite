@@ -75,13 +75,10 @@ const NewModal = ({ setModalOpen }) => {
 
   const onImageChange = async (e) => {
     e.preventDefault();
-    console.log('onImageChange');
     if (e.target.files && e.target.files[0]) {
       const selectedFile = e.target.files[0];
-      console.log('selectedFile: ', selectedFile);
       await setFile(selectedFile);
       await setFileName(selectedFile.name || "");
-      console.log('file: ', file);
       if (selectedFile.type.includes('video')) {
         await setType('VIDEO');
         await setVideoAvatar(URL.createObjectURL(selectedFile))
