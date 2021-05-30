@@ -27,13 +27,13 @@ export async function up(queryInterface, DataTypes) {
       },
       type: DataTypes.UUID
     },
-    richText: {
-      allowNull: false,
-      type: DataTypes.TEXT
-    },
     consent: {
+      allowNull: true,
       type: DataTypes.BOOLEAN,
-      defaultValue: false,
+    },
+    isFinish: {
+      allowNull: false,
+      type: DataTypes.BOOLEAN,
     },
     socialMediaPageId: {
       allowNull: true,

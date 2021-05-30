@@ -30,7 +30,7 @@ export default (sequelize, DataTypes) => {
       },
       type: DataTypes.UUID
     },
-    pageFlowOrder: {
+    pageMetaData: {
       allowNull: true,
       type: DataTypes.TEXT,
       defaultValue: null
@@ -47,7 +47,8 @@ export default (sequelize, DataTypes) => {
 
   UserGlobalTracking.associate = (models) => {
     UserGlobalTracking.belongsTo(models.Page, {
-      foreignKey: 'pageId'
+      foreignKey: 'pageId',
+      as: 'pageConfigurations'
     });
     UserGlobalTracking.belongsTo(models.Template, {
       foreignKey: 'activeTemplateId',

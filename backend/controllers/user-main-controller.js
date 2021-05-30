@@ -1,8 +1,10 @@
 import db from "../clients/database-client";
+import { checkIfValidAndNotEmptyObj } from "../utils";
 const User = db.User;
 
 const update = async (req, res, next) => {
   let transaction;
+
   try {
     if (!req.userId) {
       res.status(400).send({
@@ -10,23 +12,22 @@ const update = async (req, res, next) => {
       });
       return;
     }
+
     const { userObj } = req.body;
-    if (!userObj) {
+    if (!checkIfValidAndNotEmptyObj(userObj)) {
       res.status(400).send({
         message: "User data is required!"
       });
       return;
     }
 
-    // create the page first
-    transaction = await db.sequelize.transaction();
-
+    // add more validation to compare incoming data and its types
     const userData = {};
-    // create update object
-    if (userObj.consent) userData['consent'] = userObj.consent;
-    if (userObj.finishedAt) userData['finishedAt'] = userObj.finishedAt;
-    if (userObj.qualtricsId) userData['qualtricsId'] = userObj.qualtricsId;
+    for (const [key, value] of Object.entries(userObj)) {
+      userData[key] = value;
+    }
 
+    transaction = await db.sequelize.transaction();
     // now create a entry for register
     await User.update(userData,
       {
@@ -37,9 +38,9 @@ const update = async (req, res, next) => {
       });
     // if we reach here, there were no errors therefore commit the transaction
     await transaction.commit();
-    // fetch json
+
     res.send({
-      response: "success"
+      response: "User successfuly updated!"
     });
   } catch (error) {
     console.log(error.message);

@@ -22,11 +22,13 @@ export default (sequelize, DataTypes) => {
       },
       type: DataTypes.UUID
     },
-    richText: {
-      allowNull: false,
-      type: DataTypes.TEXT
-    },
     consent: {
+      allowNull: true,
+      type: DataTypes.BOOLEAN,
+      defaultValue: null,
+    },
+    isFinish: {
+      allowNull: false,
       type: DataTypes.BOOLEAN,
       defaultValue: false,
     },

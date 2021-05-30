@@ -1,0 +1,34 @@
+.postMessage {
+  font-family: 'Noto Sans', sans-serif;
+  font-size: 12px;
+}
+
+.link-preview {
+  /* display: table-caption; */             
+  /* make text wrap under image  */
+  text-decoration: none;
+}
+
+.descriptions {
+  background-color: #F2F3F5;
+  padding: 5px;
+}
+
+a.link-preview .link-area .og-title {
+  font-size: medium;
+  padding-bottom: 15px;
+}
+
+.og-title {
+  font-family: 'Noto Sans', sans-serif;
+  color: #828282;
+  font-size: 12px;
+}
+
+.og-description {
+  text-overflow: ellipsis;
+  font-family: 'Noto Sans', sans-serif;
+  color: black;
+  font-size: 12px;
+}
+
