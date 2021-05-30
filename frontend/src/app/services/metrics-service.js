@@ -8,10 +8,7 @@ export const getAdminTemplatesWithUserCount = () => {
 }
 
 export const fetchTemplateData = (templateId) => {
-  let url = '';
-  if (templateId) url = `/metrics/allusers/${templateId}`;
-  else url = "/metrics/allusers";
-  return http.get(url, {
+  return http.get(`/metrics/allusers/${templateId}`, {
     headers: authHeader()
   });
 }

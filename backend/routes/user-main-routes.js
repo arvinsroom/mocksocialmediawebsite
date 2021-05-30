@@ -1,4 +1,4 @@
-import userMain from "../controllers//user-main-controller";
+import userMain from "../controllers/user-main-controller";
 var express = require('express')
 var router = express.Router()
 

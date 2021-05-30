@@ -15,8 +15,13 @@ export default (sequelize, DataTypes) => {
       type: DataTypes.UUID
     },
     optionText: {
-      allowNull: true,
+      allowNull: false,
       type: DataTypes.STRING(1024)
+    },
+    optionOrder: {
+      allowNull: false,
+      defaultValue: 0,
+      type: DataTypes.SMALLINT
     },
   }, {
 		freezeTableName: true, // model name equal to table name

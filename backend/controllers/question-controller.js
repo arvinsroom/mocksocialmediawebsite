@@ -1,11 +1,12 @@
 import page from './create-page';
 import bulkQuestions from './bulk-create-questions';
 import db from "../clients/database-client";
+import { checkIfValidAndNotEmptyArray } from '../utils';
 const Question = db.Question;
 const McqOption = db.McqOption;
 
 const create = async (req, res, next) => {
-  const { templateId, type, pageName, pageQuestionArr } = req.body;
+  const { templateId, type, pageName, pageQuestionArr, richText } = req.body;
   if (!templateId) {
     res.status(400).send({
       message: "Template Id is required!"
@@ -24,7 +25,7 @@ const create = async (req, res, next) => {
     });
     return;
   }
-  if (!pageQuestionArr && Array.isArray(pageQuestionArr)) {
+  if (!checkIfValidAndNotEmptyArray(pageQuestionArr)) {
     res.status(400).send({
       message: "Question data is required!"
     });
@@ -39,7 +40,8 @@ const create = async (req, res, next) => {
     const pageId = await page.pageCreate({
       name: pageName,
       templateId,
-      type
+      type,
+      richText
     }, transaction);
     // add page Id
     // now create the full page with all the questions
@@ -64,20 +66,24 @@ const create = async (req, res, next) => {
   }
 };
 
-const fetchQ = async (pageId) => {
+const fetchQ = async (pageId, transaction) => {
   try {
     const allQuestions = await Question.findAll({
       where: {
         pageId
       },
+      order: [
+        ['order', 'ASC'],
+        [{ model: McqOption, as: 'mcqOption' }, 'optionOrder', 'ASC']
+      ],
       include: [
         {
           model: McqOption,
           as: 'mcqOption',
-          attribute: ['optionText', '_id']
+          attribute: ['_id', 'optionOrder', 'optionText'],
         }
       ]
-    })
+    }, { transaction });
     return allQuestions;
   } catch (error) {
     throw error;
@@ -103,13 +109,11 @@ const fetchAllQuestions = async (req, res, next) => {
     return;
   }
 
-  // for open text,
-  // 1) fetch question object using page Id from question table
-  // let transaction;
+  let transaction;
   try {
-    // transaction = await db.sequelize.transaction();
-    const result = await fetchQ(pageId);
-    // await transaction.commit();
+    transaction = await db.sequelize.transaction();
+    const result = await fetchQ(pageId, transaction);
+    await transaction.commit();
     res.send({
       result
     });

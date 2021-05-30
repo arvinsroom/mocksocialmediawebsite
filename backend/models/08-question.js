@@ -19,9 +19,20 @@ export default (sequelize, DataTypes) => {
       type: DataTypes.STRING(1024)
     },
     required: {
-      defaultValue: true,
+      allowNull: false,
       type: DataTypes.BOOLEAN,
-    }
+      defaultValue: false
+    },
+    multiResponse: {
+      allowNull: false,
+      type: DataTypes.BOOLEAN,
+      defaultValue: false
+    },
+    order: {
+      allowNull: false,
+      type: DataTypes.SMALLINT,
+      defaultValue: 0
+    },
   }, {
 		freezeTableName: true, // model name equal to table name
     timestamps: false, // enable timestamps

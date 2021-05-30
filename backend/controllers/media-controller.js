@@ -1,4 +1,5 @@
 import db from "../clients/database-client";
+import { checkIfValidAndNotEmptyArray } from "../utils";
 import page from './create-page';
 const Media = db.Media;
 const UserPost = db.UserPost;
@@ -33,7 +34,7 @@ const create = async (req, res, next) => {
       });
       return;
     }
-    if (!mediaPosts && Array.isArray(mediaPosts) && mediaPosts.length > 0) {
+    if (!checkIfValidAndNotEmptyArray(mediaPosts)) {
       res.status(400).send({
         message: "Media post object is required!"
       });
@@ -128,7 +129,12 @@ const uploadMultipleFiles = async (req, res, next) => {
         });
       }
     }
-    await Media.bulkCreate(mediaArr, { transaction });
+    // updateOnDuplicate: ['userPostId'],
+    // this won't work yet as we do not have a logic to make userPostId unique
+    // find another way
+    await Media.bulkCreate(mediaArr, {
+      transaction,
+    });
     // if we reach here, there were no errors therefore commit the transaction
     await transaction.commit();
 

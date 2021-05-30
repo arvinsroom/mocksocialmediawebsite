@@ -1,4 +1,5 @@
 import db from "../clients/database-client";
+import { checkIfValidAndNotEmptyObj } from "../utils";
 const UserPostTracking = db.UserPostTracking;
 
 const create = async (req, res, next) => {
@@ -11,31 +12,32 @@ const create = async (req, res, next) => {
       return;
     }
     const { trackObj } = req.body;
-    if (!trackObj) {
+    if (!checkIfValidAndNotEmptyObj(trackObj)) {
       res.status(400).send({
         message: "Tracking data is required!"
       });
       return;
     }
-    if (!trackObj.action) {
+    if (!trackObj.action || !trackObj.userPostId) {
       res.status(400).send({
-        message: "Tracking Action is required!"
+        message: "Tracking action or post data is required!"
       });
       return;
     }
     // create the page first
     transaction = await db.sequelize.transaction();
-    const tracking = {
+    await UserPostTracking.create({
       userId: req.userId,
-      userPostId: trackObj.userPostId || null,
+      userPostId: trackObj.userPostId,
       action: trackObj.action,
-    };
-    await UserPostTracking.create(tracking, { transaction });
+    }, { transaction });
     // if we reach here, there were no errors therefore commit the transaction
     await transaction.commit();
-    // fetch json
+    
+    // console.log(`User with ID ${req.userId} performed ${trackObj.action} action on post with ID ${userPostId}`);
+
     res.send({
-      message: "Success"
+      message: "Tracking data saved!"
     });
   } catch (error) {
     console.log(error.message);
