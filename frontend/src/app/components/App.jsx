@@ -1,23 +1,23 @@
-import Admin from './Admin/Admin';
-import UserLogin from './UserLogin/UserLogin';
-import UserLoginWithQualtricsId from './UserLogin/UserLoginWithQualtricsId';
-import UserResponse from './UserResponse/UserResponse';
-import Configure from './Configure/Configure';
+import AdminLogin from './Admin/AdminLogin/AdminLogin';
+import UserLogin from './User/UserLogin/UserLogin';
+import UserLoginWithQualtricsId from './User/UserLogin/UserLoginWithQualtricsId';
+import UserResponse from './User/UserResponse/UserResponse';
+import AdminPortal from './Admin/AdminPortal/AdminPortal';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
-import SuccessSnackbar from './Snackbar';
+import CustomSnackbar from './Common/Snackbar';
 
 function App() {
   return (
     <>
     <div className="wrapper">
-      <SuccessSnackbar />
+      <CustomSnackbar />
       <BrowserRouter>
         <Switch>
           <Route exact path="/admin/configure">
-            <Configure />
+            <AdminPortal />
           </Route>
           <Route exact path="/admin">
-            <Admin />
+            <AdminLogin />
           </Route>
           <Route exact path="/:accessCode/user-response">
             <UserResponse />

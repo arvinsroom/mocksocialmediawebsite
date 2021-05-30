@@ -4,7 +4,7 @@ import template from "./template";
 import snackbar from './snackbar';
 import userAuth from './userAuth';
 import flowState from './flowState';
-import pageMetaData from './pageMetaData';
+import userRegister from './userRegister';
 import facebook from './facebook';
 
 export default combineReducers({
@@ -14,5 +14,5 @@ export default combineReducers({
   userAuth,
   flowState,
   facebook,
-  pageMetaData
+  userRegister
 });
