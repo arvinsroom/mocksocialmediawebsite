@@ -23,12 +23,9 @@ const NewModal = ({ setModalOpen }) => {
   const [avatar, setAvatar] = useState(null);
   const [videoAvatar, setVideoAvatar] = useState(null);
   const [type, setType] = useState("TEXT");
-  // const userName = useSelector(state => state.facebook.name);
   const pageId = useSelector(state => state.facebook.pageId);
 
   const [file, setFile] = useState(null);
-  const [fileName, setFileName] = useState("");
-  // const [modalStyle] = useState(getModalStyle);
   const [postMessage, setPostMessage] = useState("");
 
   const dispatch = useDispatch();
@@ -44,7 +41,6 @@ const NewModal = ({ setModalOpen }) => {
     await setAvatar(null);
     await setFile(null);
     await setType("TEXT");
-    await setFileName("");
   };
 
   const handleSubmit = async (e) => {
@@ -75,13 +71,9 @@ const NewModal = ({ setModalOpen }) => {
 
   const onImageChange = async (e) => {
     e.preventDefault();
-    console.log('onImageChange');
     if (e.target.files && e.target.files[0]) {
       const selectedFile = e.target.files[0];
-      console.log('selectedFile: ', selectedFile);
       await setFile(selectedFile);
-      await setFileName(selectedFile.name || "");
-      console.log('file: ', file);
       if (selectedFile.type.includes('video')) {
         await setType('VIDEO');
         await setVideoAvatar(URL.createObjectURL(selectedFile))
@@ -156,7 +148,6 @@ const NewModal = ({ setModalOpen }) => {
                         id="upload-photo"
                         type="file"
                         inputProps={{ multiple: false }}
-                        value={fileName}
                         accept="image/*, video/*"
                         onChange={(e) => onImageChange(e)}
                       />

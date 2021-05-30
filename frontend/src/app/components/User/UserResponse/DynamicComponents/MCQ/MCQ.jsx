@@ -28,7 +28,6 @@ const MCQ = ({ data }) => {
     try {
       const { data: response } = await getQuestions(data._id, data.type);
       const resultArr = response.result || null;
-      console.log(resultArr);
       if (resultArr) {
         let normalizeRadioData = {};
         let normalizeCheckboxData = {};
