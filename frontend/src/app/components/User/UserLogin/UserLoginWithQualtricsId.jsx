@@ -32,7 +32,6 @@ const UserLoginWithQualtricsId = () => {
     if (checkValidity(qualtricsId)) {
       // send the username and password to the server
       const qualCode = Number(qualtricsId);
-      console.log(qualCode);
       try {
         await dispatch(updateUserMain({ qualtricsId: qualCode }));
         history.push(`/${accessCode}/user-response`);

@@ -40,8 +40,6 @@ const Template = () => {
     try {
       const { data } = await getAdminTemplatesWithUserCount();
       // we have data.data, data.userPosts, data.adminPosts
-      // console.log('getAdminTemplatesWithUserCount: ', data);
-      console.log(data);
       setTempWithUsersCount(data?.response || null);
     } catch (error) {
       dispatch(showErrorSnackbar("Some error occured while fetching template and user information. Please Refresh the page!"))
