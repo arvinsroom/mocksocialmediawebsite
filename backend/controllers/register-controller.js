@@ -1,4 +1,5 @@
 import db from "../clients/database-client";
+import { checkIfValidAndNotEmptyArray } from "../utils";
 import Page from './create-page';
 const Register = db.Register;
 
@@ -30,9 +31,9 @@ const create = async (req, res, next) => {
       });
       return;
     }
-    if (!register && Array.isArray(register) && register.length > 0) {
+    if (!checkIfValidAndNotEmptyArray(register)) {
       res.status(400).send({
-        message: "Register data is required!"
+        message: "Please enter valid register data!"
       });
       return;
     }
@@ -53,7 +54,7 @@ const create = async (req, res, next) => {
         required: register[i].required,
         type: register[i].type,
         storeResponse: register[i].response,
-        order: Number(register[i].order) || 0,
+        order: register[i].order,
         pageId,
         templateId
       });

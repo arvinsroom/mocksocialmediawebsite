@@ -1,41 +1,49 @@
 import db from "../clients/database-client";
+import { checkIfValidAndNotEmptyArray, checkIfValidAndNotEmptyObj } from '../utils';
+
 const UserAnswer = db.UserAnswer;
 
 const createMCQ = async (req, res, next) => {
-  const { mcq } = req.body;
-  if (!mcq) {
-    res.status(400).send({
-      message: "MCQ object is required!"
-    });
-    return;
-  }
-
-  // fetch userId from middleware
-  if (!req.userId) {
-    res.status(400).send({
-      message: "Invalid User Token, please log in again!"
-    });
-    return;
-  }
-
   // create the page first
   let transaction;
   try {
+    // fetch userId from middleware
+    if (!req.userId) {
+      res.status(400).send({
+        message: "Invalid User Token, please log in again!"
+      });
+      return;
+    }
+
+    const { mcq } = req.body;
+    if (!checkIfValidAndNotEmptyArray(mcq)) {
+      res.status(400).send({
+        message: "MCQ data is required!"
+      });
+      return;
+    }
+
     transaction = await db.sequelize.transaction();
-    let promises = [];
-    for (const [key, value] of Object.entries(mcq)) {
-      if (value) {
-        promises.push(UserAnswer.create({
-          userId: req.userId,
-          questionId: key,
-          mcqOptionId: value,
-        }, { transaction }));
+    const promises = [];
+    for (let i = 0; i < mcq.length; i++) {
+      // mcq[i] only contains key as questionId and value as mcqOptionid
+      for (const [key, value] of Object.entries(mcq[i])) {
+        if (value) {
+          promises.push({
+            userId: req.userId,
+            questionId: key,
+            mcqOptionId: value,
+          });
+        }
       }
     }
-    const result = await Promise.all(promises);
+    await UserAnswer.bulkCreate(promises, { transaction });
     // if we reach here, there were no errors therefore commit the transaction
     await transaction.commit();
-    res.send(result);
+
+    res.send({
+      message: "Answers Created!"
+    });
   } catch (error) {
     console.log(error.message);
     // if we reach here, there were some errors thrown, therefore roolback the transaction
@@ -48,40 +56,43 @@ const createMCQ = async (req, res, next) => {
 };
 
 const createOpentext = async (req, res, next) => {
-  const { opentext } = req.body;
-  if (!opentext) {
-    res.status(400).send({
-      message: "Opentext object is required!"
-    });
-    return;
-  }
-
-  // fetch userId from middleware
-  if (!req.userId) {
-    res.status(400).send({
-      message: "Invalid User Token, please log in again!"
-    });
-    return;
-  }
-
   // create the page first
   let transaction;
   try {
+    // fetch userId from middleware
+    if (!req.userId) {
+      res.status(400).send({
+        message: "Invalid User Token, please log in again!"
+      });
+      return;
+    }
+
+    const { opentext } = req.body;
+    if (!checkIfValidAndNotEmptyObj(opentext)) {
+      res.status(400).send({
+        message: "Opentext data is required!"
+      });
+      return;
+    }
+
     transaction = await db.sequelize.transaction();
     let promises = [];
     for (const [key, value] of Object.entries(opentext)) {
       if (value) {
-        promises.push(UserAnswer.create({
+        promises.push({
           userId: req.userId,
           questionId: key,
           opentextAnswerText: value
-        }, { transaction }));
+        });
       }
     }
-    const result = await Promise.all(promises);
+
+    await UserAnswer.bulkCreate(promises, { transaction });
     // if we reach here, there were no errors therefore commit the transaction
     await transaction.commit();
-    res.send(result);
+    res.send({
+      message: "Answers created!"
+    });
   } catch (error) {
     console.log(error.message);
     // if we reach here, there were some errors thrown, therefore roolback the transaction

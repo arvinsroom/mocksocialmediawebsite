@@ -11,7 +11,7 @@ export async function up(queryInterface, DataTypes) {
     },
     action: {
       allowNull: false,
-      type: DataTypes.ENUM('LIKE', 'COMMENT', 'UPVOKE', 'TWEET', 'LOVE')
+      type: DataTypes.ENUM('LIKE', 'LOVE', 'HAHA', 'WOW', 'SAD', 'ANGRY', 'COMMENT', 'TWEET', 'RETWEET')
     },
     comment: {
       allowNull: true,
@@ -40,6 +40,6 @@ export async function up(queryInterface, DataTypes) {
       type: DataTypes.UUID
     }
   });
-  await queryInterface.addIndex('UserPostAction', ['userPostId']);
+  await queryInterface.addIndex('UserPostAction', ['userPostId', 'userId']);
 }
 

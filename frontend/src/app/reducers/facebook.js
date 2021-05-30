@@ -15,7 +15,7 @@ const initialState = {
   posts: {},
   metaData: {},
   allIds: [],
-  name: "",
+  // name: "",
   isLoading: false,
   pageId: null,
   totalPostCount: 0,
@@ -40,7 +40,7 @@ export default function (state = initialState, action) {
         postEachPage: 5,
         totalPostIds: payload.totalPostIds,
         pageId: payload.pageId,
-        name: payload.name,
+        // name: payload.name,
         posts: {},
         metaData: {},
         allIds: [],
@@ -94,7 +94,7 @@ export default function (state = initialState, action) {
             ...state.metaData,
             [payload.postId]: {
               ...state.metaData[payload.postId],
-              like: true,
+              like: payload.like,
               actionId: payload.actionId
             }
           }
@@ -107,7 +107,7 @@ export default function (state = initialState, action) {
           ...state.metaData,
           [payload.postId]: {
             ...state.metaData[payload.postId],
-            like: false,
+            like: 'default',
             actionId: null
           }
         }
@@ -133,7 +133,8 @@ export default function (state = initialState, action) {
           [payload._id]: {
             _id: payload._id,
             type: type,
-            name: state.name,
+            // name: state.name,
+            userPost: true,
             postMessage: postMessage,
             parentPostId: parentPostId,
             attachedMedia: payload.attachedMedia
@@ -143,7 +144,7 @@ export default function (state = initialState, action) {
         metaData: {
           [payload._id]: {
             comments: [],
-            like: false,
+            like: 'default',
             actionId: null,
             parentPostId: parentPostId,
           },
@@ -164,7 +165,7 @@ export default function (state = initialState, action) {
         posts: {},
         metaData: {},
         allIds: [],
-        name: "",
+        // name: "",
         isLoading: false,
         pageId: null,
         totalPostCount: 0,

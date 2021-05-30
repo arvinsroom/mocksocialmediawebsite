@@ -1,6 +1,6 @@
 import db from "../clients/database-client";
+import { checkIfValidAndNotEmptyArray } from "../utils";
 const Language = db.Language;
-const GlobalLanguage = db.GlobalLanguage;
 
 const create = async (req, res, next) => {
   const { templateId, languageData } = req.body;
@@ -10,7 +10,7 @@ const create = async (req, res, next) => {
     });
     return;
   }
-  if (!languageData && Array.isArray(languageData) && languageData.length > 0) {
+  if (!checkIfValidAndNotEmptyArray(languageData)) {
     res.status(400).send({
       message: "Language data is required!"
     });

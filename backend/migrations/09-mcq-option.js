@@ -19,8 +19,12 @@ export async function up(queryInterface, DataTypes) {
       type: DataTypes.UUID
     },
     optionText: {
-      allowNull: true,
+      allowNull: false,
       type: DataTypes.STRING
+    },
+    optionOrder: {
+      allowNull: false,
+      type: DataTypes.SMALLINT
     },
   });
   await queryInterface.addIndex('McqOption', ['questionId']);

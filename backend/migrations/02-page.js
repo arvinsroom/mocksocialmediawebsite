@@ -35,6 +35,10 @@ export async function up(queryInterface, DataTypes) {
       allowNull: false,
       type: DataTypes.SMALLINT
     },
+    richText: {
+      allowNull: true,
+      type: DataTypes.TEXT
+    },
     appearTime: {
       allowNull: false,
       type: DataTypes.SMALLINT
