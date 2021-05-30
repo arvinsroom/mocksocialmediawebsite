@@ -23,8 +23,16 @@ export async function up(queryInterface, DataTypes) {
       type: DataTypes.STRING
     },
     required: {
-      defaultValue: true,
+      allowNull: false,
       type: DataTypes.BOOLEAN,
+    },
+    multiResponse: {
+      allowNull: false,
+      type: DataTypes.BOOLEAN,
+    },
+    order: {
+      allowNull: false,
+      type: DataTypes.SMALLINT
     }
   });
   await queryInterface.addIndex('Question', ['pageId']);

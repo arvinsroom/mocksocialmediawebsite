@@ -1,72 +1,62 @@
 import db from "../clients/database-client";
+import { checkIfValidAndNotEmptyArray } from "../utils";
 const Question = db.Question;
 const McqOption = db.McqOption;
 
 // here we will recieve array of mcq options
-const mcqBulkCreate = async (mcqOptions, questionId, transaction) => {
+const mcqBulkCreate = async (options, questionId, transaction) => {
   if (!questionId) throw "Question Id is required!";
   // recieve a question array
-  if (mcqOptions && mcqOptions.length < 1) {
+  if (options?.length < 1) {
     throw "Atleast one option is required for MCQ questions!";
   }
   // formulate the mcq options object
-  for(let i = 0; i < mcqOptions.length; i++) {
-    if (!mcqOptions[i].optionText) throw "Option Text is required!";
-    mcqOptions[i].questionId = questionId;
+  const mcqOptions = [];
+  for(let i = 0; i < options.length; i++) {
+    const tempObj = {};
+    if (!options[i].optionText) throw "Option text is requiret!";
+    tempObj.questionId = questionId;
+    tempObj.optionText = options[i].optionText;
+    tempObj.optionOrder = options[i].optionOrder || 0;
+    mcqOptions.push(tempObj);
   }
   
   try {
-    await McqOption.bulkCreate(mcqOptions, { transaction });
-    // return data;
-    return;
+    return await McqOption.bulkCreate(mcqOptions, { transaction });
   } catch (error) {
-    throw error.message || "Some error occurred while creating the Mcq options record(s).";
-  }
-};
-
-// default required to true
-const questionCreate = async (questionText, required, pageId, transaction) => {
-  if (!questionText) throw "Question Text field is required!";
-  // check if required is defined
-  if (typeof required === 'undefined') throw "Required field is required!";
-
-  const question = {
-    pageId,
-    required,
-    questionText
-  };
-  try {
-    const data = await Question.create(question, { transaction });
-    return data._id;
-  }
-  catch(error) {
     console.log(error.message);
-    throw error.message || "Some error occurred while creating a Question record.";
+    throw "Some error occurred while creating the Mcq options record(s).";
   }
 };
 
-// here we will recieve array of questions with, required and page Id
+// here we will recieve array of questions with, required and page Id, order, multiResponse,
 const bulkCreate = async (questions, type, pageId, transaction) => {
   if (!type) throw "Type is required!";
   if (!pageId) throw "Page Id id is required!";
 
   // recieve a question array
-  if (questions && questions.length < 1 && Array.isArray(questions)) {
-    throw 'Please provide atleast one question!';
+  if (!checkIfValidAndNotEmptyArray(questions)) {
+    throw 'Please provide a valid question.';
   }
 
-  let result = [];
   for(let i = 0; i < questions.length; i++) {
+    if (!questions[i].questionText) throw "Question Text field is required!";
     // then create a single option
-    const questionId = await questionCreate(questions[i].questionText, questions[i].required, pageId, transaction);
-    result.push(questionId);
+    const questionObj = {
+      questionText: questions[i].questionText,
+      required: questions[i].required || false,
+      order: questions[i].order || 0,
+      multiResponse: questions[i].multiResponse || false,
+      pageId
+    };
+
+    const { _id: questionId } = await Question.create(questionObj, { transaction });
+
     if (type === 'MCQ') {
       await mcqBulkCreate(questions[i].mcqOptions, questionId, transaction);
     }
   }
-  return result;
 };
-
 
 export default {
   bulkCreate,

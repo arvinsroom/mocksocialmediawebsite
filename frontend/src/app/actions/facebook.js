@@ -42,7 +42,7 @@ export const getFacebookPostsCount = (data) => (dispatch) => {
           totalPostCount,
           totalPostIds: postIds,
           pageId: data.pageId,
-          fbTranslations: fbTranslations
+          fbTranslations: fbTranslations,
           // name: chance.name(),
         }
       });
@@ -86,9 +86,9 @@ export const getFacebookPosts = (data) => (dispatch) => {
       for (let i = 0; i < postRecords.length; i++) {
         const eachId = postRecords[i]._id;
         // posts[eachId] = { ...postRecords[i], name: chance.name() };
-        posts[eachId] = { ...postRecords[i] };
+        posts[eachId] = { ...postRecords[i], userPost: false };
         metaData[eachId] = {
-          like: false,
+          like: 'default',
           actionId: null,
           parentPostId: null,
           comments: [],
@@ -148,6 +148,7 @@ export const likeFbPost = (data, id) => (dispatch) => {
         type: SET_FB_POST_LIKE,
         payload: {
           postId: id,
+          like: data.action,
           actionId: response.data._id
         }
       });
@@ -256,12 +257,7 @@ export const createFbPost = (data) => (dispatch) => {
           attachedMedia: response.data.attachedMedia, // [{ _id: ..., other media details }]
         }
       });
-
-      dispatch({
-        type: SNACKBAR_SUCCESS,
-        payload: "Post successfully created",
-      });
-
+      
       dispatch({
         type: SET_FB_LOADING,
         payload: {

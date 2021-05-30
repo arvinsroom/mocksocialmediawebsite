@@ -86,7 +86,7 @@ export default (sequelize, DataTypes) => {
       }
     });
     UserPost.belongsTo(models.UserPost, {
-      as: 'userPosts',
+      as: 'parentUserPost',
       foreignKey: 'parentPostId'
     });
     UserPost.belongsTo(models.Page, {

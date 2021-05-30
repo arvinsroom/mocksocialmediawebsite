@@ -9,8 +9,12 @@ export async function up(queryInterface, DataTypes) {
       primaryKey: true,
       type: DataTypes.UUID,
     },
+    action: {
+      allowNull: false,
+      type: DataTypes.ENUM('LIKE', 'LINKCLICK', 'LOVE', 'HAHA', 'WOW', 'SAD', 'ANGRY', 'TWEET', 'RETWEET')
+    },
     userPostId: {
-      allowNull: true,
+      allowNull: false,
       onDelete: 'CASCADE',
       references: {
         key: '_id',
@@ -27,15 +31,11 @@ export async function up(queryInterface, DataTypes) {
       },
       type: DataTypes.UUID
     },
-    action: {
-      allowNull: false,
-      type: DataTypes.ENUM('LIKE', 'LINKCLICK')
-    },
     createdAt: {
       allowNull: false,
       type: DataTypes.DATE(3),
-    },
+    }
   });
-  await queryInterface.addIndex('UserPostTracking', ['userId']);
+  await queryInterface.addIndex('UserPostTracking', ['userId', 'userPostId']);
 }
 

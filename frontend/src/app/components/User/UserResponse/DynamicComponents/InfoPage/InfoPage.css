@@ -1,0 +1,13 @@
+.DraftEditor-root {
+  font-family: 'Noto Sans', sans-serif;
+  font-size: 12px;
+}
+
+p {
+  font-family: 'Noto Sans', sans-serif;
+  font-size: 12px;
+}
+
+.fakePostDetails {
+  margin: 8px;
+}

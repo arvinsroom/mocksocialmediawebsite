@@ -32,6 +32,11 @@ export default (sequelize, DataTypes) => {
       type: DataTypes.SMALLINT,
       defaultValue: 0
     },
+    richText: {
+      allowNull: true,
+      type: DataTypes.TEXT,
+      defaultValue: null
+    },
     appearTime: {
       allowNull: false,
       type: DataTypes.SMALLINT,

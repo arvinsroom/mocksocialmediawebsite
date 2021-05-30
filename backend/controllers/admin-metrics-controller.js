@@ -1,194 +1,236 @@
 import db from "../clients/database-client";
-
-const Template = db.Template;
+import { 
+  normalizeUserAndTemplateData,
+  formQuestionsIdsArray,
+  formulateQuestionAnswerSpreadSheet,
+  formGlobalSocialMediaPageIdsArray,
+  formulateUserGlobalTracking,
+  formulateUserPostActionsTracking,
+  formulateUserPostLinkClickTracking,
+  formulateUserPosts,
+  formulateHeaders
+} from './helper/admin-metrics-helper';
 
 const getUserData = async (req, res, next) => {
-  // fetch the adminId added from middleware
-  // if (!req.adminId) {
-  //   res.status(400).send({
-  //     message: "Invalid Token, please log in again!"
-  //   });
-  //   return;
-  // }
-
-  const { adminId, templateId, userId } = req.params;
-
-  let whereClauseTemplate = {
-    adminId: adminId,
-  };
-  let whereClauseUser = null;
+  let transaction;
   try {
-    if (templateId && userId) {
-      console.log(`Fetching user details for Template with templateId ${templateId} and user with userId ${userId}.`);
-      whereClauseTemplate._id = templateId;
-      whereClauseUser = {
-        _id: userId
-      };
-    } else if (templateId && !userId) {
-      console.log(`Fetching all users details for Template with templateId ${templateId}`);
-      whereClauseTemplate._id = templateId;
-    } else {
-      console.log(`Fetching all Template and User details for Admin with admin Id ${req.adminId}`);
+    if (!req.adminId) {
+      res.status(400).send({
+        message: "Invalid Token, please log in again!"
+      });
+      return;
     }
-    // normalize as much as we can
-    const data = await Template.findAll({
-      where: whereClauseTemplate,
-      attributes: {
-        include: [
-          ['_id', 'templateId'],
-          ['videoPermission', 'Requested Video Permission'],
-          ['audioPermission', 'Requested Audio Permission'],
-          ['cookiesPermission', 'Requested Cookies Permission'],
-          ['name', 'Template Name'],
-          ['qualtricsId', 'Requested Qualtrics Id'],
-        ],
-        exclude: ['_id', 'videoPermission', 'audioPermission', 'cookiesPermission', 'name', 'qualtricsId']
+
+    const { templateId } = req.params;
+    if (!templateId) {
+      res.status(400).send({
+        message: "Invalid template Id!"
+      });
+      return;
+    }
+    transaction = await db.sequelize.transaction();
+    const allUserData = await db.User.findAll({
+      where: {
+        templateId,
       },
       include: [
         {
-          where: whereClauseUser,
-          model: db.User,
-          as: 'user',
+          where: {
+            _id: templateId
+          },
+          model: db.Template,
+          as: 'template',
           attributes: {
             include: [
-              ['_id', 'userId']
+              ['name', 'templateName'],
+              'templateCode',
+              'language'
             ],
-            exclude: ['templateId', '_id']
+            exclude: ['_id', 'adminId', 'videoPermission', 'audioPermission', 'cookiesPermission', 'qualtricsId']
           },
+        },
+        {
+          model: db.UserAnswer,
+          as: 'userQuestionAnswers',
           include: [
             {
-              model: db.UserPostAction,
-              as: 'userPostActions',
-              attributes: {
-                exclude: ['userId', '_id', 'userPostId', 'adminPostId']
-              },
-              include: [
-                {
-                  model: db.UserPost,
-                  as: 'userPosts',
-                  attributes: ['_id'],
-                  // include: [
-                  //   {
-                  //     model: db.Media,
-                  //     as: 'attachedMediaUser',
-                  //     attributes: {
-                  //       exclude: ['media', 'adminPostId', 'userPostId']
-                  //     }
-                  //   }
-                  // ],
-                },
-                {
-                  model: db.AdminPost,
-                  as: 'adminPosts',
-                  attributes: ['_id'],
-                  // include: [
-                  //   {
-                  //     model: db.Media,
-                  //     as: 'attachedMedia',
-                  //     attributes: {
-                  //       exclude: ['media', 'adminPostId', 'userPostId']
-                  //     }
-                  //   }
-                  // ],
-                },
-              ]
+              model: db.Question,
+              as: 'question',
             },
             {
-              model: db.UserRegister,
-              as: 'userRegisterations',
+              model: db.McqOption,
+              as: 'mcqOption',
+            }
+          ]
+        },
+        {
+          model: db.UserGlobalTracking,
+          as: 'userGlobalTracking',
+          include: [
+            {
+              model: db.Page,
+              as: 'pageConfigurations'
+            }
+          ]
+        },
+        {
+          // will only select the posts which have userId associated with them
+          model: db.UserPost,
+          as: 'userPosts',
+          include: [
+            {
+              // fetch any media associated with user created post
+              model: db.Media,
+              as: 'attachedMedia',
               attributes: {
-                exclude: ['profilePic', 'userId']
+                exclude: ['media', 'userPostId']
               }
             },
             {
-              model: db.UserAnswer,
-              as: 'userQuestionAnswers',
-              attributes: {
-                include: [
-                  ['_id', 'userResponseId']
-                ],
-                exclude: ['userId', '_id', 'questionId', 'mcqOptionId']
-              },
+              // for shared post fetch its parent post data
+              model: db.UserPost,
+              as: 'parentUserPost',
               include: [
                 {
-                  model: db.Question,
-                  as: 'question',
+                  // fetch any media associated with its parent post
+                  model: db.Media,
+                  as: 'attachedMedia',
                   attributes: {
-                    exclude: ['_id', 'pageId']
-                  },
-                },
-                {
-                  model: db.McqOption,
-                  as: 'mcqOption',
-                  attributes: ['optionText']
+                    exclude: ['media', 'userPostId']
+                  }
                 }
               ]
             }
           ]
         },
         {
-          model: db.Page,
-          as: 'pageFlowConfigurations',
-          attributes: {
-            exclude: ['templateId', '_id']
-          },
+          model: db.UserPostAction,
+          as: 'userPostActions',
           include: [
             {
-              model: db.Register,
-              as: 'register',
-              attributes: {
-                exclude: ['_id', 'templateId', 'pageId']
-              },
-            },
-            {
-              model: db.Finish,
-              as: 'finish',
-              attributes: {
-                exclude: ['_id', 'templateId', 'pageId']
-              },
-            },
-            {
-              model: db.Info,
-              as: 'info',
-              attributes: {
-                exclude: ['_id', 'templateId', 'pageId']
-              },
-            },
-            {
-              model: db.Question,
-              as: 'question',
-              attributes: {
-                exclude: ['_id', 'pageId']
-              },
-              include: [
-                {
-                  model: db.McqOption,
-                  as: 'mcqOption',
-                  attributes: {
-                    exclude: ['_id', 'questionId']
-                  },
-                }
-              ]
-            },
+              // we might need to show adminId where applicable
+              model: db.UserPost,
+              as: 'userPosts',
+              attributes: ['_id', 'adminPostId']
+            }
           ]
         },
-      ],
-      // required: true
-    });
+        {
+          model: db.UserPostTracking,
+          as: 'userPostTracking',
+          include: [
+            {
+              // we might need to show adminId where applicable
+              model: db.UserPost,
+              as: 'userPosts',
+              attributes: ['_id', 'adminPostId']
+            }
+          ]
+        }
+      ]
+    }, { transaction });
 
-    // process all the admin and user posts differently and fetch any media associated with them
-    const userPosts = [];
-    const adminPosts = [];
+    const templateAdminPortalQuestionsData = await db.Template.findOne({
+      where: {
+        // adminId: req.adminId,
+        _id: templateId,
+      },
+      include: [
+        {
+          // try to fetch all MCQ and OPENTEXT page
+          where: {
+            type: ['OPENTEXT', 'MCQ']
+          },
+          model: db.Page,
+          as: 'pageFlowConfigurations',
+          include: [
+            {
+              // what to include when fetching pages
+              model: db.Question,
+              as: 'question'
+            }
+          ]
+        }
+      ],
+    }, { transaction});
+
+    const globalSocialMediaPageData = await db.Template.findOne({
+      where: {
+        // adminId: req.adminId,
+        _id: templateId,
+      },
+      include: [
+        {
+          // try to fetch all MCQ and OPENTEXT page
+          where: {
+            type: ['FACEBOOK', 'TWITTER']
+          },
+          model: db.Page,
+          as: 'pageFlowConfigurations'
+        }
+      ],
+    }, { transaction});
+    
+    // stringify and parse the globalSocialMediaPageData
+    const globalSocialMediaPageJSONData = JSON.parse(JSON.stringify(globalSocialMediaPageData));
+    const globalSocailMediaDynamicArray = formGlobalSocialMediaPageIdsArray(globalSocialMediaPageJSONData);
+
+    // stringify and parse the allUserData
+    const allUserJSONData = JSON.parse(JSON.stringify(allUserData));
+
+    // stringify and parse the allUserData
+    const templateAdminPortalQuestionsJSONData = JSON.parse(JSON.stringify(templateAdminPortalQuestionsData));
+    // normalize the templateAdminPortalQuestionsData to make dynamic headers
+    const questionIdsDynamicArray = formQuestionsIdsArray(templateAdminPortalQuestionsJSONData);
+
+    
+    const spreadsheetData = [];
+    spreadsheetData.push(formulateHeaders(questionIdsDynamicArray, globalSocailMediaDynamicArray));
+    // fetch all the data from all the user responses
+    for (let i = 0; i < allUserJSONData.length; i++) {
+      // fetch individual user responses
+      const {
+        template,
+        userQuestionAnswers,
+        userGlobalTracking,
+        userPosts,
+        userPostActions,
+        userPostTracking,
+        ...userResponse
+      } = allUserJSONData[i];
+
+      // for userResponse try to add it to the
+      const eachRow = [];
+      // try to add everything for userResponse and template specific
+      const userResponseAndTemplate = {
+        ...userResponse,
+        ...template
+      };
+      eachRow = [ ...eachRow, ...normalizeUserAndTemplateData(userResponseAndTemplate)];
+      // try to add everything for userQuestionAnswers
+      // Step 1: fetch all the possible questions for a template so that we know what the headers look like
+      // second while iterating through them add the mcq answers from the user response
+      eachRow = [...eachRow, ...formulateQuestionAnswerSpreadSheet(questionIdsDynamicArray, userQuestionAnswers)]
+      // output userGlobalTracking 
+      eachRow = [ ...eachRow, ...formulateUserGlobalTracking(globalSocailMediaDynamicArray, userGlobalTracking)];
+      // output userPostActions
+      eachRow = [ ...eachRow, ...formulateUserPostActionsTracking(userPostActions)];
+      // output userPostTracking
+      eachRow = [ ...eachRow, formulateUserPostLinkClickTracking(userPostTracking)];
+      // output userPosts
+      eachRow = [ ...eachRow, ...formulateUserPosts(userPosts)];
+
+      spreadsheetData.push(eachRow);
+    }
 
     res.send({
-      data,
-      userPosts,
-      adminPosts,
+      response: allUserData || [],
+      CSVResponses: spreadsheetData || [],
     });
   } catch (error) {
-    console.log(error.message);
+    console.log(error);
     res.status(500).send({
-      message: "Some error occurred while fetching Metrics data."
+      message: "Some error occurred while fetching metrics data."
     });
   }
 };
@@ -202,7 +244,7 @@ const getTemplatesWithUserCounts = async (req, res, next) => {
       return;
     }
 
-    const data = await Template.findAll({
+    const data = await db.Template.findAll({
       where: {
         adminId: req.adminId,
       },

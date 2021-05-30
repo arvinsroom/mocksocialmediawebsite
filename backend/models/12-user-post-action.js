@@ -6,6 +6,15 @@ export default (sequelize, DataTypes) => {
       type: DataTypes.UUID,
       defaultValue: DataTypes.UUIDV4 // create a default UUIDV4 for each record
     },
+    action: {
+      allowNull: false,
+      type: DataTypes.ENUM('LIKE', 'LOVE', 'HAHA', 'WOW', 'SAD', 'ANGRY', 'COMMENT', 'TWEET', 'RETWEET')
+    },
+    comment: {
+      allowNull: true,
+      type: DataTypes.STRING,
+      defaultValue: null
+    },
     userId: {
       allowNull: false,
       references: {
@@ -21,14 +30,6 @@ export default (sequelize, DataTypes) => {
         model: 'UserPost'
       },
       type: DataTypes.UUID
-    },
-    action: {
-      allowNull: false,
-      type: DataTypes.ENUM('LIKE', 'COMMENT', 'UPVOKE', 'TWEET', 'LOVE')
-    },
-    comment: {
-      allowNull: true,
-      type: DataTypes.STRING
     },
     createdAt: {
       allowNull: false,

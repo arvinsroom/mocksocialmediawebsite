@@ -36,7 +36,7 @@ export async function up(queryInterface, DataTypes) {
       },
       type: DataTypes.UUID
     },
-    pageFlowOrder: {
+    pageMetaData: {
       allowNull: true,
       type: DataTypes.TEXT,
     },

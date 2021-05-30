@@ -63,19 +63,37 @@ export default (sequelize, DataTypes) => {
         allowNull: false
       }
     });
-    // User.hasMany(models.UserPost, {
-    //   as: 'userPosts',
-    //   foreignKey: {
-    //     name: 'userId',
-    //     allowNull: false
-    //   }
-    // });
+    User.hasMany(models.UserPost, {
+      as: 'userPosts',
+      foreignKey: {
+        name: 'userId',
+        allowNull: false
+      }
+    });
+    User.hasMany(models.UserGlobalTracking, {
+      as: 'userGlobalTracking',
+      foreignKey: {
+        name: 'userId',
+        allowNull: false
+      },
+    });
+    User.hasMany(models.UserPostTracking, {
+      as: 'userPostTracking',
+      foreignKey: {
+        name: 'userId',
+        allowNull: false
+      },
+    });
     User.hasMany(models.UserPostAction, {
       as: 'userPostActions',
       foreignKey: {
         name: 'userId',
         allowNull: false
       },
+    });
+    User.belongsTo(models.Template, {
+      as: 'template',
+      foreignKey: 'templateId'
     });
   };
 

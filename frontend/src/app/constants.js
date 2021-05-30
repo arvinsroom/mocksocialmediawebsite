@@ -64,7 +64,7 @@ export const FLOW_PAGE = Object.freeze({
 });
 
 export const DATA_PAGE = Object.freeze({
-  DATA_PAGE_NOTE: 'Use the download button to download data from all conditions, or download the data for individual conditions using the table.',
+  DATA_PAGE_NOTE: 'Press the first button to download CSV data, or the second button to download CSV.',
   CONDITION_ID: 'Condition ID',
   CONDITION_NAME: 'Condition Name',
   RESPONSES: 'Responses',
@@ -101,7 +101,7 @@ export const GENERAL_PAGE = Object.freeze({
   SELECT_SOCIAL_MEDIA_LAYOUT: 'Select social media layout',
   SELECT_ORDER_OF_PRESENTATION_OF_POSTS: 'Select order of presentation of posts',
   UPLOAD_SPREADSHEET_OF_SOCIAL_MEDIA_POSTS: 'Upload spreadsheet of social media posts',
-  SUCCESSFULLY_UPLOADED_SOCAIL_MEDIA_SPREADSHEET: 'Successfully uploaded spreadsheet of social media posts',
+  SUCCESSFULLY_UPLOADED_SOCIAL_MEDIA_SPREADSHEET: 'Successfully uploaded spreadsheet of social media posts',
   UPLOADING_A_NEW_SPREADSHEET_WILL_OVERWRITE: "Uploading a new language spreadsheet will overwrite any existing language spreadsheet.",
   
   UPLOAD_LANGUAGE_SPREADSHEET: 'Upload language spreadsheet',
@@ -147,6 +147,12 @@ export const USER_LOGIN = Object.freeze({
 
 export const FB_TRANSLATIONS_DEFAULT = Object.freeze({
   LIKE: 'Like',
+  LOVE: 'Love',
+  HAHA: 'Haha',
+  ANGRY: 'Angry',
+  SAD: 'Sad',
+  WOW: 'Wow',
+
   CREATE: 'Create',
   COMMENT: 'Comment',
   POST: 'Post',
@@ -161,7 +167,8 @@ export const FB_TRANSLATIONS_DEFAULT = Object.freeze({
   VIDEO: 'Video',
   FEELING: 'Feeling',
   ACTIVITY: 'Activity',
-  ADD_TO_YOUR_POST: 'Add to Your Post'
+  ADD_TO_YOUR_POST: 'Add to Your Post',
+  COMMENTS: 'Comments'
 });
 
 export const USER_TRANSLATIONS_DEFAULT = Object.freeze({
@@ -192,9 +199,9 @@ export const USER_TRANSLATIONS_DEFAULT = Object.freeze({
   LOGIN: 'Login',
   I_CONSENT:'I consent',
   I_DO_NOT_CONSENT:'I do not consent',
-
-
-  TYPE_YOUR_USERNAME_HERE: 'Type your username here',
+  PLEASE_UPLOAD_FILE_OF_SIZE_LESS_THAN_20MB: 'Please upload file of size less than 20MB.',
+  PLEASE_ENTER_A_VALID_RESPONSE: 'Please enter a valid response.',
   UPLOAD: 'Upload',
-  PLEASE_ENTER_A_VALID_RESPONSE: 'Please enter a valid response.'
+  TYPE_YOUR_USERNAME_HERE: 'Type your username here',
+  POSTED: 'Posted!'
 });

@@ -1,4 +1,5 @@
 import db from "../clients/database-client";
+import { checkIfValidAndNotEmptyObj } from "../utils";
 const UserPostAction = db.UserPostAction;
 const UserPost = db.UserPost;
 const Media = db.Media;
@@ -9,7 +10,6 @@ const createAction = async (req, res, next) => {
   let transaction;
 
   try {
-    const { actionObj } = req.body;
     // fetch userId from middleware
     if (!req.userId) {
       res.status(400).send({
@@ -17,9 +17,11 @@ const createAction = async (req, res, next) => {
       });
       return;
     }
-    if (!actionObj) {
+
+    const { actionObj } = req.body;
+    if (!checkIfValidAndNotEmptyObj(actionObj)) {
       res.status(400).send({
-        message: "Action Object is required!"
+        message: "Action data is required!"
       });
       return;
     }
@@ -34,7 +36,7 @@ const createAction = async (req, res, next) => {
     const data = await UserPostAction.create(action, { transaction });
     // if we reach here, there were no errors therefore commit the transaction
     await transaction.commit();
-    // fetch json
+
     res.send({
       _id: data._id
     });
@@ -212,19 +214,34 @@ const getFacebookPostIds = async (req, res, next) => {
         attributes: ['adminPostId', '_id']
       }, { transaction });
     }
-    // fetch the renderering order and store that in database, for post tracking
-    const postAdminIds = [];
     const postIds = [];
     if (data.count > 0) {
+      // fetch the old object, if it exist for that user
+      const prevGlobalTrackingObj = await UserGlobalTracking.findOne({
+        where: {
+          userId: req.userId,
+          pageId
+        }
+      }, { transaction });
+
+      let parsedMetaData = {};
+      if (prevGlobalTrackingObj?.pageMetaData) {
+        // parse the metaData
+        parsedMetaData = JSON.parse(prevGlobalTrackingObj.pageMetaData);
+      }
+      parsedMetaData['facebookPostsOrderAdminIds'] = [];
+      // fetch the renderering order and store that in database, for post tracking
       data.rows.forEach(row => {
-        postAdminIds.push(row.adminPostId);
+        parsedMetaData['facebookPostsOrderAdminIds'].push(row.adminPostId);
         postIds.push(row._id);
       });
-      const stringify = JSON.stringify(postAdminIds);
-      console.log('Adding to User Global Tracking: ', stringify);
-      await UserGlobalTracking.create({
+
+      // stringify again the metadata object and upsert it
+      const stringify = JSON.stringify(parsedMetaData);
+      console.log('Adding to User Global Tracking MetaData: ', stringify);
+      await UserGlobalTracking.upsert({
         userId: req.userId,
-        pageFlowOrder: stringify,
+        pageMetaData: stringify,
         pageId
       }, { transaction });
     }
@@ -349,7 +366,7 @@ const getFacebookFakeActionPosts = async (req, res, next) => {
             pageId: pageId
           },
           model: UserPost,
-          as: 'userPosts',
+          as: 'parentUserPost',
           attributes: ['_id', 'type', 'postMessage', 'isFake', 'adminPostId'],
         }
       ]
