@@ -2,6 +2,10 @@
   margin-top: 10px;
   margin-bottom: 10px;
   padding-left: 15px;
-  font-size: 12px;
+  padding-right: 15px;
+}
+
+.postBottom > p {
+  font-size: 12px !important;
   font-family: 'Noto Sans', sans-serif;
 }

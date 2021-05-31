@@ -26,7 +26,7 @@ const UserLogin = () => {
       const tempCode = Number(code);
       try {
         await dispatch(userLogin(tempCode));
-        history.push(`/${tempCode}/qualtrics`);
+        history.push(`/${tempCode}/participantId`);
       } catch (error) {
         history.push("/");
       }

@@ -22,7 +22,7 @@ function App() {
           <Route exact path="/:accessCode/user-response">
             <UserResponse />
           </Route>
-          <Route exact path="/:accessCode/qualtrics">
+          <Route exact path="/:accessCode/participantId">
             <UserLoginWithQualtricsId />
           </Route>
           <Route exact path="/:accessCode?">

@@ -29,6 +29,9 @@ const getUserData = async (req, res, next) => {
       return;
     }
     transaction = await db.sequelize.transaction();
+
+    console.log(`Fetching allUserData for template with ID ${templateId}`);
+
     const allUserData = await db.User.findAll({
       where: {
         templateId,
@@ -128,11 +131,12 @@ const getUserData = async (req, res, next) => {
           ]
         }
       ]
-    }, { transaction });
+    }, { transaction, logging: false });
+
+    console.log(`Fetching templateAdminPortalQuestionsData for template with ID ${templateId}`);
 
     const templateAdminPortalQuestionsData = await db.Template.findOne({
       where: {
-        // adminId: req.adminId,
         _id: templateId,
       },
       include: [
@@ -152,7 +156,9 @@ const getUserData = async (req, res, next) => {
           ]
         }
       ],
-    }, { transaction});
+    }, { transaction, logging: false});
+
+    console.log(`Fetching globalSocialMediaPageData for template with ID ${templateId}`);
 
     const globalSocialMediaPageData = await db.Template.findOne({
       where: {
@@ -169,8 +175,9 @@ const getUserData = async (req, res, next) => {
           as: 'pageFlowConfigurations'
         }
       ],
-    }, { transaction});
-    
+    }, { transaction, logging: false });
+    await transaction.commit();
+
     // stringify and parse the globalSocialMediaPageData
     const globalSocialMediaPageJSONData = JSON.parse(JSON.stringify(globalSocialMediaPageData));
     const globalSocailMediaDynamicArray = formGlobalSocialMediaPageIdsArray(globalSocialMediaPageJSONData);
@@ -183,9 +190,10 @@ const getUserData = async (req, res, next) => {
     // normalize the templateAdminPortalQuestionsData to make dynamic headers
     const questionIdsDynamicArray = formQuestionsIdsArray(templateAdminPortalQuestionsJSONData);
 
-    
     const spreadsheetData = [];
-    spreadsheetData.push(formulateHeaders(questionIdsDynamicArray, globalSocailMediaDynamicArray));
+    console.log('Creating spreadsheet data...');
+    const mainHeadersDynamicArray = formulateHeaders(questionIdsDynamicArray, globalSocailMediaDynamicArray);
+    spreadsheetData.push(mainHeadersDynamicArray);
     // fetch all the data from all the user responses
     for (let i = 0; i < allUserJSONData.length; i++) {
       // fetch individual user responses
@@ -219,16 +227,17 @@ const getUserData = async (req, res, next) => {
       eachRow = [ ...eachRow, formulateUserPostLinkClickTracking(userPostTracking)];
       // output userPosts
       eachRow = [ ...eachRow, ...formulateUserPosts(userPosts)];
-
       spreadsheetData.push(eachRow);
     }
-
+    console.log(`Done! Created all user responses with following dynamic fields ${mainHeadersDynamicArray}.`);
+    
     res.send({
       response: allUserData || [],
       CSVResponses: spreadsheetData || [],
     });
   } catch (error) {
     console.log(error);
+    if (transaction) await transaction.rollback();
     res.status(500).send({
       message: "Some error occurred while fetching metrics data."
     });

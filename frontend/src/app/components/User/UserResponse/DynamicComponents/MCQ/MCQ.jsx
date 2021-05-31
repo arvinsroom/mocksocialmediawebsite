@@ -111,7 +111,7 @@ const MCQ = ({ data }) => {
             }
           }
         }
-        await createMCQ({ mcq: mcqResponse });
+        if (mcqResponse.length > 0) await createMCQ({ mcq: mcqResponse });
         dispatch(showSuccessSnackbar((translations?.responses_saved) || USER_TRANSLATIONS_DEFAULT.RESPONSES_SAVED));
         dispatch(updateFlowActiveState());
       } else {
