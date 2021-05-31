@@ -63,8 +63,9 @@ const create = async (req, res, next) => {
       }
     }
 
+    console.log('Trying to create User Posts from excel file!')
     // create the Post records
-    await UserPost.bulkCreate(mediaArr, { transaction });
+    await UserPost.bulkCreate(mediaArr, { transaction, logging: false });
     // if we reach here, there were no errors therefore commit the transaction
     await transaction.commit();
 
@@ -129,11 +130,13 @@ const uploadMultipleFiles = async (req, res, next) => {
         });
       }
     }
+    console.log(`Trying to create Media entries for ${postData}.`)
     // updateOnDuplicate: ['userPostId'],
     // this won't work yet as we do not have a logic to make userPostId unique
     // find another way
     await Media.bulkCreate(mediaArr, {
       transaction,
+      logging: false
     });
     // if we reach here, there were no errors therefore commit the transaction
     await transaction.commit();

@@ -169,7 +169,7 @@ try {
   app.use('/api/questions', [verifyToken, isAdmin], question);
   app.use('/api/language', [verifyToken, isAdmin], language);
   app.use('/api/page', [verifyToken, isAdmin], page);
-  app.use('/api/media', [verifyToken, isAdmin], media);  
+  app.use('/api/media', [verifyToken, isAdmin], media);
   app.use('/api/metrics', [verifyToken, isAdmin], metrics);
 
   app.use('/api/user/questions', [verifyUserToken, isUser], userQuesion);
