@@ -33,7 +33,8 @@ const createAction = async (req, res, next) => {
       userPostId: actionObj.userPostId || null,
     };
     transaction = await db.sequelize.transaction();
-    const data = await UserPostAction.create(action, { transaction });
+    const data = await UserPostAction.create(action, { transaction, logging: false });
+    console.log(`${action.action} performed by ${action.userId} on user post with ID ${action.userPostId}.`);
     // if we reach here, there were no errors therefore commit the transaction
     await transaction.commit();
 
@@ -76,8 +77,10 @@ const deleteAction = async (req, res, next) => {
         _id,
         userId: req.userId
       },
-      transaction
+      transaction,
+      logging: false
     });
+    console.log(`Deleting action with ID ${_id} for user ${req.userId}.`)
     await transaction.commit();
 
     res.send("Action was successfully deleted.");
@@ -129,8 +132,8 @@ const createNewPost = async (req, res, next) => {
       type,
       parentPostId: parentPostId || null
     };
-    const data = await UserPost.create(post, { transaction });
-
+    const data = await UserPost.create(post, { transaction, logging: false });
+    console.log(`Creating post for user ${req.userId} of type ${type}.`);
     let mediaData = null;
     let attachedMedia = [];
     if (req.file) {
@@ -140,7 +143,8 @@ const createNewPost = async (req, res, next) => {
         media: req.file.buffer,
         mimeType: req.file.mimetype,
       };
-      mediaData = await Media.create(media, { transaction });
+      mediaData = await Media.create(media, { transaction, logging: false });
+      console.log(`Also ataching Media entry for user ${req.userId} with file type as: ${media.mimeType}`);
       attachedMedia.push(mediaData);
     }
 
@@ -243,7 +247,8 @@ const getFacebookPostIds = async (req, res, next) => {
         userId: req.userId,
         pageMetaData: stringify,
         pageId
-      }, { transaction });
+      }, { transaction, logging: false });
+      console.log('Metadata updated!');
     }
 
     // fetch the language data for current page
@@ -293,7 +298,6 @@ const getFacebookPostWithDetails = async (req, res, next) => {
       where: {
         _id: postIds,
       },
-      // attributes: ,
       order: db.sequelize.literal("FIND_IN_SET(UserPost._id,'"+postIds.join(',')+"')"),
       include: [
         {
@@ -301,7 +305,9 @@ const getFacebookPostWithDetails = async (req, res, next) => {
           as: 'attachedMedia',
         }
       ]
-    }, { transaction });
+    }, { transaction, logging: false });
+
+    console.log(`Fetching posts with order perserved: ${postIds}.`)
 
     await transaction.commit();
     res.send({
@@ -334,25 +340,6 @@ const getFacebookFakeActionPosts = async (req, res, next) => {
       return;
     }
 
-    
-    //   {
-      //   
-      //   adminPostId: null,
-      //   type: "VIDEO",
-      //   linkTitle: null,
-      //   link: null,
-      //   linkPreview: null,
-      
-      
-      //   sourceTweet: null,
-      
-      
-      
-      
-      
-      // }
-      //   },
-    //   {
     transaction = await db.sequelize.transaction();
     const shareData = await UserPost.findAll({
       where: {
@@ -367,35 +354,13 @@ const getFacebookFakeActionPosts = async (req, res, next) => {
           },
           model: UserPost,
           as: 'parentUserPost',
-          attributes: ['_id', 'type', 'postMessage', 'isFake', 'adminPostId'],
+          attributes: ['_id', 'type', 'postMessage', 'isFake', 'adminPostId', 'linkTitle'],
         }
       ]
-    }, { transaction });
+    }, { transaction, logging: false });
 
-    // actionPostsData: [
-    //   {
-    
-    
-    
-    //     action: "LIKE",
-    //     comment: null,
-    
-    //     userPosts: {
-    
-    //       adminPostId: null,
-    //       type: "SHARE",
-    //       linkTitle: null,
-    //       link: null,
-    //       linkPreview: null,
-    
-    //       isFake: true,
-    //       sourceTweet: null,
-    
-    
-    
-    
-    //       }
-    //     },
+    console.log(`Fetching fake shared posts by user ${req.userId} on social media page with Id ${pageId}.`);
+
     const actionData = await UserPostAction.findAll({
       where: {
         userId: req.userId
@@ -409,10 +374,12 @@ const getFacebookFakeActionPosts = async (req, res, next) => {
           },
           model: UserPost,
           as: 'userPosts',
-          attributes: ['_id', 'type', 'postMessage', 'isFake', 'adminPostId'],
+          attributes: ['_id', 'type', 'postMessage', 'isFake', 'adminPostId', 'linkTitle'],
         }
       ]
-    }, { transaction });
+    }, { transaction, logging: false });
+
+    console.log(`Fetching fake comments and likes by user ${req.userId} on social media page with Id ${pageId}.`);
 
     await transaction.commit();
     res.send({

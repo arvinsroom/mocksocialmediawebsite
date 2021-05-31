@@ -62,16 +62,13 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  /* padding: 5px; */
   flex: 1;
-  /* height: 44px;
-  margin-bottom: -6px;
-  padding-top: 0;
-  margin-top: -6px; */
 }
 
 .postOption > p {
   margin-left: 10px;
+  font-family: 'Noto Sans', sans-serif;
+  font-size: 12px !important;
 }
 
 .postOption:hover {

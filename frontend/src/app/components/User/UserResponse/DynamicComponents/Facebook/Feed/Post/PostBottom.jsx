@@ -3,17 +3,13 @@ import { likeFbPost, unlikeFbPost, commentFbPost } from '../../../../../../../ac
 import { selectPostsMetadata } from '../../../../../../../selectors/facebook';
 import { useState } from "react";
 import { Avatar } from "@material-ui/core";
-import { showInfoSnackbar } from '../../../../../../../actions/snackbar';
 import ShareModal from './ShareModal';
-import shareLogo from '../../../../../../../../../public/assets/icons/share.png';
-import commentLogo from '../../../../../../../../../public/assets/icons/comment.png';
 import { FB_TRANSLATIONS_DEFAULT } from '../../../../../../../constants';
 import React from 'react';
 import { FacebookSelector } from '@charkour/react-reactions';
 import "./Post.css";
 
 const PostBottom = ({ id }) => {
-  const [isShown, setIsShown] = useState(false);
   const postMetadata = useSelector(state => selectPostsMetadata(state, id));
   const fbTranslations = useSelector(state => state.facebook.fbTranslations);
   const userRegisterData = useSelector(state => state.userRegister.metaData);
@@ -89,17 +85,19 @@ const PostBottom = ({ id }) => {
           onClick={(e) => handleToggleLike(e)}>
             <div className={postMetadata.like.toLowerCase() + 'Emoji'}></div>
             <p className={postMetadata.like.toLowerCase() + 'Text'}>
-              {postMetadata.like === 'default' ? fbTranslations?.['LIKE'] || FB_TRANSLATIONS_DEFAULT?.['LIKE'] : 
-                fbTranslations?.[postMetadata.like] || FB_TRANSLATIONS_DEFAULT?.[postMetadata.like]}
+              <strong>
+              {postMetadata.like === 'default' ? fbTranslations?.['like'] || FB_TRANSLATIONS_DEFAULT?.['LIKE'] : 
+                fbTranslations?.[postMetadata.like.toLowerCase()] || FB_TRANSLATIONS_DEFAULT?.[postMetadata.like]}
+              </strong>
             </p>
         </div>
         <div className="postOption" onClick={toggleComment}>
-          <img src={commentLogo} style={{ width: '3em', height: '3em', marginRight: '-10px'}} alt="comment Logo"/>
-          <p>{fbTranslations?.comment || FB_TRANSLATIONS_DEFAULT.COMMENT}</p>
+          <div className={'commentEmoji'}></div>
+          <p><strong>{fbTranslations?.comment || FB_TRANSLATIONS_DEFAULT.COMMENT}</strong></p>
         </div>
         <div className="postOption" onClick={openModal}>
-          <img src={shareLogo} style={{ width: '3em', height: '3em', marginRight: '-10px'}} alt="share Logo"/>
-          <p>{fbTranslations?.share || FB_TRANSLATIONS_DEFAULT.SHARE}</p>
+          <div className={'shareEmoji'}></div>
+          <p><strong>{fbTranslations?.share || FB_TRANSLATIONS_DEFAULT.SHARE}</strong></p>
         </div>
     </div>
     {openCommentBox && 

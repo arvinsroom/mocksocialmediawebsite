@@ -1,10 +1,9 @@
 import { getUserFinishDetails } from '../../../../../services/finish-service';
 import { useEffect, useState } from "react";
-import { Button, Container, TextField, Card, Link, Typography } from '@material-ui/core';
+import { Button, Container, Link } from '@material-ui/core';
 import { useSelector, useDispatch } from "react-redux";
 import { Redirect } from 'react-router-dom';
 import useStyles from '../../../../style';
-import { showErrorSnackbar, showSuccessSnackbar } from '../../../../../actions/snackbar';
 import "./Finish.css";
 import { updateFlowActiveState } from '../../../../../actions/flowState';
 import ArrowForwardIosIcon from '@material-ui/icons/ArrowForwardIos';
