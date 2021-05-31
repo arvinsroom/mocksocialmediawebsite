@@ -63,6 +63,7 @@ const InfoPage = ({ data }) => {
     if (!isLoggedInUser) return <Redirect to="/" />;
     setIsLoading(true);
     fetchInfoDetails();
+    window.scrollTo(0,0);
   }, []);
 
   const handleConsentChange = (e) => {
