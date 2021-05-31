@@ -9,7 +9,7 @@ export const formQuestionsIdsArray = (templateAdminPortalQuestionsData) => {
   for (let i = 0; i < pageConfigAllQuestions.length; i++) {
     const allPageQuestions = pageConfigAllQuestions[i].question || [];
     for (let j = 0; j < allPageQuestions.length; j++) {
-      const item = pageConfigAllQuestions[i].type + ';' + allPageQuestions[j]._id + ';' + allPageQuestions[j].questionText;
+      const item = pageConfigAllQuestions[i].type + '!~*!' + allPageQuestions[j]._id + '!~*!' + allPageQuestions[j].questionText;
       templateAllQuestionsData.push(item);
     }
   }
@@ -33,7 +33,7 @@ const normalizeUserQuestionAnswersHelper = (questionAnswers) => {
     else answerText = currentItem.opentextAnswerText;
     
     if (!normalize[currentItem.questionId]) normalize[currentItem.questionId] = '';
-    normalize[currentItem.questionId] = normalize[currentItem.questionId] + answerText + ';';
+    normalize[currentItem.questionId] = normalize[currentItem.questionId] + answerText + '!~*!';
   }
   return normalize;
 };
@@ -50,7 +50,7 @@ export const formulateQuestionAnswerSpreadSheet = (questionAdminData, questionRe
   const eachRow = [];
   for (let i = 0; i < questionAdminData.length; i++) {
     // we found a question in normalized user response that means they answered it
-    const questionId = questionAdminData[i].split(';')[1];
+    const questionId = questionAdminData[i].split('!~*!')[1];
     const questionResponse = normalizedQuestionData[questionId];
     if (questionResponse) eachRow.push(questionResponse);
     else eachRow.push("");
@@ -65,7 +65,7 @@ export const formGlobalSocialMediaPageIdsArray = (globalSocialMediaPages) => {
   const globalSocialMediaPagesData = [];
   const pageConfigAllSocialPages= globalSocialMediaPages?.pageFlowConfigurations || [];
   for (let i = 0; i < pageConfigAllSocialPages.length; i++) {
-    const item = pageConfigAllSocialPages[i].type + ';' + pageConfigAllSocialPages[i]._id + ';' + pageConfigAllSocialPages[i].name + ';' + pageConfigAllSocialPages[i].pageDataOrder;
+    const item = pageConfigAllSocialPages[i].type + '!~*!' + pageConfigAllSocialPages[i]._id + '!~*!' + pageConfigAllSocialPages[i].name + '!~*!' + pageConfigAllSocialPages[i].pageDataOrder;
     globalSocialMediaPagesData.push(item);
   }
   return globalSocialMediaPagesData;
@@ -104,7 +104,7 @@ export const formulateUserGlobalTracking = (globalAdminData, globalResponseData)
   const normalizedGlobalUserData = normalizeUserGlobalTracking(globalResponseData);
   const eachRow = [];
   for (let i = 0; i < globalAdminData.length; i++) {
-    const socialMediaPageId = globalAdminData[i].split(';')[1];
+    const socialMediaPageId = globalAdminData[i].split('!~*!')[1];
     const socialMediaPageResponse = normalizedGlobalUserData[socialMediaPageId];
     // we found a question in normalized user response that means they answered it
     if (socialMediaPageResponse) eachRow.push(socialMediaPageResponse);
@@ -126,7 +126,7 @@ export const formulateUserPostLinkClickTracking = (globalResponseData) => {
   for (let i = 0; i < globalResponseData.length; i++) {
     // linkclick is always done on a post
     const currentItem = globalResponseData[i]?.userPosts || null;
-    if (currentItem) stringTempEntry = stringTempEntry + (currentItem.adminPostId || currentItem._id) + ';';
+    if (currentItem) stringTempEntry = stringTempEntry + (currentItem.adminPostId || currentItem._id) + '!~*!';
   }
   return stringTempEntry;
 };
@@ -134,8 +134,8 @@ export const formulateUserPostLinkClickTracking = (globalResponseData) => {
 
 /* userPostActions */
 
-// comment are formulated as |postId;comment|
-// any other action i.e. like or love is done as postId;postId ....
+// comment are formulated as  postId!~*!comment|$|
+// any other action i.e. like or love is done as postId|$|postId ....
 const normalizeUserPostActionsTracking = (globalActionsResponseData) => {
   const normalize = {};
   for (let i = 0; i < globalActionsResponseData.length; i++) {
@@ -143,7 +143,8 @@ const normalizeUserPostActionsTracking = (globalActionsResponseData) => {
     const currentPostData = globalActionsResponseData[i].userPosts;
     const postId = (currentPostData.adminPostId || currentPostData._id);
 
-    normalize[currentAction] = (normalize[currentAction] || "") + postId + ';' + (globalActionsResponseData[i].comment || '-9999') + '|';
+    if (normalize[currentAction] === 'COMMENT') (normalize[currentAction] || "") + postId + '!~*!' + (globalActionsResponseData[i].comment || '-9999') + '|$|';
+    else normalize[currentAction] = (normalize[currentAction] || "") + postId + '|$|';
   }
   return normalize;
 };
@@ -163,7 +164,7 @@ export const formulateUserPostActionsTracking = (postActionsResponseData) => {
 
 /* UserPosts */
 
-// PHOTO, VIDEO ... are formulated as |postId;postMessage;attachedMediaId;parentPostId|
+// PHOTO, VIDEO ... are formulated as postId!~*!postMessage!~*!attachedMediaId!~*!parentPostId|$|
 const normalizeUserPosts = (responseUserPosts) => {
   const normalize = {};
   for (let i = 0; i < responseUserPosts.length; i++) {
@@ -176,10 +177,10 @@ const normalizeUserPosts = (responseUserPosts) => {
     const attachedMediaId = currentPost?.attachedMedia?.length > 0 ? (currentPost.attachedMedia[0]._id || '-9999') : '-9999';
     
     normalize[currentPost.type] = (normalize[currentPost.type] || "") + 
-      postId + ';' +
-      (currentPost.postMessage || "") + ';' +
-      attachedMediaId + ';' +
-      sharePostId + '|';
+      postId + '!~*!' +
+      (currentPost.postMessage || "") + '!~*!' +
+      attachedMediaId + '!~*!' +
+      sharePostId + '|$|';
   }
   return normalize;
 };
