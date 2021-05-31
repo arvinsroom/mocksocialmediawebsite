@@ -1,6 +1,6 @@
 .postMessage {
   font-family: 'Noto Sans', sans-serif;
-  font-size: 12px;
+  font-size: 12px !important;
 }
 
 .link-preview {
@@ -15,20 +15,20 @@
 }
 
 a.link-preview .link-area .og-title {
-  font-size: medium;
+  font-size: small;
   padding-bottom: 15px;
 }
 
 .og-title {
   font-family: 'Noto Sans', sans-serif;
   color: #828282;
-  font-size: 12px;
+  font-size: 12px !important;
 }
 
 .og-description {
   text-overflow: ellipsis;
   font-family: 'Noto Sans', sans-serif;
   color: black;
-  font-size: 12px;
+  font-size: 12px !important;
 }
 

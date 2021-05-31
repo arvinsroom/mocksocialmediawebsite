@@ -1,11 +1,13 @@
 .DraftEditor-root {
   font-family: 'Noto Sans', sans-serif;
-  font-size: 12px;
+  font-size: 16px;
+  font-weight: 200;
 }
 
 p {
   font-family: 'Noto Sans', sans-serif;
-  font-size: 12px;
+  font-size: 16px;
+  font-weight: 200;
 }
 
 .fakePostDetails {

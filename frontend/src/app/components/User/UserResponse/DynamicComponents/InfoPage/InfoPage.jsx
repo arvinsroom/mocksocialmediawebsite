@@ -86,8 +86,11 @@ const InfoPage = ({ data }) => {
 
   const capitalize = (str) => {
     if (typeof str !== 'string' || str === '') return '';
-    const lowerCase = str.slice(1).toLowerCase();
-    return str.charAt(0).toUpperCase() + lowerCase;
+    // fetch the translation first
+    // initially it will be in uppercase
+    let translate = translations?.[str.toLowerCase()] || USER_TRANSLATIONS_DEFAULT?.[str];
+    const lowerCase = translate.slice(1).toLowerCase();
+    return translate.charAt(0).toUpperCase() + lowerCase;
   }
 
   return (  
@@ -110,33 +113,33 @@ const InfoPage = ({ data }) => {
         <Container component="main" maxWidth="md" className={classes.card}>
           {fakeShareSocialMediaPosts?.length > 0 ? 
             <>
-            <p><b>Shared posts</b></p>
+            <p><b>{translations?.['shared_posts'] || USER_TRANSLATIONS_DEFAULT.SHARED_POSTS}</b></p>
             {fakeShareSocialMediaPosts.map(item => (
               <div key={item._id} className={classes.card}>
                 <div className="fakePostDetails">
-                  <p>Post message: {item.postMessage || ""}</p>
+                  <p>{item?.parentUserPost?.linkTitle || item?.parentUserPost?.postMessage || ""}</p>
                 </div>
               </div>
             ))}
             </>
           : 
-            <p>No shared posts!</p>
+            <p><b>{translations?.['no_shared_posts!'] || USER_TRANSLATIONS_DEFAULT.NO_SHARED_POSTS}</b></p>
           }
           {fakeActionSocialMediaPosts?.length > 0 ? 
           <>
-            <p><b>Liked or commented posts</b></p>
+            <p><b>{translations?.['liked_or_commented_posts'] || USER_TRANSLATIONS_DEFAULT.LIKED_OR_COMMENTED_POSTS}</b></p>
             {fakeActionSocialMediaPosts.map(item => (
               <div key={item._id} className={classes.card}>
                 <div className="fakePostDetails">
-                  <p>Action: {capitalize(item.action)}</p>
-                  {item.action === 'COMMENT' && <p>Comment: {item.comment || ""}</p>}
-                  <p>Post message: {item.userPosts.postMessage || ""}</p>
+                  <p>{translations?.action || USER_TRANSLATIONS_DEFAULT.ACTION}: {capitalize(item.action)}</p>
+                  {item.action === 'COMMENT' && <p>{translations?.comment || USER_TRANSLATIONS_DEFAULT.COMMENT}: {item.comment || ""}</p>}
+                  <p>{item.userPosts?.linkTitle || item.userPosts?.postMessage || ""}</p>
                 </div>
               </div>
             ))}
             </>
           : 
-            <p>No liked or commented posts!</p>
+            <p><b>{translations?.['no_liked_or_commented_posts!'] || USER_TRANSLATIONS_DEFAULT.NO_LIKED_OR_COMMENTED_POSTS}</b></p>
           }
         </Container>
       }

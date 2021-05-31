@@ -17,10 +17,6 @@ const StoryCreate = () => {
     setModalOpen(!modalOpen);
   };
 
-  const handlePhotoVideo = (e) => {
-    e.preventDefault();
-  };
-
   const translate = (...words) => {
     const word1 = fbTranslations?.[words[0]] || null;
     const word2 = fbTranslations?.[words[1]] || null;
@@ -45,17 +41,17 @@ const StoryCreate = () => {
       </div>
 
       <div className="postOptions">
-        {<div className="postOption" onClick={handlePhotoVideo}>
+        {<div className="postOption" onClick={openModal}>
           <PhotoLibraryIcon style={{ color: '#31A24C' }}/>
-          <p style={{color: 'grey', paddingTop: '4px'}}>{translate('photo', 'video')}</p>
+          <p style={{color: 'grey', paddingTop: '4px'}}><b>{translate('photo', 'video')}</b></p>
         </div>}
         <div className="postOption">
           <PersonAddIcon style={{ color: '#1877F2' }}/>
-          <p>{fbTranslations?.tag_friends || FB_TRANSLATIONS_DEFAULT.TAG_FRIENDS}</p>
+          <p><b>{fbTranslations?.tag_friends || FB_TRANSLATIONS_DEFAULT.TAG_FRIENDS}</b></p>
         </div>
         <div className="postOption onlyLargeScreen">
           <InsertEmoticonIcon style={{ color: '#F5C33B' }} />
-          <p>{translate('feeling', 'activity')}</p>
+          <p><b>{translate('feeling', 'activity')}</b></p>
         </div>
     </div>
     </div>

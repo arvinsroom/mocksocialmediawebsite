@@ -62,6 +62,7 @@ const create = async (req, res, next) => {
 };
 
 const getInfoDetails = async (req, res, next) => {
+  let transaction;
   try {
     // fetch template _id from params
     const pageId = req.params.pageId;
@@ -72,19 +73,25 @@ const getInfoDetails = async (req, res, next) => {
       return;
     }
 
+    transaction = await db.sequelize.transaction();
+
+    console.log(`Fetching Information details for page ${pageId}.`);
+
     const data = await Info.findOne({
       where: {
         pageId: pageId
       },
       attributes: ['consent', 'socialMediaPageId', 'isFinish']
-    });
-
+    }, { transaction, logging: false });
+    
+    await transaction.commit();
     res.send({
       infoDetails: data,
     });
 
   } catch (error) {
     console.log(error.message);
+    if (transaction) await transaction.rollback();
     res.status(500).send({
       message:
         error.message || "Some error occurred while Fetching the Info page details."

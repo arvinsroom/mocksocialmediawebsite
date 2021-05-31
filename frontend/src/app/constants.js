@@ -203,5 +203,18 @@ export const USER_TRANSLATIONS_DEFAULT = Object.freeze({
   PLEASE_ENTER_A_VALID_RESPONSE: 'Please enter a valid response.',
   UPLOAD: 'Upload',
   TYPE_YOUR_USERNAME_HERE: 'Type your username here',
-  POSTED: 'Posted!'
+  POSTED: 'Posted!',
+
+  SHARED_POSTS: 'Shared posts',
+  NO_SHARED_POSTS: 'No shared posts!',
+  LIKED_OR_COMMENTED_POSTS: 'Liked or commented posts',
+  NO_LIKED_OR_COMMENTED_POSTS: 'No liked or commented posts!',
+  ACTION: 'Action',
+  COMMENT: 'Comment',
+  LIKE: 'Like',
+  LOVE: 'Love',
+  HAHA: 'Haha',
+  ANGRY: 'Angry',
+  SAD: 'Sad',
+  WOW: 'Wow'
 });
