@@ -58,9 +58,9 @@ export const formulateQuestionAnswerSpreadSheet = (questionAdminData, questionRe
   return eachRow;
 };
 
-/* userGlobalTracking */
+/* userSocialMediaPages */
 
-export const formGlobalSocialMediaPageIdsArray = (globalSocialMediaPages) => {
+export const formSocialMediaPageIdsArray = (globalSocialMediaPages) => {
   // this function is used to make the array of all the question _ids
   const globalSocialMediaPagesData = [];
   const pageConfigAllSocialPages= globalSocialMediaPages?.pageFlowConfigurations || [];
@@ -70,6 +70,8 @@ export const formGlobalSocialMediaPageIdsArray = (globalSocialMediaPages) => {
   }
   return globalSocialMediaPagesData;
 };
+
+/* userGlobalTracking */
 
 // this forms an object with page configurations as Ids and all there metadata in 
 // connected with those ID's
@@ -211,7 +213,11 @@ const headers = [
   'uniqueResponseId', 'conditionId', 'accessCode', 'participantId', 'consent', 'startedAt', 'finishedAt', 'conditionName', 'language'
 ];
 
-export const normalizeUserAndTemplateData = (userAndTemplateData) => {
+export const formUserAndTemplateData = (userResponse, template) => {
+  const userAndTemplateData = {
+    ...userResponse,
+    ...template,
+  };
   // go over the headersRef and fetch
   const eachRow = [];
   for (let i = 0; i < headersRef.length; i++) {
@@ -230,10 +236,10 @@ export const formulateHeaders = (questionIdsDynamicArray, globalSocailMediaDynam
   // 5) userPostTracking
   // 6) userPosts
   return headers.concat(
-      questionIdsDynamicArray,
-      globalSocailMediaDynamicArray,
-      possiblePostActions,
-      possiblePostTracking,
-      possiblePostTypes
-    );
+    questionIdsDynamicArray,
+    globalSocailMediaDynamicArray,
+    possiblePostActions,
+    possiblePostTracking,
+    possiblePostTypes
+  );
 }

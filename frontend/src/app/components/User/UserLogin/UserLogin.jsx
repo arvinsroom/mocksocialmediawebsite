@@ -1,12 +1,15 @@
 import React, { useEffect, useState } from "react";
 import { useHistory, useParams } from "react-router-dom";
-import { Button, CssBaseline, TextField, Card } from '@material-ui/core';
+import { Button, TextField } from '@material-ui/core';
 import Container from '@material-ui/core/Container';
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
+import InputAdornment from '@material-ui/core/InputAdornment';
 import { userLogin } from "../../../actions/userAuth";
 import useStyles from '../../style';
 import { showInfoSnackbar } from "../../../actions/snackbar";
 import { USER_TRANSLATIONS_DEFAULT } from '../../../constants';
+import { IconKey } from '@tabler/icons';
+import "./UserLogin.css";
 
 const UserLogin = () => {
   let history = useHistory();
@@ -47,7 +50,7 @@ const UserLogin = () => {
   return (
     <>
     <Container component="main" maxWidth="xs" className={classes.centerCard}>
-      <form onSubmit={handleSubmit} className={classes.form}>
+      <form onSubmit={handleSubmit} className="login">
         <TextField
           variant="outlined"
           margin="normal"
@@ -56,6 +59,13 @@ const UserLogin = () => {
           label={USER_TRANSLATIONS_DEFAULT.ACCESS_CODE}
           onChange={({ target }) => setTemplateId(target.value)}
           name={USER_TRANSLATIONS_DEFAULT.ACCESS_CODE}
+          InputProps={{
+            startAdornment: (
+              <InputAdornment position="start">
+                <IconKey />
+              </InputAdornment>
+            ),
+          }}
         />
         <Button
           type="submit"

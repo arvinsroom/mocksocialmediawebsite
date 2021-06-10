@@ -2,13 +2,13 @@ import { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { getQuestions } from '../../../../../services/questions-service';
 import { createMCQ } from '../../../../../services/user-answer-service';
-import { Button, RadioGroup, Container, FormControlLabel, Radio, FormGroup, Checkbox } from '@material-ui/core';
+import { Button, RadioGroup, FormControlLabel, Radio, FormGroup, Checkbox } from '@material-ui/core';
 import { Redirect } from 'react-router-dom';
 import useStyles from '../../../../style';
 import { showErrorSnackbar, showInfoSnackbar, showSuccessSnackbar } from '../../../../../actions/snackbar';
 import { updateFlowActiveState } from '../../../../../actions/flowState';
 import "./MCQ.css";
-import ArrowForwardIosIcon from '@material-ui/icons/ArrowForwardIos';
+import { IconChevronRight } from '@tabler/icons';
 import Progress from '../../../../Common/Progress';
 import { USER_TRANSLATIONS_DEFAULT } from '../../../../../constants';
 import RenderRichTextArea from '../../../../Common/UserCommon/RenderRichTextArea';
@@ -88,7 +88,7 @@ const MCQ = ({ data }) => {
     return true;
   };
 
-  const handleSave = async e => {
+  const handleSubmit = async e => {
     e.preventDefault();
 
     try {
@@ -135,65 +135,62 @@ const MCQ = ({ data }) => {
 
   return (
     <>
-      <Container component="main" maxWidth="md" className={classes.card}>
+      {data?.richText && <RenderRichTextArea richText={data.richText}/>}
 
-        {data?.richText && <RenderRichTextArea richText={data.richText}/>}
+      {mcqQuestions?.length > 0 ? mcqQuestions.map((question, index) => (
+        <div key={index}>
+          <br/>
+          <p className="mcqText">{question.questionText}</p>
 
-        {mcqQuestions?.length > 0 ? mcqQuestions.map((question, index) => (
-          <Container component="main" maxWidth="md" key={index} className={classes.card}>
-            <p className="mcqText">{question.questionText}</p>
+          {!question.multiResponse &&
+            <RadioGroup
+              aria-label="MCQ Questions"
+              name="MCQ"
+              value={mcqRadioResponse?.[question._id] || ''}
+              onChange={e => handleRadioChange(question._id, e)} >
+              {question.mcqOption?.length > 0 ? question.mcqOption.map((option, optionIndex) => (
+                <FormControlLabel
+                  key={option._id}
+                  value={option._id}
+                  control={<Radio color="primary" />}
+                  label={<p className="mcqText">{option.optionText}</p>}
+                />
+              )): null}
+            </RadioGroup>
+          }
 
-            {!question.multiResponse &&
-              <RadioGroup
-                aria-label="MCQ Questions"
-                name="MCQ"
-                value={mcqRadioResponse?.[question._id] || ''}
-                onChange={e => handleRadioChange(question._id, e)} >
-                {question.mcqOption?.length > 0 ? question.mcqOption.map((option, optionIndex) => (
-                  <FormControlLabel
-                    key={option._id}
-                    value={option._id}
-                    control={<Radio color="primary" />}
-                    label={<p className="mcqText">{option.optionText}</p>}
-                  />
-                )): null}
-              </RadioGroup>
-            }
-
-            {question.multiResponse &&
-              <FormGroup
-                aria-label="MCQ Questions"
-                name="MCQ" >
-                {question.mcqOption?.length > 0 ? question.mcqOption.map((option, optionIndex) => (
-                  <FormControlLabel
-                    key={option._id}
-                    control={
-                      <Checkbox
-                        color="primary"
-                        checked={mcqCheckResponse?.[question._id][option._id] || false}
-                        onChange={e => handleCheckBoxChange(question._id, option._id, e)}
-                      />
-                    }
-                    label={<p className="mcqText">{option.optionText}</p>}
-                  />
-                )): null}
-              </FormGroup>
-            }
-
-          </Container>
-        )) : null}
-        {isLoading && <Progress />}
-        <Button
-          type="submit"
-          variant="contained"
-          color="primary"
-          style={{ float: 'right', width: '25%'}}
-          onClick={handleSave}
-          className={classes.submit}
-        >
-          <ArrowForwardIosIcon style={{ fontSize: 15 }} />
-        </Button>
-      </Container>
+          {question.multiResponse &&
+            <FormGroup
+              aria-label="MCQ Questions"
+              name="MCQ" >
+              {question.mcqOption?.length > 0 ? question.mcqOption.map((option, optionIndex) => (
+                <FormControlLabel
+                  key={option._id}
+                  control={
+                    <Checkbox
+                      color="primary"
+                      checked={mcqCheckResponse?.[question._id][option._id] || false}
+                      onChange={e => handleCheckBoxChange(question._id, option._id, e)}
+                    />
+                  }
+                  label={<p className="mcqText">{option.optionText}</p>}
+                />
+              )): null}
+            </FormGroup>
+          }
+        </div>
+      )) : null}
+      {isLoading && <Progress />}
+      <Button
+        type="submit"
+        variant="contained"
+        color="primary"
+        onClick={handleSubmit}
+        className={classes.submit}
+        endIcon={<IconChevronRight />}
+      >
+        {translations?.next || "NEXT"}
+      </Button>
    </>
   )
 };

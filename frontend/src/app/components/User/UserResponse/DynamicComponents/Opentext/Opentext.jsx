@@ -2,13 +2,13 @@ import { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { getQuestions } from '../../../../../services/questions-service';
 import { createOpentext } from '../../../../../services/user-answer-service';
-import { Button, TextField, Container } from '@material-ui/core';
+import { Button, TextField } from '@material-ui/core';
 import { Redirect } from 'react-router-dom';
 import useStyles from '../../../../style';
 import { showErrorSnackbar, showInfoSnackbar, showSuccessSnackbar } from '../../../../../actions/snackbar';
 import { updateFlowActiveState } from '../../../../../actions/flowState';
 import "./Opentext.css";
-import ArrowForwardIosIcon from '@material-ui/icons/ArrowForwardIos';
+import { IconChevronRight } from '@tabler/icons';
 import Progress from '../../../../Common/Progress';
 import { USER_TRANSLATIONS_DEFAULT } from '../../../../../constants';
 import RenderRichTextArea from '../../../../Common/UserCommon/RenderRichTextArea';
@@ -62,7 +62,7 @@ const Opentext = ({ data }) => {
     return true;
   };
 
-  const handleClick = async e => {
+  const handleSubmit = async e => {
     e.preventDefault();
     
     try {
@@ -85,36 +85,33 @@ const Opentext = ({ data }) => {
 
   return (
     <>
-      <Container component="main" maxWidth="md" className={classes.card}>
-
-        {data?.richText && <RenderRichTextArea richText={data.richText}/>}
-
-        {OpentextQuestions && OpentextQuestions.length > 0 ? OpentextQuestions.map((question, index) => (
-          <Container component="main" maxWidth="md" key={index} className={classes.card}>
-              <p className="questionText">{question.questionText || ""}</p>
-              <TextField
-                className={classes.center}
-                value={opentextResponse ? opentextResponse[question._id] : ''}
-                label={(translations?.type_your_answer_here) || USER_TRANSLATIONS_DEFAULT.TYPE_YOUR_ANSWER_HERE}
-                onChange={(e) => handleChange(question._id, e)}
-                variant="outlined"
-                margin="normal"
-                fullWidth
-              />
-            </Container>
-        )) : null}
-        {isLoading && <Progress />}
-        <Button
-          type="submit"
-          variant="contained"
-          color="primary"
-          style={{ float: 'right', width: '25%'}}
-          onClick={handleClick}
-          className={classes.submit}
-        >
-          <ArrowForwardIosIcon style={{ fontSize: 15 }} />
-        </Button>
-      </Container>
+      {data?.richText && <RenderRichTextArea richText={data.richText}/>}
+      {OpentextQuestions && OpentextQuestions.length > 0 ? OpentextQuestions.map((question, index) => (
+        <div key={index}>
+          <br/>
+          <p className="questionText">{question.questionText || ""}</p>
+          <TextField
+            className={classes.center}
+            value={opentextResponse ? opentextResponse[question._id] : ''}
+            label={(translations?.type_your_answer_here) || USER_TRANSLATIONS_DEFAULT.TYPE_YOUR_ANSWER_HERE}
+            onChange={(e) => handleChange(question._id, e)}
+            variant="outlined"
+            margin="normal"
+            fullWidth
+          />
+        </div>
+      )) : null}
+      {isLoading && <Progress />}
+      <Button
+        type="submit"
+        variant="contained"
+        color="primary"
+        onClick={handleSubmit}
+        className={classes.submit}
+        endIcon={<IconChevronRight />}
+      >
+        {translations?.next || "NEXT"}
+      </Button>
    </>
   )
 };

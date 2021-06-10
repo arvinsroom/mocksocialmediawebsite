@@ -1,17 +1,19 @@
 import { useState } from 'react';
 import * as XLSX from 'xlsx';
-import { Button, Typography, Input, Divider, TextField, FormControl, MenuItem, InputLabel, Select } from '@material-ui/core';
+import { Button, Input, TextField, FormControl, MenuItem, InputLabel, Select } from '@material-ui/core';
 import { create } from "../../../../../../services/media-service";
 import { useDispatch } from "react-redux";
 import useStyles from '../../../../../style';
 import { showErrorSnackbar, showInfoSnackbar, showSuccessSnackbar } from '../../../../../../actions/snackbar';
 import { GENERAL_PAGE, TEMPLATE, TEMPLATE_TYPES, ORDER_TYPES } from '../../../../../../constants';
+import { IconTableImport } from '@tabler/icons';
 
 const MediaPosts = ({ templateId }) => {
   const [mediaJSON, setMediaJSON] = useState(null);
   const [pageName, setPageName] = useState("");
   const [templateType, setTemplateType] = useState("");
   const [orderType, setOrderType] = useState("");
+  const [uploadPostSpreadsheetName, setUploadPostSpreadsheetName] = useState("");
 
   const classes = useStyles();
   const dispatch = useDispatch();
@@ -29,6 +31,7 @@ const MediaPosts = ({ templateId }) => {
       if (file.size > 20e6) {
         dispatch(showInfoSnackbar("Please upload file of size less than 20MB."));
       } else {
+        setUploadPostSpreadsheetName(file.name);
         let reader = new FileReader();
         reader.onload = function (e) {
           var data = e.target.result;
@@ -54,6 +57,7 @@ const MediaPosts = ({ templateId }) => {
     setTemplateType("");
     setOrderType("");
     setMediaJSON(null);
+    setUploadPostSpreadsheetName("");
   };
 
   const handleSubmit = async e => {
@@ -118,43 +122,52 @@ const MediaPosts = ({ templateId }) => {
           autoFocus
         />
         <FormControl variant="outlined" className={classes.formControl}>
-          <InputLabel id="demo-simple-select-outlined-label">{GENERAL_PAGE.SELECT_SOCIAL_MEDIA_LAYOUT}</InputLabel>
+          <InputLabel id="demo-simple-select-outlined-label">{GENERAL_PAGE.SELECT_PLATFORM}</InputLabel>
           <Select
             labelId="demo-simple-select-outlined-label"
             id="demo-simple-select-outlined"
             className={classes.marginBottom}
             value={templateType}
             onChange={handleType}
-            label={GENERAL_PAGE.SELECT_SOCIAL_MEDIA_LAYOUT}
+            label={GENERAL_PAGE.SELECT_PLATFORM}
           >
             {createMenuItems()}
           </Select>
         </FormControl>
 
         <FormControl variant="outlined" className={classes.formControl}>
-          <InputLabel id="demo-simple-select-outlined-label">{GENERAL_PAGE.SELECT_ORDER_OF_PRESENTATION_OF_POSTS}</InputLabel>
+          <InputLabel id="demo-simple-select-outlined-label">{GENERAL_PAGE.ORDER_OF_PRESENTATION_OF_POSTS}</InputLabel>
           <Select
             labelId="demo-simple-select-outlined-label"
             id="demo-simple-select-outlined"
             className={classes.marginBottom}
             value={orderType}
             onChange={handleOrder}
-            label={GENERAL_PAGE.SELECT_ORDER_OF_PRESENTATION_OF_POSTS}
+            label={GENERAL_PAGE.ORDER_OF_PRESENTATION_OF_POSTS}
           >
             {createMenuItemsOrder()}
           </Select>
         </FormControl>
 
-        <Typography component="h6">
-          {GENERAL_PAGE.UPLOAD_SPREADSHEET_OF_SOCIAL_MEDIA_POSTS}
-        </Typography>
-        <Input
-          type="file"
-          disableUnderline={true}
-          accept={SheetJSFT}
-          onChange={(e) => handleChange(e)}
-        />
-        <Divider className={classes.divider}/>
+        <Button
+          variant="contained"
+          component="label"
+          startIcon={<IconTableImport />}
+        >
+          {GENERAL_PAGE.UPLOAD_POST_SPREADSHEET}
+          <Input
+            style={{ display: "none" }}
+            disableUnderline={true}
+            id="upload-file"
+            type="file"
+            inputProps={{ multiple: false }}
+            accept={SheetJSFT}
+            onChange={(e) => handleChange(e)}
+          />
+        </Button>
+        <br/>
+        <p>{" Spreadsheet that will be uploaded upon clicking next step: " + (uploadPostSpreadsheetName || "")}</p>
+
         <Button
           type="submit"
           variant="contained"

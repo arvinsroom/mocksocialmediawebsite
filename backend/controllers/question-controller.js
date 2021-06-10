@@ -66,30 +66,6 @@ const create = async (req, res, next) => {
   }
 };
 
-const fetchQ = async (pageId, transaction) => {
-  try {
-    const allQuestions = await Question.findAll({
-      where: {
-        pageId
-      },
-      order: [
-        ['order', 'ASC'],
-        [{ model: McqOption, as: 'mcqOption' }, 'optionOrder', 'ASC']
-      ],
-      include: [
-        {
-          model: McqOption,
-          as: 'mcqOption',
-          attribute: ['_id', 'optionOrder', 'optionText'],
-        }
-      ]
-    }, { transaction });
-    return allQuestions;
-  } catch (error) {
-    throw error;
-  }
-}
-
 // user route
 const fetchAllQuestions = async (req, res, next) => {
   // fetch template _id from params
@@ -112,14 +88,30 @@ const fetchAllQuestions = async (req, res, next) => {
   let transaction;
   try {
     transaction = await db.sequelize.transaction();
-    const result = await fetchQ(pageId, transaction);
+    const result = await Question.findAll({
+      where: {
+        pageId
+      },
+      order: [
+        ['order', 'ASC'],
+        [{ model: McqOption, as: 'mcqOption' }, 'optionOrder', 'ASC']
+      ],
+      include: [
+        {
+          model: McqOption,
+          as: 'mcqOption',
+          attribute: ['_id', 'optionOrder', 'optionText'],
+        }
+      ]
+    }, { transaction });
+
     await transaction.commit();
     res.send({
       result
     });
   } catch (error) {
     console.log(error.message);
-    // if (transaction) await transaction.rollback();
+    if (transaction) await transaction.rollback();
     res.status(500).send({
       message: "Some error occurred while fetching questions."
     });
