@@ -21,8 +21,6 @@ import { useEffect, useState } from 'react';
 // import { TEMPLATE_TYPES } from '../../../../../constants';
 import { create } from '../../../../../services/template-service';
 import { updateTemplate } from '../../../../../actions/template';
-import DeleteIcon from '@material-ui/icons/Delete';
-import AddIcon from '@material-ui/icons/Add';
 import { useSelector, useDispatch } from "react-redux";
 import { Redirect } from 'react-router-dom';
 import useStyles from '../../../../style';
@@ -30,6 +28,7 @@ import { setTemplateId, getPrevTemplate, deletePrevTemplate } from "../../../../
 import { showErrorSnackbar, showInfoSnackbar, showSuccessSnackbar } from '../../../../../actions/snackbar';
 import { TEMPLATE } from '../../../../../constants';
 import SaveIcon from '@material-ui/icons/Save';
+import { IconEdit, IconTrash, IconDeviceFloppy } from '@tabler/icons';
 
 const Template = () => {
   const [templateName, setTemplateName] = useState("");
@@ -166,6 +165,7 @@ const Template = () => {
   return (
     <>
     <Container component="main" maxWidth="lg" className={classes.card}>
+    <h1>Condition Settings Page</h1>
     <form onSubmit={handleSubmit} className={classes.form}>
       <TextField
         variant="outlined"
@@ -200,7 +200,7 @@ const Template = () => {
             name="requestAudio"
             inputProps={{ 'aria-label': 'Request audio permissions' }}
           />}
-          label="Request audio access"
+          label={<p>Request audio access</p>}
         />
         <FormControlLabel
           control={<Switch
@@ -210,7 +210,7 @@ const Template = () => {
             name="requestVideo"
             inputProps={{ 'aria-label': 'Request Video permission' }}
           />}
-          label="Request video access"
+          label={<p>Request video access</p>}
         />
         <FormControlLabel
           control={<Switch
@@ -220,7 +220,7 @@ const Template = () => {
             name="requestCookies"
             inputProps={{ 'aria-label': 'Request Cookies permission' }}
           />}
-          label="Request cookies"
+          label={<p>Request cookies</p>}
         />
       </FormGroup>
       <Button
@@ -242,19 +242,23 @@ const Template = () => {
       <Table aria-label="Template(s)">
         <TableHead>
           <TableRow>
-            <TableCell className={classes.body, classes.head} align="center">{TEMPLATE.CONDITION_NAME}</TableCell>
-            <TableCell className={classes.body, classes.head} align="center">{TEMPLATE.LANGUAGE}</TableCell>
-            <TableCell className={classes.body, classes.head} align="center">{TEMPLATE.CHANGE_ACCESS_CODE}</TableCell>
-            <TableCell className={classes.body, classes.head} align="center">{TEMPLATE.ACCESS_CODE}</TableCell>
-            <TableCell className={classes.body, classes.head} align="center">{TEMPLATE.SET_AS_ACTIVE}</TableCell>
-            <TableCell className={classes.body, classes.head} align="center">{TEMPLATE.DELETE}</TableCell>
+            <TableCell className={classes.body, classes.head} align="center"><p>{TEMPLATE.CONDITION_NAME}</p></TableCell>
+            <TableCell className={classes.body, classes.head} align="center"><p>{TEMPLATE.LANGUAGE}</p></TableCell>
+            <TableCell className={classes.body, classes.head} align="center"><p>{TEMPLATE.CHANGE_ACCESS_CODE}</p></TableCell>
+            <TableCell className={classes.body, classes.head} align="center"><p>{TEMPLATE.ACCESS_CODE}</p></TableCell>
+            <TableCell className={classes.body, classes.head} align="center"><p>{TEMPLATE.SET_AS_ACTIVE}</p></TableCell>
+            <TableCell className={classes.body, classes.head} align="center"><p>{TEMPLATE.DELETE}</p></TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
           {prevTemplates && prevTemplates.length > 0 ? prevTemplates.map((row) => (
             <TableRow key={row._id}>
-              <TableCell align="center">{row.name}</TableCell>
-              <TableCell align="center">{row.language}</TableCell>
+              <TableCell align="center">
+                <p>{row.name}</p>
+              </TableCell>
+              <TableCell align="center">
+                <p>{row.language}</p>
+              </TableCell>
               <TableCell align="center">
                 <TextField
                   id="standard-number"
@@ -262,26 +266,32 @@ const Template = () => {
                   onChange={e => handleChange(row._id, e)}
                   inputProps={{ min: 100000, max: 999999 }}
                   type="number"
-                  InputLabelProps={{
-                    shrink: true,
-                  }}
                 />
-                <IconButton aria-label="Save template code" onClick={(e) => handleTemplateCode(row._id, e)}>
-                  <SaveIcon color="primary" />
-                </IconButton>
+                <Button
+                  aria-label="Save template code"
+                  onClick={(e) => handleTemplateCode(row._id, e)}
+                  >
+                  <IconDeviceFloppy />
+                </Button>
               </TableCell>
               <TableCell align="center">
                 <p style={{ textAlign: 'center' }}>{row.templateCode}</p>
               </TableCell>
               <TableCell align="center">
-                <IconButton aria-label="set template" onClick={() => handleTemplateId(row._id, row.name, TEMPLATE.TEMPLATE_CURRENT_SELECT)}>
-                  <AddIcon color="primary" />
-                </IconButton>
+                <Button
+                  aria-label="set template"
+                  onClick={() => handleTemplateId(row._id, row.name, TEMPLATE.TEMPLATE_CURRENT_SELECT)}
+                  >
+                  <IconEdit />
+                </Button>
               </TableCell>
               <TableCell align="center">
-                <IconButton aria-label="delete template" onClick={(e) => handleClickOpen(row._id, row.name, e)}>
-                  <DeleteIcon color="primary" />
-                </IconButton>
+                <Button
+                  aria-label="delete template"
+                  onClick={(e) => handleClickOpen(row._id, row.name, e)}
+                  >
+                  <IconTrash />
+                </Button>
               </TableCell>
             </TableRow>
           )) : null}

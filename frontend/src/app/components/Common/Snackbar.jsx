@@ -2,13 +2,13 @@ import { useDispatch, useSelector } from "react-redux";
 import Snackbar from "@material-ui/core/Snackbar";
 import { clearSnackbar } from "../../actions/snackbar";
 import CloseIcon from '@material-ui/icons/Close';
-import CheckCircleIcon from '@material-ui/icons/CheckCircle';
-import ErrorIcon from '@material-ui/icons/Error';
-import InfoIcon from '@material-ui/icons/Info';
 import IconButton from '@material-ui/core/IconButton';
+import { IconCircleCheck, IconInfoCircle, IconAlertCircle } from '@tabler/icons';
+import useStyles from '../style';
 
 export default function CustomSnackbar() {
   const dispatch = useDispatch();
+  const classes = useStyles();
 
   const { type, snackbarMessage, open } = useSelector(
     state => state.snackbar
@@ -22,31 +22,22 @@ export default function CustomSnackbar() {
     switch (type) {
       case "S":
         return (
-          <span id="client-snackbar">
-            <IconButton size="small" color="inherit">
-              <CheckCircleIcon fontSize="small" />
-            </IconButton>
-            {snackbarMessage}
+          <span id="client-snackbar" className={classes.flexCenter}>
+            <IconCircleCheck /> &nbsp; {snackbarMessage}
           </span>
         );
       
       case "E":
         return (
-          <span id="client-snackbar">
-            <IconButton size="small" color="inherit">
-              <ErrorIcon fontSize="small" />
-            </IconButton>
-            {snackbarMessage}
+          <span id="client-snackbar" className={classes.flexCenter}>
+            <IconAlertCircle /> &nbsp; {snackbarMessage}
           </span>
         );
 
       case "I":
         return (
-          <span id="client-snackbar">
-            <IconButton size="small" color="inherit">
-              <InfoIcon fontSize="small" />
-            </IconButton>
-            {snackbarMessage}
+          <span id="client-snackbar" className={classes.flexCenter}>
+            <IconInfoCircle /> &nbsp; {snackbarMessage}
           </span>
         );
   

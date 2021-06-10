@@ -1,8 +1,6 @@
-import { Button, TextField, IconButton, Container, Tooltip, Fab, Grid, Switch } from '@material-ui/core';
+import { Button, TextField, IconButton, Container, Tooltip, Grid, Switch } from '@material-ui/core';
 import { useState } from 'react';
 import { create } from "../../../../../services/questions-service";
-import DeleteIcon from '@material-ui/icons/Delete';
-import AddIcon from '@material-ui/icons/Add';
 import cloneDeep from 'lodash/cloneDeep';
 import { useSelector, useDispatch } from "react-redux";
 import { Redirect } from 'react-router-dom';
@@ -11,6 +9,7 @@ import { showErrorSnackbar, showSuccessSnackbar, showInfoSnackbar } from '../../
 import { TEMPLATE, MCQ_PAGE } from '../../../../../constants';
 import RichTextArea from '../../../../Common/AdminCommon/RichTextArea';
 import { checkIfEmptyRichText } from '../../../../../utils';
+import { IconCirclePlus, IconTrash } from '@tabler/icons';
 
 const MCQ = () => {
   const [clearRichText, setClearRichText] = useState(false);
@@ -111,6 +110,7 @@ const MCQ = () => {
 
   return (
     <Container component="main" maxWidth="lg" className={classes.card}>
+      <h1>Multiple-choice Page</h1>
       <form onSubmit={handleSubmit} className={classes.form}>
         <TextField
           margin="normal"
@@ -124,15 +124,18 @@ const MCQ = () => {
         
         <RichTextArea setRichText={setRichText} clearRichText={clearRichText}/>
 
-        <Tooltip title="Add Quesion" aria-label="Add Quesion" >
-          <Fab color="primary" onClick={() => addQuestion()} className={classes.marginTenPx}>
-            <AddIcon />
-          </Fab>
-        </Tooltip>
+        <Button
+          variant="contained"
+          component="label"
+          onClick={() => addQuestion()} className={classes.marginTenPx}
+          startIcon={<IconCirclePlus />}
+        >
+          CREATE NEW QUESTION
+        </Button>
         {OpenTextArr?.length > 0 ? OpenTextArr.map((question, questionIndex) => (
           <div key={questionIndex} className={classes.card}>
             <Grid container spacing={1}>
-              <Grid item xs={7}>
+              <Grid item xs={8}>
                 <TextField
                   className={classes.textGrid}
                   variant="outlined"
@@ -144,51 +147,58 @@ const MCQ = () => {
                   autoFocus
                 />
               </Grid>
+              <Grid item xs={1}>
+                <TextField
+                  id="standard-number"
+                  onChange={(e) => handleCustomField(question, 'order', e)}
+                  inputProps={{ min: 0, max: 65535, step: 1 }}
+                  type="number"
+                  label="Order"
+                />
+              </Grid>
               <Grid item xs={1} className={classes.flexCenter}>
-                <Tooltip title="Question Required?">
+                <Tooltip title="Response required?">
                   <Switch
                     checked={question.required}
                     onChange={(e) => handleCustomField(question, 'required', e)}
                     color="primary"
                     name="requiredField"
-                    inputProps={{ 'aria-label': 'Question/Answer Required' }}
+                    inputProps={{ 'aria-label': 'Response required' }}
                   />
                 </Tooltip>
               </Grid>
               <Grid item xs={1} className={classes.flexCenter}>
-                <Tooltip title="Allow Multiple Responses?">
+                <Tooltip title="Allow multiple responses?">
                   <Switch
                     checked={question.multiResponse}
                     onChange={(e) => handleCustomField(question, 'multiResponse', e)}
                     color="primary"
                     name="allowMultipleResponses"
-                    inputProps={{ 'aria-label': 'Allow Multiple responses' }}
+                    inputProps={{ 'aria-label': 'Allow multiple responses' }}
                   />
                 </Tooltip>
               </Grid>
-              <Grid item xs={2} className={classes.flexCenter}>
-                <TextField
-                  id="standard-number"
-                  variant="outlined"
-                  onChange={(e) => handleCustomField(question, 'order', e)}
-                  inputProps={{ min: 0, max: 65535, step: 1 }}
-                  type="number"
-                  label="order"
-                />
-              </Grid>
               <Grid item xs={1} className={classes.floatRight, classes.flexCenter}>
                 <Tooltip title="Delete question">
-                  <IconButton aria-label="delete question" className={classes.floatRight} onClick={() => removeQuestion(questionIndex)}>
-                    <DeleteIcon />
-                  </IconButton>
+                  <Button
+                    aria-label="delete question"
+                    className={classes.floatRight}
+                    onClick={() => removeQuestion(questionIndex)}
+                    >
+                    <IconTrash />
+                  </Button>
                 </Tooltip>
               </Grid>
-              <Grid item xs={12}>
-                <Tooltip title="Add MCQ Option">
-                  <IconButton aria-label="Add MCQ Option" className={classes.floatLeft} onClick={() => addMcqOption(questionIndex)}>
-                    <AddIcon />
-                  </IconButton>
-                </Tooltip>
+              <Grid item xs={12} >
+                <Button
+                  style={{ marginLeft: '10px'}}
+                  variant="contained"
+                  component="label"
+                  onClick={() => addMcqOption(questionIndex)}
+                  startIcon={<IconCirclePlus />}
+                >
+                  ADD RESPONSE OPTION
+                </Button>
               </Grid>
             </Grid>
               {OpenTextArr[questionIndex].mcqOptions && 
@@ -207,21 +217,24 @@ const MCQ = () => {
                         autoFocus
                       />
                     </Grid>
-                    <Grid item xs={1} className={classes.flexCenter}>
+                    <Grid item xs={1}>
                       <TextField
                         id="standard-number"
-                        variant="outlined"
                         onChange={(e) => handleCustomField(option, 'optionOrder', e)}
                         inputProps={{ min: 0, max: 65535, step: 1 }}
                         type="number"
-                        label="order"
+                        label="Order"
                       />
                     </Grid>
                     <Grid item xs={1} className={classes.floatRight, classes.flexCenter}>
                       <Tooltip title="Delete Mcq Option">
-                        <IconButton aria-label="Delete Mcq Option" className={classes.floatRight} onClick={() => removeMcqOption(questionIndex, mcqOptionIndex)}>
-                          <DeleteIcon />
-                        </IconButton>
+                        <Button
+                          aria-label="Delete Mcq Option"
+                          className={classes.floatRight}
+                          onClick={() => removeMcqOption(questionIndex, mcqOptionIndex)}
+                          >
+                          <IconTrash />
+                        </Button>
                       </Tooltip>
                     </Grid>
                   </Grid>

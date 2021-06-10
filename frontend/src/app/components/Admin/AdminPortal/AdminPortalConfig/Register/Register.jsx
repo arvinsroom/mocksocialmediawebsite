@@ -5,17 +5,14 @@ import {
   TextField,
   Container,
   Tooltip,
-  Fab,
   MenuItem,
   IconButton,
   InputLabel,
   Select,
-  Grid,
-  Box
+  Grid
 } from '@material-ui/core';
 import { useEffect, useState } from 'react';
 import AddIcon from '@material-ui/icons/Add';
-import DeleteIcon from '@material-ui/icons/Delete';
 import useStyles from '../../../../style';
 import { useSelector, useDispatch } from "react-redux";
 import { create } from '../../../../../services/register-service';
@@ -28,6 +25,7 @@ import {
   REGISTER_PAGE_CUSTOM_REFERENCES
 } from '../../../../../constants';
 import cloneDeep from 'lodash/cloneDeep';
+import { IconCirclePlus, IconTrash } from '@tabler/icons';
 
 const Register = () => {
   const [customFieldArr, setCustomFieldArr] = useState([]);
@@ -129,10 +127,8 @@ const Register = () => {
 
   return (
     <>
-    <Box component="span" className={classes.note} display="block">
-      For now, <b>Store Response to Database</b> doesn't work. User Responses are only saved in browser and are discarded after they finish. 
-    </Box>
     <Container component="main" maxWidth="lg" className={classes.card}>
+      <h1>Registration Page</h1>
       <form onSubmit={handleSubmit}>
         <TextField
             className={classes.marginBottom}
@@ -144,16 +140,20 @@ const Register = () => {
             onChange={({ target }) => setPageName(target.value)}
             autoFocus
           />
-        <Tooltip title="Add Custom Field" aria-label="Add Custom Field" >
-          <Fab color="primary" onClick={() => addCustomField()} className={classes.marginTenPx}>
-            <AddIcon />
-          </Fab>
-        </Tooltip>
+        <Button
+          variant="contained"
+          component="label"
+          aria-label="Add field"
+          onClick={() => addCustomField()} className={classes.marginTenPx}
+          startIcon={<IconCirclePlus />}
+        >
+          CREATE FIELD
+        </Button>
 
         {customFieldArr?.length > 0 ? customFieldArr.map((customField, customFieldIndex) => (
           <Container key={customFieldIndex} component="main" maxWidth="lg" className={classes.card}>
 
-          <Grid container>
+          <Grid container spacing={1}>
             <Grid item xs={8}>
               <TextField
                 variant="outlined"
@@ -172,66 +172,68 @@ const Register = () => {
                 onChange={(e) => handleCustomField(customField, 'order', e)}
                 inputProps={{ min: 0, max: 65535, step: 1 }}
                 type="number"
-                label="order"
-                InputLabelProps={{
-                  shrink: true,
-                }}
+                label="Order"
+                fullWidth
               />
             </Grid>
             <Grid item xs={1} className={classes.flexCenter} >
-              <Tooltip title="Field Required?">
+              <Tooltip title="Field required?">
                 <Switch
                   checked={customField.required}
                   onChange={(e) => handleCustomField(customField, 'required', e)}
                   color="primary"
                   name="requiredField"
-                  inputProps={{ 'aria-label': 'Field Required' }}
+                  inputProps={{ 'aria-label': 'Field required' }}
                 />
             </Tooltip>
             </Grid>
             <Grid item xs={1} className={classes.flexCenter} >
-              <Tooltip title="Store Response to Database?">
+              <Tooltip title="Store response to database?">
                 <Switch
                   checked={customField.response}
                   onChange={(e) => handleCustomField(customField, 'response', e)}
                   color="primary"
                   name="responseField"
-                  inputProps={{ 'aria-label': 'Field Response Required' }}
+                  inputProps={{ 'aria-label': 'Store response to database' }}
                 />
             </Tooltip>
             </Grid>
             <Grid item xs={1} className={classes.floatRight, classes.flexCenter}>
-              <Tooltip title="Delete question">
-                <IconButton aria-label="delete question" className={classes.floatRight} onClick={() => removeField(customFieldIndex)}>
-                  <DeleteIcon />
-                </IconButton>
+              <Tooltip title="Delete field">
+                <Button
+                  aria-label="Delete field"
+                  className={classes.floatRight}
+                  onClick={() => removeField(customFieldIndex)}
+                  >
+                  <IconTrash />
+                </Button>
               </Tooltip>
             </Grid>
             </Grid>
           <br></br>
           <FormControl variant="outlined" className={classes.formControl}>
-            <InputLabel id="demo-simple-select-outlined-label">{"Please select the Custom Field Type"}</InputLabel>
+            <InputLabel id="demo-simple-select-outlined-label">{"Field Type"}</InputLabel>
             <Select
               labelId="demo-simple-select-outlined-label"
               id="demo-simple-select-outlined"
               className={classes.marginBottom}
               value={customField.type}
               onChange={(e) => handleCustomField(customField, 'type', e)}
-              label={"Please select the Custom Field Type"}
+              label={"Field Type"}
             >
               {customFields}
             </Select>
           </FormControl>
 
           <FormControl variant="outlined" className={classes.formControl}>
-            <InputLabel id="demo-simple-select-outlined-label">{"Please select the Custom Field Reference Name"}</InputLabel>
+            <InputLabel id="demo-simple-select-outlined-label">{"Associated Variable"}</InputLabel>
             <Select
               labelId="demo-simple-select-outlined-label"
               id="demo-simple-select-outlined"
               className={classes.marginBottom}
               value={customField.referenceName}
               onChange={(e) => handleCustomField(customField, 'referenceName', e)}
-              label={"Please select the Custom Field Reference Name"}
+              label={"Associated Variable"}
             >
               {customRefs}
             </Select>

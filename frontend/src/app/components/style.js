@@ -2,7 +2,6 @@ import { makeStyles } from '@material-ui/core/styles';
 
 const useStyles = makeStyles((theme) => ({
   paper: {
-    marginTop: theme.spacing(2),
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
@@ -12,8 +11,23 @@ const useStyles = makeStyles((theme) => ({
     marginTop: theme.spacing(1),
     // padding: '20px'
   },
+  customColor: {
+    backgroundColor: '#2472b2',
+    color: '#fff',
+  },
   submit: {
     margin: theme.spacing(3, 0, 2),
+    backgroundColor: '#2472b2',
+    color: '#fff',
+    '&:hover': {
+      backgroundColor: '#2472b2',
+      color: '#fff',
+    },
+    fontFamily: '"Noto Sans", sans-serif',
+    fontSize: '16px',
+    marginLeft: 'auto',
+    marginRight: '0',
+    display: 'flex',
   },
   formControl: {
     // margin: theme.spacing(1),
@@ -25,7 +39,8 @@ const useStyles = makeStyles((theme) => ({
   },
   title: {
     flexGrow: 1,
-    fontFamily: '"Roboto", "Helvetica", "Arial", sans-serif'
+    fontFamily: '"Noto Sans", sans-serif',
+    fontSize: '16px'
   },
   root: {
     flexGrow: 1,
@@ -48,9 +63,6 @@ const useStyles = makeStyles((theme) => ({
   center: {
     width: '100%'
   },
-  // marginAuto: {
-  //   margin: 'auto'
-  // },
   marginTenPx: {
     margin: '10px'
   },
@@ -66,7 +78,7 @@ const useStyles = makeStyles((theme) => ({
     color: 'black',
   },
   body: {
-    fontSize: 14,
+    fontSize: 16,
   },
   marginTopBottom: {
     float: 'right !important',
@@ -116,8 +128,9 @@ const useStyles = makeStyles((theme) => ({
     boxShadow: 'inset 0 0 0 1px rgba(0, 0, 0, 0.1)'
   },
   card: {
-    boxShadow: '0px 2px 1px -1px rgb(0 0 0 / 20%), 0px 1px 1px 0px rgb(0 0 0 / 14%), 0px 1px 3px 0px rgb(0 0 0 / 12%)',
+    boxShadow: '0 5px 10px rgba(154,160,185,.05), 0 15px 40px rgba(166,173,201,.2)',
     borderRadius: '5px 5px',
+    backgroundColor: '#FFFFFF',
     paddingBottom: theme.spacing(1),
     paddingTop: theme.spacing(1),
     marginTop: theme.spacing(2),
@@ -125,10 +138,11 @@ const useStyles = makeStyles((theme) => ({
   },
   centerCard: {
     position: 'absolute',
+    backgroundColor: '#FFFFFF',
     left: '50%',
     top: '50%',
     transform: 'translate(-50%, -50%)',
-    boxShadow: '0px 2px 1px -1px rgb(0 0 0 / 20%), 0px 1px 1px 0px rgb(0 0 0 / 14%), 0px 1px 3px 0px rgb(0 0 0 / 12%)',
+    boxShadow: '0 5px 10px rgba(154,160,185,.05), 0 15px 40px rgba(166,173,201,.2)',
     borderRadius: '5px 5px',
   },
   adminSaveButton: {
@@ -144,7 +158,9 @@ const useStyles = makeStyles((theme) => ({
   flexCenter: {
     display: 'flex',
     alignItems: 'center',
-    justifyContent: 'center'
+    justifyContent: 'center',
+    fontFamily: '"Noto Sans", sans-serif',
+    fontSize: '16px'
   }
 }));
 

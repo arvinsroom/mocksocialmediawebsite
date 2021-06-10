@@ -1,7 +1,6 @@
 .facebookMainBody {
   /* display: flex; */
   /* width: auto; */
-  /* background-color: #F2F3F5; */
   /* height: 100vh; */
   justify-content: center;
   /* margin-left: 30%;
@@ -11,3 +10,12 @@
   width: '100%',
   /* margin-top: theme.spacing(1), */
 }
+
+/* .facebookCard {
+  background-color: #f1f2f6;
+  box-shadow: none !important;
+}
+
+.customCSS {
+  background-color: #f1f2f6;
+} */
