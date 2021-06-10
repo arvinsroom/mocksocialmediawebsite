@@ -35,48 +35,43 @@ const Admin = () => {
 
   return (
     <>
-    <Container component="main" maxWidth="xs">
-      <CssBaseline />
-      <div className={classes.paper}>
-        <Typography component={'span'} variant="h5">
-          Sign in
-        </Typography>
-        <form onSubmit={handleSubmit} className={classes.form} noValidate>
-          <TextField
-            variant="outlined"
-            margin="normal"
-            required
-            fullWidth
-            id="usename"
-            label="Username"
-            autoComplete="username"
-            onChange={({ target }) => setUsername(target.value)}
-            autoFocus
-          />
-          <TextField
-            variant="outlined"
-            margin="normal"
-            required
-            fullWidth
-            name="password"
-            label="Password"
-            type="password"
-            id="password"
-            autoComplete="current-password"
-            onChange={({ target }) => setPassword(target.value)}
-          />
-          {isLoading && <Progress />}
-          <Button
-            type="submit"
-            variant="contained"
-            fullWidth
-            color="primary"
-            className={classes.submit}
-          >
-            Sign In
-          </Button>
-        </form>
-      </div>
+    <Container component="main" maxWidth="xs" className={classes.centerCard}>
+      <p className={classes.flexCenter} style={{ fontSize: '24px' }} >Sign in</p>
+      <form onSubmit={handleSubmit} className={classes.form} noValidate>
+        <TextField
+          variant="outlined"
+          margin="normal"
+          required
+          fullWidth
+          id="usename"
+          label="Username"
+          autoComplete="username"
+          onChange={({ target }) => setUsername(target.value)}
+          autoFocus
+        />
+        <TextField
+          variant="outlined"
+          margin="normal"
+          required
+          fullWidth
+          name="password"
+          label="Password"
+          type="password"
+          id="password"
+          autoComplete="current-password"
+          onChange={({ target }) => setPassword(target.value)}
+        />
+        {isLoading && <Progress />}
+        <Button
+          type="submit"
+          variant="contained"
+          fullWidth
+          color="primary"
+          className={classes.submit}
+        >
+          Sign In
+        </Button>
+      </form>
     </Container>
     </>
   );

@@ -86,6 +86,7 @@ const InfoPage = () => {
 
   return (
     <Container component="main" maxWidth="lg" className={classes.card}>
+      <h1>Information Page</h1>
       <TextField
         margin="normal"
         required
@@ -120,7 +121,7 @@ const InfoPage = () => {
             name="consent"
             inputProps={{ 'aria-label': 'Render this page as a Finish page' }}
           />}
-          label={"Make this page the Finish page"}
+          label={"Make this page terminal"}
         />
       </FormGroup>
 

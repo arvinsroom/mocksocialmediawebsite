@@ -68,6 +68,7 @@ const Finish = () => {
 
   return (
     <Container component="main" maxWidth="lg" className={classes.card}>
+    <h1>Redirect Page</h1>
     <form onSubmit={handleSubmit} className={classes.form}>
       <TextField
         className={classes.marginBottom}

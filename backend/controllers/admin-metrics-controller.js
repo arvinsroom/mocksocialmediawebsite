@@ -1,15 +1,4 @@
 import db from "../clients/database-client";
-import { 
-  normalizeUserAndTemplateData,
-  formQuestionsIdsArray,
-  formulateQuestionAnswerSpreadSheet,
-  formGlobalSocialMediaPageIdsArray,
-  formulateUserGlobalTracking,
-  formulateUserPostActionsTracking,
-  formulateUserPostLinkClickTracking,
-  formulateUserPosts,
-  formulateHeaders
-} from './helper/admin-metrics-helper';
 
 const getUserData = async (req, res, next) => {
   let transaction;
@@ -158,9 +147,9 @@ const getUserData = async (req, res, next) => {
       ],
     }, { transaction, logging: false});
 
-    console.log(`Fetching globalSocialMediaPageData for template with ID ${templateId}`);
+    console.log(`Fetching socialMediaPageData for template with ID ${templateId}`);
 
-    const globalSocialMediaPageData = await db.Template.findOne({
+    const socialMediaPageData = await db.Template.findOne({
       where: {
         // adminId: req.adminId,
         _id: templateId,
@@ -178,62 +167,10 @@ const getUserData = async (req, res, next) => {
     }, { transaction, logging: false });
     await transaction.commit();
 
-    // stringify and parse the globalSocialMediaPageData
-    const globalSocialMediaPageJSONData = JSON.parse(JSON.stringify(globalSocialMediaPageData));
-    const globalSocailMediaDynamicArray = formGlobalSocialMediaPageIdsArray(globalSocialMediaPageJSONData);
-
-    // stringify and parse the allUserData
-    const allUserJSONData = JSON.parse(JSON.stringify(allUserData));
-
-    // stringify and parse the allUserData
-    const templateAdminPortalQuestionsJSONData = JSON.parse(JSON.stringify(templateAdminPortalQuestionsData));
-    // normalize the templateAdminPortalQuestionsData to make dynamic headers
-    const questionIdsDynamicArray = formQuestionsIdsArray(templateAdminPortalQuestionsJSONData);
-
-    const spreadsheetData = [];
-    console.log('Creating spreadsheet data...');
-    const mainHeadersDynamicArray = formulateHeaders(questionIdsDynamicArray, globalSocailMediaDynamicArray);
-    spreadsheetData.push(mainHeadersDynamicArray);
-    // fetch all the data from all the user responses
-    for (let i = 0; i < allUserJSONData.length; i++) {
-      // fetch individual user responses
-      const {
-        template,
-        userQuestionAnswers,
-        userGlobalTracking,
-        userPosts,
-        userPostActions,
-        userPostTracking,
-        ...userResponse
-      } = allUserJSONData[i];
-
-      // for userResponse try to add it to the
-      const eachRow = [];
-      // try to add everything for userResponse and template specific
-      const userResponseAndTemplate = {
-        ...userResponse,
-        ...template
-      };
-      eachRow = [ ...eachRow, ...normalizeUserAndTemplateData(userResponseAndTemplate)];
-      // try to add everything for userQuestionAnswers
-      // Step 1: fetch all the possible questions for a template so that we know what the headers look like
-      // second while iterating through them add the mcq answers from the user response
-      eachRow = [...eachRow, ...formulateQuestionAnswerSpreadSheet(questionIdsDynamicArray, userQuestionAnswers)]
-      // output userGlobalTracking 
-      eachRow = [ ...eachRow, ...formulateUserGlobalTracking(globalSocailMediaDynamicArray, userGlobalTracking)];
-      // output userPostActions
-      eachRow = [ ...eachRow, ...formulateUserPostActionsTracking(userPostActions)];
-      // output userPostTracking
-      eachRow = [ ...eachRow, formulateUserPostLinkClickTracking(userPostTracking)];
-      // output userPosts
-      eachRow = [ ...eachRow, ...formulateUserPosts(userPosts)];
-      spreadsheetData.push(eachRow);
-    }
-    console.log(`Done! Created all user responses with following dynamic fields ${mainHeadersDynamicArray}.`);
-    
     res.send({
-      response: allUserData || [],
-      CSVResponses: spreadsheetData || [],
+      allUserData: allUserData || [],
+      socialMediaPageData: socialMediaPageData || null,
+      templateAdminPortalQuestionsData: templateAdminPortalQuestionsData || null,
     });
   } catch (error) {
     console.log(error);
@@ -245,6 +182,7 @@ const getUserData = async (req, res, next) => {
 };
 
 const getTemplatesWithUserCounts = async (req, res, next) => {
+  let transaction;
   try {
     if (!req.adminId) {
       res.status(400).send({
@@ -252,6 +190,7 @@ const getTemplatesWithUserCounts = async (req, res, next) => {
       });
       return;
     }
+    transaction = await db.sequelize.transaction();
 
     const data = await db.Template.findAll({
       where: {
@@ -270,13 +209,14 @@ const getTemplatesWithUserCounts = async (req, res, next) => {
           attributes: []
         }
       ]
-    });
-
+    }, { transaction });
+    await transaction.commit();
     res.send({
       response: data
     });
   } catch (error) {
     console.log(error.message);
+    if (transaction) await transaction.rollback();
     res.status(500).send({
       message: "Some error occurred while fetching Templates with user Counts."
     });

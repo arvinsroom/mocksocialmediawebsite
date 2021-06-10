@@ -59,12 +59,11 @@ export const FLOW_PAGE = Object.freeze({
   FLOW_CONFIG_NOTE: "Order values should range from 1 to the total number of pages. An order value of 0 represents no order.",
   PAGE_NAME: 'Page Name',
   PAGE_TYPE: 'Page Type',
-  SET_FLOW_ORDER: 'Flow Order',
+  SET_FLOW_ORDER: 'Change Flow Order',
   CURRENT_FLOW_ORDER: 'Current Flow Order'
 });
 
 export const DATA_PAGE = Object.freeze({
-  DATA_PAGE_NOTE: 'Press the first button to download CSV data, or the second button to download CSV.',
   CONDITION_ID: 'Condition ID',
   CONDITION_NAME: 'Condition Name',
   RESPONSES: 'Responses',
@@ -92,25 +91,25 @@ export const INFO_PAGE = Object.freeze({
   PROVIDE_A_UNIQUE_PAGE_NAME: 'Provide a unique name for this information page',
   SUCCESSFULLY_CREATED_INFORMATION_PAGE: 'Successfully created information page',
   ADD_I_CONSENT_AND_I_DO_NOT_CONSENT_TO_THE_BOTTOM: 'Add "I consent" and "I do not consent" options at the bottom of the page',
-  ADD_FAKE_POSTS_TO_THE_BOTTOM: 'Add all the fake posts that a user either likes, comments, and/or shares at the bottom of the page.',
-  SELECT_SOCIAL_MEDIA_PAGE: 'select a social media page'
+  ADD_FAKE_POSTS_TO_THE_BOTTOM: 'Select a social media page to use for the misinformation display (optional).',
+  SELECT_SOCIAL_MEDIA_PAGE: 'SELECT SOCIAL MEDIA PAGE'
 });
 
 export const GENERAL_PAGE = Object.freeze({
   PROVIDE_A_UNIQUE_NAME_FOR_SOCIAL_MEDIA: 'Provide a unique name for this social media page',
-  SELECT_SOCIAL_MEDIA_LAYOUT: 'Select social media layout',
-  SELECT_ORDER_OF_PRESENTATION_OF_POSTS: 'Select order of presentation of posts',
-  UPLOAD_SPREADSHEET_OF_SOCIAL_MEDIA_POSTS: 'Upload spreadsheet of social media posts',
+  SELECT_PLATFORM: 'Select Platform',
+  ORDER_OF_PRESENTATION_OF_POSTS: 'Order of presentation of posts',
   SUCCESSFULLY_UPLOADED_SOCIAL_MEDIA_SPREADSHEET: 'Successfully uploaded spreadsheet of social media posts',
   UPLOADING_A_NEW_SPREADSHEET_WILL_OVERWRITE: "Uploading a new language spreadsheet will overwrite any existing language spreadsheet.",
   
-  UPLOAD_LANGUAGE_SPREADSHEET: 'Upload language spreadsheet',
   SUCCESSFULLY_UPLOADED_LANGUAGE_SPREADSHEET: 'Successfully uploaded language spreadsheet',
   SELECT_LANGUAGE_FOR_SOCIAL_MEDIA_UI: 'Select language for the social media UI',
-  UPLOAD_MEDIA_ASSOCIATED_WITH_POSTS: 'Upload media associated with the social media posts',
   SUCCESSFULLY_SAVED_LANGUAGE_AND_OR_MEDIA: 'Successfully saved language data and/or uploaded media',
   SAVE_RESPONSES: 'Save Responses',
-  PLEASE_ENTER_A_VALID_RESPONSE: 'Please enter a valid response.'
+  PLEASE_ENTER_A_VALID_RESPONSE: 'Please enter a valid response.',
+  UPLOAD_POST_SPREADSHEET: 'UPLOAD POST SPREADSHEET',
+  UPLOAD_POST_MEDIA: 'UPLOAD POST MEDIA',
+  UPLOAD_LANGUAGE_SPREADSHEET: 'UPLOAD LANGUAGE SPREADSHEET'
 });
 
 export const FINISH_PAGE = Object.freeze({
