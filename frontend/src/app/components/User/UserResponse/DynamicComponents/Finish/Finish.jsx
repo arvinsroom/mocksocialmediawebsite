@@ -1,12 +1,12 @@
 import { getUserFinishDetails } from '../../../../../services/finish-service';
 import { useEffect, useState } from "react";
-import { Button, Container, Link } from '@material-ui/core';
+import { Button, Link } from '@material-ui/core';
 import { useSelector, useDispatch } from "react-redux";
 import { Redirect } from 'react-router-dom';
 import useStyles from '../../../../style';
 import "./Finish.css";
 import { updateFlowActiveState } from '../../../../../actions/flowState';
-import ArrowForwardIosIcon from '@material-ui/icons/ArrowForwardIos';
+import { IconChevronRight } from '@tabler/icons';
 import { USER_TRANSLATIONS_DEFAULT } from '../../../../../constants';
 
 const Finish = ({ data }) => {
@@ -33,13 +33,12 @@ const Finish = ({ data }) => {
       link : `https://${link}`
   };
 
-  const handleClick = () => {
+  const handleSubmit = () => {
     dispatch(updateFlowActiveState());
   };
 
   return (
    <>
-    <Container component="main" maxWidth="md" className={classes.card}>
       {finishObj ? 
         <>
           <p className='finishText'>{finishObj.text ? finishObj.text : ""}</p>
@@ -57,13 +56,12 @@ const Finish = ({ data }) => {
         type="submit"
         variant="contained"
         color="primary"
-        style={{ float: 'right', width: '25%'}}
-        onClick={handleClick}
+        onClick={handleSubmit}
         className={classes.submit}
+        endIcon={<IconChevronRight />}
       >
-        <ArrowForwardIosIcon style={{ fontSize: 15 }} />
+        {translations?.next || "NEXT"}
       </Button>
-      </Container>
     </>
   );
 };

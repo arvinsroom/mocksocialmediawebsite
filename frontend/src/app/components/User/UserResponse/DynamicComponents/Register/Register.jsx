@@ -1,17 +1,16 @@
 import { getUserRegisterDetails } from '../../../../../services/register-service';
 // import { createUserRegister } from '../../../../../services/register-service';
 import { useEffect, useState } from "react";
-import { Button, Input, Container, Avatar, Fab, TextField } from '@material-ui/core';
+import { Button, Input, Avatar, TextField } from '@material-ui/core';
 import { useSelector, useDispatch } from "react-redux";
-import AddIcon from "@material-ui/icons/Add";
 import { Redirect } from 'react-router-dom';
 import useStyles from '../../../../style';
 import { showErrorSnackbar, showInfoSnackbar, showSuccessSnackbar } from '../../../../../actions/snackbar';
 import { updateFlowActiveState } from '../../../../../actions/flowState';
 import { setRegisterMetaData } from '../../../../../actions/userRegister';
-import ArrowForwardIosIcon from '@material-ui/icons/ArrowForwardIos';
 import { USER_TRANSLATIONS_DEFAULT } from '../../../../../constants';
 import cloneDeep from 'lodash/cloneDeep';
+import { IconCloudUpload, IconChevronRight } from '@tabler/icons';
 import "./Register.css";
 
 const Register = ({ data }) => {
@@ -61,7 +60,7 @@ const Register = ({ data }) => {
     return true;
   }
 
-  const handleClick = async e => {
+  const handleSubmit = async e => {
     e.preventDefault();
 
     try {
@@ -129,7 +128,12 @@ const Register = ({ data }) => {
             src={registerStateRes[field._id].avatar}
             className="registerTopAvatar"
           />
-          <label htmlFor="upload-photo">
+        <Button
+          variant="contained"
+          component="label"
+          startIcon={<IconCloudUpload />}
+        >
+          {translations?.upload || USER_TRANSLATIONS_DEFAULT.UPLOAD}
           <Input
             style={{ display: "none" }}
             id="upload-photo"
@@ -139,16 +143,7 @@ const Register = ({ data }) => {
             accept={field.type.toLowerCase() + '/*'}
             onChange={(e) => handleFileField(field._id, e)}
           />
-          <Fab
-            className="registerTopInput"
-            color="primary"
-            size="small"
-            component="span"
-            aria-label="add"
-            variant="extended">
-            <AddIcon /> {translations?.upload || USER_TRANSLATIONS_DEFAULT.UPLOAD}
-          </Fab>
-        </label>
+        </Button>
       </div>
       );
     } else {
@@ -172,7 +167,7 @@ const Register = ({ data }) => {
   };
 
   return (
-    <Container component="main" maxWidth="md" className={classes.card}>
+  <>
       {registerState?.length > 0 && registerState.map(field => (
         <div key={field._id}>
           {renderDynamicInput(field)}
@@ -182,13 +177,13 @@ const Register = ({ data }) => {
         type="submit"
         variant="contained"
         color="primary"
-        style={{ float: 'right', width: '25%' }}
-        onClick={handleClick}
+        onClick={handleSubmit}
         className={classes.submit}
+        endIcon={<IconChevronRight />}
       >
-        <ArrowForwardIosIcon style={{ fontSize: 15 }} />
+        {translations?.next || "NEXT"}
       </Button>
-    </Container>
+      </>
   );
 };
 

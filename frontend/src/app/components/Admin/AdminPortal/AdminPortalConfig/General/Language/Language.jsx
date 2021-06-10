@@ -1,16 +1,18 @@
 import { useState, useEffect } from 'react';
 import * as XLSX from 'xlsx';
-import { Button, Typography, Input, Divider, Box } from '@material-ui/core';
+import { Button, Input, Box } from '@material-ui/core';
 import { create } from "../../../../../../services/language-service";
-import { useSelector, useDispatch } from "react-redux";
+import { useDispatch } from "react-redux";
 import useStyles from '../../../../../style';
 import SelectLanguage from './SelectLanguage';
 import { showErrorSnackbar, showInfoSnackbar, showSuccessSnackbar } from '../../../../../../actions/snackbar';
 import { GENERAL_PAGE, TEMPLATE } from '../../../../../../constants';
+import { IconLanguage } from '@tabler/icons';
 
 const Language = ({ disable, templateId }) => {
   const [languageJSON, setLanguageJSON] = useState(null);
   const [currentLanguages, setCurrentLanguages] = useState(null);
+  const [uploadLanSpreadsheetName, setUploadLanSpreadsheetName] = useState("");
 
   const classes = useStyles();
   const dispatch = useDispatch();
@@ -31,6 +33,7 @@ const Language = ({ disable, templateId }) => {
       if (file.size > 20e6) {
         dispatch(showInfoSnackbar("Please upload file of size less than 20MB."));
       } else {
+        setUploadLanSpreadsheetName(file.name);
         let reader = new FileReader();
         reader.onload = function (e) {
           var data = e.target.result;
@@ -53,6 +56,7 @@ const Language = ({ disable, templateId }) => {
 
   const resetValues = () => {
     setLanguageJSON(null);
+    setUploadLanSpreadsheetName("");
   };
 
   const handleSubmit = async e => {
@@ -84,19 +88,29 @@ const Language = ({ disable, templateId }) => {
   return (
     <>
     <Box component="span" className={classes.note} display="block">
-      {GENERAL_PAGE.UPLOADING_A_NEW_SPREADSHEET_WILL_OVERWRITE}
+      <p>{GENERAL_PAGE.UPLOADING_A_NEW_SPREADSHEET_WILL_OVERWRITE}</p>
     </Box>
       <form onSubmit={handleSubmit}>
-        <Typography component="h6">
+        <br/>
+        <Button
+          variant="contained"
+          component="label"
+          startIcon={<IconLanguage />}
+        >
           {GENERAL_PAGE.UPLOAD_LANGUAGE_SPREADSHEET}
-        </Typography>
-        <Input
-          type="file"
-          disableUnderline={true}
-          accept={SheetJSFT}
-          onChange={(e) => handleChange(e)}
-        />
-        <Divider className={classes.divider}/>
+          <Input
+            style={{ display: "none" }}
+            disableUnderline={true}
+            id="upload-files"
+            type="file"
+            inputProps={{ multiple: false }}
+            accept={SheetJSFT}
+            onChange={(e) => handleChange(e)}
+            />
+        </Button>
+        <br/>
+        <p>{" Spreadsheet that will be uploaded upon clicking next step: " + (uploadLanSpreadsheetName || "")}</p>
+
         <Button
           type="submit"
           variant="contained"
@@ -110,6 +124,7 @@ const Language = ({ disable, templateId }) => {
       </form>
       {<SelectLanguage currentLanguages={currentLanguages} templateId={templateId}/>}
     </>
+    
   );
 };
 

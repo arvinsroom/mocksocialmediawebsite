@@ -1,5 +1,5 @@
-import { useState, useRef } from 'react';
-import { Button, Input, Typography, Box } from '@material-ui/core';
+import { useState } from 'react';
+import { Button, Input, Box } from '@material-ui/core';
 import useStyles from '../../../../../style';
 import { useDispatch } from "react-redux";
 import { uploadMultipleFiles } from "../../../../../../services/media-service";
@@ -7,19 +7,20 @@ import { showErrorSnackbar, showSuccessSnackbar, showInfoSnackbar } from '../../
 import { GENERAL_PAGE } from '../../../../../../constants';
 import Progress from '../../../../../Common/Progress';
 import SocialMediaPages from '../../../../../Common/AdminCommon/SocialMediaPages';
+import { IconPhoto } from '@tabler/icons';
 
 const Upload = ({ templateId }) => {
   const [selectedFiles, setSelectedFiles] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [active, setActive] = useState("");
+  const [uploadMediaNames, setUploadMediaNames] = useState("");
 
   const classes = useStyles();
-  const clearValues = useRef(null);
   const dispatch = useDispatch();
 
   const resetValues = () => {
     setSelectedFiles(null);
-    clearValues.current.value = "";
+    setUploadMediaNames("");
   };
 
   const uploadFiles = async () => {
@@ -59,28 +60,43 @@ const Upload = ({ templateId }) => {
   };
 
   const selectFiles = (e) => {
-    setSelectedFiles(e.target.files);
+    const allFiles = e.target.files;
+    setSelectedFiles(allFiles);
+    // and update the diaplay names
+    let allNames = '';
+    for (let i = 0; i < allFiles.length; i++) allNames += allFiles[i].name + ';';
+    setUploadMediaNames(allNames);
   }
 
   return (
     <>
       <form onSubmit={handleSubmit} className={classes.form}>
         <Box component="span" className={classes.note} display="block">
-          You can either upload all files at once or in small batches. Total file size limit is: 20MB. 
+          <p>Media can be uploaded all at once or in batches, as long as no batch exceeds 20MB in size.</p>
         </Box>
+        <br/>
         <SocialMediaPages active={active} setActive={setActive} templateId={templateId}/>
+        <br/>
+        <br/>
+        <Button
+          variant="contained"
+          component="label"
+          startIcon={<IconPhoto />}
+        >
+          {GENERAL_PAGE.UPLOAD_POST_MEDIA}
+          <Input
+            style={{ display: "none" }}
+            disableUnderline={true}
+            id="upload-files"
+            type="file"
+            inputProps={{ multiple: true }}
+            accept="image/*, video/*"
+            onChange={selectFiles}
+          />
+        </Button>
+        <br/>
+        <p>{" Media that will be uploaded upon clicking next step: " + (uploadMediaNames || "")}</p>
 
-        <Typography component="h6">
-          {GENERAL_PAGE.UPLOAD_MEDIA_ASSOCIATED_WITH_POSTS}
-        </Typography>
-        <Input
-          type="file"
-          inputProps={{ multiple: true }}
-          accept="image/*, video/*"
-          disableUnderline={true}
-          onChange={selectFiles}
-          ref={clearValues}
-        />
         {isLoading && <Progress />}
         <Button
           type="submit"

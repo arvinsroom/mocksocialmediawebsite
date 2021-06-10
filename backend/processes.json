@@ -6,7 +6,7 @@
         "merge_logs": true,
         "max_restarts": 10,
         "instances": 2,
-        "max_memory_restart": "200M"
+        "max_memory_restart": "500M"
       }
   ]
 }

@@ -13,10 +13,6 @@ const General = () => {
   const { _id: templateId } = useSelector(state => state.template);
   const classes = useStyles();
 
-  useEffect(() => {
-    
-  }, []);
-
   if (!isLoggedInAdmin) {
     return <Redirect to="/admin" />;
   }
@@ -24,17 +20,18 @@ const General = () => {
   return (
     <>
     <Container component="main" maxWidth="lg" className={classes.card}>
-      <p>Step 1</p>
+      <h1>Social Media Page</h1>
+      <h2>Step 1 - Basic information</h2>
       <MediaPosts templateId={templateId} />
     </Container>
-    <br></br>
+    <br />
     <Container component="main" maxWidth="lg" className={classes.card}>
-      <p>Step 2</p>
+      <h2>Step 2 - Upload associated media</h2>
       <Upload templateId={templateId}/>
     </Container>
-    <br></br>
+    <br />
     <Container component="main" maxWidth="lg" className={classes.card}>
-      <p>Step 3</p>
+      <h2>Step 3 - Upload language information</h2>
       <Language templateId={templateId}/>
     </Container>
     </>

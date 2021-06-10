@@ -11,8 +11,7 @@ import { Button,
   DialogContent,
   DialogActions,
   DialogContentText,
-  DialogTitle,
-  IconButton
+  DialogTitle
 } from '@material-ui/core';
 import { useEffect, useState } from 'react';
 import { update, get, deletePage } from '../../../../../services/page-service';
@@ -21,7 +20,7 @@ import { Redirect } from 'react-router-dom';
 import useStyles from '../../../../style';
 import { showErrorSnackbar, showSuccessSnackbar, showInfoSnackbar } from '../../../../../actions/snackbar';
 import { TEMPLATE, FLOW_PAGE } from '../../../../../constants';
-import DeleteIcon from '@material-ui/icons/Delete';
+import { IconRefresh, IconTrash } from '@tabler/icons';
 
 const Flow = () => {
   const [pages, setPages] = useState("");
@@ -101,53 +100,49 @@ const Flow = () => {
   return (
     <>
     <Container component="main" maxWidth="lg" className={classes.card}>
+    <h1>Study Flow Page</h1>
     <Box component="span" className={classes.note} display="block">
       {FLOW_PAGE.FLOW_CONFIG_NOTE}
     </Box>
-    <form onSubmit={handleSubmit} className={classes.form}>
-      <Table aria-label="Configure Page Ordering">
+
+    <Table aria-label="Configure Page Ordering">
       <TableHead>
         <TableRow>
-          <TableCell className={classes.body, classes.head} align="center">{FLOW_PAGE.PAGE_NAME}</TableCell>
-          <TableCell className={classes.body, classes.head} align="center">{FLOW_PAGE.PAGE_TYPE}</TableCell>
-          <TableCell className={classes.body, classes.head} align="center">{FLOW_PAGE.SET_FLOW_ORDER}</TableCell>
-          <TableCell className={classes.body, classes.head} align="center">{FLOW_PAGE.CURRENT_FLOW_ORDER}</TableCell>
-          <TableCell className={classes.body, classes.head} align="center">{"Delete Page"}</TableCell>
+          <TableCell className={classes.body, classes.head} align="center"><p>{FLOW_PAGE.PAGE_NAME}</p></TableCell>
+          <TableCell className={classes.body, classes.head} align="center"><p>{FLOW_PAGE.PAGE_TYPE}</p></TableCell>
+          <TableCell className={classes.body, classes.head} align="center"><p>{FLOW_PAGE.CURRENT_FLOW_ORDER}</p></TableCell>
+          <TableCell className={classes.body, classes.head} align="center"><p>{FLOW_PAGE.SET_FLOW_ORDER}</p></TableCell>
+          <TableCell className={classes.body, classes.head} align="center"><p>Delete Page</p></TableCell>
         </TableRow>
       </TableHead>
       <TableBody>
         {pages && pages.length > 0 ? pages.map((row) => (
           <TableRow key={row._id}>
-            <TableCell align="center">{row.name}</TableCell>
-            <TableCell align="center">{row.type}</TableCell>
+            <TableCell align="center">
+              <p>{row.name}</p>
+            </TableCell>
+            <TableCell align="center">
+              <p>{row.type}</p>
+            </TableCell>
+            <TableCell align="center">
+              <p>{row.flowOrder || 0}</p>
+            </TableCell>
             <TableCell align="center">
               <TextField
                 id="standard-number"
                 onChange={e => handleChange(row._id, e)}
                 inputProps={{ min: 0, max: 65535, step: 1 }}
                 type="number"
-                InputLabelProps={{
-                  shrink: true,
-                }}
               />
             </TableCell>
             <TableCell align="center">
-              <TextField
-                id="standard-number"
-                disabled={true}
-                // InputProps={{ inputProps: { min: 0, max: 65535 } }}
-                value={row.flowOrder || 0}
-                type="number"
-                InputLabelProps={{
-                  shrink: true,
-                }}
-              />
+              <Button
+                aria-label="delete template"
+                onClick={(e) => handleClickOpen(row._id, row.name, e)}
+                >
+                <IconTrash />
+              </Button>
             </TableCell>
-            <TableCell align="center">
-                <IconButton aria-label="delete template" onClick={(e) => handleClickOpen(row._id, row.name, e)}>
-                  <DeleteIcon color="primary" />
-                </IconButton>
-              </TableCell>
           </TableRow>
         )) : null}
       </TableBody>
@@ -155,14 +150,15 @@ const Flow = () => {
     <Button
       type="submit"
       variant="contained"
-      color="primary"
       fullWidth
       disabled={!pageOrderData}
       className={classes.submit}
+      onClick={handleSubmit}
+      component="label"
+      startIcon={<IconRefresh />}
     >
-      Save
+      UPDATE FLOW ORDER
     </Button>
-    </form>
 
     </Container>
         <Dialog
