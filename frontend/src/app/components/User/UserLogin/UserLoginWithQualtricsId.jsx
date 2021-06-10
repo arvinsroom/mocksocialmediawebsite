@@ -3,20 +3,19 @@ import { Redirect, useHistory, useParams } from "react-router-dom";
 import { Button, CssBaseline, TextField } from '@material-ui/core';
 import Container from '@material-ui/core/Container';
 import { useDispatch, useSelector } from "react-redux";
-import { userLogin,  } from "../../../actions/userAuth";
 import useStyles from '../../style';
-// import { getAllLanguagesData, setActiveLanguage } from '../../actions/global';
-// import { selectActiveLanguage, selectAllLanguage } from '../../selectors/global';
+import InputAdornment from '@material-ui/core/InputAdornment';
+import { IconKey } from '@tabler/icons';
 import { showInfoSnackbar } from "../../../actions/snackbar";
 import { updateUserMain } from '../../../actions/user';
 import { USER_TRANSLATIONS_DEFAULT } from '../../../constants';
+import "./UserLogin.css";
 
 const UserLoginWithQualtricsId = () => {
   let history = useHistory();
   const [qualtricsId, setQualtricsId] = useState("");
   const classes = useStyles();
   const dispatch = useDispatch();
-  // const selectedLanguage = useSelector(state => selectActiveLanguage(state));
   const { isLoggedInUser, translations } = useSelector(state => state.userAuth);
   const { accessCode } = useParams();
 
@@ -55,6 +54,13 @@ const UserLoginWithQualtricsId = () => {
           name={USER_TRANSLATIONS_DEFAULT.PARTICIPANT_ID}
           label={(translations?.participant_id) || USER_TRANSLATIONS_DEFAULT.PARTICIPANT_ID}
           onChange={({ target }) => setQualtricsId(target.value)}
+          InputProps={{
+            startAdornment: (
+              <InputAdornment position="start">
+                <IconKey />
+              </InputAdornment>
+            ),
+          }}
         />
         <Button
           type="submit"

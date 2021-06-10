@@ -10,11 +10,11 @@ import {
 } from '../../../../../actions/facebook';
 import { updateFlowActiveState } from '../../../../../actions/flowState';
 import { Button, Container } from '@material-ui/core';
-import ArrowForwardIosIcon from '@material-ui/icons/ArrowForwardIos';
 import StoryCreate from "./Feed/StoryCreate/StoryCreate";
+import { IconChevronRight } from '@tabler/icons';
 
 const Facebook = ({ data }) => {
-  const { isLoggedInUser, languageName } = useSelector(state => state.userAuth);
+  const { isLoggedInUser, translations, languageName } = useSelector(state => state.userAuth);
 
   const totalPostCount = useSelector(state => state.facebook.totalPostCount);
   const allIds = useSelector(state => state.facebook.allIds);
@@ -40,30 +40,29 @@ const Facebook = ({ data }) => {
     fetch();
   }, []);
 
-  const handleClick = (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
     dispatch(updateFlowActiveState());
   };
 
   return (
     <>
-      <Container component="main" maxWidth="sm">
+      <Container component="main" maxWidth="sm" className="facebookCard">
         <StoryCreate />
 
         <div className="facebookMainBody">
           {totalPostCount && totalPostCount > 0 ? <Feed /> : <p>No Posts Exists!</p>}
         </div>
         <Button
-            type="submit"
-            variant="contained"
-            color="primary"
-            disabled={allIds.length < totalPostCount}
-            style={{ float: 'right', width: '25%'}}
-            onClick={handleClick}
-            className={classes.submit}
-          >
-            <ArrowForwardIosIcon style={{ fontSize: 15 }} />
-          </Button>
+          type="submit"
+          variant="contained"
+          color="primary"
+          onClick={handleSubmit}
+          className={classes.submit}
+          endIcon={<IconChevronRight />}
+        >
+          {translations?.next || "NEXT"}
+        </Button>
       </Container>
     </>
   )

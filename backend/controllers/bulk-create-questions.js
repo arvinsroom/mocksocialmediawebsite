@@ -19,14 +19,8 @@ const mcqBulkCreate = async (options, questionId, transaction) => {
     tempObj.optionText = options[i].optionText;
     tempObj.optionOrder = options[i].optionOrder || 0;
     mcqOptions.push(tempObj);
-  }
-  
-  try {
-    return await McqOption.bulkCreate(mcqOptions, { transaction });
-  } catch (error) {
-    console.log(error.message);
-    throw "Some error occurred while creating the Mcq options record(s).";
-  }
+  }  
+  await McqOption.bulkCreate(mcqOptions, { transaction });
 };
 
 // here we will recieve array of questions with, required and page Id, order, multiResponse,

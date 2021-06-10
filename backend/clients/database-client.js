@@ -31,7 +31,7 @@ const sequelize = new Sequelize({
   pool: {
     acquire: 30000,
     idle: 10000,
-    max: 5,
+    max: 25,
     min: 0,
   },
   dialect: config.dialect,

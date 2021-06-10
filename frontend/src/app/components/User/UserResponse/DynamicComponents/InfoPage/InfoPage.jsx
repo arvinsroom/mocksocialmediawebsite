@@ -8,7 +8,6 @@ import {
   RadioGroup,
   Radio,
   FormControlLabel,
-  Container
  } from '@material-ui/core';
 import { useSelector, useDispatch } from "react-redux";
 import { Redirect } from 'react-router-dom';
@@ -16,7 +15,7 @@ import useStyles from '../../../../style';
 import { showSuccessSnackbar, showInfoSnackbar, showErrorSnackbar } from '../../../../../actions/snackbar';
 import { updateUserMain } from '../../../../../actions/user';
 import { updateFlowActiveState } from '../../../../../actions/flowState';
-import ArrowForwardIosIcon from '@material-ui/icons/ArrowForwardIos';
+import { IconChevronRight } from '@tabler/icons';
 import Progress from '../../../../Common/Progress';
 import { USER_TRANSLATIONS_DEFAULT } from '../../../../../constants';
 import RenderRichTextArea from '../../../../Common/UserCommon/RenderRichTextArea';
@@ -96,12 +95,10 @@ const InfoPage = ({ data }) => {
 
   return (  
    <>
-    <Container component="main" maxWidth="md" className={classes.card}>
-
-      {data?.richText && <RenderRichTextArea richText={data.richText} />}
+      {data?.richText && <><RenderRichTextArea richText={data.richText} /> <br/> </>}
 
       {infoDetails?.consent === true &&
-        <Container component="main" maxWidth="md" className={classes.card}>
+        <div>
           <FormControl component="fieldset">
             <FormLabel component="legend">{(translations?.['please_indicate_whether_you_consent_to_participate_to_continue.']) || USER_TRANSLATIONS_DEFAULT.PROVIDE_CONSENT}</FormLabel>
           </FormControl>
@@ -109,14 +106,15 @@ const InfoPage = ({ data }) => {
             <FormControlLabel value={'YES'} control={<Radio color="primary" />} label={(translations?.i_consent) || USER_TRANSLATIONS_DEFAULT.I_CONSENT} />
             <FormControlLabel value={'NO'} control={<Radio color="primary" />} label={(translations?.i_do_not_consent) || USER_TRANSLATIONS_DEFAULT.I_DO_NOT_CONSENT} />
           </RadioGroup>
-        </Container>}
+          <br />
+        </div>}
       {infoDetails?.socialMediaPageId !== null &&
-        <Container component="main" maxWidth="md" className={classes.card}>
+        <>
           {fakeShareSocialMediaPosts?.length > 0 ? 
             <>
             <p><b>{translations?.['shared_posts'] || USER_TRANSLATIONS_DEFAULT.SHARED_POSTS}</b></p>
             {fakeShareSocialMediaPosts.map(item => (
-              <div key={item._id} className={classes.card}>
+              <div key={item._id}>
                 <div className="fakePostDetails">
                   <p>{item?.parentUserPost?.linkTitle || item?.parentUserPost?.postMessage || ""}</p>
                 </div>
@@ -126,14 +124,15 @@ const InfoPage = ({ data }) => {
           : 
             <p><b>{translations?.['no_shared_posts!'] || USER_TRANSLATIONS_DEFAULT.NO_SHARED_POSTS}</b></p>
           }
+          <br />
           {fakeActionSocialMediaPosts?.length > 0 ? 
           <>
             <p><b>{translations?.['liked_or_commented_posts'] || USER_TRANSLATIONS_DEFAULT.LIKED_OR_COMMENTED_POSTS}</b></p>
             {fakeActionSocialMediaPosts.map(item => (
-              <div key={item._id} className={classes.card}>
+              <div key={item._id}>
                 <div className="fakePostDetails">
-                  <p>{translations?.action || USER_TRANSLATIONS_DEFAULT.ACTION}: {capitalize(item.action)}</p>
-                  {item.action === 'COMMENT' && <p>{translations?.comment || USER_TRANSLATIONS_DEFAULT.COMMENT}: {item.comment || ""}</p>}
+                  <p><b>{translations?.action || USER_TRANSLATIONS_DEFAULT.ACTION}:</b> {capitalize(item.action)}</p>
+                  {item.action === 'COMMENT' && <p><b>{translations?.comment || USER_TRANSLATIONS_DEFAULT.COMMENT}:</b> {item.comment || ""}</p>}
                   <p>{item.userPosts?.linkTitle || item.userPosts?.postMessage || ""}</p>
                 </div>
               </div>
@@ -142,23 +141,22 @@ const InfoPage = ({ data }) => {
           : 
             <p><b>{translations?.['no_liked_or_commented_posts!'] || USER_TRANSLATIONS_DEFAULT.NO_LIKED_OR_COMMENTED_POSTS}</b></p>
           }
-        </Container>
+        </>
       }
       {isLoading && <Progress />}
 
       {infoDetails?.isFinish !== true &&
-        <Button
-          type="submit"
-          variant="contained"
-          color="primary"
-          style={{ float: 'right', width: '25%'}}
-          onClick={handleSubmit}
-          className={classes.submit}
-        >
-          <ArrowForwardIosIcon style={{ fontSize: 15 }} />
-        </Button>
+      <Button
+        type="submit"
+        variant="contained"
+        color="primary"
+        onClick={handleSubmit}
+        className={classes.submit}
+        endIcon={<IconChevronRight />}
+      >
+        {translations?.next || "NEXT"}
+      </Button>
       }
-    </Container>
    </>
   );
 };
