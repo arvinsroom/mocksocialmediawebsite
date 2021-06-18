@@ -89,6 +89,7 @@ export const getFacebookPosts = (data) => (dispatch) => {
         posts[eachId] = { ...postRecords[i], userPost: false };
         metaData[eachId] = {
           like: 'default',
+          initLike: postRecords[i].initLike || 0,
           actionId: null,
           parentPostId: null,
           comments: [],

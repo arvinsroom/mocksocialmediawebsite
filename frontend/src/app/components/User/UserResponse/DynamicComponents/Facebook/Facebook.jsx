@@ -15,9 +15,7 @@ import { IconChevronRight } from '@tabler/icons';
 
 const Facebook = ({ data }) => {
   const { isLoggedInUser, translations, languageName } = useSelector(state => state.userAuth);
-
   const totalPostCount = useSelector(state => state.facebook.totalPostCount);
-  const allIds = useSelector(state => state.facebook.allIds);
 
   const dispatch = useDispatch();
   const classes = useStyles();

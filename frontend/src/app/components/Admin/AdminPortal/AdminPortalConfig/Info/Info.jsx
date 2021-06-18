@@ -24,6 +24,7 @@ const InfoPage = () => {
   const [pageName, setPageName] = useState("");
   const [consent, setConsent] = useState(false);
   const [isFinish, setIsFinish] = useState(false);
+  const [responseCode, setResponseCode] = useState(false);
   const [active, setActive] = useState("");
 
   const { isLoggedInAdmin } = useSelector(state => state.auth);
@@ -38,6 +39,7 @@ const InfoPage = () => {
     await setActive("");
     await setConsent(false);
     await setIsFinish(false);
+    await setResponseCode(false);
   };
 
   const handleConsent = (e) => {
@@ -46,6 +48,10 @@ const InfoPage = () => {
   
   const handleIsFinish = (e) => {
     setIsFinish(e.target.checked);
+  };
+
+  const handleResponseCode = (e) => {
+    setResponseCode(e.target.checked);
   };
 
   const handleSave = async e => {
@@ -62,9 +68,9 @@ const InfoPage = () => {
       richText: checkIfEmptyRichText(richText) ? null : richText,
       consent: consent,
       socialMediaPageId: active,
-      isFinish: isFinish
+      isFinish: isFinish,
+      responseCode: responseCode
     };
-
     try {
       await create(info);
       await dispatch(showSuccessSnackbar(INFO_PAGE.SUCCESSFULLY_CREATED_INFORMATION_PAGE));
@@ -122,6 +128,19 @@ const InfoPage = () => {
             inputProps={{ 'aria-label': 'Render this page as a Finish page' }}
           />}
           label={"Make this page terminal"}
+        />
+      </FormGroup>
+
+      <FormGroup  style={{ padding: '15px' }}>
+        <FormControlLabel
+          control={<Switch
+            checked={responseCode}
+            onChange={handleResponseCode}
+            color="primary"
+            name="responseCode"
+            inputProps={{ 'aria-label': 'Show response code' }}
+          />}
+          label={"Show response code"}
         />
       </FormGroup>
 

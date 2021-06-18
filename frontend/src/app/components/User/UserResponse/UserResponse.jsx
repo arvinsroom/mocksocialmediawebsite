@@ -13,6 +13,7 @@ import MCQ from './DynamicComponents/MCQ/MCQ';
 import Opentext from './DynamicComponents/Opentext/Opentext';
 import Register from './DynamicComponents/Register/Register';
 import Facebook from './DynamicComponents/Facebook/Facebook';
+import Twitter from './DynamicComponents/Twitter/Twitter';
 
 import { userLogout } from "../../../actions/userAuth";
 import { updateUserMain } from '../../../actions/user';
@@ -24,6 +25,7 @@ const Components = {
   REGISTER: Register,
   FACEBOOK: Facebook,
   INFO: InfoPage,
+  TWITTER: Twitter,
 };
 
 const UserResponse = () => {

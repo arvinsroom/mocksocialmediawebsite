@@ -12,7 +12,7 @@ export default (sequelize, DataTypes) => {
     },
     type: {
       allowNull: true,
-      type: DataTypes.ENUM('LINK', 'VIDEO', 'PHOTO', 'TEXT', 'SHARE')
+      type: DataTypes.ENUM('LINK', 'VIDEO', 'PHOTO', 'TEXT', 'SHARE', 'RETWEET', 'REPLYTO', 'QUOTETWEET')
     },
     linkTitle: {
       allowNull: true,
@@ -39,6 +39,34 @@ export default (sequelize, DataTypes) => {
       allowNull: true,
       type: DataTypes.STRING(1024),
       defaultValue: null
+    },
+    authorId: {
+      allowNull: true,
+      references: {
+        key: '_id',
+        model: 'UserPostAuthor'
+      },
+      type: DataTypes.INTEGER
+    },
+    isReplyTo: {
+      allowNull: true,
+      type: DataTypes.INTEGER
+    },
+    isReplyToOrder: {
+      allowNull: true,
+      type: DataTypes.SMALLINT
+    },
+    initLike: {
+      allowNull: true,
+      type: DataTypes.INTEGER
+    },
+    datePosted: {
+      allowNull: true,
+      type: DataTypes.STRING
+    },
+    handle: {
+      allowNull: true,
+      type: DataTypes.STRING
     },
     userId: {
       allowNull: true,
@@ -82,6 +110,12 @@ export default (sequelize, DataTypes) => {
     UserPost.belongsTo(models.User, {
       foreignKey: {
         name: 'userId',
+        allowNull: true
+      }
+    });
+    UserPost.belongsTo(models.UserPostAuthor, {
+      foreignKey: {
+        name: 'authorId',
         allowNull: true
       }
     });
