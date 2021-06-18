@@ -1,6 +1,7 @@
 import db from "../clients/database-client";
 import Page from './create-page';
 const Info = db.Info;
+const User = db.User;
 
 // save a Info and return the _id for the Info created
 const create = async (req, res, next) => {
@@ -13,8 +14,10 @@ const create = async (req, res, next) => {
       richText,
       consent,
       socialMediaPageId,
-      isFinish
+      isFinish,
+      responseCode
     } = req.body;
+    console.log(responseCode);
 
     if (!templateId) {
       res.status(400).send({
@@ -43,7 +46,8 @@ const create = async (req, res, next) => {
       pageId,
       consent: consent || false,
       socialMediaPageId: socialMediaPageId || null,
-      isFinish: isFinish || false
+      isFinish: isFinish || false,
+      showResponseCode: responseCode || false,
     }, { transaction });
     // if we reach here, there were no errors therefore commit the transaction
     await transaction.commit();
@@ -61,9 +65,38 @@ const create = async (req, res, next) => {
   }
 };
 
+// will mostly run once
+const checkExistAndReturnResponseCode = async (transaction) => {
+  // have one case outside as it will be the most common case
+  let responseCode = Math.floor(100000 + Math.random() * 900000);
+  const data = await User.findOne({
+    where: {
+      responseCode
+    }
+  }, { transaction });
+  // data is not null, try again with another tempCode
+  while (data !== null) {
+    console.log('Collision! Trying a new Response Code.');
+    responseCode = Math.floor(100000 + Math.random() * 900000);
+    data = await User.findOne({
+      where: {
+        responseCode
+      }
+    }, { transaction });
+  }
+  return responseCode;
+}
+
 const getInfoDetails = async (req, res, next) => {
   let transaction;
   try {
+    // fetch userId from middleware
+    if (!req.userId) {
+      res.status(400).send({
+        message: "Invalid User Token, please log in again!"
+      });
+      return;
+    }
     // fetch template _id from params
     const pageId = req.params.pageId;
     if (!pageId) {
@@ -81,12 +114,29 @@ const getInfoDetails = async (req, res, next) => {
       where: {
         pageId: pageId
       },
-      attributes: ['consent', 'socialMediaPageId', 'isFinish']
+      attributes: ['consent', 'socialMediaPageId', 'isFinish', 'showResponseCode']
     }, { transaction, logging: false });
     
+    let code = null;
+    // add the logic to generate the 6 digit code if showResponseCode is true
+    if (data.showResponseCode) {
+      // create a unique 6 digit response code
+      code = await checkExistAndReturnResponseCode(transaction);
+      // update the user object
+      await User.update({
+        responseCode: code
+      }, {
+        where: {
+          _id: req.userId
+        },
+        transaction
+      });
+    }
+
     await transaction.commit();
     res.send({
       infoDetails: data,
+      responseCode: code
     });
 
   } catch (error) {

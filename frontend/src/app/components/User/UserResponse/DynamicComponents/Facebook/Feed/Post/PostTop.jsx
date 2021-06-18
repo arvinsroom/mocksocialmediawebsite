@@ -34,7 +34,7 @@ const PostTop = ({ id }) => {
               />
               <div className="postTopInfo">
                 <h3>{singlePost.userPost ? (userRegisterData['USERNAME'] || "") : ""}</h3>
-                {/* <p>{"2h"}</p> */}
+                <p>{singlePost.datePosted || ""}</p>
               </div>
               <div className="postTopThreeDots">
                 <MoreHorizIcon />
