@@ -5,7 +5,7 @@ import snackbar from './snackbar';
 import userAuth from './userAuth';
 import flowState from './flowState';
 import userRegister from './userRegister';
-import facebook from './facebook';
+import socialMedia from './socialMedia';
 
 export default combineReducers({
   auth,
@@ -13,6 +13,6 @@ export default combineReducers({
   snackbar,
   userAuth,
   flowState,
-  facebook,
+  socialMedia,
   userRegister
 });

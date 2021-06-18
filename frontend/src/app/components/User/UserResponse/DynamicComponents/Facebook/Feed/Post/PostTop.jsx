@@ -1,17 +1,18 @@
 import "./Post.css";
 import { useSelector } from "react-redux";
 import { trackLinkClick } from '../../../../../../../services/tracking-service';
-import { selectSinglePost } from '../../../../../../../selectors/facebook';
-import Photo from './PostType/Photo';
-import Video from './PostType/Video';
-import Text from './PostType/Text';
+import { selectSinglePost } from '../../../../../../../selectors/socialMedia';
+import { selectSocialMediaAuthor } from '../../../../../../../selectors/socialMediaAuthors';
+import DynamicMedia from '../../../../../../Common/UserCommon/SocialMediaPostType/DynamicMedia';
+import Text from '../../../../../../Common/UserCommon/SocialMediaPostType/Text';
 import { Avatar } from "@material-ui/core";
 import { useEffect, useState } from "react";
-import Share from './PostType/Share';
+import Share from '../../../../../../Common/UserCommon/SocialMediaPostType/Share';
 import MoreHorizIcon from '@material-ui/icons/MoreHoriz';
 
 const PostTop = ({ id }) => {
   const singlePost = useSelector(state => selectSinglePost(state, id));
+  const singleAuthor = useSelector(state => selectSocialMediaAuthor(state, singlePost.authorId));
   const userRegisterData = useSelector(state => state.userRegister.metaData);
 
   const [renderSinglePost, setRenderSinglePost] = useState(null);
@@ -33,7 +34,9 @@ const PostTop = ({ id }) => {
                 className="postTopAvatar"
               />
               <div className="postTopInfo">
-                <h3>{singlePost.userPost ? (userRegisterData['USERNAME'] || "") : ""}</h3>
+                <h3>{singlePost.userPost ? (userRegisterData['USERNAME'] || "") : 
+                  singleAuthor?.authorName || ""
+                }</h3>
                 <p>{singlePost.datePosted || ""}</p>
               </div>
               <div className="postTopThreeDots">
@@ -43,19 +46,15 @@ const PostTop = ({ id }) => {
 
             <Text postMessage={singlePost.postMessage} link={singlePost.link} />
 
-            {singlePost.type === 'PHOTO' ?
-              <Photo attachedMedia={singlePost.attachedMedia[0]} />
-              : null}
-
-            {singlePost.type === 'VIDEO' ?
-              <Video attachedMedia={singlePost.attachedMedia[0]} />
-              : null}
+            {(singlePost.type === 'PHOTO' || singlePost.type === 'VIDEO') &&
+              <DynamicMedia attachedMedia={singlePost.attachedMedia[0]} />
+            }
 
             {singlePost.type === 'LINK' ?
               <a href={singlePost.link} className="link-preview" onClick={storeLinkClick} target="_blank" rel="noopener noreferrer">
                 <div className="link-area">
                   <div className="og-image">
-                    <Photo attachedMedia={singlePost.attachedMedia[0]} />
+                    <DynamicMedia attachedMedia={singlePost.attachedMedia[0]} />
                   </div>
                   <div className="descriptions">
                     <div className="og-title">
