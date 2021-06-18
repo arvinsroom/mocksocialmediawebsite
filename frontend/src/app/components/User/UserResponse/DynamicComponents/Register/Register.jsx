@@ -1,5 +1,4 @@
-import { getUserRegisterDetails } from '../../../../../services/register-service';
-// import { createUserRegister } from '../../../../../services/register-service';
+import { getUserRegisterDetails, createUserRegister } from '../../../../../services/register-service';
 import { useEffect, useState } from "react";
 import { Button, Input, Avatar, TextField } from '@material-ui/core';
 import { useSelector, useDispatch } from "react-redux";
@@ -66,23 +65,45 @@ const Register = ({ data }) => {
     try {
       if (checkValidity()) {
         // check validity before sending the data
-        // let formData = new FormData();
-        // formData.append("file", registerState?.profilePic || null);
-        // formData.append("username", registerState?.username || null);
-        // await createUserRegister(formData);
-
+        let formData = new FormData();
+        const regesterIds = [];
         // for now save the result in redux store
         const metaData = {};
         // get the profile pic and username to store in the redux state
-        for (const [, value] of Object.entries(registerStateRes)) {
-          if (value.value) {
-            if (value.referenceName === 'PROFILEPHOTO') metaData[value.referenceName] = URL.createObjectURL(value.value);
-            else metaData[value.referenceName] = value.value;
+        for (const [key, response] of Object.entries(registerStateRes)) {
+          const { 
+            referenceName,
+            value,
+            storeResponse
+          } = response;
+          if (value) {
+            if (referenceName === 'PROFILEPHOTO') {
+              metaData[referenceName] = URL.createObjectURL(value);
+              if (storeResponse) {
+                regesterIds.push(key);
+                // change the file name to key
+                const splitArr = value.name.split('.');
+                const newFileName = key.toString() + '.' + splitArr[splitArr.length - 1];
+                 if (splitArr.length > 0) formData.append("files", value, newFileName);
+              }
+            }
+            else {
+              if (storeResponse) {
+                regesterIds.push(key);
+                formData.append(key, value.toString());
+              }
+            }
+            metaData[referenceName] = value;
           }
         }
-        dispatch(setRegisterMetaData(metaData));
-        dispatch(showSuccessSnackbar((translations?.responses_saved) || USER_TRANSLATIONS_DEFAULT.RESPONSES_SAVED));
-        dispatch(updateFlowActiveState());
+        if (regesterIds.length > 0) {
+          // send the response to db
+          formData.append('registerIds', JSON.stringify(regesterIds));
+          await createUserRegister(formData);
+        }
+        await dispatch(setRegisterMetaData(metaData));
+        await dispatch(updateFlowActiveState());
+        await dispatch(showSuccessSnackbar((translations?.responses_saved) || USER_TRANSLATIONS_DEFAULT.RESPONSES_SAVED));
       } else {
         dispatch(showInfoSnackbar((translations?.['please_answer_all_required_questions_to_continue.']) || USER_TRANSLATIONS_DEFAULT.ENTER_REQUIRED_INFO));
       }

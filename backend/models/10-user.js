@@ -23,6 +23,10 @@ export default (sequelize, DataTypes) => {
       type: DataTypes.BOOLEAN,
       defaultValue: false,
     },
+    responseCode: {
+      allowNull: true,
+      type: DataTypes.INTEGER
+    },
     startedAt: {
       allowNull: false,
       type: DataTypes.literal('CURRENT_TIMESTAMP(3)'),
