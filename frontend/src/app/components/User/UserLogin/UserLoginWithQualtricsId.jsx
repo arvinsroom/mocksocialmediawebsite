@@ -8,7 +8,7 @@ import InputAdornment from '@material-ui/core/InputAdornment';
 import { IconKey } from '@tabler/icons';
 import { showInfoSnackbar } from "../../../actions/snackbar";
 import { updateUserMain } from '../../../actions/user';
-import { USER_TRANSLATIONS_DEFAULT } from '../../../constants';
+import { USER_TRANSLATIONS_DEFAULT, WINDOW_GLOBAL } from '../../../constants';
 import "./UserLogin.css";
 
 const UserLoginWithQualtricsId = () => {
@@ -19,7 +19,12 @@ const UserLoginWithQualtricsId = () => {
   const { isLoggedInUser, translations } = useSelector(state => state.userAuth);
   const { accessCode } = useParams();
 
-  if (!isLoggedInUser) return <Redirect to="/" />;
+  useEffect(() => {
+    if (!isLoggedInUser) return <Redirect to="/" />;
+    window.onbeforeunload = function() {
+      return WINDOW_GLOBAL.RELOAD_ALERT_MESSAGE;
+    };
+  }, []);
 
   const checkValidity = (id) => {
     if (id && id.length === 6 && Number(id)) return true;

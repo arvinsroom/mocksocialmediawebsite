@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from "react-redux";
 import {
   getFacebookPostsCount,
   clearFacebookState
-} from '../../../../../actions/facebook';
+} from '../../../../../actions/socialMedia';
 import useStyles from '../../../../style';
 import { Redirect } from 'react-router-dom';
 import { updateFlowActiveState } from '../../../../../actions/flowState';
@@ -12,11 +12,12 @@ import { IconChevronRight } from '@tabler/icons';
 import Sidebar from './Sidebar/Sidebar';
 import Feed from './Feed/Feed';
 import TweetBox from './Feed/TweetBox';
+import { WINDOW_GLOBAL } from '../../../../../constants';
 import "./Twitter.css";
 
 const Twitter = ({ data }) => {
   const { isLoggedInUser, translations, languageName } = useSelector(state => state.userAuth);
-  const totalPostCount = useSelector(state => state.facebook.totalPostCount);
+  const totalPostCount = useSelector(state => state.socialMedia.totalPostCount);
 
   const dispatch = useDispatch();
   const classes = useStyles();
@@ -38,6 +39,9 @@ const Twitter = ({ data }) => {
   useEffect(() => {
     if (!isLoggedInUser) return <Redirect to="/" />;
     fetch();
+    window.onbeforeunload = function() {
+      return WINDOW_GLOBAL.RELOAD_ALERT_MESSAGE;
+    };
   }, []);
 
   const handleSubmit = (e) => {

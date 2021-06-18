@@ -9,7 +9,7 @@ import PersonAddIcon from '@material-ui/icons/PersonAdd';
 import { FB_TRANSLATIONS_DEFAULT } from '../../../../../../../constants';
 
 const StoryCreate = () => {
-  const fbTranslations = useSelector(state => state.facebook.fbTranslations);
+  const fbTranslations = useSelector(state => state.socialMedia.fbTranslations);
   const userRegisterData = useSelector(state => state.userRegister.metaData);
 
   const [modalOpen , setModalOpen] = useState(false);

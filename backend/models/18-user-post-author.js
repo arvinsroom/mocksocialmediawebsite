@@ -34,6 +34,10 @@ export default (sequelize, DataTypes) => {
       type: DataTypes.INTEGER,
       defaultValue: 0
     },
+    handle: {
+      allowNull: true,
+      type: DataTypes.STRING
+    },
     pageId: {
       allowNull: false, // ???
       onDelete: 'CASCADE',

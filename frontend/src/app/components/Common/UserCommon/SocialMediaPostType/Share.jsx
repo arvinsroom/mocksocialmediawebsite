@@ -1,13 +1,14 @@
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import Photo from './Photo';
-import Video from './Video';
+import DynamicMedia from './DynamicMedia';
 import Text from './Text';
 import { Avatar } from "@material-ui/core";
-import { selectSinglePost } from '../../../../../../../../selectors/facebook';
+import { selectSinglePost } from '../../../../selectors/socialMedia';
+import { selectSocialMediaAuthor } from '../../../../selectors/socialMediaAuthors';
 
 const Share = ({ id }) => {
   const parentSharedPost = useSelector(state => selectSinglePost(state, id));
+  const singleAuthor = useSelector(state => selectSocialMediaAuthor(state, parentSharedPost.authorId));
   const [renderSharePost, setRenderSharePost] = useState(null);
   const userRegisterData = useSelector(state => state.userRegister.metaData);
 
@@ -21,26 +22,24 @@ const Share = ({ id }) => {
               className="postTopAvatar"
             />
             <div className="postTopInfo">
-            <h3>{parentSharedPost.userPost ? (userRegisterData['USERNAME'] || "") : ""}</h3>
-            {/* <p>{"2h"}</p> */}
+            <h3>{parentSharedPost.userPost ? (userRegisterData['USERNAME'] || "") : 
+              (singleAuthor?.authorName || "")
+            }</h3>
+            <p>{parentSharedPost.datePosted || ""}</p>
             </div>
           </div>
 
           <Text className="postMessage" postMessage={parentSharedPost.postMessage} link={parentSharedPost.link} />
 
-          {parentSharedPost.type === 'PHOTO' ?
-            <Photo attachedMedia={parentSharedPost.attachedMedia[0]} />
-            : null}
-
-          {parentSharedPost.type === 'VIDEO' ?
-            <Video attachedMedia={parentSharedPost.attachedMedia[0]} />
-            : null}
+          {(parentSharedPost.type === 'PHOTO' || parentSharedPost.type === 'VIDEO') &&
+            <DynamicMedia attachedMedia={singlePost.attachedMedia[0]} />
+          }
 
           {parentSharedPost.type === 'LINK' ?
             <a href={parentSharedPost.link} className="link-preview" target="_blank" rel="noopener noreferrer">
               <div className="link-area">
                 <div className="og-image">
-                  <Photo attachedMedia={parentSharedPost.attachedMedia[0]} />
+                  <DynamicMedia attachedMedia={parentSharedPost.attachedMedia[0]} />
                 </div>
                 <div className="descriptions">
                   <div className="og-title">

@@ -5,6 +5,7 @@ const UserPost = db.UserPost;
 const Media = db.Media;
 const UserGlobalTracking = db.UserGlobalTracking;
 const Language = db.Language;
+const UserPostAuthor = db.UserPostAuthor;
 
 const createAction = async (req, res, next) => {
   let transaction;
@@ -261,12 +262,21 @@ const getFacebookPostIds = async (req, res, next) => {
       attributes: ['name', 'translations']
     }, { transaction });
 
+    // fetch all the authors for this page
+    const userPostAuthors = await UserPostAuthor.findAll({
+      where: {
+        pageId,
+      },
+      attributes: ['authorId', 'authorName', 'authorVerified', 'handle']
+    }, { transaction });
+
     await transaction.commit();
 
     res.send({
       totalPosts: data.count,
       postIds: postIds,
-      translations
+      translations,
+      authors: userPostAuthors
     });
   } catch (error) {
     console.log(error.message);

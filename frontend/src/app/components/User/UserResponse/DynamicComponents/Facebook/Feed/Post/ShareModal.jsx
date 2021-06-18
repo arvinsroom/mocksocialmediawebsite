@@ -1,12 +1,12 @@
 import "./Post.css";
 import { useDispatch, useSelector } from "react-redux";
-import { createFbPost } from '../../../../../../../actions/facebook';
+import { createFbPost } from '../../../../../../../actions/socialMedia';
 import { useState } from "react";
 import { Avatar, Container } from "@material-ui/core";
 import { showSuccessSnackbar } from '../../../../../../../actions/snackbar';
 import Modal from '@material-ui/core/Modal';
 import { Button } from "@material-ui/core";
-import Share from './PostType/Share';
+import Share from '../../../../../../Common/UserCommon/SocialMediaPostType/Share';
 import PhotoLibraryIcon from '@material-ui/icons/PhotoLibrary';
 import ClearIcon from '@material-ui/icons/Clear';
 import InsertEmoticonIcon from '@material-ui/icons/InsertEmoticon';
@@ -17,14 +17,14 @@ import GifIcon from '@material-ui/icons/Gif';
 import { FB_TRANSLATIONS_DEFAULT } from '../../../../../../../constants';
 
 const ShareModal = ({ id, setModalOpen }) => {
-  const fbTranslations = useSelector(state => state.facebook.fbTranslations);
+  const fbTranslations = useSelector(state => state.socialMedia.fbTranslations);
   const userRegisterData = useSelector(state => state.userRegister.metaData);
   const { translations } = useSelector(state => state.userAuth);
 
   const [sharePostText, setSharePostText] = useState("");
   const dispatch = useDispatch();
-  // const userName = useSelector(state => state.facebook.name);
-  const pageId = useSelector(state => state.facebook.pageId);
+  // const userName = useSelector(state => state.socialMedia.name);
+  const pageId = useSelector(state => state.socialMedia.pageId);
 
   const handleClose = () => {
     setModalOpen(false)
@@ -41,7 +41,9 @@ const ShareModal = ({ id, setModalOpen }) => {
     };
     
     await dispatch(createFbPost({ postObj: JSON.stringify(postObj) }));
-    await dispatch(showSuccessSnackbar(translations?.['posted!'] || USER_TRANSLATIONS_DEFAULT?.POSTED))
+    await dispatch(showSuccessSnackbar(translations?.['posted!'] || USER_TRANSLATIONS_DEFAULT?.POSTED));
+    // clear state
+    setSharePostText("");
     setModalOpen(false);
   }
 

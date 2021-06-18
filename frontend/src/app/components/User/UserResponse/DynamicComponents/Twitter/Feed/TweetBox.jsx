@@ -9,16 +9,16 @@ import SentimentSatisfiedOutlinedIcon from '@material-ui/icons/SentimentSatisfie
 import EventOutlinedIcon from '@material-ui/icons/EventOutlined';
 import GifIcon from '@material-ui/icons/Gif';
 import { USER_TRANSLATIONS_DEFAULT } from '../../../../../../constants';
-import { createFbPost } from '../../../../../../actions/facebook';
+import { createFbPost } from '../../../../../../actions/socialMedia';
 import { showInfoSnackbar, showSuccessSnackbar } from '../../../../../../actions/snackbar';
-import Share from '../../Facebook/Feed/Post/PostType/Share';
+import Share from '../../../../../Common/UserCommon/SocialMediaPostType/Share';
 import "./TweetBox.css";
 
 const TweetBox = ({ placeholderText, replyTo, quoteTweet, handleCloseModal }) => {
   // const twTranslations = useSelector(state => state.twitter.twTranslations);
   const { translations } = useSelector(state => state.userAuth);
   const [postMessage, setPostMessage] = useState("");
-  const pageId = useSelector(state => state.facebook.pageId);
+  const pageId = useSelector(state => state.socialMedia.pageId);
 
   const [avatar, setAvatar] = useState(null);
   const [videoAvatar, setVideoAvatar] = useState(null);
@@ -39,15 +39,15 @@ const TweetBox = ({ placeholderText, replyTo, quoteTweet, handleCloseModal }) =>
         await setAvatar(URL.createObjectURL(selectedFile));
       }
     }
+    // we already have the selected file, can now clear the state
+    e.target.value = null;
   }
 
-  const handleDelete = async (e) => {
-    e.preventDefault();
-
-    await setVideoAvatar(null);
-    await setAvatar(null);
-    await setType("TEXT");
-    await setFile(null);
+  const handleDelete = () => {
+    setVideoAvatar(null);
+    setAvatar(null);
+    setType("TEXT");
+    setFile(null);
   };
 
   const handleSubmit = async (e) => {
@@ -65,14 +65,17 @@ const TweetBox = ({ placeholderText, replyTo, quoteTweet, handleCloseModal }) =>
           type: type,
           parentPostId: replyTo || quoteTweet,
           pageId,
-        } 
+        };
         if (replyTo) postObj.type = 'REPLYTO';
         else if (quoteTweet) postObj.type = 'QUOTETWEET';
         let formData = new FormData();
         formData.append("file", file || null);
         formData.append("postObj", JSON.stringify(postObj));
         await dispatch(createFbPost(formData));
-        await dispatch(showSuccessSnackbar(translations?.['posted!'] || USER_TRANSLATIONS_DEFAULT?.POSTED))
+        await dispatch(showSuccessSnackbar(translations?.['posted!'] || USER_TRANSLATIONS_DEFAULT?.POSTED));
+        // clear the file state
+        handleDelete();
+        setPostMessage("");
         if (handleCloseModal) handleCloseModal();
       } else {
         dispatch(showInfoSnackbar(translations?.please_upload_file_of_size_less_than_20mb || USER_TRANSLATIONS_DEFAULT?.PLEASE_UPLOAD_FILE_OF_SIZE_LESS_THAN_20MB));
@@ -98,7 +101,7 @@ const TweetBox = ({ placeholderText, replyTo, quoteTweet, handleCloseModal }) =>
               value={postMessage}
               autoFocus={true}
               onChange={({ target }) => setPostMessage(target.value)}
-              className="newFeedInputArea"
+              className="newFeedInputAreaShare"
               type="text"
               placeholder={placeholderText} />
           </div>
@@ -107,12 +110,12 @@ const TweetBox = ({ placeholderText, replyTo, quoteTweet, handleCloseModal }) =>
         {avatar &&
           <div className="container sharePreview sharePostPreview">
             <img src={avatar} alt="upload pic" className="selectedFile" />
-            <ClearIcon className="btn" onClick={e => handleDelete(e)} />
+            <ClearIcon className="btn" onClick={handleDelete} />
           </div>}
         {videoAvatar &&
           <div className="container sharePreview sharePostPreview">
             <video src={videoAvatar} className="selectedFile" />
-            <ClearIcon className="btn" onClick={e => handleDelete(e)} />
+            <ClearIcon className="btn" onClick={handleDelete} />
           </div>}
 
         {/* quotetweet is similar to share tweet */}
