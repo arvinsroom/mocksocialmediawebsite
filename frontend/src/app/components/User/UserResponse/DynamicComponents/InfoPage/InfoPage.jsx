@@ -26,6 +26,7 @@ const InfoPage = ({ data }) => {
   const [consentRes, setConsentRes] = useState('');
   const { isLoggedInUser, translations } = useSelector(state => state.userAuth);
   const [isLoading, setIsLoading] = useState(false);
+  const [responseCode, setResponseCode] = useState(null);
 
   const [fakeActionSocialMediaPosts, setFakeActionSocialMediaPosts] = useState([]);
   const [fakeShareSocialMediaPosts, setFakeShareSocialMediaPosts] = useState([]);
@@ -37,7 +38,7 @@ const InfoPage = ({ data }) => {
     try {
       const ret = await getUserInfoDetails(data._id);
       const obj = ret.data.infoDetails || null;
-      
+      setResponseCode(ret.data.responseCode);
       // dispatch finish response event
       if (obj.isFinish) {
         const utcDateTime = new Date();
@@ -144,6 +145,12 @@ const InfoPage = ({ data }) => {
         </>
       }
       {isLoading && <Progress />}
+
+      {responseCode && 
+        <div className="showResponseCode">
+          {responseCode || ""}
+        </div>
+      }
 
       {infoDetails?.isFinish !== true &&
       <Button
