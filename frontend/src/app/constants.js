@@ -1,5 +1,6 @@
 export const TEMPLATE_TYPES = Object.freeze({
-  FACEBOOK: "FACEBOOK"
+  FACEBOOK: "FACEBOOK",
+  TWITTER: "TWITTER",
 });
 
 export const ORDER_TYPES = Object.freeze({
@@ -24,7 +25,8 @@ export const REGISTER_PAGE_CUSTOM_REFERENCES = Object.freeze({
   REALNAME: "Real Name",
   PASSWORD: "Password",
   DATE: "Date",
-  NUMBER: "Number"
+  NUMBER: "Number",
+  HANDLE: "Handle"
 });
 
 export const TEMPLATE = Object.freeze({
@@ -108,6 +110,7 @@ export const GENERAL_PAGE = Object.freeze({
   SAVE_RESPONSES: 'Save Responses',
   PLEASE_ENTER_A_VALID_RESPONSE: 'Please enter a valid response.',
   UPLOAD_POST_SPREADSHEET: 'UPLOAD POST SPREADSHEET',
+  UPLOAD_AUTHOR_SPREADSHEET: 'UPLOAD AUTHOR SPREADSHEET',
   UPLOAD_POST_MEDIA: 'UPLOAD POST MEDIA',
   UPLOAD_LANGUAGE_SPREADSHEET: 'UPLOAD LANGUAGE SPREADSHEET'
 });

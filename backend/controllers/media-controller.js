@@ -3,6 +3,7 @@ import { checkIfValidAndNotEmptyArray } from "../utils";
 import page from './create-page';
 const Media = db.Media;
 const UserPost = db.UserPost;
+const UserPostAuthor = db.UserPostAuthor;
 
 const create = async (req, res, next) => {
   // create the page first
@@ -15,7 +16,7 @@ const create = async (req, res, next) => {
       });
       return;
     }
-    const { templateId, type, name, mediaPosts, pageDataOrder } = req.body;
+    const { templateId, type, name, mediaPosts, pageDataOrder, author } = req.body;
     if (!templateId) {
       res.status(400).send({
         message: "Template Id is required!"
@@ -40,6 +41,12 @@ const create = async (req, res, next) => {
       });
       return;
     }
+    if (!checkIfValidAndNotEmptyArray(author)) {
+      res.status(400).send({
+        message: "Author object is required!"
+      });
+      return;
+    }
     transaction = await db.sequelize.transaction();
     // create the page with the name within each pageQuestionArray and template Id
     const pageId = await page.pageCreate({
@@ -48,9 +55,26 @@ const create = async (req, res, next) => {
       type,
       pageDataOrder: pageDataOrder || null
     }, transaction);
+    console.log(author);
+    // bulk create the authors
+    const authorKeys = ['authorId', 'authorName', 'authorVerified', 'totalPosts', 'totalFollowing', 'totalFollower'];
+    const authorArr = [];
+    for (let i = 1; i < author.length; i++) {
+      if (author[i].length > 0) {
+        let obj = {};
+        for (let j = 0; j < author[i].length; j++) {
+          obj[authorKeys[j]] = author[i][j];
+        }
+        obj.pageId = pageId;
+        authorArr.push(obj);
+      }
+    }
+    console.log('Trying to create User Authors from excel file!')
+    // create the Post records
+    await UserPostAuthor.bulkCreate(authorArr, { transaction, logging: false });
 
     // modify the media array
-    const mediaKeys = ['adminPostId', 'link', 'linkTitle', 'linkPreview', 'postMessage', 'sourceTweet', 'type', 'isFake'];
+    const mediaKeys = ['adminPostId', 'link', 'linkTitle', 'linkPreview', 'postMessage', 'sourceTweet', 'type', 'isFake', 'authorId', 'isReplyTo', 'isReplyOrder', 'initLike', 'datePosted', 'handle'];
     const mediaArr = [];
     for (let i = 1; i < mediaPosts.length; i++) {
       if (mediaPosts[i].length > 0) {

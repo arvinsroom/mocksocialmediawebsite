@@ -5,7 +5,6 @@ import { useState } from "react";
 import { Avatar } from "@material-ui/core";
 import ShareModal from './ShareModal';
 import { FB_TRANSLATIONS_DEFAULT } from '../../../../../../../constants';
-import React from 'react';
 import { FacebookSelector } from '@charkour/react-reactions';
 import "./Post.css";
 

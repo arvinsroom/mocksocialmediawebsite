@@ -3,4 +3,14 @@ body {
   font-size: 16px !important;
   background-color: #E5EBF0 !important;
   margin: 0 !important;
+  --twitter-color: #50b7f5;
+  --twitter-background: #e6ecf0;
 }
+
+/* 
+.modalContainerPaper {
+  background-color: white;
+  box-shadow: 0px 5px 7px -7px rgba(0,0,0, 0.75);
+  padding: 8px;
+  border-radius: 8px;
+} */

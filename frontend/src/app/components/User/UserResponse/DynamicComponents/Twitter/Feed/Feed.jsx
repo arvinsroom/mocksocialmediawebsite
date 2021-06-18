@@ -1,12 +1,12 @@
 import { useEffect, useRef, useCallback } from "react";
-import PostTop from './Post/PostTop';
 import { useSelector, useDispatch } from "react-redux";
 import { selectAllPostIds } from '../../../../../../selectors/facebook';
-import PostBottom from "./Post/PostBottom";
 import useStyles from '../../../../../style';
 import {
   getFacebookPosts
 } from '../../../../../../actions/facebook';
+import TwitterPostBottom from "./TwitterPostBottom";
+import TwitterPostTop from './TwitterPostTop';
 import Progress from '../../../../../Common/Progress';
 import "./Feed.css";
 
@@ -49,13 +49,13 @@ const Feed = () => {
         {allIds.map((postId, index) => {
           if (allIds.length === index + 1) {
             return (<div key={postId} ref={lastPostRef} className={classes.post}>
-              <PostTop id={postId} />
-              <PostBottom id={postId} />
+              <TwitterPostTop id={postId} />
+              <TwitterPostBottom id={postId} />
             </div>)
           } else {
             return (<div key={postId} className={classes.post}>
-              <PostTop id={postId}/>
-              <PostBottom id={postId} />
+              <TwitterPostTop id={postId}/>
+              <TwitterPostBottom id={postId} />
             </div>)
           }
         })}
@@ -65,6 +65,6 @@ const Feed = () => {
       </div>
     </>
   );
-};
+}
 
 export default Feed;

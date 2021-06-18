@@ -10,10 +10,12 @@ import { IconTableImport } from '@tabler/icons';
 
 const MediaPosts = ({ templateId }) => {
   const [mediaJSON, setMediaJSON] = useState(null);
+  const [authorJSON, setAuthorJSON] = useState(null);
   const [pageName, setPageName] = useState("");
   const [templateType, setTemplateType] = useState("");
   const [orderType, setOrderType] = useState("");
   const [uploadPostSpreadsheetName, setUploadPostSpreadsheetName] = useState("");
+  const [uploadAuthorSpreadsheetName, setUploadAuthorSpreadsheetName] = useState("");
 
   const classes = useStyles();
   const dispatch = useDispatch();
@@ -24,14 +26,15 @@ const MediaPosts = ({ templateId }) => {
     return "." + x;
   }).join(",");
 
-  const handleChange = (e) => {
+  const handleChange = (e, sType) => {
     e.preventDefault();
     let file = e.target.files ? e.target.files[0] : null;
     if (file) {
       if (file.size > 20e6) {
-        dispatch(showInfoSnackbar("Please upload file of size less than 20MB."));
+        dispatch(showInfoSnackbar("Please upload file of size less than 10MB."));
       } else {
-        setUploadPostSpreadsheetName(file.name);
+        if (sType === 'MEDIA') setUploadPostSpreadsheetName(file.name);
+        else setUploadAuthorSpreadsheetName(file.name); // sType === 'AUTHOR'
         let reader = new FileReader();
         reader.onload = function (e) {
           var data = e.target.result;
@@ -45,7 +48,8 @@ const MediaPosts = ({ templateId }) => {
           // filter excel, here only checking rows
           dataParse = dataParse.filter(arr => arr && arr.length > 0);
           /* Update state */
-          setMediaJSON(dataParse);
+          if (sType === 'MEDIA') setMediaJSON(dataParse);
+          else setAuthorJSON(dataParse); // sType === 'AUTHOR'
         };
         reader.readAsBinaryString(file);
       }
@@ -57,6 +61,7 @@ const MediaPosts = ({ templateId }) => {
     setTemplateType("");
     setOrderType("");
     setMediaJSON(null);
+    setAuthorJSON(null);
     setUploadPostSpreadsheetName("");
   };
 
@@ -64,23 +69,31 @@ const MediaPosts = ({ templateId }) => {
     e.preventDefault();
     if (!templateId) {
       dispatch(showInfoSnackbar(TEMPLATE.SELECT_OR_CREATE_TEMPLATE));
-    }
-    try {
-      if (mediaJSON && pageName) {
-        await create({ name: pageName, type: templateType, pageDataOrder: orderType, templateId: templateId, mediaPosts: mediaJSON});
-        dispatch(showSuccessSnackbar(GENERAL_PAGE.SUCCESSFULLY_UPLOADED_SOCIAL_MEDIA_SPREADSHEET));
-        resetValues();
-      } else {
-        dispatch(showInfoSnackbar(GENERAL_PAGE.PLEASE_ENTER_A_VALID_RESPONSE))
+    } else {
+      try {
+        if (authorJSON && mediaJSON && pageName) {
+          await create({
+            name: pageName,
+            type: templateType,
+            pageDataOrder: orderType,
+            templateId: templateId,
+            mediaPosts: mediaJSON,
+            author: authorJSON
+          });
+          dispatch(showSuccessSnackbar(GENERAL_PAGE.SUCCESSFULLY_UPLOADED_SOCIAL_MEDIA_SPREADSHEET));
+          resetValues();
+        } else {
+          dispatch(showInfoSnackbar(GENERAL_PAGE.PLEASE_ENTER_A_VALID_RESPONSE))
+        }
+      } catch (error) {
+        const resMessage =
+          (error.response &&
+            error.response.data &&
+            error.response.data.message) ||
+          error.message ||
+          error.toString();
+          dispatch(showErrorSnackbar(resMessage));
       }
-    } catch (error) {
-      const resMessage =
-        (error.response &&
-          error.response.data &&
-          error.response.data.message) ||
-        error.message ||
-        error.toString();
-        dispatch(showErrorSnackbar(resMessage));
     }
   };
 
@@ -154,6 +167,25 @@ const MediaPosts = ({ templateId }) => {
           component="label"
           startIcon={<IconTableImport />}
         >
+          {GENERAL_PAGE.UPLOAD_AUTHOR_SPREADSHEET}
+          <Input
+            style={{ display: "none" }}
+            disableUnderline={true}
+            id="upload-file"
+            type="file"
+            inputProps={{ multiple: false }}
+            accept={SheetJSFT}
+            onChange={(e) => handleChange(e, 'AUTHOR')}
+          />
+        </Button>
+        <br/>
+        <p>{" Spreadsheet that will be uploaded upon clicking next step: " + (uploadAuthorSpreadsheetName || "")}</p>
+
+        <Button
+          variant="contained"
+          component="label"
+          startIcon={<IconTableImport />}
+        >
           {GENERAL_PAGE.UPLOAD_POST_SPREADSHEET}
           <Input
             style={{ display: "none" }}
@@ -162,7 +194,7 @@ const MediaPosts = ({ templateId }) => {
             type="file"
             inputProps={{ multiple: false }}
             accept={SheetJSFT}
-            onChange={(e) => handleChange(e)}
+            onChange={(e) => handleChange(e, 'MEDIA')}
           />
         </Button>
         <br/>

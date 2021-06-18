@@ -50,23 +50,53 @@ const createUserRegister = async (req, res, next) => {
       });
       return;
     }
-        
-    // create  the page first
     transaction = await db.sequelize.transaction();
-    // get the post id from the file
-    const userRegisterData = {
-      profilePic: req.file ? req.file.buffer : null,
-      mimeType: req.file ? req.file.mimetype : null,
-      username: req.body?.username || null,
-      userId: req.userId
-    };
 
-    // now create a entry for register
-    const data = await UserRegister.create(userRegisterData, { transaction });
+    const { registerIds } = req.body;
+    const { files } = req;
+
+    // parse registerIds
+    const parseRegisterIdsArr = JSON.parse(registerIds);
+    const userRegisterData = [];
+    // fetch each entry data from req body and form the userRegisterData
+    for(let i = 0; i < parseRegisterIdsArr.length; i++) {
+      const id = parseRegisterIdsArr[i];
+      // filter out the files ids
+      const fieldValue = req.body[id];
+      if (fieldValue) {
+        userRegisterData.push({
+          registerId: id,
+          userId: req.userId,
+          generalFieldValue: req.body[id]
+        });
+      }
+    }
+    
+    // process the files array now
+    for (let i = 0; i < files.length; i++) {
+      // fetch the id from file name
+      const registerId = files[i].originalname.split(".")[0];
+      // should only create entry if post id exist
+      userRegisterData.push({
+        mimeType: files[i].mimetype,
+        image: files[i].buffer,
+        registerId: registerId,
+        userId: req.userId
+      });
+    }
+    console.log(userRegisterData);
+
+    // now create all entries for register
+    await UserRegister.bulkCreate(userRegisterData, {
+      transaction,
+      logging: false
+    });
     // if we reach here, there were no errors therefore commit the transaction
     await transaction.commit();
-    // fetch json
-    res.send(data);
+
+    res.send({
+      response: "Success!"
+    });
   } catch (error) {
     console.log(error.message);
     // if we reach here, there were some errors thrown, therefore roolback the transaction

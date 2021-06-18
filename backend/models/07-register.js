@@ -21,7 +21,7 @@ export default (sequelize, DataTypes) => {
     },
     referenceName: {
       allowNull: true,
-      type: DataTypes.ENUM('PROFILEPHOTO', 'EMAIL', 'USERNAME', 'REALNAME', 'PASSWORD', 'DATE', 'NUMBER')
+      type: DataTypes.ENUM('PROFILEPHOTO', 'EMAIL', 'USERNAME', 'REALNAME', 'PASSWORD', 'DATE', 'NUMBER', 'HANDLE')
     },
     storeResponse: {
       allowNull: false,

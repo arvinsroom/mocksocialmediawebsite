@@ -26,12 +26,12 @@ const General = () => {
     </Container>
     <br />
     <Container component="main" maxWidth="lg" className={classes.card}>
-      <h2>Step 2 - Upload associated media</h2>
+      <h2>Step 3 - Upload associated media</h2>
       <Upload templateId={templateId}/>
     </Container>
     <br />
     <Container component="main" maxWidth="lg" className={classes.card}>
-      <h2>Step 3 - Upload language information</h2>
+      <h2>Step 4 - Upload language information</h2>
       <Language templateId={templateId}/>
     </Container>
     </>
