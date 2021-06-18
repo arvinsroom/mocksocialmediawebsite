@@ -64,10 +64,6 @@ export default (sequelize, DataTypes) => {
       allowNull: true,
       type: DataTypes.STRING
     },
-    handle: {
-      allowNull: true,
-      type: DataTypes.STRING
-    },
     userId: {
       allowNull: true,
       references: {

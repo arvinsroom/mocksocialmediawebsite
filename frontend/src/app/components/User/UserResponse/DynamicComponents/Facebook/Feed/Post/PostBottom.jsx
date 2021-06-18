@@ -1,6 +1,6 @@
 import { useSelector, useDispatch } from "react-redux";
-import { likeFbPost, unlikeFbPost, commentFbPost } from '../../../../../../../actions/facebook';
-import { selectPostsMetadata } from '../../../../../../../selectors/facebook';
+import { likeFbPost, unlikeFbPost, commentFbPost } from '../../../../../../../actions/socialMedia';
+import { selectPostsMetadata } from '../../../../../../../selectors/socialMedia';
 import { useState } from "react";
 import { Avatar } from "@material-ui/core";
 import ShareModal from './ShareModal';
@@ -10,7 +10,7 @@ import "./Post.css";
 
 const PostBottom = ({ id }) => {
   const postMetadata = useSelector(state => selectPostsMetadata(state, id));
-  const fbTranslations = useSelector(state => state.facebook.fbTranslations);
+  const fbTranslations = useSelector(state => state.socialMedia.fbTranslations);
   const userRegisterData = useSelector(state => state.userRegister.metaData);
 
   const [openCommentBox, setOpenCommentBox] = useState(false);

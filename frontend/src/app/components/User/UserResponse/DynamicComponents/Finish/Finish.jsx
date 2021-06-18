@@ -7,7 +7,7 @@ import useStyles from '../../../../style';
 import "./Finish.css";
 import { updateFlowActiveState } from '../../../../../actions/flowState';
 import { IconChevronRight } from '@tabler/icons';
-import { USER_TRANSLATIONS_DEFAULT } from '../../../../../constants';
+import { USER_TRANSLATIONS_DEFAULT, WINDOW_GLOBAL } from '../../../../../constants';
 
 const Finish = ({ data }) => {
   const [finishObj, setFinishObj] = useState(null);
@@ -25,6 +25,9 @@ const Finish = ({ data }) => {
   useEffect(() => {
     if (!isLoggedInUser) return <Redirect to="/" />;
     fetch();
+    window.onbeforeunload = function() {
+      return WINDOW_GLOBAL.RELOAD_ALERT_MESSAGE;
+    };
   }, []);
 
   const getRedirectionLink = (link) => {

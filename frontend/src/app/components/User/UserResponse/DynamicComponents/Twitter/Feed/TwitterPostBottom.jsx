@@ -9,8 +9,8 @@ import CreateOutlinedIcon from '@material-ui/icons/CreateOutlined';
 import ClearIcon from '@material-ui/icons/Clear';
 import TweetBox from './TweetBox';
 import { showInfoSnackbar, showSuccessSnackbar } from '../../../../../../actions/snackbar';
-import { likeFbPost, unlikeFbPost, createFbPost } from '../../../../../../actions/facebook';
-import { selectPostsMetadata } from '../../../../../../selectors/facebook';
+import { likeFbPost, unlikeFbPost, createFbPost } from '../../../../../../actions/socialMedia';
+import { selectPostsMetadata } from '../../../../../../selectors/socialMedia';
 import { USER_TRANSLATIONS_DEFAULT } from '../../../../../../constants';
 import "./TwitterPost.css";
 
@@ -20,7 +20,7 @@ const TwitterPostBottom = ({ id }) => {
   const [modalType, setModalType] = useState(null);
   const [anchorEl, setAnchorEl] = useState(null);
   const [modalOpen , setModalOpen] = useState(false);
-  const pageId = useSelector(state => state.facebook.pageId);
+  const pageId = useSelector(state => state.socialMedia.pageId);
   const dispatch = useDispatch();
 
   const handleClick = (event) => {

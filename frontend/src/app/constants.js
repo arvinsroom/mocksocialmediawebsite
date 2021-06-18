@@ -220,3 +220,7 @@ export const USER_TRANSLATIONS_DEFAULT = Object.freeze({
   SAD: 'Sad',
   WOW: 'Wow'
 });
+
+export const WINDOW_GLOBAL = Object.freeze({
+  RELOAD_ALERT_MESSAGE: 'If you reload this page, you might loose the data, Are you sure?'
+});

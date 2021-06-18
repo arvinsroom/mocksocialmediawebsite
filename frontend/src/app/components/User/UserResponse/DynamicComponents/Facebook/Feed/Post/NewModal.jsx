@@ -1,6 +1,6 @@
 import "./Post.css";
 import { useDispatch, useSelector } from "react-redux";
-import { createFbPost } from '../../../../../../../actions/facebook';
+import { createFbPost } from '../../../../../../../actions/socialMedia';
 import { useState } from "react";
 import { Avatar, Container, Modal } from "@material-ui/core";
 import { showInfoSnackbar, showSuccessSnackbar } from '../../../../../../../actions/snackbar';
@@ -15,14 +15,14 @@ import GifIcon from '@material-ui/icons/Gif';
 import { FB_TRANSLATIONS_DEFAULT, USER_TRANSLATIONS_DEFAULT } from '../../../../../../../constants';
 
 const NewModal = ({ setModalOpen }) => {
-  const fbTranslations = useSelector(state => state.facebook.fbTranslations);
+  const fbTranslations = useSelector(state => state.socialMedia.fbTranslations);
   const userRegisterData = useSelector(state => state.userRegister.metaData);
   const { translations } = useSelector(state => state.userAuth);
 
   const [avatar, setAvatar] = useState(null);
   const [videoAvatar, setVideoAvatar] = useState(null);
   const [type, setType] = useState("TEXT");
-  const pageId = useSelector(state => state.facebook.pageId);
+  const pageId = useSelector(state => state.socialMedia.pageId);
 
   const [file, setFile] = useState(null);
   const [postMessage, setPostMessage] = useState("");
@@ -33,13 +33,11 @@ const NewModal = ({ setModalOpen }) => {
     setModalOpen(false)
   };
 
-  const handleDelete = async (e) => {
-    e.preventDefault();
-
-    await setVideoAvatar(null);
-    await setAvatar(null);
-    await setFile(null);
-    await setType("TEXT");
+  const handleDelete = () => {
+    setVideoAvatar(null);
+    setAvatar(null);
+    setFile(null);
+    setType("TEXT");
   };
 
   const handleSubmit = async (e) => {
@@ -60,7 +58,10 @@ const NewModal = ({ setModalOpen }) => {
         formData.append("file", file || null);
         formData.append("postObj", JSON.stringify(postObj));
         await dispatch(createFbPost(formData));
-        await dispatch(showSuccessSnackbar(translations?.['posted!'] || USER_TRANSLATIONS_DEFAULT?.POSTED))
+        await dispatch(showSuccessSnackbar(translations?.['posted!'] || USER_TRANSLATIONS_DEFAULT?.POSTED));
+        // clear state
+        handleDelete();
+        setPostMessage("");
         setModalOpen(false);
       } else {
         dispatch(showInfoSnackbar(translations?.please_upload_file_of_size_less_than_20mb || USER_TRANSLATIONS_DEFAULT?.PLEASE_UPLOAD_FILE_OF_SIZE_LESS_THAN_20MB));
@@ -81,6 +82,8 @@ const NewModal = ({ setModalOpen }) => {
         await setAvatar(URL.createObjectURL(selectedFile));
       }
     }
+    // we already have the selected file, can now clear the state
+    e.target.value = null;
   }
 
   return (
@@ -127,12 +130,12 @@ const NewModal = ({ setModalOpen }) => {
               {avatar &&
                 <div className="container sharePreview sharePostPreview">
                   <img src={avatar} alt="upload pic" className="selectedFile" />
-                  <ClearIcon className="btn" onClick={e => handleDelete(e)} />
+                  <ClearIcon className="btn" onClick={handleDelete} />
                 </div>}
               {videoAvatar &&
                 <div className="container sharePreview sharePostPreview">
                   <video src={videoAvatar} className="selectedFile" />
-                  <ClearIcon className="btn" onClick={e => handleDelete(e)} />
+                  <ClearIcon className="btn" onClick={handleDelete} />
                 </div>}
 
               <div className="newModalBottom">
