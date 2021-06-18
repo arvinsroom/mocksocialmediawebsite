@@ -13,9 +13,6 @@ import {
   CLEAR_FB_STATE
  } from "./types";
 import * as FacebookPostService from '../services/facebook-service';
-// import Chance from 'chance';
-
-// const chance = new Chance();
 
 export const finishFetch = () => (dispatch) => {
   dispatch({
@@ -36,6 +33,14 @@ export const getFacebookPostsCount = (data) => (dispatch) => {
       const totalPostCount = response.data?.totalPosts || 0;
       const postIds = response.data?.postIds || [];
       const fbTranslations = response.data?.translations?.translations || null;
+      const authors = response.data?.authors || [];
+      // normalize the authors data
+      const normalizeAuthor = {};
+      for (let i = 0; i < authors.length; i++) {
+        const eachId = authors[i].authorId;
+        normalizeAuthor[eachId] = { ...authors[i] };
+      }
+
       dispatch({
         type: SET_FB_POST_IDS_AND_COUNT,
         payload: {
@@ -43,7 +48,7 @@ export const getFacebookPostsCount = (data) => (dispatch) => {
           totalPostIds: postIds,
           pageId: data.pageId,
           fbTranslations: fbTranslations,
-          // name: chance.name(),
+          authors: normalizeAuthor
         }
       });
       return Promise.resolve();
@@ -85,7 +90,6 @@ export const getFacebookPosts = (data) => (dispatch) => {
       let allIds = [];
       for (let i = 0; i < postRecords.length; i++) {
         const eachId = postRecords[i]._id;
-        // posts[eachId] = { ...postRecords[i], name: chance.name() };
         posts[eachId] = { ...postRecords[i], userPost: false };
         metaData[eachId] = {
           like: 'default',

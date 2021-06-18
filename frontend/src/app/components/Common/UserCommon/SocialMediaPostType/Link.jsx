@@ -1,4 +1,4 @@
-import Photo from './Photo';
+import DynamicMedia from './DynamicMedia';
 import { useSelector } from "react-redux";
 import "./Link.css";
 

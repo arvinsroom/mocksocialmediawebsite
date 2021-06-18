@@ -1,22 +1,22 @@
 import { useEffect, useRef, useCallback } from "react";
 import PostTop from './Post/PostTop';
 import { useSelector, useDispatch } from "react-redux";
-import { selectAllPostIds } from '../../../../../../selectors/facebook';
+import { selectAllPostIds } from '../../../../../../selectors/socialMedia';
 import PostBottom from "./Post/PostBottom";
 import useStyles from '../../../../../style';
 import {
   getFacebookPosts
-} from '../../../../../../actions/facebook';
+} from '../../../../../../actions/socialMedia';
 import Progress from '../../../../../Common/Progress';
 import "./Feed.css";
 
 const Feed = () => {
   const allIds = useSelector(state => selectAllPostIds(state));
-  const currentPostPage = useSelector(state => state.facebook.currentPostPage);
-  const isLoading = useSelector(state => state.facebook.isLoading);
-  const postEachPage = useSelector(state => state.facebook.postEachPage);
-  const totalPostIds = useSelector(state => state.facebook.totalPostIds);
-  const finish = useSelector(state => state.facebook.finish);
+  const currentPostPage = useSelector(state => state.socialMedia.currentPostPage);
+  const isLoading = useSelector(state => state.socialMedia.isLoading);
+  const postEachPage = useSelector(state => state.socialMedia.postEachPage);
+  const totalPostIds = useSelector(state => state.socialMedia.totalPostIds);
+  const finish = useSelector(state => state.socialMedia.finish);
 
   const classes = useStyles();
   const dispatch = useDispatch();
