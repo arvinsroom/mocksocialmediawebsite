@@ -10,7 +10,7 @@ import { updateFlowActiveState } from '../../../../../actions/flowState';
 import "./Opentext.css";
 import { IconChevronRight } from '@tabler/icons';
 import Progress from '../../../../Common/Progress';
-import { USER_TRANSLATIONS_DEFAULT } from '../../../../../constants';
+import { USER_TRANSLATIONS_DEFAULT, WINDOW_GLOBAL } from '../../../../../constants';
 import RenderRichTextArea from '../../../../Common/UserCommon/RenderRichTextArea';
 
 const Opentext = ({ data }) => {
@@ -53,6 +53,9 @@ const Opentext = ({ data }) => {
     if (!isLoggedInUser) return <Redirect to="/" />;
     setIsLoading(true);
     fetch();
+    window.onbeforeunload = function() {
+      return WINDOW_GLOBAL.RELOAD_ALERT_MESSAGE;
+    };
   }, []);
 
   const checkAndFilterRequired = () => {

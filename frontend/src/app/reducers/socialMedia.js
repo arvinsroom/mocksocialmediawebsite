@@ -15,7 +15,6 @@ const initialState = {
   posts: {},
   metaData: {},
   allIds: [],
-  // name: "",
   isLoading: false,
   pageId: null,
   totalPostCount: 0,
@@ -23,7 +22,8 @@ const initialState = {
   postEachPage: 5,
   totalPostIds: [],
   finish: false,
-  fbTranslations: null
+  fbTranslations: null,
+  authors: null
 };
 
 // this is bad and goes against whole point of using redux but for
@@ -40,13 +40,13 @@ export default function (state = initialState, action) {
         postEachPage: 5,
         totalPostIds: payload.totalPostIds,
         pageId: payload.pageId,
-        // name: payload.name,
         posts: {},
         metaData: {},
         allIds: [],
         isLoading: false,
         finish: false,
-        fbTranslations: payload.fbTranslations || null
+        fbTranslations: payload.fbTranslations || null,
+        authors: payload.authors,
       };
 
     case STACK_FB_STATE:
@@ -126,14 +126,13 @@ export default function (state = initialState, action) {
       };
 
     case CREATE_FB_POST:
-      const { type, parentPostId, postMessage } = payload.post;
+      const { type, parentPostId, postMessage, initLike } = payload.post;
       return {
         ...state,
         posts: {
           [payload._id]: {
             _id: payload._id,
             type: type,
-            // name: state.name,
             userPost: true,
             postMessage: postMessage,
             parentPostId: parentPostId,
@@ -145,6 +144,7 @@ export default function (state = initialState, action) {
           [payload._id]: {
             comments: [],
             like: 'default',
+            initLike: 0,
             actionId: null,
             parentPostId: parentPostId,
           },
@@ -165,7 +165,6 @@ export default function (state = initialState, action) {
         posts: {},
         metaData: {},
         allIds: [],
-        // name: "",
         isLoading: false,
         pageId: null,
         totalPostCount: 0,
@@ -173,7 +172,8 @@ export default function (state = initialState, action) {
         postEachPage: 5,
         totalPostIds: [],
         finish: false,
-        fbTranslations: null
+        fbTranslations: null,
+        authors: {}
       }
     
     default:

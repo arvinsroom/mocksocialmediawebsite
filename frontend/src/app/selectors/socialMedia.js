@@ -1,7 +1,7 @@
 import { createCachedSelector } from 're-reselect';
 import { createSelector } from 'reselect';
 
-const selectPostsMetadataArr = state => state.facebook.metaData;
+const selectPostsMetadataArr = state => state.socialMedia.metaData;
 const selecLikePostID = (state, id) => id;
 
 export const selectPostsMetadata = createCachedSelector(
@@ -13,7 +13,7 @@ export const selectPostsMetadata = createCachedSelector(
   (state, id) => id
 );
 
-const selectAllIDs = state => state.facebook.allIds;
+const selectAllIDs = state => state.socialMedia.allIds;
 export const selectAllPostIds = createSelector(
   [selectAllIDs],
   (ids) => {
@@ -21,7 +21,7 @@ export const selectAllPostIds = createSelector(
   }
 );
 
-const selectPosts = state => state.facebook.posts;
+const selectPosts = state => state.socialMedia.posts;
 const selectPostsID = (state, id) => id;
 export const selectSinglePost = createCachedSelector(
   [selectPosts,

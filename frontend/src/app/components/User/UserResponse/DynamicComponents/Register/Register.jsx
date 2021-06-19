@@ -7,7 +7,7 @@ import useStyles from '../../../../style';
 import { showErrorSnackbar, showInfoSnackbar, showSuccessSnackbar } from '../../../../../actions/snackbar';
 import { updateFlowActiveState } from '../../../../../actions/flowState';
 import { setRegisterMetaData } from '../../../../../actions/userRegister';
-import { USER_TRANSLATIONS_DEFAULT } from '../../../../../constants';
+import { USER_TRANSLATIONS_DEFAULT, WINDOW_GLOBAL } from '../../../../../constants';
 import cloneDeep from 'lodash/cloneDeep';
 import { IconCloudUpload, IconChevronRight } from '@tabler/icons';
 import "./Register.css";
@@ -50,6 +50,10 @@ const Register = ({ data }) => {
   useEffect(() => {
     if (!isLoggedInUser) return <Redirect to="/" />;
     fetch();
+
+    window.onbeforeunload = function() {
+      return WINDOW_GLOBAL.RELOAD_ALERT_MESSAGE;
+    };
   }, []);
 
   const checkValidity = () => {
