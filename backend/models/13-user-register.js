@@ -8,15 +8,18 @@ export default (sequelize, DataTypes) => {
     },
     image: {
       allowNull: true,
-      type: DataTypes.BLOB('long')
+      type: DataTypes.BLOB('long'),
+      defaultValue: null
     },
     mimeType: {
       allowNull: true,
-      type: DataTypes.STRING
+      type: DataTypes.STRING,
+      defaultValue: null
     },
     generalFieldValue: {
       allowNull: true,
       type: DataTypes.STRING(1024),
+      defaultValue: null
     },
     registerId: {
       allowNull: false,

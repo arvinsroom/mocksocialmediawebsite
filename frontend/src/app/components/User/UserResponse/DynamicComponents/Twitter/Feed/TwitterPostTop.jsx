@@ -9,12 +9,13 @@ import { Avatar } from '@material-ui/core';
 import VerifiedUserIcon from '@material-ui/icons/VerifiedUser';
 import ChatBubbleOutlineIcon from "@material-ui/icons/ChatBubbleOutline";
 import ReplyTo from "../../../../../Common/UserCommon/SocialMediaPostType/ReplyTo";
-import Share from '../../../../../Common/UserCommon/SocialMediaPostType/Share';
+import { TW_TRANSLATIONS_DEFAULT } from '../../../../../../constants';
 import "./TwitterPost.css";
 
 const TwitterPostTop = ({ id }) => {
   const singlePost = useSelector(state => selectSinglePost(state, id));
   // selector for authors data
+  const socialMediaTranslations = useSelector(state => state.socialMedia.socialMediaTranslations);
   const singleAuthor = useSelector(state => selectSocialMediaAuthor(state, singlePost.authorId));
   const userRegisterData = useSelector(state => state.userRegister.metaData);
   const [renderSinglePost, setRenderSinglePost] = useState(null);
@@ -33,7 +34,8 @@ const TwitterPostTop = ({ id }) => {
       {singlePost &&
       <>
        {singlePost.type === 'RETWEET' && 
-        <div className="twitterRetweeted"><ChatBubbleOutlineIcon fontSize="small" /> &nbsp;&nbsp;&nbsp; You Retweeted</div>
+        <div className="twitterRetweeted">
+          <ChatBubbleOutlineIcon fontSize="small" /> &nbsp;&nbsp;&nbsp; {socialMediaTranslations?.you_retweeted || TW_TRANSLATIONS_DEFAULT.YOU_RETWEETED}</div>
        }
 
         <div className="twitterPost">
@@ -56,7 +58,8 @@ const TwitterPostTop = ({ id }) => {
                   }
                   {" "}
                   <span className="twitterPostHeaderSpecial">
-                    {/* {singlePost.authorVerified && <VerifiedUserIcon className="twitterPostBadge" />} */}
+                    {singleAuthor?.authorVerified ? <VerifiedUserIcon className="twitterPostBadge" /> : null}
+                    {" "}
                     {/* twitter handle from registration page */}
                     {singlePost.userPost ? (userRegisterData['HANDLE'] || "") : 
                       singleAuthor?.handle || ""
@@ -103,15 +106,9 @@ const TwitterPostTop = ({ id }) => {
                   </a>
                   : null}
 
-                {/* {singlePost.type === 'SHARE' ?
-                  <div className="sharePostPreview">
-                    <Share id={singlePost.parentPostId} />
-                  </div>
-                  : null} */}
-
                 {singlePost.type === 'QUOTETWEET' ?
                     <div className="sharePostPreview">
-                      <Share id={singlePost.parentPostId} />
+                      <TwitterPostTop id={singlePost.parentPostId} />
                     </div>
                   : null
                 }

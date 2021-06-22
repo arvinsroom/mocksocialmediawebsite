@@ -12,12 +12,14 @@ import { IconChevronRight } from '@tabler/icons';
 import Sidebar from './Sidebar/Sidebar';
 import Feed from './Feed/Feed';
 import TweetBox from './Feed/TweetBox';
-import { WINDOW_GLOBAL } from '../../../../../constants';
+import { WINDOW_GLOBAL, TW_TRANSLATIONS_DEFAULT } from '../../../../../constants';
+
 import "./Twitter.css";
 
 const Twitter = ({ data }) => {
   const { isLoggedInUser, translations, languageName } = useSelector(state => state.userAuth);
   const totalPostCount = useSelector(state => state.socialMedia.totalPostCount);
+  const socialMediaTranslations = useSelector(state => state.socialMedia.socialMediaTranslations);
 
   const dispatch = useDispatch();
   const classes = useStyles();
@@ -59,12 +61,16 @@ const Twitter = ({ data }) => {
         <div className="twitterFeed">
           {/* header */}
           <div className="twitterFeedHeader">
-            <h2>Home</h2>
+            <h2>{socialMediaTranslations?.home || TW_TRANSLATIONS_DEFAULT.HOME}</h2>
           </div>
 
           {/* tweetbox */}
           <div key={"twitter"}>
-            <TweetBox placeholderText={"What's happening?"} replyTo={null} quoteTweet={null} handleCloseModal={null} />
+            <TweetBox 
+              placeholderText={socialMediaTranslations?.["what's_happening?"] || TW_TRANSLATIONS_DEFAULT.WHATS_HAPPENING}
+              replyTo={null}
+              quoteTweet={null}
+              handleCloseModal={null} />
           </div>
           {/* twitter feed */}
           {totalPostCount && totalPostCount > 0 ? <Feed /> : <p>No Posts Exists!</p>}
