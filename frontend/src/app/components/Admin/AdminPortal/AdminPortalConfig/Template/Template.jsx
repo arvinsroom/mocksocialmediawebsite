@@ -27,8 +27,8 @@ import useStyles from '../../../../style';
 import { setTemplateId, getPrevTemplate, deletePrevTemplate } from "../../../../../actions/template";
 import { showErrorSnackbar, showInfoSnackbar, showSuccessSnackbar } from '../../../../../actions/snackbar';
 import { TEMPLATE } from '../../../../../constants';
-import SaveIcon from '@material-ui/icons/Save';
 import { IconEdit, IconTrash, IconDeviceFloppy } from '@tabler/icons';
+import clsx from 'clsx';
 
 const Template = () => {
   const [templateName, setTemplateName] = useState("");
@@ -165,7 +165,7 @@ const Template = () => {
   return (
     <>
     <Container component="main" maxWidth="lg" className={classes.card}>
-    <h1>Condition Settings Page</h1>
+    <h1>Condition Settings</h1>
     <form onSubmit={handleSubmit} className={classes.form}>
       <TextField
         variant="outlined"
@@ -228,7 +228,9 @@ const Template = () => {
         variant="contained"
         color="primary"
         fullWidth
-        className={classes.submit}
+        className={clsx(classes.submit, classes.widthFitContent)}
+        startIcon={<IconDeviceFloppy />
+        }
       >
         Save
       </Button>
@@ -236,17 +238,14 @@ const Template = () => {
     </Container>
 
     <Container component="main" maxWidth="lg" className={classes.card}>
-    <Box component="span" className={classes.note} display="block">
-      {TEMPLATE.TEMPLATE_DELETE_NOTE}
-    </Box>
       <Table aria-label="Template(s)">
         <TableHead>
           <TableRow>
             <TableCell className={classes.body, classes.head} align="center"><p>{TEMPLATE.CONDITION_NAME}</p></TableCell>
             <TableCell className={classes.body, classes.head} align="center"><p>{TEMPLATE.LANGUAGE}</p></TableCell>
-            <TableCell className={classes.body, classes.head} align="center"><p>{TEMPLATE.CHANGE_ACCESS_CODE}</p></TableCell>
-            <TableCell className={classes.body, classes.head} align="center"><p>{TEMPLATE.ACCESS_CODE}</p></TableCell>
             <TableCell className={classes.body, classes.head} align="center"><p>{TEMPLATE.SET_AS_ACTIVE}</p></TableCell>
+            <TableCell className={classes.body, classes.head} align="center"><p>{TEMPLATE.ACCESS_CODE}</p></TableCell>
+            <TableCell className={classes.body, classes.head} align="center"><p>{TEMPLATE.CHANGE_ACCESS_CODE}</p></TableCell>
             <TableCell className={classes.body, classes.head} align="center"><p>{TEMPLATE.DELETE}</p></TableCell>
           </TableRow>
         </TableHead>
@@ -258,6 +257,17 @@ const Template = () => {
               </TableCell>
               <TableCell align="center">
                 <p>{row.language}</p>
+              </TableCell>
+              <TableCell align="center">
+                <Button
+                  aria-label="set template"
+                  onClick={() => handleTemplateId(row._id, row.name, TEMPLATE.TEMPLATE_CURRENT_SELECT)}
+                  >
+                  <IconEdit />
+                </Button>
+              </TableCell>
+              <TableCell align="center">
+                <p style={{ textAlign: 'center' }}>{row.templateCode}</p>
               </TableCell>
               <TableCell align="center">
                 <TextField
@@ -275,17 +285,6 @@ const Template = () => {
                 </Button>
               </TableCell>
               <TableCell align="center">
-                <p style={{ textAlign: 'center' }}>{row.templateCode}</p>
-              </TableCell>
-              <TableCell align="center">
-                <Button
-                  aria-label="set template"
-                  onClick={() => handleTemplateId(row._id, row.name, TEMPLATE.TEMPLATE_CURRENT_SELECT)}
-                  >
-                  <IconEdit />
-                </Button>
-              </TableCell>
-              <TableCell align="center">
                 <Button
                   aria-label="delete template"
                   onClick={(e) => handleClickOpen(row._id, row.name, e)}
@@ -297,6 +296,9 @@ const Template = () => {
           )) : null}
         </TableBody>
       </Table>
+      <Box component="span" className={classes.note} display="block">
+        {TEMPLATE.TEMPLATE_DELETE_NOTE}
+      </Box>
     </Container>
 
     <Dialog

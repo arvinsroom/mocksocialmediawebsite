@@ -32,7 +32,7 @@ export const getFacebookPostsCount = (data) => (dispatch) => {
       // these are all the facebook post
       const totalPostCount = response.data?.totalPosts || 0;
       const postIds = response.data?.postIds || [];
-      const fbTranslations = response.data?.translations?.translations || null;
+      const socialMediaTranslations = response.data?.translations?.translations || null;
       const authors = response.data?.authors || [];
       // normalize the authors data
       const normalizeAuthor = {};
@@ -47,7 +47,7 @@ export const getFacebookPostsCount = (data) => (dispatch) => {
           totalPostCount,
           totalPostIds: postIds,
           pageId: data.pageId,
-          fbTranslations: fbTranslations,
+          socialMediaTranslations: socialMediaTranslations,
           authors: normalizeAuthor
         }
       });

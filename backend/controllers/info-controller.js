@@ -17,7 +17,6 @@ const create = async (req, res, next) => {
       isFinish,
       responseCode
     } = req.body;
-    console.log(responseCode);
 
     if (!templateId) {
       res.status(400).send({

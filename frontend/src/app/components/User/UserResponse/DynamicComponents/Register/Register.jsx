@@ -96,8 +96,8 @@ const Register = ({ data }) => {
                 regesterIds.push(key);
                 formData.append(key, value.toString());
               }
+              metaData[referenceName] = value;
             }
-            metaData[referenceName] = value;
           }
         }
         if (regesterIds.length > 0) {

@@ -25,7 +25,8 @@ import {
   REGISTER_PAGE_CUSTOM_REFERENCES
 } from '../../../../../constants';
 import cloneDeep from 'lodash/cloneDeep';
-import { IconCirclePlus, IconTrash } from '@tabler/icons';
+import { IconCirclePlus, IconTrash, IconDeviceFloppy } from '@tabler/icons';
+import clsx from 'clsx';
 
 const Register = () => {
   const [customFieldArr, setCustomFieldArr] = useState([]);
@@ -246,7 +247,8 @@ const Register = () => {
         variant="contained"
         color="primary"
         fullWidth
-        className={classes.submit}
+        startIcon={<IconDeviceFloppy />}
+        className={clsx(classes.submit, classes.widthFitContent)}
       >
         Save
       </Button>

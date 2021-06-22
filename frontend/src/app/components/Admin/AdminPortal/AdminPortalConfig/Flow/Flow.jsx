@@ -21,6 +21,7 @@ import useStyles from '../../../../style';
 import { showErrorSnackbar, showSuccessSnackbar, showInfoSnackbar } from '../../../../../actions/snackbar';
 import { TEMPLATE, FLOW_PAGE } from '../../../../../constants';
 import { IconRefresh, IconTrash } from '@tabler/icons';
+import clsx from 'clsx';
 
 const Flow = () => {
   const [pages, setPages] = useState("");
@@ -100,7 +101,7 @@ const Flow = () => {
   return (
     <>
     <Container component="main" maxWidth="lg" className={classes.card}>
-    <h1>Study Flow Page</h1>
+    <h1>Study Flow</h1>
     <Box component="span" className={classes.note} display="block">
       {FLOW_PAGE.FLOW_CONFIG_NOTE}
     </Box>
@@ -156,6 +157,7 @@ const Flow = () => {
       onClick={handleSubmit}
       component="label"
       startIcon={<IconRefresh />}
+      className={clsx(classes.submit, classes.widthFitContent)}
     >
       UPDATE FLOW ORDER
     </Button>

@@ -51,10 +51,10 @@
   }
 }
 
-.twitterPostMediaBox {
+/* .twitterPostMediaBox {
   border: 1px solid var(--twitter-background);
   border-radius: 10px;
-}
+} */
 
 .twitterRetweeted {
   margin-left: 60px;
