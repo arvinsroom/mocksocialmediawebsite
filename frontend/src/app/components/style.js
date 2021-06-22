@@ -29,6 +29,9 @@ const useStyles = makeStyles((theme) => ({
     marginRight: '0',
     display: 'flex',
   },
+  widthFitContent: {
+    width: 'fit-content'
+  },
   formControl: {
     // margin: theme.spacing(1),
     minWidth: 120,
@@ -74,8 +77,8 @@ const useStyles = makeStyles((theme) => ({
     minWidth: 650,
   },
   head: {
-    backgroundColor: 'cornsilk',
-    color: 'black',
+    backgroundColor: '#2472b2 !important',
+    color: '#fff !important',
   },
   body: {
     fontSize: 16,
@@ -161,6 +164,9 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: 'center',
     fontFamily: '"Noto Sans", sans-serif',
     fontSize: '16px'
+  },
+  colorChange: {
+    color: '#jkjk'
   }
 }));
 

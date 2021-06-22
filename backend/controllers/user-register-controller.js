@@ -84,7 +84,6 @@ const createUserRegister = async (req, res, next) => {
         userId: req.userId
       });
     }
-    console.log(userRegisterData);
 
     // now create all entries for register
     await UserRegister.bulkCreate(userRegisterData, {

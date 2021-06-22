@@ -23,7 +23,7 @@
   background-color: white;
   z-index: 100;
   border-bottom: 1px solid var(--twitter-background);
-  padding: 5px;
+  padding: 15px;
 }
 
 .twitterFeedHeader > h2 {

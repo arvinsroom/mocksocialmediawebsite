@@ -10,7 +10,7 @@ import "./Post.css";
 
 const PostBottom = ({ id }) => {
   const postMetadata = useSelector(state => selectPostsMetadata(state, id));
-  const fbTranslations = useSelector(state => state.socialMedia.fbTranslations);
+  const socialMediaTranslations = useSelector(state => state.socialMedia.socialMediaTranslations);
   const userRegisterData = useSelector(state => state.userRegister.metaData);
 
   const [openCommentBox, setOpenCommentBox] = useState(false);
@@ -75,7 +75,7 @@ const PostBottom = ({ id }) => {
             {display && <FacebookSelector onSelect={handleReactions} iconSize={30} />}
           </div>
           <div className="postAction totalComments">
-            <p>{(postMetadata?.comments?.length.toString() || "0") + " " + (fbTranslations?.comments || FB_TRANSLATIONS_DEFAULT?.COMMENTS)}</p>
+            <p>{(postMetadata?.comments?.length.toString() || "0") + " " + (socialMediaTranslations?.comments || FB_TRANSLATIONS_DEFAULT?.COMMENTS)}</p>
           </div>
         </div>
       <div className="postOptions">
@@ -85,18 +85,18 @@ const PostBottom = ({ id }) => {
             <div className={postMetadata.like.toLowerCase() + 'Emoji'}></div>
             <p className={postMetadata.like.toLowerCase() + 'Text'}>
               <strong>
-              {postMetadata.like === 'default' ? fbTranslations?.['like'] || FB_TRANSLATIONS_DEFAULT?.['LIKE'] : 
-                fbTranslations?.[postMetadata.like.toLowerCase()] || FB_TRANSLATIONS_DEFAULT?.[postMetadata.like]}
+              {postMetadata.like === 'default' ? socialMediaTranslations?.['like'] || FB_TRANSLATIONS_DEFAULT?.['LIKE'] : 
+                socialMediaTranslations?.[postMetadata.like.toLowerCase()] || FB_TRANSLATIONS_DEFAULT?.[postMetadata.like]}
               </strong>
             </p>
         </div>
         <div className="postOption" onClick={toggleComment}>
           <div className={'commentEmoji'}></div>
-          <p><strong>{fbTranslations?.comment || FB_TRANSLATIONS_DEFAULT.COMMENT}</strong></p>
+          <p><strong>{socialMediaTranslations?.comment || FB_TRANSLATIONS_DEFAULT.COMMENT}</strong></p>
         </div>
         <div className="postOption" onClick={openModal}>
           <div className={'shareEmoji'}></div>
-          <p><strong>{fbTranslations?.share || FB_TRANSLATIONS_DEFAULT.SHARE}</strong></p>
+          <p><strong>{socialMediaTranslations?.share || FB_TRANSLATIONS_DEFAULT.SHARE}</strong></p>
         </div>
     </div>
     {openCommentBox && 
@@ -111,10 +111,10 @@ const PostBottom = ({ id }) => {
             onChange={({ target }) => setCurrentComment(target.value)}
             className="createCommentInputText"
             type="text"
-            placeholder={fbTranslations?.write_a_comment || FB_TRANSLATIONS_DEFAULT.WRITE_A_COMMENT} />
+            placeholder={socialMediaTranslations?.write_a_comment || FB_TRANSLATIONS_DEFAULT.WRITE_A_COMMENT} />
 
             <button className="postComment" onClick={e => handleSubmitComment(e)} type="submit">
-              {fbTranslations?.post || FB_TRANSLATIONS_DEFAULT.POST}
+              {socialMediaTranslations?.post || FB_TRANSLATIONS_DEFAULT.POST}
             </button>
           </form>
         </div>

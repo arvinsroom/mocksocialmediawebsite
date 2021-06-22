@@ -8,9 +8,12 @@ import {
   Container
 } from '@material-ui/core';
 import { useEffect, useState, useRef } from 'react';
-import { getAdminTemplatesWithUserCount, fetchTemplateData } from '../../../../../services/metrics-service';
-import { IconTableExport, IconDatabaseExport } from '@tabler/icons';
-import SystemUpdateIcon from '@material-ui/icons/SystemUpdate';
+import {
+  getAdminTemplatesWithUserCount,
+  fetchTemplateData,
+  downloadMediaData
+} from '../../../../../services/metrics-service';
+import { IconTableExport, IconDatabaseExport, IconFileExport } from '@tabler/icons';
 import { useSelector, useDispatch } from "react-redux";
 import { Redirect } from 'react-router-dom';
 import useStyles from '../../../../style';
@@ -27,13 +30,16 @@ import {
   formulateUserPostActionsTracking,
   formulateUserPostLinkClickTracking,
   formulateUserPosts,
-  formulateHeaders
+  formulateHeaders,
+  normalizeMediaData,
+  formulateRegistrations
 } from './metrics-helper';
+import JSZip from 'jszip';
+import saveAs from 'save-as';
 
 const Template = () => {
   const { isLoggedInAdmin } = useSelector(state => state.auth);
   const [tempWithUsersCount, setTempWithUsersCount] = useState(null);
-  // const [headers, setHeaders] = useState([]);
   const [allUserResponses, setAllUserResponses] = useState([]);
   const [downloadFileName, setDownloadFileName] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -62,6 +68,40 @@ const Template = () => {
     return <Redirect to="/admin" />;
   }
   
+  const downloadTemplateMedia = async (templateId, templateName, e) => {
+    e.preventDefault();
+    await setIsLoading(true);
+    const { data } = await downloadMediaData(templateId);
+    const allMedia = normalizeMediaData(data);
+    if (allMedia?.length > 0) {
+      const zip = new JSZip();
+      let count = 0;
+      const zipFilename = templateName + "-media.zip";
+      allMedia.forEach(async function (fileObj) {
+        try {
+          const mimeTypeExt = fileObj.mimeType.split('/');
+          const fileName = fileObj._id + "." + (mimeTypeExt[mimeTypeExt.length - 1] || "");
+          zip.file(fileName, fileObj.media.data, { binary: true });
+          count++;
+          if(count === allMedia.length) {
+            zip.generateAsync({ type:'blob' }).then(function(content) {
+              saveAs(content, zipFilename);
+            });
+          }
+        } catch (err) {
+          // log the error but download how much it can
+          dispatch(showErrorSnackbar("Some error occured! Only partial files have been download!"));
+          zip.generateAsync({ type:'blob' }).then(function(content) {
+            saveAs(content, zipFilename);
+          });
+          await setIsLoading(false);
+        }
+      });
+    }
+    else dispatch(showInfoSnackbar("No attached media found!"));
+    await setIsLoading(false);
+  }
+
   const downloadSpecificTemplate = async (templateId, templateName, type, e) => {
     e.preventDefault();
     try {
@@ -105,9 +145,10 @@ const Template = () => {
               userPosts,
               userPostActions,
               userPostTracking,
+              userRegisterations,
               ...userResponse
             } = allUserData[i];
-      
+
             const eachRow = [
               ...formUserAndTemplateData(userResponse, template),
               // userQuestionAnswers
@@ -119,17 +160,19 @@ const Template = () => {
               // userPostTracking
               formulateUserPostLinkClickTracking(userPostTracking),
               // userPosts
-              ...formulateUserPosts(userPosts)
+              ...formulateUserPosts(userPosts),
+              // userRegistrations, return only a string
+              formulateRegistrations(userRegisterations)
             ];
             spreadsheetData.push(eachRow);
           }
-      
           await setDownloadFileName(templateName + '.csv');
           await setAllUserResponses(spreadsheetData);
           // use ref to press start the downloading for CSV file
           csvLinkRef?.current.link.click();
         }
       } else dispatch(showInfoSnackbar("No Response Exist to download!"));
+      dispatch(showInfoSnackbar("Download complete!"));
       await setIsLoading(false);
     } catch (error) {
       await setIsLoading(false);
@@ -139,7 +182,7 @@ const Template = () => {
 
   return (
     <Container component="main" maxWidth="lg" className={classes.card}>
-    <h1>Data Page</h1>
+    <h1>Data Download</h1>
     {isLoading && <Progress />}
     <div className={classes.form}>
         <Table aria-label="Template(s) with User(s) Information">
@@ -149,6 +192,7 @@ const Template = () => {
               <TableCell className={classes.body, classes.head} align="center"><p>{DATA_PAGE.RESPONSES}</p></TableCell>
               <TableCell className={classes.body, classes.head} align="center"><p>Download CSV</p></TableCell>
               <TableCell className={classes.body, classes.head} align="center"><p>Download JSON</p></TableCell>
+              <TableCell className={classes.body, classes.head} align="center"><p>Download Media</p></TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -164,14 +208,21 @@ const Template = () => {
                   <Button
                     onClick={e => downloadSpecificTemplate(row.templateId, row.templateName, 'CSV', e)}
                   >
-                    <IconDatabaseExport />
+                    <IconTableExport />
                   </Button>
                 </TableCell>
                 <TableCell align="center">
                   <Button
                       onClick={e => downloadSpecificTemplate(row.templateId, row.templateName, 'JSON', e)}
                   >
-                    <IconTableExport />
+                    <IconDatabaseExport />
+                  </Button>
+                </TableCell>
+                <TableCell align="center">
+                  <Button
+                      onClick={e => downloadTemplateMedia(row.templateId, row.templateName, e)}
+                  >
+                    <IconFileExport />
                   </Button>
                 </TableCell>
               </TableRow>

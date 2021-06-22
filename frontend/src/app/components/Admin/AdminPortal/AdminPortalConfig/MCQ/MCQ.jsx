@@ -9,7 +9,8 @@ import { showErrorSnackbar, showSuccessSnackbar, showInfoSnackbar } from '../../
 import { TEMPLATE, MCQ_PAGE } from '../../../../../constants';
 import RichTextArea from '../../../../Common/AdminCommon/RichTextArea';
 import { checkIfEmptyRichText } from '../../../../../utils';
-import { IconCirclePlus, IconTrash } from '@tabler/icons';
+import { IconCirclePlus, IconTrash, IconDeviceFloppy } from '@tabler/icons';
+import clsx from 'clsx';
 
 const MCQ = () => {
   const [clearRichText, setClearRichText] = useState(false);
@@ -246,7 +247,8 @@ const MCQ = () => {
         variant="contained"
         color="primary"
         fullWidth
-        className={classes.submit}
+        startIcon={<IconDeviceFloppy />}
+        className={clsx(classes.submit, classes.widthFitContent)}
       >
         Save
       </Button>

@@ -7,7 +7,8 @@ import useStyles from '../../../../../style';
 import SelectLanguage from './SelectLanguage';
 import { showErrorSnackbar, showInfoSnackbar, showSuccessSnackbar } from '../../../../../../actions/snackbar';
 import { GENERAL_PAGE, TEMPLATE } from '../../../../../../constants';
-import { IconLanguage } from '@tabler/icons';
+import { IconLanguage, IconDeviceFloppy } from '@tabler/icons';
+import clsx from 'clsx';
 
 const Language = ({ disable, templateId }) => {
   const [languageJSON, setLanguageJSON] = useState(null);
@@ -117,7 +118,8 @@ const Language = ({ disable, templateId }) => {
           color="primary"
           fullWidth
           disabled={!languageJSON}
-          className={classes.submit}
+          startIcon={<IconDeviceFloppy />}
+          className={clsx(classes.submit, classes.widthFitContent)}
         >
           {GENERAL_PAGE.SAVE_RESPONSES}
         </Button>
