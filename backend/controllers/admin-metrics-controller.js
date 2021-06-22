@@ -118,6 +118,21 @@ const getUserData = async (req, res, next) => {
               attributes: ['_id', 'adminPostId']
             }
           ]
+        },
+        {
+          model: db.UserRegister,
+          as: 'userRegisterations',
+          attributes: {
+            exclude: ['image', 'userId']
+          },
+          include: [
+            {
+              // we might need to show adminId where applicable
+              model: db.Register,
+              as: 'Register',
+              attributes: ['type', 'displayName', 'referenceName']
+            }
+          ]
         }
       ]
     }, { transaction, logging: false });
@@ -223,7 +238,85 @@ const getTemplatesWithUserCounts = async (req, res, next) => {
   }
 };
 
+const downloadAllMedia = async (req, res, next) => {
+  let transaction;
+  try {
+    if (!req.adminId) {
+      res.status(400).send({
+        message: "Invalid Token, please log in again!"
+      });
+      return;
+    }
+
+    const { templateId } = req.params;
+    if (!templateId) {
+      res.status(400).send({
+        message: "Invalid template Id!"
+      });
+      return;
+    }
+    transaction = await db.sequelize.transaction();
+
+    const data = await db.User.findAll({
+      where: {
+        templateId,
+      },
+      attributes: { 
+        exclude: ['consent', 'finishedAt', 'qualtricsId', 'responseCode', 'startedAt', 'templateId']
+      },
+      include: [
+        {
+          // will only select the posts which have userId associated with them
+          model: db.UserPost,
+          as: 'userPosts',
+          attributes: { 
+            exclude: ['adminPostId', 'authorId', 'createdAt', 'datePosted', 'initLike',
+              'isFake', 'isReplyTo', 'isReplyToOrder', 'link', 'linkPreview', 'linkTitle',
+              'pageId', 'parentPostId', 'postMessage', 'sourceTweet', 'type', 'userId']
+          },
+          include: [
+            {
+              // fetch any media associated with user created post
+              model: db.Media,
+              as: 'attachedMedia',
+              attributes: ['_id', 'mimeType', 'media'],
+            }
+          ]
+        },
+        {
+          model: db.UserRegister,
+          as: 'userRegisterations',
+          attributes: {
+            include: [
+              ['image', 'media'],
+              'mimeType', 
+              '_id',
+            ],
+            exclude: [
+              'image',
+              'generalFieldValue',
+              'registerId',
+              'userId'
+            ]
+          }
+        }
+      ]
+    }, { transaction, logging: false });
+    await transaction.commit();
+
+    res.send(data);
+  } catch (error) {
+    console.log(error.message);
+    if (transaction) await transaction.rollback();
+    res.status(500).send({
+      message: "Some error occurred while fetching Template Media."
+    });
+  }
+};
+
+
 export default {
   getUserData,
-  getTemplatesWithUserCounts
+  getTemplatesWithUserCounts,
+  downloadAllMedia
 }

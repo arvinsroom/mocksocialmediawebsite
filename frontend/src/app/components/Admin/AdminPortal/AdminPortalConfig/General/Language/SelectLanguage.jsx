@@ -5,6 +5,8 @@ import { showErrorSnackbar, showInfoSnackbar } from '../../../../../../actions/s
 import { GENERAL_PAGE, TEMPLATE } from '../../../../../../constants';
 import { useState } from 'react';
 import useStyles from '../../../../../style';
+import clsx from 'clsx';
+import { IconDeviceFloppy } from '@tabler/icons';
 
 const SelectLanguage = ({ currentLanguages, templateId }) => {
   const [active, setActive] = useState("");
@@ -69,7 +71,8 @@ const SelectLanguage = ({ currentLanguages, templateId }) => {
         color="primary"
         fullWidth
         disabled={currentLanguages === null}
-        className={classes.submit}
+        startIcon={<IconDeviceFloppy />}
+        className={clsx(classes.submit, classes.widthFitContent)}
         >
         {GENERAL_PAGE.SAVE_RESPONSES}
       </Button>

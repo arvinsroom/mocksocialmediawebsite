@@ -8,15 +8,16 @@ import PollOutlinedIcon from '@material-ui/icons/PollOutlined';
 import SentimentSatisfiedOutlinedIcon from '@material-ui/icons/SentimentSatisfiedOutlined';
 import EventOutlinedIcon from '@material-ui/icons/EventOutlined';
 import GifIcon from '@material-ui/icons/Gif';
-import { USER_TRANSLATIONS_DEFAULT } from '../../../../../../constants';
+import { USER_TRANSLATIONS_DEFAULT, TW_TRANSLATIONS_DEFAULT } from '../../../../../../constants';
 import { createFbPost } from '../../../../../../actions/socialMedia';
 import { showInfoSnackbar, showSuccessSnackbar } from '../../../../../../actions/snackbar';
 import Share from '../../../../../Common/UserCommon/SocialMediaPostType/Share';
 import "./TweetBox.css";
 
 const TweetBox = ({ placeholderText, replyTo, quoteTweet, handleCloseModal }) => {
-  // const twTranslations = useSelector(state => state.twitter.twTranslations);
+  const socialMediaTranslations = useSelector(state => state.socialMedia.socialMediaTranslations);
   const { translations } = useSelector(state => state.userAuth);
+  const userRegisterData = useSelector(state => state.userRegister.metaData);
   const [postMessage, setPostMessage] = useState("");
   const pageId = useSelector(state => state.socialMedia.pageId);
 
@@ -95,7 +96,7 @@ const TweetBox = ({ placeholderText, replyTo, quoteTweet, handleCloseModal }) =>
 
       <form>
         <div className="tweetBoxInput">
-          <Avatar />
+          <Avatar src={(userRegisterData['PROFILEPHOTO'] || "")} />
           <div className="twitterPostMessage">
             <textarea
               value={postMessage}
@@ -163,7 +164,9 @@ const TweetBox = ({ placeholderText, replyTo, quoteTweet, handleCloseModal }) =>
             <Button
               className="tweetBoxButton"
               onClick={handleSubmit}
-            >Tweet</Button>
+            >
+              {socialMediaTranslations?.tweet || TW_TRANSLATIONS_DEFAULT.TWEET}
+            </Button>
           </div>
       </div>
       </form>

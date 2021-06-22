@@ -11,11 +11,12 @@ import TweetBox from './TweetBox';
 import { showInfoSnackbar, showSuccessSnackbar } from '../../../../../../actions/snackbar';
 import { likeFbPost, unlikeFbPost, createFbPost } from '../../../../../../actions/socialMedia';
 import { selectPostsMetadata } from '../../../../../../selectors/socialMedia';
-import { USER_TRANSLATIONS_DEFAULT } from '../../../../../../constants';
+import { USER_TRANSLATIONS_DEFAULT, TW_TRANSLATIONS_DEFAULT } from '../../../../../../constants';
 import "./TwitterPost.css";
 
 const TwitterPostBottom = ({ id }) => {
   const postMetadata = useSelector(state => selectPostsMetadata(state, id));
+  const socialMediaTranslations = useSelector(state => state.socialMedia.socialMediaTranslations);
   const { translations } = useSelector(state => state.userAuth);
   const [modalType, setModalType] = useState(null);
   const [anchorEl, setAnchorEl] = useState(null);
@@ -103,10 +104,10 @@ const TwitterPostBottom = ({ id }) => {
         onClose={handleClose}
       >
         <MenuItem onClick={e => handleRetweet(e)}>
-          <RepeatOutlinedIcon /> {" "} Retweet
+          <RepeatOutlinedIcon /> {" "} {socialMediaTranslations?.retweet || TW_TRANSLATIONS_DEFAULT.RETWEET}
         </MenuItem>
         <MenuItem onClick={e => openModal(e, 'QUOTETWEET')}>
-          <CreateOutlinedIcon /> {" "} Quote Tweet
+          <CreateOutlinedIcon /> {" "} {socialMediaTranslations?.quote_tweet || TW_TRANSLATIONS_DEFAULT.QUOTE_TWEET}
         </MenuItem>
       </Menu>
       {modalOpen && 
@@ -126,8 +127,20 @@ const TwitterPostBottom = ({ id }) => {
                 </div>
               </div>
               {modalType === 'REPLY' ?
-                <div key={modalType}><TweetBox placeholderText={"Tweet your reply"} replyTo={id} quoteTweet={null} handleCloseModal={handleCloseModal} /></div> :
-                <div key={modalType}><TweetBox placeholderText={"Add a comment"} replyTo={null} quoteTweet={id} handleCloseModal={handleCloseModal} /></div>
+                <div key={modalType}>
+                  <TweetBox 
+                    placeholderText={socialMediaTranslations?.tweet_your_reply || TW_TRANSLATIONS_DEFAULT.TWEET_YOUR_REPLY}
+                    replyTo={id}
+                    quoteTweet={null}
+                    handleCloseModal={handleCloseModal} />
+                </div> :
+                <div key={modalType}>
+                  <TweetBox
+                    placeholderText={socialMediaTranslations?.add_a_comment || TW_TRANSLATIONS_DEFAULT.ADD_A_COMMENT}
+                    replyTo={null}
+                    quoteTweet={id}
+                    handleCloseModal={handleCloseModal} />
+                </div>
               }
             </div>
             </Container>

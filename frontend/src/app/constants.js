@@ -224,3 +224,23 @@ export const USER_TRANSLATIONS_DEFAULT = Object.freeze({
 export const WINDOW_GLOBAL = Object.freeze({
   RELOAD_ALERT_MESSAGE: 'If you reload this page, you might loose the data, Are you sure?'
 });
+
+export const TW_TRANSLATIONS_DEFAULT = Object.freeze({
+  HOME: 'Home',
+  EXPLORE: 'Explore',
+  NOTIFICATIONS: 'Notifications',
+  MESSAGES: 'Messages',
+  BOOKMARKS: 'Bookmarks',
+  LISTS: 'Lists',
+  PROFILE: 'Profile',
+  MORE: 'More',
+
+  WHATS_ON_YOUR_MIND: 'What\'s on your mind?',
+  TWEET: 'Tweet',
+  WHATS_HAPPENING: 'What\'s happening?',
+  TWEET_YOUR_REPLY: 'Tweet your reply',
+  ADD_A_COMMENT: 'Add a comment',
+  YOU_RETWEETED: 'You Retweeted',
+  RETWEET: 'Retweet',
+  QUOTE_TWEET: 'Quote Tweet'
+});

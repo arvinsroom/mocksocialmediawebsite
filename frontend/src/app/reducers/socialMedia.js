@@ -22,7 +22,7 @@ const initialState = {
   postEachPage: 5,
   totalPostIds: [],
   finish: false,
-  fbTranslations: null,
+  socialMediaTranslations: null,
   authors: null
 };
 
@@ -45,7 +45,7 @@ export default function (state = initialState, action) {
         allIds: [],
         isLoading: false,
         finish: false,
-        fbTranslations: payload.fbTranslations || null,
+        socialMediaTranslations: payload.socialMediaTranslations || null,
         authors: payload.authors,
       };
 
@@ -172,7 +172,7 @@ export default function (state = initialState, action) {
         postEachPage: 5,
         totalPostIds: [],
         finish: false,
-        fbTranslations: null,
+        socialMediaTranslations: null,
         authors: {}
       }
     

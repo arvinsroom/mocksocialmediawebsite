@@ -12,3 +12,9 @@ export const fetchTemplateData = (templateId) => {
     headers: authHeader()
   });
 }
+
+export const downloadMediaData = (templateId) => {
+  return http.get(`/metrics/allUsers/allMedia/${templateId}`, {
+    headers: authHeader()
+  });
+}

@@ -9,7 +9,7 @@ import PersonAddIcon from '@material-ui/icons/PersonAdd';
 import { FB_TRANSLATIONS_DEFAULT } from '../../../../../../../constants';
 
 const StoryCreate = () => {
-  const fbTranslations = useSelector(state => state.socialMedia.fbTranslations);
+  const socialMediaTranslations = useSelector(state => state.socialMedia.socialMediaTranslations);
   const userRegisterData = useSelector(state => state.userRegister.metaData);
 
   const [modalOpen , setModalOpen] = useState(false);
@@ -18,8 +18,8 @@ const StoryCreate = () => {
   };
 
   const translate = (...words) => {
-    const word1 = fbTranslations?.[words[0]] || null;
-    const word2 = fbTranslations?.[words[1]] || null;
+    const word1 = socialMediaTranslations?.[words[0]] || null;
+    const word2 = socialMediaTranslations?.[words[1]] || null;
     const finalWord1 = word1 ? word1 : FB_TRANSLATIONS_DEFAULT[words[0].toUpperCase()];
     const finalWord2 = word2 ? word2 : FB_TRANSLATIONS_DEFAULT[words[1].toUpperCase()];
     return finalWord1 + '/' + finalWord2;
@@ -36,7 +36,7 @@ const StoryCreate = () => {
           <input
             onClick={openModal}
             className="createStoryInputText"
-            placeholder={fbTranslations?.["what's_on_your_mind?"] || FB_TRANSLATIONS_DEFAULT.WHATS_ON_YOUR_MIND} />
+            placeholder={socialMediaTranslations?.["what's_on_your_mind?"] || FB_TRANSLATIONS_DEFAULT.WHATS_ON_YOUR_MIND} />
         </form>
       </div>
 
@@ -47,7 +47,7 @@ const StoryCreate = () => {
         </div>}
         <div className="postOption">
           <PersonAddIcon style={{ color: '#1877F2' }}/>
-          <p><b>{fbTranslations?.tag_friends || FB_TRANSLATIONS_DEFAULT.TAG_FRIENDS}</b></p>
+          <p><b>{socialMediaTranslations?.tag_friends || FB_TRANSLATIONS_DEFAULT.TAG_FRIENDS}</b></p>
         </div>
         <div className="postOption onlyLargeScreen">
           <InsertEmoticonIcon style={{ color: '#F5C33B' }} />
