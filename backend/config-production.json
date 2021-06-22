@@ -1,0 +1,26 @@
+{
+  "database": {
+    "name": "",
+    "username": "",
+    "password": "",
+    "host": "",
+    "port": "3306",
+    "dialect": "mysql"
+  },
+  "adminCredentials": [
+    {
+      "username": "",
+      "password": ""
+    },
+    {
+      "username": "",
+      "password": ""
+    },
+    {
+      "username": "",
+      "password": ""
+    }
+  ],
+  "secret": "",
+  "secretUser": ""
+}
