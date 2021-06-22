@@ -12,7 +12,7 @@ const ReplyTo = ({ id }) => {
     if (parentRepliedPost) {
       setRenderReplyPost(
         <div className="twitterReplyTo">
-          Replying To {singleAuthor.handle || ""}
+          Replying To {singleAuthor?.handle || ""}
         </div>
       );
     }

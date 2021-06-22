@@ -7,7 +7,8 @@ import { showErrorSnackbar, showSuccessSnackbar, showInfoSnackbar } from '../../
 import { GENERAL_PAGE } from '../../../../../../constants';
 import Progress from '../../../../../Common/Progress';
 import SocialMediaPages from '../../../../../Common/AdminCommon/SocialMediaPages';
-import { IconPhoto } from '@tabler/icons';
+import { IconPhoto, IconDeviceFloppy } from '@tabler/icons';
+import clsx from 'clsx';
 
 const Upload = ({ templateId }) => {
   const [selectedFiles, setSelectedFiles] = useState(null);
@@ -95,7 +96,7 @@ const Upload = ({ templateId }) => {
           />
         </Button>
         <br/>
-        <p>{" Media that will be uploaded upon clicking next step: " + (uploadMediaNames || "")}</p>
+        <p style={{ overflowWrap: 'anywhere' }}>{" Media that will be uploaded upon clicking next step: " + (uploadMediaNames || "")}</p>
 
         {isLoading && <Progress />}
         <Button
@@ -104,7 +105,8 @@ const Upload = ({ templateId }) => {
           color="primary"
           fullWidth
           disabled={active === ""}
-          className={classes.submit}
+          startIcon={<IconDeviceFloppy />}
+          className={clsx(classes.submit, classes.widthFitContent)}
           >
           {GENERAL_PAGE.SAVE_RESPONSES}
         </Button>

@@ -17,6 +17,8 @@ import { TEMPLATE, INFO_PAGE } from '../../../../../constants';
 import SocialMediaPages from '../../../../Common/AdminCommon/SocialMediaPages';
 import RichTextArea from '../../../../Common/AdminCommon/RichTextArea';
 import { checkIfEmptyRichText } from '../../../../../utils';
+import { IconDeviceFloppy } from '@tabler/icons';
+import clsx from 'clsx';
 
 const InfoPage = () => {
   const [clearRichText, setClearRichText] = useState(false);
@@ -138,9 +140,9 @@ const InfoPage = () => {
             onChange={handleResponseCode}
             color="primary"
             name="responseCode"
-            inputProps={{ 'aria-label': 'Show response code' }}
+            inputProps={{ 'aria-label': 'Generate six-digit completion code' }}
           />}
-          label={"Show response code"}
+          label={"Generate six-digit completion code"}
         />
       </FormGroup>
 
@@ -156,7 +158,8 @@ const InfoPage = () => {
         fullWidth
         color="primary"
         onClick={handleSave}
-        className={classes.submit}
+        startIcon={<IconDeviceFloppy />}
+        className={clsx(classes.submit, classes.widthFitContent)}
       >
       Save
       </Button>

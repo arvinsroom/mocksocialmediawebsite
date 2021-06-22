@@ -32,7 +32,7 @@ const Share = ({ id }) => {
           <Text className="postMessage" postMessage={parentSharedPost.postMessage} link={parentSharedPost.link} />
 
           {(parentSharedPost.type === 'PHOTO' || parentSharedPost.type === 'VIDEO') &&
-            <DynamicMedia attachedMedia={singlePost.attachedMedia[0]} />
+            <DynamicMedia attachedMedia={parentSharedPost.attachedMedia[0]} />
           }
 
           {parentSharedPost.type === 'LINK' ?

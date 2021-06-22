@@ -93,7 +93,7 @@ const useStyles = makeStyles((theme) => ({
 const AdminPortalDrawer = () => {
   const classes = useStyles();
   const theme = useTheme();
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(true);
   const [activeState, setActiveState] = useState('CONDITION-SETTINGS');
   const { isLoggedInAdmin } = useSelector(state => state.auth);
   const { _id: templateId, name } = useSelector(state => state.template);

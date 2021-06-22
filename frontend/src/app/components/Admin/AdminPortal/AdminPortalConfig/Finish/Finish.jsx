@@ -6,8 +6,9 @@ import { useSelector, useDispatch } from "react-redux";
 import { Redirect } from 'react-router-dom';
 import { showErrorSnackbar, showSuccessSnackbar, showInfoSnackbar } from '../../../../../actions/snackbar';
 import { TEMPLATE, FINISH_PAGE } from '../../../../../constants';
-import RichTextArea from '../../../../Common/AdminCommon/RichTextArea';
 import { checkIfEmptyRichText } from '../../../../../utils';
+import { IconDeviceFloppy } from '@tabler/icons';
+import clsx from 'clsx';
 
 const Finish = () => {
   const [clearRichText, setClearRichText] = useState(false);
@@ -105,7 +106,8 @@ const Finish = () => {
         variant="contained"
         color="primary"
         fullWidth
-        className={classes.submit}
+        startIcon={<IconDeviceFloppy />}
+        className={clsx(classes.submit, classes.widthFitContent)}
       >
         Save
       </Button>

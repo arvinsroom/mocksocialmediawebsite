@@ -87,7 +87,8 @@ const normalizeUserGlobalTracking = (allGlobalTracking) => {
     const currentItem = allGlobalTracking[i]?.pageConfigurations || null;
     // make sure this stays consistent
     if (currentItem) {
-      const dynamicField = currentItem.type.toLowerCase() + 'PostsOrderAdminIds';
+      // const dynamicField = currentItem.type.toLowerCase() + 'PostsOrderAdminIds';
+      const dynamicField = 'facebookPostsOrderAdminIds';
       const metaData = allGlobalTracking[i].pageMetaData;
       if (metaData) {
         const parseMetaData = JSON.parse(allGlobalTracking[i].pageMetaData);
@@ -125,10 +126,12 @@ export const formulateUserPostLinkClickTracking = (globalResponseData) => {
   // we need to form this while outputting the responses in excel sheet
   // will form in ID form
   let stringTempEntry = '';
-  for (let i = 0; i < globalResponseData.length; i++) {
-    // linkclick is always done on a post
-    const currentItem = globalResponseData[i]?.userPosts || null;
-    if (currentItem) stringTempEntry = stringTempEntry + (currentItem.adminPostId || currentItem._id) + '!~*!';
+  if (globalResponseData) {
+    for (let i = 0; i < globalResponseData.length; i++) {
+      // linkclick is always done on a post
+      const currentItem = globalResponseData[i]?.userPosts || null;
+      if (currentItem) stringTempEntry = stringTempEntry + (currentItem.adminPostId || currentItem._id) + '!~*!';
+    }
   }
   return stringTempEntry;
 };
@@ -152,7 +155,7 @@ const normalizeUserPostActionsTracking = (globalActionsResponseData) => {
 };
 
 // manually form the array for all the possible actions and then add postId for that action
-const possiblePostActions = ['LIKE', 'LOVE', 'HAHA', 'WOW', 'SAD', 'ANGRY', 'COMMENT', 'TWEET', 'RETWEET'];
+const possiblePostActions = ['LIKE', 'LOVE', 'HAHA', 'WOW', 'SAD', 'ANGRY', 'COMMENT'];
 export const formulateUserPostActionsTracking = (postActionsResponseData) => {
   const eachRow = [];
   const normalizeUserPostActionsData = normalizeUserPostActionsTracking(postActionsResponseData);
@@ -177,7 +180,6 @@ const normalizeUserPosts = (responseUserPosts) => {
       '-9999';
     const postId = (currentPost.adminPostId || currentPost._id);
     const attachedMediaId = currentPost?.attachedMedia?.length > 0 ? (currentPost.attachedMedia[0]._id || '-9999') : '-9999';
-    
     normalize[currentPost.type] = (normalize[currentPost.type] || "") + 
       postId + '!~*!' +
       (currentPost.postMessage || "") + '!~*!' +
@@ -187,7 +189,7 @@ const normalizeUserPosts = (responseUserPosts) => {
   return normalize;
 };
 
-const possiblePostTypes= ['LINK', 'VIDEO', 'PHOTO', 'TEXT', 'SHARE'];
+const possiblePostTypes= ['LINK', 'VIDEO', 'PHOTO', 'TEXT', 'SHARE', 'RETWEET', 'QUOTETWEET', 'REPLYTO'];
 export const formulateUserPosts = (userPosts) => {
   // manually form the array for all the possible actions and then add postId for that action
   const normalizeUserPostsData = normalizeUserPosts(userPosts);
@@ -200,17 +202,40 @@ export const formulateUserPosts = (userPosts) => {
   return eachRow;
 };
 
+const possibleRegisterTypes= ['REGISTRATION'];
+// structure: userRegisterId!~*!type!~*!displayName!~*!referenceName!~*!generalFieldValue!$!
+export const formulateRegistrations = (userRegistrations) => {
+  let retStr = "";
+  if (userRegistrations) {
+    for (let i = 0; i < userRegistrations.length; i++) {
+      const userRegisterId = userRegistrations[i]?._id || "-9999";
+      const registerDetails = userRegistrations[i]?.Register || {};
+      const displayName = registerDetails?.displayName || "-9999";
+      const referenceName = registerDetails?.referenceName || "-9999";
+      const type = registerDetails?.type || "-9999";
+      const generalFieldValue = userRegistrations[i]?.generalFieldValue || "-9999";
+
+      retStr = retStr + userRegisterId + '!~*!' +
+        type + '!~*!' +
+        displayName + '!~*!' +
+        referenceName + '!~*!' +
+        generalFieldValue + '|$|';
+    }
+  }
+  return retStr;
+};
+
 // templateId ==> accessCode
 // qualtricsId ==> participantCode
 // templateName ==> conditionName
 // templateCode ==> conditionCode
 // template _id ==> conditionId
 const headersRef = [
-  '_id', 'templateId', 'templateCode', 'qualtricsId', 'consent', 'startedAt', 'finishedAt', 'templateName', 'language'
+  '_id', 'responseCode', 'templateId', 'templateCode', 'qualtricsId', 'consent', 'startedAt', 'finishedAt', 'templateName', 'language'
 ];
 
 const headers = [
-  'uniqueResponseId', 'conditionId', 'accessCode', 'participantId', 'consent', 'startedAt', 'finishedAt', 'conditionName', 'language'
+  'uniqueResponseId', 'responseCode', 'conditionId', 'accessCode', 'participantId', 'consent', 'startedAt', 'finishedAt', 'conditionName', 'language'
 ];
 
 export const formUserAndTemplateData = (userResponse, template) => {
@@ -235,11 +260,46 @@ export const formulateHeaders = (questionIdsDynamicArray, globalSocailMediaDynam
   // 4) userPostActions
   // 5) userPostTracking
   // 6) userPosts
+  // 7) userRegistrations
   return headers.concat(
     questionIdsDynamicArray,
     globalSocailMediaDynamicArray,
     possiblePostActions,
     possiblePostTracking,
-    possiblePostTypes
+    possiblePostTypes,
+    possibleRegisterTypes
   );
+}
+
+export const normalizeMediaData = (users) => {
+  const eachMedia = [];
+  for (let i = 0; i < users.length; i++) {
+    // check the user posts for each user
+    const userPosts = users[i]?.userPosts || [];
+    const userRegistrations = users[i]?.userRegisterations || [];
+    if (userPosts.length > 0) {
+      // there were some posts for ith user
+      // go over each post
+      for(let j = 0; j < userPosts.length; j++) {
+        // check if each user posts have some attached media
+        const attachedMedia = userPosts[j]?.attachedMedia || [];
+        if (attachedMedia.length > 0) {
+          // we do have some attached media
+          for (let k = 0; k < attachedMedia.length; k++) eachMedia.push(attachedMedia[k]);
+        }
+      }
+    }
+
+    if (userRegistrations.length > 0) {
+      // there were some posts for ith user
+      // go over each post
+      for(let j = 0; j < userRegistrations.length; j++) {
+        // check if each user posts have some attached media
+        if (userRegistrations[j].media !== null && userRegistrations[j].mimeType !== null) {
+          eachMedia.push(userRegistrations[j]);
+        }
+      }
+    }
+  }
+  return eachMedia;
 }

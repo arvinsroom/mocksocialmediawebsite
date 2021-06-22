@@ -156,11 +156,6 @@ try {
   });
 
   // simple route
-  // app.get("/", (req, res) => {
-  //   res.json({
-  //     message: "Welcome to Mock Website application."
-  //   });
-  // });
   // we do not need middleware here as admin is trying to log in
   app.use('/api/admin/login', auth);
   app.use('/api/user/login', authUser);

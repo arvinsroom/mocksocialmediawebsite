@@ -6,7 +6,8 @@ import { useDispatch } from "react-redux";
 import useStyles from '../../../../../style';
 import { showErrorSnackbar, showInfoSnackbar, showSuccessSnackbar } from '../../../../../../actions/snackbar';
 import { GENERAL_PAGE, TEMPLATE, TEMPLATE_TYPES, ORDER_TYPES } from '../../../../../../constants';
-import { IconTableImport } from '@tabler/icons';
+import { IconTableImport, IconDeviceFloppy } from '@tabler/icons';
+import clsx from 'clsx';
 
 const MediaPosts = ({ templateId }) => {
   const [mediaJSON, setMediaJSON] = useState(null);
@@ -206,7 +207,8 @@ const MediaPosts = ({ templateId }) => {
           color="primary"
           fullWidth
           disabled={!pageName && !mediaJSON}
-          className={classes.submit}
+          startIcon={<IconDeviceFloppy />}
+          className={clsx(classes.submit, classes.widthFitContent)}
         >
           {GENERAL_PAGE.SAVE_RESPONSES}
         </Button>    

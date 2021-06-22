@@ -17,7 +17,7 @@ import GifIcon from '@material-ui/icons/Gif';
 import { FB_TRANSLATIONS_DEFAULT } from '../../../../../../../constants';
 
 const ShareModal = ({ id, setModalOpen }) => {
-  const fbTranslations = useSelector(state => state.socialMedia.fbTranslations);
+  const socialMediaTranslations = useSelector(state => state.socialMedia.socialMediaTranslations);
   const userRegisterData = useSelector(state => state.userRegister.metaData);
   const { translations } = useSelector(state => state.userAuth);
 
@@ -59,7 +59,7 @@ const ShareModal = ({ id, setModalOpen }) => {
           <div className="modalContainerPaper">
           <form onSubmit={handleSubmit}>
             <div className="modalTop">
-              <h2 className="modalTopFont">{fbTranslations?.write_post || FB_TRANSLATIONS_DEFAULT.WRITE_POST}</h2>
+              <h2 className="modalTopFont">{socialMediaTranslations?.write_post || FB_TRANSLATIONS_DEFAULT.WRITE_POST}</h2>
               <div className="modalTopBtn">
                 <ClearIcon className="btn" onClick={handleClose} />
               </div>
@@ -84,7 +84,7 @@ const ShareModal = ({ id, setModalOpen }) => {
                 className="newFeedInputAreaShare"
                 type="text"
                 // placeholder={`What's on your mind, ${userName.split(' ')[0]}?`} />
-                placeholder={fbTranslations?.["what's_on_your_mind?"] || FB_TRANSLATIONS_DEFAULT.WHATS_ON_YOUR_MIND} />
+                placeholder={socialMediaTranslations?.["what's_on_your_mind?"] || FB_TRANSLATIONS_DEFAULT.WHATS_ON_YOUR_MIND} />
             </div>
 
             <div className="sharePreview sharePostPreview">
@@ -93,7 +93,7 @@ const ShareModal = ({ id, setModalOpen }) => {
 
             <div className="newModalBottom">
                 <div className="newModalOption newModalWidth1">
-                  <p>{fbTranslations?.add_to_your_post || FB_TRANSLATIONS_DEFAULT.ADD_TO_YOUR_POST}</p>
+                  <p>{socialMediaTranslations?.add_to_your_post || FB_TRANSLATIONS_DEFAULT.ADD_TO_YOUR_POST}</p>
                 </div>
                 <div className="newModalWidth2">
                   <div className="newModalOption">
@@ -123,7 +123,7 @@ const ShareModal = ({ id, setModalOpen }) => {
               color="primary"
               fullWidth
             >
-              {fbTranslations?.share || FB_TRANSLATIONS_DEFAULT.SHARE}
+              {socialMediaTranslations?.share || FB_TRANSLATIONS_DEFAULT.SHARE}
             </Button>
           </form>
         </div>
