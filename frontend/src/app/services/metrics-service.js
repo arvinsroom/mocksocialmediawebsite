@@ -7,8 +7,26 @@ export const getAdminTemplatesWithUserCount = () => {
   });
 }
 
-export const fetchTemplateData = (templateId) => {
+// export const fetchTemplateData = (templateId) => {
+//   return http.get(`/metrics/allusers/${templateId}`, {
+//     headers: authHeader()
+//   });
+// }
+
+export const fetchTemplateDataAllUser = (templateId) => {
   return http.get(`/metrics/allusers/${templateId}`, {
+    headers: authHeader()
+  });
+}
+
+export const fetchTemplateDataSocialMedia = (templateId) => {
+  return http.get(`/metrics/allusers/socialmedia/${templateId}`, {
+    headers: authHeader()
+  });
+}
+
+export const fetchTemplateDataQuestionData = (templateId) => {
+  return http.get(`/metrics/allusers/question/${templateId}`, {
     headers: authHeader()
   });
 }

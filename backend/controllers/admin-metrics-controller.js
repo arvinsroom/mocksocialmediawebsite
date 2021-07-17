@@ -137,55 +137,10 @@ const getUserData = async (req, res, next) => {
       ]
     }, { transaction, logging: false });
 
-    console.log(`Fetching templateAdminPortalQuestionsData for template with ID ${templateId}`);
-
-    const templateAdminPortalQuestionsData = await db.Template.findOne({
-      where: {
-        _id: templateId,
-      },
-      include: [
-        {
-          // try to fetch all MCQ and OPENTEXT page
-          where: {
-            type: ['OPENTEXT', 'MCQ']
-          },
-          model: db.Page,
-          as: 'pageFlowConfigurations',
-          include: [
-            {
-              // what to include when fetching pages
-              model: db.Question,
-              as: 'question'
-            }
-          ]
-        }
-      ],
-    }, { transaction, logging: false});
-
-    console.log(`Fetching socialMediaPageData for template with ID ${templateId}`);
-
-    const socialMediaPageData = await db.Template.findOne({
-      where: {
-        // adminId: req.adminId,
-        _id: templateId,
-      },
-      include: [
-        {
-          // try to fetch all MCQ and OPENTEXT page
-          where: {
-            type: ['FACEBOOK', 'TWITTER']
-          },
-          model: db.Page,
-          as: 'pageFlowConfigurations'
-        }
-      ],
-    }, { transaction, logging: false });
     await transaction.commit();
 
     res.send({
       allUserData: allUserData || [],
-      socialMediaPageData: socialMediaPageData || null,
-      templateAdminPortalQuestionsData: templateAdminPortalQuestionsData || null,
     });
   } catch (error) {
     console.log(error);
@@ -314,9 +269,119 @@ const downloadAllMedia = async (req, res, next) => {
   }
 };
 
+const getUserDataSocialMediaData = async (req, res, next) => {
+  let transaction;
+  try {
+    if (!req.adminId) {
+      res.status(400).send({
+        message: "Invalid Token, please log in again!"
+      });
+      return;
+    }
+
+    const { templateId } = req.params;
+    if (!templateId) {
+      res.status(400).send({
+        message: "Invalid template Id!"
+      });
+      return;
+    }
+    transaction = await db.sequelize.transaction();
+
+    console.log(`Fetching socialMediaPageData for template with ID ${templateId}`);
+
+    const socialMediaPageData = await db.Template.findOne({
+      where: {
+        // adminId: req.adminId,
+        _id: templateId,
+      },
+      include: [
+        {
+          // try to fetch all MCQ and OPENTEXT page
+          where: {
+            type: ['FACEBOOK', 'TWITTER']
+          },
+          model: db.Page,
+          as: 'pageFlowConfigurations'
+        }
+      ],
+    }, { transaction, logging: false });
+    await transaction.commit();
+
+    res.send({
+      socialMediaPageData: socialMediaPageData || null,
+    });
+  } catch (error) {
+    console.log(error);
+    if (transaction) await transaction.rollback();
+    res.status(500).send({
+      message: "Some error occurred while fetching socialmedia metrics data."
+    });
+  }
+};
+
+const getUserDataQuestionData = async (req, res, next) => {
+  let transaction;
+  try {
+    if (!req.adminId) {
+      res.status(400).send({
+        message: "Invalid Token, please log in again!"
+      });
+      return;
+    }
+
+    const { templateId } = req.params;
+    if (!templateId) {
+      res.status(400).send({
+        message: "Invalid template Id!"
+      });
+      return;
+    }
+    transaction = await db.sequelize.transaction();
+
+    console.log(`Fetching templateAdminPortalQuestionsData for template with ID ${templateId}`);
+
+    const templateAdminPortalQuestionsData = await db.Template.findOne({
+      where: {
+        _id: templateId,
+      },
+      include: [
+        {
+          // try to fetch all MCQ and OPENTEXT page
+          where: {
+            type: ['OPENTEXT', 'MCQ']
+          },
+          model: db.Page,
+          as: 'pageFlowConfigurations',
+          include: [
+            {
+              // what to include when fetching pages
+              model: db.Question,
+              as: 'question'
+            }
+          ]
+        }
+      ],
+    }, { transaction, logging: false});
+    await transaction.commit();
+
+    res.send({
+      templateAdminPortalQuestionsData: templateAdminPortalQuestionsData || null,
+    });
+  } catch (error) {
+    console.log(error);
+    if (transaction) await transaction.rollback();
+    res.status(500).send({
+      message: "Some error occurred while fetching question metrics data."
+    });
+  }
+};
+
 
 export default {
   getUserData,
   getTemplatesWithUserCounts,
-  downloadAllMedia
+  downloadAllMedia,
+  getUserDataSocialMediaData,
+  getUserDataQuestionData
 }
