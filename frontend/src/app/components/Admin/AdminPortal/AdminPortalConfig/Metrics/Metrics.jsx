@@ -10,7 +10,10 @@ import {
 import { useEffect, useState, useRef } from 'react';
 import {
   getAdminTemplatesWithUserCount,
-  fetchTemplateData,
+  // fetchTemplateData,
+  fetchTemplateDataAllUser,
+  fetchTemplateDataSocialMedia,
+  fetchTemplateDataQuestionData,
   downloadMediaData
 } from '../../../../../services/metrics-service';
 import { IconTableExport, IconDatabaseExport, IconFileExport } from '@tabler/icons';
@@ -106,11 +109,14 @@ const Template = () => {
     e.preventDefault();
     try {
       await setIsLoading(true);
-      const { data } = await fetchTemplateData(templateId);
+      // reduce load for fetching template data
+      const { data: userData } = await fetchTemplateDataAllUser(templateId);
+      const { data: socialMediaData } = await fetchTemplateDataSocialMedia(templateId);
+      const { data: questionData } = await fetchTemplateDataQuestionData(templateId);
       // this is JSON for all user data
-      const allUserData = data?.allUserData || [];
-      const socialMediaPageData = data?.socialMediaPageData || null;
-      const templateAdminPortalQuestionsData = data?.templateAdminPortalQuestionsData || null;
+      const allUserData = userData?.allUserData || [];
+      const socialMediaPageData = socialMediaData?.socialMediaPageData || null;
+      const templateAdminPortalQuestionsData = questionData?.templateAdminPortalQuestionsData || null;
       // set the response as it it
       if (allUserData.length > 0) {
         if (type === 'JSON') {
