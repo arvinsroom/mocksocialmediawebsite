@@ -31,3 +31,7 @@ export const checkIfValidAndNotEmptyArray = (arr) => {
 export const checkIfValidAndNotEmptyObj = (obj) => {
   return (obj && typeof obj === 'object' && (JSON.stringify(obj) !== '{}'));
 }
+
+export const isNumeric = (num) => {
+  return !isNaN(num);
+}
