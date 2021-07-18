@@ -50,36 +50,39 @@ const getUserData = async (req, res, next) => {
           },
           model: db.Template,
           as: 'template',
-          attributes: {
-            include: [
-              ['name', 'templateName'],
-              'templateCode',
-              'language'
-            ],
-            exclude: ['_id', 'adminId', 'videoPermission', 'audioPermission', 'cookiesPermission', 'qualtricsId']
-          },
+          attributes: [
+            ['name', 'templateName'],
+            'templateCode',
+            'language'
+          ],
         },
         {
           model: db.UserAnswer,
           as: 'userQuestionAnswers',
+          attributes: {
+            exclude: ['userId'],
+          },
           include: [
-            {
-              model: db.Question,
-              as: 'question',
-            },
+            // {
+            //   model: db.Question,
+            //   as: 'question',
+            // },
             {
               model: db.McqOption,
               as: 'mcqOption',
+              attributes: ['optionText'],
             }
           ]
         },
         {
           model: db.UserGlobalTracking,
           as: 'userGlobalTracking',
+          attributes: ['pageMetaData'],
           include: [
             {
               model: db.Page,
-              as: 'pageConfigurations'
+              as: 'pageConfigurations',
+              attributes: ['_id'],
             }
           ]
         },
@@ -87,35 +90,37 @@ const getUserData = async (req, res, next) => {
           // will only select the posts which have userId associated with them
           model: db.UserPost,
           as: 'userPosts',
+          attributes: ['_id', 'adminPostId', 'postMessage', 'type'],
           include: [
             {
               // fetch any media associated with user created post
               model: db.Media,
               as: 'attachedMedia',
-              attributes: {
-                exclude: ['media', 'userPostId']
-              }
+              attributes: ['_id']
             },
             {
               // for shared post fetch its parent post data
               model: db.UserPost,
               as: 'parentUserPost',
-              include: [
-                {
-                  // fetch any media associated with its parent post
-                  model: db.Media,
-                  as: 'attachedMedia',
-                  attributes: {
-                    exclude: ['media', 'userPostId']
-                  }
-                }
-              ]
+              // we only require parentAdminPostId and/or its primary id
+              attributes: ['_id', 'adminPostId'],
+              // include: [
+              //   {
+              //     // fetch any media associated with its parent post
+              //     model: db.Media,
+              //     as: 'attachedMedia',
+              //     attributes: {
+              //       exclude: ['media', 'userPostId', 'isThumbnail']
+              //     }
+              //   }
+              // ]
             }
           ]
         },
         {
           model: db.UserPostAction,
           as: 'userPostActions',
+          attributes: ['_id', 'action', 'comment'],
           include: [
             {
               // we might need to show adminId where applicable
@@ -128,6 +133,7 @@ const getUserData = async (req, res, next) => {
         {
           model: db.UserPostTracking,
           as: 'userPostTracking',
+          attributes: ['userPostId'],
           include: [
             {
               // we might need to show adminId where applicable

@@ -89,7 +89,7 @@ const normalizeUserGlobalTracking = (allGlobalTracking) => {
     if (currentItem) {
       // const dynamicField = currentItem.type.toLowerCase() + 'PostsOrderAdminIds';
       const dynamicField = 'facebookPostsOrderAdminIds';
-      const metaData = allGlobalTracking[i].pageMetaData;
+      const metaData = allGlobalTracking[i].pageMetaData || null;
       if (metaData) {
         const parseMetaData = JSON.parse(allGlobalTracking[i].pageMetaData);
         normalize[currentItem._id] = JSON.stringify(parseMetaData[dynamicField]);
