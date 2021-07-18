@@ -39,7 +39,7 @@ const getUserData = async (req, res, next) => {
         templateId,
       },
       order: [
-        ['_id', 'ASC']
+        ['startedAt', 'ASC']
       ],
       limit: Number(limit),
       offset: Number(offset),
