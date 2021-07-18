@@ -1,4 +1,5 @@
 import db from "../clients/database-client";
+import { isNumeric } from '../utils';
 
 const getUserData = async (req, res, next) => {
   let transaction;
@@ -10,10 +11,22 @@ const getUserData = async (req, res, next) => {
       return;
     }
 
-    const { templateId } = req.params;
+    const { templateId, limit, offset } = req.params;
     if (!templateId) {
       res.status(400).send({
         message: "Invalid template Id!"
+      });
+      return;
+    }
+    if (!isNumeric(limit)) {
+      res.status(400).send({
+        message: "Invalid limit number!"
+      });
+      return;
+    }
+    if (!isNumeric(offset)) {
+      res.status(400).send({
+        message: "Invalid offset number!"
       });
       return;
     }
@@ -25,6 +38,11 @@ const getUserData = async (req, res, next) => {
       where: {
         templateId,
       },
+      order: [
+        ['_id', 'ASC']
+      ],
+      limit: Number(limit),
+      offset: Number(offset),
       include: [
         {
           where: {

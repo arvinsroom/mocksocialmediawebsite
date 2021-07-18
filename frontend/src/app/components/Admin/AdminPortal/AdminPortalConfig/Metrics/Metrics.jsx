@@ -105,22 +105,26 @@ const Template = () => {
     await setIsLoading(false);
   }
 
-  const downloadSpecificTemplate = async (templateId, templateName, type, e) => {
+  const downloadSpecificTemplate = async (templateId, templateName, totalEntries, type, e) => {
     e.preventDefault();
     try {
       await setIsLoading(true);
-      // reduce load for fetching template data
-      const { data: userData } = await fetchTemplateDataAllUser(templateId);
-      const { data: socialMediaData } = await fetchTemplateDataSocialMedia(templateId);
-      const { data: questionData } = await fetchTemplateDataQuestionData(templateId);
-      // this is JSON for all user data
-      const allUserData = userData?.allUserData || [];
-      const socialMediaPageData = socialMediaData?.socialMediaPageData || null;
-      const templateAdminPortalQuestionsData = questionData?.templateAdminPortalQuestionsData || null;
-      // set the response as it it
+      let offset = 0;
+      let limit = 25;
+      // fetch the first request here
+      const { data: userData } = await fetchTemplateDataAllUser(templateId, limit, offset);
+      let allUserData = userData?.allUserData || [];
       if (allUserData.length > 0) {
         if (type === 'JSON') {
-          const json = JSON.stringify(allUserData);
+          let json = JSON.stringify(allUserData);
+          offset = offset + allUserData.length;
+          while (offset < totalEntries) {
+            // fetch the new responses
+            const { data: userData } = await fetchTemplateDataAllUser(templateId, limit, offset);
+            allUserData = userData?.allUserData || [];
+            json = json + JSON.stringify(allUserData);
+            offset = offset + allUserData.length;
+          }
           const blob = new Blob([json],{ type:'application/json' });
           const href = await URL.createObjectURL(blob);
           const link = document.createElement('a');
@@ -130,6 +134,12 @@ const Template = () => {
           link.click();
           document.body.removeChild(link);
         } else if (type === 'CSV') {
+          const { data: socialMediaData } = await fetchTemplateDataSocialMedia(templateId);
+          const { data: questionData } = await fetchTemplateDataQuestionData(templateId);
+    
+          const socialMediaPageData = socialMediaData?.socialMediaPageData || null;
+          const templateAdminPortalQuestionsData = questionData?.templateAdminPortalQuestionsData || null;
+    
           // normalize the socialMediaPageIdsArray to make dynamic headers
           const socailMediaDynamicArray = formSocialMediaPageIdsArray(socialMediaPageData);
       
@@ -142,7 +152,8 @@ const Template = () => {
           spreadsheetData.push(mainHeadersDynamicArray);
 
           // fetch all the data from all the user responses and align them
-          for (let i = 0; i < allUserData.length; i++) {
+          let i = 0;
+          while (allUserData.length !== 0) {
             // fetch individual user response
             const {
               template,
@@ -171,6 +182,18 @@ const Template = () => {
               formulateRegistrations(userRegisterations)
             ];
             spreadsheetData.push(eachRow);
+
+            i++;
+
+            // logic for more response
+            if (i === allUserData.length) {
+              offset = offset + allUserData.length;
+              if (offset >= totalEntries) break;
+              // fetch the new responses and update
+              i = 0;
+              const { data: userData } = await fetchTemplateDataAllUser(templateId, limit, offset);
+              allUserData = userData?.allUserData || [];
+            }
           }
           await setDownloadFileName(templateName + '.csv');
           await setAllUserResponses(spreadsheetData);
@@ -212,14 +235,14 @@ const Template = () => {
                 </TableCell>
                 <TableCell align="center">
                   <Button
-                    onClick={e => downloadSpecificTemplate(row.templateId, row.templateName, 'CSV', e)}
+                    onClick={e => downloadSpecificTemplate(row.templateId, row.templateName, row.userEntries, 'CSV', e)}
                   >
                     <IconTableExport />
                   </Button>
                 </TableCell>
                 <TableCell align="center">
                   <Button
-                      onClick={e => downloadSpecificTemplate(row.templateId, row.templateName, 'JSON', e)}
+                      onClick={e => downloadSpecificTemplate(row.templateId, row.templateName, row.userEntries, 'JSON', e)}
                   >
                     <IconDatabaseExport />
                   </Button>

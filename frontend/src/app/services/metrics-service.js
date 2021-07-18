@@ -13,8 +13,8 @@ export const getAdminTemplatesWithUserCount = () => {
 //   });
 // }
 
-export const fetchTemplateDataAllUser = (templateId) => {
-  return http.get(`/metrics/allusers/${templateId}`, {
+export const fetchTemplateDataAllUser = (templateId, limit, offset) => {
+  return http.get(`/metrics/allusers/${templateId}/${limit}/${offset}`, {
     headers: authHeader()
   });
 }

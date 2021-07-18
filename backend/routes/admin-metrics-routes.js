@@ -2,7 +2,7 @@ import adminMetrics  from "../controllers/admin-metrics-controller"
 var express = require('express')
 var router = express.Router()
 
-router.get("/allusers/:templateId", adminMetrics.getUserData);
+router.get("/allusers/:templateId/:limit/:offset", adminMetrics.getUserData);
 
 router.get("/allusers/socialmedia/:templateId", adminMetrics.getUserDataSocialMediaData);
 
