@@ -116,15 +116,14 @@ const Template = () => {
       let allUserData = userData?.allUserData || [];
       if (allUserData.length > 0) {
         if (type === 'JSON') {
-          let json = JSON.stringify(allUserData);
-          offset = offset + allUserData.length;
+          offset = allUserData.length;
           while (offset < totalEntries) {
             // fetch the new responses
             const { data: userData } = await fetchTemplateDataAllUser(templateId, limit, offset);
-            allUserData = userData?.allUserData || [];
-            json = json + JSON.stringify(allUserData);
-            offset = offset + allUserData.length;
+            allUserData = allUserData.concat(userData?.allUserData || []);
+            offset = allUserData.length;
           }
+          const json = JSON.stringify(allUserData);
           const blob = new Blob([json],{ type:'application/json' });
           const href = await URL.createObjectURL(blob);
           const link = document.createElement('a');
