@@ -10,7 +10,8 @@ import {
 import { useEffect, useState, useRef } from 'react';
 import {
   getAdminTemplatesWithUserCount,
-  // fetchTemplateData,
+  fetchTemplateDataAllUserPosts,
+  fetchTemplateDataAllUserPostsActions,
   fetchTemplateDataAllUser,
   fetchTemplateDataSocialMedia,
   fetchTemplateDataQuestionData,
@@ -113,17 +114,36 @@ const Template = () => {
       let limit = 25;
       // fetch the first request here
       const { data: userData } = await fetchTemplateDataAllUser(templateId, limit, offset);
+      const { data: userPostsData } = await fetchTemplateDataAllUserPosts(templateId, limit, offset);
+      const { data: userPostsActionsData } = await fetchTemplateDataAllUserPostsActions(templateId, limit, offset);
       let allUserData = userData?.allUserData || [];
+      let allUsersPostsData = userPostsData?.allUsersPostsData || [];
+      let allUsersPostsActionsData = userPostsActionsData?.allUsersPostsActionsData || [];
+
       if (allUserData.length > 0) {
         if (type === 'JSON') {
           offset = allUserData.length;
           while (offset < totalEntries) {
             // fetch the new responses
             const { data: userData } = await fetchTemplateDataAllUser(templateId, limit, offset);
+            const { data: userPostsData } = await fetchTemplateDataAllUserPosts(templateId, limit, offset);
+            const { data: userPostsActionsData } = await fetchTemplateDataAllUserPostsActions(templateId, limit, offset);      
             allUserData = allUserData.concat(userData?.allUserData || []);
+            allUsersPostsData = allUsersPostsData.concat(userPostsData?.allUsersPostsData || []);
+            allUsersPostsActionsData = allUsersPostsActionsData.concat(userPostsActionsData?.allUsersPostsActionsData || []);
             offset = allUserData.length;
           }
-          const json = JSON.stringify(allUserData);
+          // form one big object of all data
+          const userDataJSON = [];
+          for(let j = 0; j < totalEntries; j++) {
+            let tempObj = Object.assign(
+              allUserData[j],
+              allUsersPostsData[j],
+              allUsersPostsActionsData[j]
+            );
+            userDataJSON.push(tempObj);
+          }
+          const json = JSON.stringify(userDataJSON);
           const blob = new Blob([json],{ type:'application/json' });
           const href = await URL.createObjectURL(blob);
           const link = document.createElement('a');
@@ -158,12 +178,18 @@ const Template = () => {
               template,
               userQuestionAnswers,
               userGlobalTracking,
-              userPosts,
-              userPostActions,
               userPostTracking,
               userRegisterations,
               ...userResponse
             } = allUserData[i];
+
+            const { 
+              userPosts
+            } = allUsersPostsData[i];
+
+             const {
+              userPostActions
+            } = allUseraPostsActionsData[i];
 
             const eachRow = [
               ...formUserAndTemplateData(userResponse, template),
@@ -191,7 +217,11 @@ const Template = () => {
               // fetch the new responses and update
               i = 0;
               const { data: userData } = await fetchTemplateDataAllUser(templateId, limit, offset);
+              const { data: userPostsData } = await fetchTemplateDataAllUserPosts(templateId, limit, offset);
+              const { data: userPostsActionsData } = await fetchTemplateDataAllUserPostsActions(templateId, limit, offset);
               allUserData = userData?.allUserData || [];
+              allUsersPostsData = userPostsData?.allUsersPostsData || [];
+              allUseraPostsActionsData = userPostsActionsData?.allUsersPostsActionsData || [];
             }
           }
           await setDownloadFileName(templateName + '.csv');

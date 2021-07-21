@@ -7,14 +7,20 @@ export const getAdminTemplatesWithUserCount = () => {
   });
 }
 
-// export const fetchTemplateData = (templateId) => {
-//   return http.get(`/metrics/allusers/${templateId}`, {
-//     headers: authHeader()
-//   });
-// }
-
 export const fetchTemplateDataAllUser = (templateId, limit, offset) => {
   return http.get(`/metrics/allusers/${templateId}/${limit}/${offset}`, {
+    headers: authHeader()
+  });
+}
+
+export const fetchTemplateDataAllUserPosts = (templateId, limit, offset) => {
+  return http.get(`/metrics/allusers/userpost/${templateId}/${limit}/${offset}`, {
+    headers: authHeader()
+  });
+}
+
+export const fetchTemplateDataAllUserPostsActions = (templateId, limit, offset) => {
+  return http.get(`/metrics/allusers/userpost/actions/${templateId}/${limit}/${offset}`, {
     headers: authHeader()
   });
 }

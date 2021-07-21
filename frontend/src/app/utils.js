@@ -18,3 +18,9 @@ export const checkIfEmptyRichText = (richTextState) => {
 
   return _.isEqual(parsedEmptyObject, parsedRichTextObject);
 }
+
+// escape new line and double quote(s)
+export const escapeChars = (str) => {
+  if (!str) return "-9999"; // special case
+  return str.replace(/(?:\r\n|\r|\n)/g, '<br>').replace(/"/g, '\'');
+}
