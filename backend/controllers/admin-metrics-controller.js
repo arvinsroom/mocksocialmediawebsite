@@ -70,7 +70,7 @@ const getUserData = async (req, res, next) => {
             {
               model: db.McqOption,
               as: 'mcqOption',
-              attributes: ['optionText'],
+              attributes: ['optionText']
             }
           ]
         },
@@ -83,50 +83,6 @@ const getUserData = async (req, res, next) => {
               model: db.Page,
               as: 'pageConfigurations',
               attributes: ['_id'],
-            }
-          ]
-        },
-        {
-          // will only select the posts which have userId associated with them
-          model: db.UserPost,
-          as: 'userPosts',
-          attributes: ['_id', 'adminPostId', 'postMessage', 'type'],
-          include: [
-            {
-              // fetch any media associated with user created post
-              model: db.Media,
-              as: 'attachedMedia',
-              attributes: ['_id']
-            },
-            {
-              // for shared post fetch its parent post data
-              model: db.UserPost,
-              as: 'parentUserPost',
-              // we only require parentAdminPostId and/or its primary id
-              attributes: ['_id', 'adminPostId'],
-              // include: [
-              //   {
-              //     // fetch any media associated with its parent post
-              //     model: db.Media,
-              //     as: 'attachedMedia',
-              //     attributes: {
-              //       exclude: ['media', 'userPostId', 'isThumbnail']
-              //     }
-              //   }
-              // ]
-            }
-          ]
-        },
-        {
-          model: db.UserPostAction,
-          as: 'userPostActions',
-          attributes: ['_id', 'action', 'comment'],
-          include: [
-            {
-              // we might need to show adminId where applicable
-              model: db.UserPost,
-              as: 'userPosts',
-              attributes: ['_id', 'adminPostId']
             }
           ]
         },
@@ -171,6 +127,174 @@ const getUserData = async (req, res, next) => {
     if (transaction) await transaction.rollback();
     res.status(500).send({
       message: "Some error occurred while fetching metrics data."
+    });
+  }
+};
+
+const getUsersPostsData = async (req, res, next) => {
+  let transaction;
+  try {
+    if (!req.adminId) {
+      res.status(400).send({
+        message: "Invalid Token, please log in again!"
+      });
+      return;
+    }
+
+    const { templateId, limit, offset } = req.params;
+    if (!templateId) {
+      res.status(400).send({
+        message: "Invalid template Id!"
+      });
+      return;
+    }
+    if (!isNumeric(limit)) {
+      res.status(400).send({
+        message: "Invalid limit number!"
+      });
+      return;
+    }
+    if (!isNumeric(offset)) {
+      res.status(400).send({
+        message: "Invalid offset number!"
+      });
+      return;
+    }
+    transaction = await db.sequelize.transaction();
+
+    console.log(`Fetching allUsersPostsData for template with ID ${templateId}`);
+
+    const allUsersPostsData = await db.User.findAll({
+      where: {
+        templateId,
+      },
+      order: [
+        ['startedAt', 'ASC']
+      ],
+      // we do not need other attr
+      attributes: ['_id', 'startedAt'],
+      limit: Number(limit),
+      offset: Number(offset),
+      include: [
+        {
+          // will only select the posts which have userId associated with them
+          model: db.UserPost,
+          as: 'userPosts',
+          attributes: ['_id', 'adminPostId', 'postMessage', 'type'],
+          include: [
+            {
+              // fetch any media associated with user created post
+              model: db.Media,
+              as: 'attachedMedia',
+              attributes: ['_id']
+            },
+            {
+              // for shared post fetch its parent post data
+              model: db.UserPost,
+              as: 'parentUserPost',
+              // we only require parentAdminPostId and/or its primary id
+              attributes: ['_id', 'adminPostId'],
+              // include: [
+              //   {
+              //     // fetch any media associated with its parent post
+              //     model: db.Media,
+              //     as: 'attachedMedia',
+              //     attributes: {
+              //       exclude: ['media', 'userPostId', 'isThumbnail']
+              //     }
+              //   }
+              // ]
+            }
+          ]
+        }
+      ]
+    }, { transaction, logging: false });
+
+    await transaction.commit();
+
+    res.send({
+      allUsersPostsData: allUsersPostsData || [],
+    });
+  } catch (error) {
+    console.log(error);
+    if (transaction) await transaction.rollback();
+    res.status(500).send({
+      message: "Some error occurred while fetching userpost metrics data."
+    });
+  }
+};
+
+const getUsersPostsActionsData = async (req, res, next) => {
+  let transaction;
+  try {
+    if (!req.adminId) {
+      res.status(400).send({
+        message: "Invalid Token, please log in again!"
+      });
+      return;
+    }
+
+    const { templateId, limit, offset } = req.params;
+    if (!templateId) {
+      res.status(400).send({
+        message: "Invalid template Id!"
+      });
+      return;
+    }
+    if (!isNumeric(limit)) {
+      res.status(400).send({
+        message: "Invalid limit number!"
+      });
+      return;
+    }
+    if (!isNumeric(offset)) {
+      res.status(400).send({
+        message: "Invalid offset number!"
+      });
+      return;
+    }
+    transaction = await db.sequelize.transaction();
+
+    console.log(`Fetching allUsersPostsActionsData for template with ID ${templateId}`);
+
+    const allUsersPostsActionsData = await db.User.findAll({
+      where: {
+        templateId,
+      },
+      order: [
+        ['startedAt', 'ASC']
+      ],
+      limit: Number(limit),
+      offset: Number(offset),
+      // we do not need other attr
+      attributes: ['_id', 'startedAt'],
+      include: [
+        {
+          model: db.UserPostAction,
+          as: 'userPostActions',
+          attributes: ['_id', 'action', 'comment'],
+          include: [
+            {
+              // we might need to show adminId where applicable
+              model: db.UserPost,
+              as: 'userPosts',
+              attributes: ['_id', 'adminPostId']
+            }
+          ]
+        }
+      ]
+    }, { transaction, logging: false });
+
+    await transaction.commit();
+
+    res.send({
+      allUsersPostsActionsData: allUsersPostsActionsData || [],
+    });
+  } catch (error) {
+    console.log(error);
+    if (transaction) await transaction.rollback();
+    res.status(500).send({
+      message: "Some error occurred while fetching userPostActions metrics data."
     });
   }
 };
@@ -407,5 +531,7 @@ export default {
   getTemplatesWithUserCounts,
   downloadAllMedia,
   getUserDataSocialMediaData,
-  getUserDataQuestionData
+  getUserDataQuestionData,
+  getUsersPostsActionsData,
+  getUsersPostsData
 }
