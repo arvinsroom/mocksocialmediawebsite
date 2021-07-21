@@ -189,7 +189,7 @@ const Template = () => {
 
              const {
               userPostActions
-            } = allUseraPostsActionsData[i];
+            } = allUsersPostsActionsData[i];
 
             const eachRow = [
               ...formUserAndTemplateData(userResponse, template),
@@ -221,7 +221,7 @@ const Template = () => {
               const { data: userPostsActionsData } = await fetchTemplateDataAllUserPostsActions(templateId, limit, offset);
               allUserData = userData?.allUserData || [];
               allUsersPostsData = userPostsData?.allUsersPostsData || [];
-              allUseraPostsActionsData = userPostsActionsData?.allUsersPostsActionsData || [];
+              allUsersPostsActionsData = userPostsActionsData?.allUsersPostsActionsData || [];
             }
           }
           await setDownloadFileName(templateName + '.csv');
