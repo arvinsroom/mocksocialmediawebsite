@@ -43,7 +43,7 @@ const TwitterPostTop = ({ id }) => {
             <TwitterPostTop id={singlePost.parentPostId} /> :
             <div className="twitterPostAvatar">
               <Avatar
-                src={singlePost.userPost ? (userRegisterData['PROFILEPHOTO'] || "") : ""}
+                src={singlePost.userPost ? (userRegisterData['PROFILEPHOTO'] || "") : singleAuthor.avatarUrl || ""}
                 className="postTopAvatar"
               />
             </div>

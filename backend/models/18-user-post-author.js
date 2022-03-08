@@ -14,6 +14,10 @@ export default (sequelize, DataTypes) => {
       allowNull: false,
       type: DataTypes.STRING(1024)
     },
+    avatarUrl: {
+      allowNull: true,
+      type: DataTypes.STRING
+    },
     authorVerified: {
       allowNull: false,
       type: DataTypes.BOOLEAN,

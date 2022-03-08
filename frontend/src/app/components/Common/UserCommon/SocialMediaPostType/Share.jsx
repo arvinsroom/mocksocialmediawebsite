@@ -18,7 +18,7 @@ const Share = ({ id }) => {
         <div className="post">
           <div className="postTop">
             <Avatar
-              src={parentSharedPost.userPost ? (userRegisterData['PROFILEPHOTO'] || "") : ""}
+              src={parentSharedPost.userPost ? (userRegisterData['PROFILEPHOTO'] || "") : singleAuthor.avatarUrl || ""}
               className="postTopAvatar"
             />
             <div className="postTopInfo">
