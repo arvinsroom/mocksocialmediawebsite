@@ -30,7 +30,7 @@ const PostTop = ({ id }) => {
           <>
             <div className="postTop">
               <Avatar
-                src={singlePost.userPost ? (userRegisterData['PROFILEPHOTO'] || "") : ""}
+                src={singlePost.userPost ? (userRegisterData['PROFILEPHOTO'] || "") : singleAuthor.avatarUrl || ""}
                 className="postTopAvatar"
               />
               <div className="postTopInfo">
