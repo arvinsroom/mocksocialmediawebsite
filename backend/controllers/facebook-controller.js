@@ -267,7 +267,7 @@ const getFacebookPostIds = async (req, res, next) => {
       where: {
         pageId,
       },
-      attributes: ['authorId', 'authorName', 'authorVerified', 'handle']
+      attributes: ['authorId', 'authorName', 'authorVerified', 'handle', 'avatarUrl']
     }, { transaction });
 
     await transaction.commit();
