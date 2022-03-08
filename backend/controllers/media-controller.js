@@ -56,7 +56,7 @@ const create = async (req, res, next) => {
       pageDataOrder: pageDataOrder || null
     }, transaction);
     // bulk create the authors
-    const authorKeys = ['authorId', 'authorName', 'authorVerified', 'totalPosts', 'totalFollowing', 'totalFollower', 'handle'];
+    const authorKeys = ['authorId', 'authorName', 'authorVerified', 'totalPosts', 'totalFollowing', 'totalFollower', 'handle', 'avatarUrl'];
     const authorArr = [];
     for (let i = 1; i < author.length; i++) {
       if (author[i].length > 0) {
