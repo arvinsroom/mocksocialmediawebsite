@@ -7,11 +7,11 @@ import FavoriteBorderIcon from "@material-ui/icons/FavoriteBorder";
 import PublishOutlinedIcon from '@material-ui/icons/PublishOutlined';
 import CreateOutlinedIcon from '@material-ui/icons/CreateOutlined';
 import ClearIcon from '@material-ui/icons/Clear';
-import TweetBox from './TweetBox';
-import { showInfoSnackbar, showSuccessSnackbar } from '../../../../../../actions/snackbar';
-import { likeFbPost, unlikeFbPost, createFbPost } from '../../../../../../actions/socialMedia';
-import { selectPostsMetadata } from '../../../../../../selectors/socialMedia';
-import { USER_TRANSLATIONS_DEFAULT, TW_TRANSLATIONS_DEFAULT } from '../../../../../../constants';
+import TweetBox from '../TweetBox/TweetBox';
+import { showSuccessSnackbar } from '../../../../../../../actions/snackbar';
+import { likeFbPost, unlikeFbPost, createFbPost } from '../../../../../../../actions/socialMedia';
+import { selectPostsMetadata } from '../../../../../../../selectors/socialMedia';
+import { USER_TRANSLATIONS_DEFAULT, TW_TRANSLATIONS_DEFAULT } from '../../../../../../../constants';
 import "./TwitterPost.css";
 
 const TwitterPostBottom = ({ id }) => {

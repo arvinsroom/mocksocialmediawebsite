@@ -26,7 +26,8 @@ export const REGISTER_PAGE_CUSTOM_REFERENCES = Object.freeze({
   PASSWORD: "Password",
   DATE: "Date",
   NUMBER: "Number",
-  HANDLE: "Handle"
+  HANDLE: "Handle",
+  RELATIONSHIP: "Relationship"
 });
 
 export const TEMPLATE = Object.freeze({

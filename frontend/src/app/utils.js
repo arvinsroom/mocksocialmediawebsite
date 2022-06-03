@@ -24,3 +24,9 @@ export const escapeChars = (str) => {
   if (!str) return "-9999"; // special case
   return str.replace(/(?:\r\n|\r|\n)/g, '<br>').replace(/"/g, '\'');
 }
+
+export const parseNumber = (str) => {
+  if (!str) return null;
+  const num = parseInt(str);
+  return num !== NaN ? num : null;
+}

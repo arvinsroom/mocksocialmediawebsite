@@ -73,7 +73,7 @@ const create = async (req, res, next) => {
     await UserPostAuthor.bulkCreate(authorArr, { transaction, logging: false });
 
     // modify the media array
-    const mediaKeys = ['adminPostId', 'link', 'linkTitle', 'linkPreview', 'postMessage', 'sourceTweet', 'type', 'isFake', 'authorId', 'isReplyTo', 'isReplyOrder', 'initLike', 'datePosted'];
+    const mediaKeys = ['adminPostId', 'link', 'linkTitle', 'linkPreview', 'postMessage', 'sourceTweet', 'type', 'isFake', 'authorId', 'isReplyTo', 'isReplyOrder', 'initLike', 'datePosted', 'likedBy', 'likedByOverflow', 'retweetedBy', 'retweetedByOverflow'];
     const mediaArr = [];
     for (let i = 1; i < mediaPosts.length; i++) {
       if (mediaPosts[i].length > 0) {

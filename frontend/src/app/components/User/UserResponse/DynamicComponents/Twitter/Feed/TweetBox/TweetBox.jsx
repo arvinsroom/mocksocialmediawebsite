@@ -1,17 +1,16 @@
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from "react-redux";
 import { Button, Avatar, Input } from '@material-ui/core';
-// import { TW_TRANSLATIONS_DEFAULT } from '../../../../../../../constants';
 import PhotoLibraryIcon from '@material-ui/icons/PhotoLibrary';
 import ClearIcon from '@material-ui/icons/Clear';
 import PollOutlinedIcon from '@material-ui/icons/PollOutlined';
 import SentimentSatisfiedOutlinedIcon from '@material-ui/icons/SentimentSatisfiedOutlined';
 import EventOutlinedIcon from '@material-ui/icons/EventOutlined';
 import GifIcon from '@material-ui/icons/Gif';
-import { USER_TRANSLATIONS_DEFAULT, TW_TRANSLATIONS_DEFAULT } from '../../../../../../constants';
-import { createFbPost } from '../../../../../../actions/socialMedia';
-import { showInfoSnackbar, showSuccessSnackbar } from '../../../../../../actions/snackbar';
-import Share from '../../../../../Common/UserCommon/SocialMediaPostType/Share';
+import { USER_TRANSLATIONS_DEFAULT, TW_TRANSLATIONS_DEFAULT } from '../../../../../../../constants';
+import { createFbPost } from '../../../../../../../actions/socialMedia';
+import { showInfoSnackbar, showSuccessSnackbar } from '../../../../../../../actions/snackbar';
+import Share from '../../../../../../Common/UserCommon/SocialMediaPostType/Share';
 import "./TweetBox.css";
 
 const TweetBox = ({ placeholderText, replyTo, quoteTweet, handleCloseModal }) => {
@@ -93,7 +92,6 @@ const TweetBox = ({ placeholderText, replyTo, quoteTweet, handleCloseModal }) =>
           <Share id={replyTo} />
         </div>
       }
-
       <form>
         <div className="tweetBoxInput">
           <Avatar src={(userRegisterData['PROFILEPHOTO'] || "")} />

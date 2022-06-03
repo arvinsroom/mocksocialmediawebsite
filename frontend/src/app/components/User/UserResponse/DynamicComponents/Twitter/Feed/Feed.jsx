@@ -1,13 +1,13 @@
 import { useEffect, useRef, useCallback } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { selectAllPostIds } from '../../../../../../selectors/socialMedia';
-import useStyles from '../../../../../style';
 import {
   getFacebookPosts
 } from '../../../../../../actions/socialMedia';
-import TwitterPostBottom from "./TwitterPostBottom";
-import TwitterPostTop from './TwitterPostTop';
+import TwitterPostBottom from "./TwitterPost/TwitterPostBottom";
+import TwitterPostTop from './TwitterPost/TwitterPostTop';
 import Progress from '../../../../../Common/Progress';
+import { selectAllPostIds } from '../../../../../../selectors/socialMedia';
+import useStyles from '../../../../../style';
 import "./Feed.css";
 
 const Feed = () => {

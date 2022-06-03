@@ -11,7 +11,7 @@ import { Button } from '@material-ui/core';
 import { IconChevronRight } from '@tabler/icons';
 import Sidebar from './Sidebar/Sidebar';
 import Feed from './Feed/Feed';
-import TweetBox from './Feed/TweetBox';
+import TweetBox from './Feed/TweetBox/TweetBox';
 import { WINDOW_GLOBAL, TW_TRANSLATIONS_DEFAULT } from '../../../../../constants';
 
 import "./Twitter.css";
