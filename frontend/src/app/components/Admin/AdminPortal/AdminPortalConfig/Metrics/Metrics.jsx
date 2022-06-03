@@ -190,7 +190,7 @@ const Template = () => {
              const {
               userPostActions
             } = allUsersPostsActionsData[i];
-            
+
             const eachRow = [
               ...formUserAndTemplateData(userResponse, template),
               // userQuestionAnswers

@@ -34,7 +34,7 @@
     "redux-thunk": "^2.3.0",
     "reselect": "^4.0.0",
     "save-as": "^0.1.8",
-    "xlsx": "^0.16.9"
+    "xlsx": "^0.17.0"
   },
   "scripts": {
     "webpack-build-prod": "webpack --mode production",
