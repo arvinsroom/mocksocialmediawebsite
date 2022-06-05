@@ -12,7 +12,7 @@ import PermIdentityIcon from "@material-ui/icons/PermIdentity";
 import ClearIcon from '@material-ui/icons/Clear';
 import MoreHorizIcon from "@material-ui/icons/MoreHoriz";
 import { Button, Modal, Container } from '@material-ui/core';
-import TweetBox from "../Feed/TweetBox";
+import TweetBox from '../Feed/TweetBox/TweetBox';
 import { TW_TRANSLATIONS_DEFAULT } from '../../../../../../constants';
 import "./Sidebar.css";
 

@@ -73,11 +73,14 @@ const Register = ({ data }) => {
         const regesterIds = [];
         // for now save the result in redux store
         const metaData = {};
+        // add a default empty value for off by 1 cases
+        metaData.RELATIONSHIP = [''];
         // get the profile pic and username to store in the redux state
         for (const [key, response] of Object.entries(registerStateRes)) {
           const { 
             referenceName,
             value,
+            // order,
             storeResponse
           } = response;
           if (value) {
@@ -92,12 +95,20 @@ const Register = ({ data }) => {
               }
             }
             else {
+              if (referenceName === 'RELATIONSHIP') {
+                metaData[referenceName] = [...metaData[referenceName], value];
+                // let orderNum = order ? order : -1;
+                // metaData.ORDER = metaData.ORDER ? [...metaData.ORDER, orderNum] : [orderNum];
+              } else metaData[referenceName] = value;
+
               if (storeResponse) {
                 regesterIds.push(key);
                 formData.append(key, value.toString());
               }
-              metaData[referenceName] = value;
             }
+          }
+          else {
+            if (referenceName === 'RELATIONSHIP') metaData[referenceName] = [...metaData[referenceName], ""];
           }
         }
         if (regesterIds.length > 0) {

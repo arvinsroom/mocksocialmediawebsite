@@ -246,11 +246,11 @@ const Template = () => {
         <Table aria-label="Template(s) with User(s) Information">
           <TableHead>
             <TableRow>
-              <TableCell className={classes.body, classes.head} align="center"><p>{DATA_PAGE.CONDITION_NAME}</p></TableCell>
-              <TableCell className={classes.body, classes.head} align="center"><p>{DATA_PAGE.RESPONSES}</p></TableCell>
-              <TableCell className={classes.body, classes.head} align="center"><p>Download CSV</p></TableCell>
-              <TableCell className={classes.body, classes.head} align="center"><p>Download JSON</p></TableCell>
-              <TableCell className={classes.body, classes.head} align="center"><p>Download Media</p></TableCell>
+              <TableCell className={[classes.body, classes.head]} align="center"><p>{DATA_PAGE.CONDITION_NAME}</p></TableCell>
+              <TableCell className={[classes.body, classes.head]} align="center"><p>{DATA_PAGE.RESPONSES}</p></TableCell>
+              <TableCell className={[classes.body, classes.head]} align="center"><p>Download CSV</p></TableCell>
+              <TableCell className={[classes.body, classes.head]} align="center"><p>Download JSON</p></TableCell>
+              <TableCell className={[classes.body, classes.head]} align="center"><p>Download Media</p></TableCell>
             </TableRow>
           </TableHead>
           <TableBody>

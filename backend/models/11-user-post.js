@@ -64,6 +64,22 @@ export default (sequelize, DataTypes) => {
       allowNull: true,
       type: DataTypes.STRING
     },
+    likedBy: {
+      allowNull: true,
+      type: DataTypes.STRING
+    },
+    likedByOverflow: {
+      allowNull: true,
+      type: DataTypes.STRING
+    },
+    retweetedBy: {
+      allowNull: true,
+      type: DataTypes.STRING
+    },
+    retweetedByOverflow: {
+      allowNull: true,
+      type: DataTypes.STRING
+    },
     userId: {
       allowNull: true,
       references: {

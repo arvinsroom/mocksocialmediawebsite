@@ -65,3 +65,14 @@
   justify-content: flex-start;
   align-items: flex-end;
 }
+
+.likedOrRetweetComp {
+  color: rgb(83, 100, 113);
+  font: 14px -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  margin-top: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  flex-direction: row;
+  margin-left: 74px;
+}
