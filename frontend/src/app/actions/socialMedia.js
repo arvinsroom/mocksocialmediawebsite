@@ -10,7 +10,8 @@ import {
   SET_FB_POST_IDS_AND_COUNT,
   SET_FB_POST_FETCH_FINISH,
   UPDATE_FACEBOOK_PAGE_STATE,
-  CLEAR_FB_STATE
+  CLEAR_FB_STATE,
+  UNDO_POST
  } from "./types";
 import * as FacebookPostService from '../services/facebook-service';
 
@@ -93,6 +94,7 @@ export const getFacebookPosts = (data) => (dispatch) => {
         posts[eachId] = { ...postRecords[i], userPost: false };
         metaData[eachId] = {
           like: 'default',
+          type: postRecords[i].type,
           initLike: postRecords[i].initLike || 0,
           actionId: null,
           parentPostId: null,
@@ -188,6 +190,42 @@ export const unlikeFbPost = (actionId, id) => (dispatch) => {
         payload: {
           postId: id,
         }
+      });
+
+      return Promise.resolve();
+    },
+    (error) => {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+
+      dispatch({
+        type: SNACKBAR_ERROR,
+        payload: message,
+      });
+
+      return Promise.reject();
+    }
+  );
+};
+
+export const updatePost = (data) => (dispatch) => {
+  return FacebookPostService.updatePost(data).then(
+    () => {
+      // this event should undo the retweet from postArray and render the UI properly
+      dispatch({
+        type: UNDO_POST,
+        payload: {
+          postId: data.id
+        }
+      });
+
+      dispatch({
+        type: SNACKBAR_SUCCESS,
+        payload: "Your retweet has been undone.",
       });
 
       return Promise.resolve();

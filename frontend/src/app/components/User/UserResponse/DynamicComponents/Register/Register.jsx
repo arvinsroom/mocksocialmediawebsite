@@ -12,6 +12,8 @@ import cloneDeep from 'lodash/cloneDeep';
 import { IconCloudUpload, IconChevronRight } from '@tabler/icons';
 import "./Register.css";
 
+const regex = /^@[A-Za-z0-9\_]+$/i;
+
 const Register = ({ data }) => {
   const { isLoggedInUser, translations } = useSelector(state => state.userAuth);
   const [registerState, setRegisterState] = useState([]);
@@ -135,12 +137,21 @@ const Register = ({ data }) => {
 
   const handleTextField = async (_id, e) => {
     e.preventDefault();
-    let newResState = cloneDeep(registerStateRes);
-    newResState[_id] = {
-      ...newResState[_id],
-      value: e.target.value
-    };
-    await setRegisterStateRes(newResState);
+    let value = e.target.value || "";
+    let handleState = false;
+    if (e.target.name === "HANDLE" && value.length > 0) {
+      if (!regex.test(value)) handleState = true;
+    }
+    if (!handleState) {
+      let newResState = cloneDeep(registerStateRes);
+      newResState[_id] = {
+        ...newResState[_id],
+        value: value
+      };
+      await setRegisterStateRes(newResState);
+    } else {
+      dispatch(showErrorSnackbar("Handle should start with @ and only have A-Z, a-z, 0-9 and/or _"));
+    }
   };
 
   const handleFileField = async (_id, e) => {

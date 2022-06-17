@@ -3,9 +3,10 @@ import React, { useEffect, useState } from 'react';
 import useStyles from '../../style';
 import { useSelector, useDispatch } from "react-redux";
 import { Redirect, useHistory } from 'react-router-dom';
+import { getCurrentUTCTime }  from '../../../utils';
+import { trackPageMetaData } from '../../../services/user-tracking-service'
 import "./UserResponse.css";
-import { USER_TRANSLATIONS_DEFAULT } from '../../../constants';
-import clsx from 'clsx';
+// import clsx from 'clsx';
 
 import InfoPage from './DynamicComponents/InfoPage/InfoPage';
 import Finish from './DynamicComponents/Finish/Finish';
@@ -17,6 +18,7 @@ import Twitter from './DynamicComponents/Twitter/Twitter';
 
 import { userLogout } from "../../../actions/userAuth";
 import { updateUserMain } from '../../../actions/user';
+import { USER_TRANSLATIONS_DEFAULT } from '../../../constants';
 
 const Components = {
   MCQ: MCQ,
@@ -37,9 +39,8 @@ const UserResponse = () => {
   let history = useHistory();
 
   const updateFinishTimeAndLogout = async () => {
-    const utcDateTime = new Date();
-    var utcDateTimeString = utcDateTime.toISOString().replace('Z', '').replace('T', ' ');
-    await dispatch(updateUserMain({ finishedAt: utcDateTimeString }));
+    // update last flow data
+    await dispatch(updateUserMain({ finishedAt: getCurrentUTCTime() }));
     await dispatch(userLogout());
   };
 
@@ -84,7 +85,7 @@ const UserResponse = () => {
     //   [classes.card]: true,
     //   ['customCSS']: isFacebook
     // })}>
-    <Container component="main" maxWidth="md" className={classes.card, 'customCSS'}>
+    <Container component="main" maxWidth="md" className={`${classes.card} customCSS`}>
       {block(active)}
     </Container>
   );

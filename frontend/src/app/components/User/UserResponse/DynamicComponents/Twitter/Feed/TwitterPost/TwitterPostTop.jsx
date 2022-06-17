@@ -7,7 +7,7 @@ import ChatBubbleOutlineIcon from "@material-ui/icons/ChatBubbleOutline";
 import ReplyTo from "../../../../../../Common/UserCommon/SocialMediaPostType/ReplyTo";
 import { TW_TRANSLATIONS_DEFAULT } from '../../../../../../../constants';
 import { parseNumber } from '../../../../../../../utils';
-import { trackLinkClick } from '../../../../../../../services/tracking-service';
+import { trackLinkClick } from '../../../../../../../services/user-tracking-service';
 import { selectSinglePost } from '../../../../../../../selectors/socialMedia';
 import { selectSocialMediaAuthor } from '../../../../../../../selectors/socialMediaAuthors';
 import DynamicMedia from '../../../../../../Common/UserCommon/SocialMediaPostType/DynamicMedia';
@@ -128,7 +128,7 @@ const TwitterPostTop = ({ id }) => {
                       singleAuthor?.handle || ""
                     }
                     {" "}
-                    {singlePost.datePosted || ""}
+                    {singlePost.type === 'REPLYTO' ? "2s" : singlePost.datePosted || ""}
                   </span>
                 </h3>
               </div>

@@ -244,11 +244,13 @@ const getFacebookPostIds = async (req, res, next) => {
       // stringify again the metadata object and upsert it
       const stringify = JSON.stringify(parsedMetaData);
       console.log('Adding to User Global Tracking MetaData: ', stringify);
-      await UserGlobalTracking.upsert({
-        userId: req.userId,
-        pageMetaData: stringify,
-        pageId
-      }, { transaction, logging: false });
+      let upsertObj = {};
+      if (prevGlobalTrackingObj?._id) upsertObj['_id'] = prevGlobalTrackingObj._id;
+      upsertObj.userId = req.userId;
+      upsertObj.pageMetaData = stringify;
+      upsertObj.pageId = pageId;
+
+      await UserGlobalTracking.upsert(upsertObj, { transaction, logging: false });
       console.log('Metadata updated!');
     }
 
@@ -406,12 +408,56 @@ const getFacebookFakeActionPosts = async (req, res, next) => {
   }
 };
 
+const updatePost = async (req, res, next) => {
+  let transaction;
+  try {
+    // fetch userId from middleware
+    if (!req.userId) {
+      res.status(400).send({
+        message: "Invalid User Token, please log in again!"
+      });
+      return;
+    }
+
+    const { type, id } = req.body;
+    if (!type || !id) {
+      res.status(400).send({
+        message: "UserPost data required!"
+      });
+      return;
+    }
+    transaction = await db.sequelize.transaction();
+    // update the user object
+    await UserPost.update({
+      type
+    }, {
+      where: {
+        _id: id,
+        // userId: req.userId
+      },
+      transaction
+    });
+
+    console.log(`Updating post with ID ${id} for user ${req.userId}.`)
+    await transaction.commit();
+
+    res.send("Post was successfully updated.");
+  } catch (error) {
+    console.log(error.message);
+    if (transaction) await transaction.rollback();
+    res.status(500).send({
+      message: "Error occurred when updating Post."
+    });
+  }
+};
+
 
 export default {
   createAction,
-  deleteAction,
   createNewPost,
   getFacebookPostIds,
   getFacebookPostWithDetails,
-  getFacebookFakeActionPosts
+  getFacebookFakeActionPosts,
+  deleteAction,
+  updatePost
 };

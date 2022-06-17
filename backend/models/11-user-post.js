@@ -12,7 +12,7 @@ export default (sequelize, DataTypes) => {
     },
     type: {
       allowNull: true,
-      type: DataTypes.ENUM('LINK', 'VIDEO', 'PHOTO', 'TEXT', 'SHARE', 'RETWEET', 'REPLYTO', 'QUOTETWEET')
+      type: DataTypes.ENUM('LINK', 'VIDEO', 'PHOTO', 'TEXT', 'SHARE', 'RETWEET', 'REPLYTO', 'QUOTETWEET', 'UNDORETWEET')
     },
     linkTitle: {
       allowNull: true,
