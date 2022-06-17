@@ -10,7 +10,7 @@ import GifIcon from '@material-ui/icons/Gif';
 import { USER_TRANSLATIONS_DEFAULT, TW_TRANSLATIONS_DEFAULT } from '../../../../../../../constants';
 import { createFbPost } from '../../../../../../../actions/socialMedia';
 import { showInfoSnackbar, showSuccessSnackbar } from '../../../../../../../actions/snackbar';
-import Share from '../../../../../../Common/UserCommon/SocialMediaPostType/Share';
+import ReplyToQuoteTweetPreview from '../../../../../../Common/UserCommon/SocialMediaPostType/replyToQuoteTweetPreview';
 import "./TweetBox.css";
 
 const TweetBox = ({ placeholderText, replyTo, quoteTweet, handleCloseModal }) => {
@@ -85,11 +85,10 @@ const TweetBox = ({ placeholderText, replyTo, quoteTweet, handleCloseModal }) =>
 
   return (
     <div className="tweetBox">
-
       {/* replyTo is also similar to share tweet */}
       {replyTo && 
         <div className="sharePostPreview sharePreview">
-          <Share id={replyTo} />
+          <ReplyToQuoteTweetPreview id={replyTo} />
         </div>
       }
       <form>
@@ -120,7 +119,7 @@ const TweetBox = ({ placeholderText, replyTo, quoteTweet, handleCloseModal }) =>
         {/* quotetweet is similar to share tweet */}
         {quoteTweet && 
           <div className="sharePostPreview sharePreview">
-            <Share id={quoteTweet} />
+            <ReplyToQuoteTweetPreview id={quoteTweet} />
           </div>
         }
 

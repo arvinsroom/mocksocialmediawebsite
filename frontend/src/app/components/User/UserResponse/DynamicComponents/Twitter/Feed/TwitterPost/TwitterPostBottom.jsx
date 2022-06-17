@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from "react-redux";
 import { Button, Menu, MenuItem, Modal, Container } from '@material-ui/core';
 import ChatBubbleOutlineIcon from "@material-ui/icons/ChatBubbleOutline";
@@ -9,7 +9,7 @@ import CreateOutlinedIcon from '@material-ui/icons/CreateOutlined';
 import ClearIcon from '@material-ui/icons/Clear';
 import TweetBox from '../TweetBox/TweetBox';
 import { showSuccessSnackbar } from '../../../../../../../actions/snackbar';
-import { likeFbPost, unlikeFbPost, createFbPost } from '../../../../../../../actions/socialMedia';
+import { likeFbPost, unlikeFbPost, createFbPost, updatePost } from '../../../../../../../actions/socialMedia';
 import { selectPostsMetadata } from '../../../../../../../selectors/socialMedia';
 import { USER_TRANSLATIONS_DEFAULT, TW_TRANSLATIONS_DEFAULT } from '../../../../../../../constants';
 import "./TwitterPost.css";
@@ -52,7 +52,7 @@ const TwitterPostBottom = ({ id }) => {
       type: 'RETWEET',
       parentPostId: id,
       pageId,
-    } 
+    };
     let formData = new FormData();
     formData.append("file", null);
     formData.append("postObj", JSON.stringify(postObj));
@@ -60,6 +60,12 @@ const TwitterPostBottom = ({ id }) => {
     await dispatch(showSuccessSnackbar(translations?.['posted!'] || USER_TRANSLATIONS_DEFAULT?.POSTED))
     // close the menu
     handleClose();
+  };
+
+  const handleUndoRetweet = async (e) => {
+    e.preventDefault();
+    
+    await dispatch(updatePost({ type: 'UNDORETWEET', id }));
   };
 
   const handleToggleLike = (e) => {
@@ -75,7 +81,7 @@ const TwitterPostBottom = ({ id }) => {
       dispatch(likeFbPost(data, id));
     }
   };
-
+  
   return (
     <>
       <div className="twitterPostFooter addMarginInMobile">
@@ -99,13 +105,20 @@ const TwitterPostBottom = ({ id }) => {
       <Menu
         id="simple-menu"
         anchorEl={anchorEl}
-        keepMounted
+        // keepMounted
         open={Boolean(anchorEl)}
         onClose={handleClose}
       >
-        <MenuItem onClick={e => handleRetweet(e)}>
-          <RepeatOutlinedIcon /> {" "} {socialMediaTranslations?.retweet || TW_TRANSLATIONS_DEFAULT.RETWEET}
-        </MenuItem>
+        { 
+        postMetadata.type === "RETWEET" ?
+          <MenuItem onClick={e => handleUndoRetweet(e)}>
+            <RepeatOutlinedIcon /> {" "} {"Undo Retweet"}
+          </MenuItem>
+        :
+          <MenuItem onClick={e => handleRetweet(e)}>
+            <RepeatOutlinedIcon /> {" "} {socialMediaTranslations?.retweet || TW_TRANSLATIONS_DEFAULT.RETWEET}
+          </MenuItem>
+        }
         <MenuItem onClick={e => openModal(e, 'QUOTETWEET')}>
           <CreateOutlinedIcon /> {" "} {socialMediaTranslations?.quote_tweet || TW_TRANSLATIONS_DEFAULT.QUOTE_TWEET}
         </MenuItem>

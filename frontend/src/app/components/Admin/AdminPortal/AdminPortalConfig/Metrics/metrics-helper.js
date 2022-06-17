@@ -58,20 +58,28 @@ export const formSocialMediaPageIdsArray = (globalSocialMediaPages) => {
   return globalSocialMediaPagesData;
 };
 
-/* userGlobalTracking */
-
+/* userGlobalTracking
+  Structure: startedTime!~*!postsOrderAdminId!~*!finishedTime
+*/
 const normalizeUserGlobalTracking = (allGlobalTracking) => {
   const normalize = {};
   for (let i = 0; i < allGlobalTracking.length; i++) {
     const currentItem = allGlobalTracking[i]?.pageConfigurations || null;
     if (currentItem) {
-      // const dynamicField = currentItem.type.toLowerCase() + 'PostsOrderAdminIds';
-      const dynamicField = 'facebookPostsOrderAdminIds';
       const metaData = allGlobalTracking[i].pageMetaData || null;
+      let finishTime = "-9999";
+      let orderPosts = "-9999";
+      let startTime = escapeChars(allGlobalTracking[i].createdAt);
       if (metaData) {
         const parseMetaData = JSON.parse(allGlobalTracking[i].pageMetaData);
-        normalize[currentItem._id] = JSON.stringify(parseMetaData[dynamicField]);
+        finishTime = escapeChars(parseMetaData['finishedAt']);
+        if (finishTime !== "-9999") {
+          let timeArray = finishTime.split(' ');
+          if (timeArray && timeArray.length > 1) finishTime = timeArray[0] + 'T' + timeArray[1] + 'Z';
+        }
+        orderPosts = escapeChars(JSON.stringify(parseMetaData['facebookPostsOrderAdminIds'])) ||  "-9999";
       }
+      normalize[currentItem._id] = startTime + "!~*!" + orderPosts + "!~*!" + finishTime;
     }
   }
   return normalize;
@@ -152,7 +160,7 @@ const normalizeUserPosts = (responseUserPosts) => {
   return normalize;
 };
 
-const possiblePostTypes= ['LINK', 'VIDEO', 'PHOTO', 'TEXT', 'SHARE', 'RETWEET', 'QUOTETWEET', 'REPLYTO'];
+const possiblePostTypes= ['LINK', 'VIDEO', 'PHOTO', 'TEXT', 'SHARE', 'RETWEET', 'QUOTETWEET', 'REPLYTO', 'UNDORETWEET'];
 export const formulateUserPosts = (userPosts) => {
   // manually form the array for all the possible actions and then add postId for that action
   const normalizeUserPostsData = normalizeUserPosts(userPosts);

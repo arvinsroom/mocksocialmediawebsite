@@ -77,7 +77,7 @@ const getUserData = async (req, res, next) => {
         {
           model: db.UserGlobalTracking,
           as: 'userGlobalTracking',
-          attributes: ['pageMetaData'],
+          attributes: ['pageMetaData', 'createdAt'],
           include: [
             {
               model: db.Page,

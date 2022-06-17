@@ -30,3 +30,7 @@ export const parseNumber = (str) => {
   const num = parseInt(str);
   return num !== NaN ? num : null;
 }
+
+export const getCurrentUTCTime = () => new Date().toISOString().replace('Z', '').replace('T', ' ');
+
+export const removePropery = (prop, { [prop]: exclProp, ...rest }) => rest;

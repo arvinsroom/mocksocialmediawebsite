@@ -1,6 +1,6 @@
 import "./Post.css";
 import { useSelector } from "react-redux";
-import { trackLinkClick } from '../../../../../../../services/tracking-service';
+import { trackLinkClick } from '../../../../../../../services/user-tracking-service';
 import { selectSinglePost } from '../../../../../../../selectors/socialMedia';
 import { selectSocialMediaAuthor } from '../../../../../../../selectors/socialMediaAuthors';
 import DynamicMedia from '../../../../../../Common/UserCommon/SocialMediaPostType/DynamicMedia';

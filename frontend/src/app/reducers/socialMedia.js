@@ -8,8 +8,10 @@ import {
   SET_FB_POST_IDS_AND_COUNT,
   SET_FB_POST_FETCH_FINISH,
   UPDATE_FACEBOOK_PAGE_STATE,
-  CLEAR_FB_STATE
+  CLEAR_FB_STATE,
+  UNDO_POST
 } from "../actions/types";
+import { removePropery } from '../utils';
 
 const initialState = {
   posts: {},
@@ -144,6 +146,7 @@ export default function (state = initialState, action) {
           [payload._id]: {
             comments: [],
             like: 'default',
+            type: type,
             initLike: 0,
             actionId: null,
             parentPostId: parentPostId,
@@ -151,6 +154,14 @@ export default function (state = initialState, action) {
           ...state.metaData,
         },
         allIds: [payload._id, ...state.allIds]
+      };
+
+    case UNDO_POST:
+      return {
+        ...state,
+        posts: removePropery(payload.postId, state.posts),
+        metaData: removePropery(payload.postId, state.metaData),
+        allIds: state.allIds.filter(item => item !== payload.postId)
       };
 
     case SET_FB_LOADING:

@@ -26,7 +26,7 @@ import userFacebook from './routes/facebook-routes';
 import userQuesion from './routes/user-question-routes';
 import userAnswer from './routes/user-answer-routes';
 import userMain from './routes/user-main-routes';
-import tracking from './routes/tracking-routes';
+import userTracking from './routes/user-tracking-routes';
 import { databaseConfigurations, adminCredConfigurations } from './utils';
 
 const mysql = require('mysql2/promise');
@@ -178,7 +178,7 @@ try {
   app.use('/api/user/info', [verifyUserToken, isUser], userInfo);
   app.use('/api/user/facebook', [verifyUserToken, isUser], userFacebook);
   app.use('/api/user/main', [verifyUserToken, isUser], userMain);
-  app.use('/api/user/tracking', [verifyUserToken, isUser], tracking);
+  app.use('/api/user/tracking', [verifyUserToken, isUser], userTracking);
 
   // set port, listen for requests
   const PORT = process.env.PORT || 8081;
