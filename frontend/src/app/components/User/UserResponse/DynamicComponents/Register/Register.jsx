@@ -10,13 +10,15 @@ import { setRegisterMetaData } from '../../../../../actions/userRegister';
 import { USER_TRANSLATIONS_DEFAULT, WINDOW_GLOBAL } from '../../../../../constants';
 import cloneDeep from 'lodash/cloneDeep';
 import { IconCloudUpload, IconChevronRight } from '@tabler/icons';
+import RenderRichTextArea from '../../../../Common/UserCommon/RenderRichTextArea';
 import "./Register.css";
 
-const regex = /^@[A-Za-z0-9\_]+$/i;
+const regex = /^@?[A-Za-z0-9\_]+$/i;
 
 const Register = ({ data }) => {
   const { isLoggedInUser, translations } = useSelector(state => state.userAuth);
   const [registerState, setRegisterState] = useState([]);
+  const [handleValidation, setHandleValidation] = useState(true);
   // const [avatar, setAvatar] = useState("");
   const [registerStateRes, setRegisterStateRes] = useState({});
 
@@ -59,6 +61,8 @@ const Register = ({ data }) => {
   }, []);
 
   const checkValidity = () => {
+    // special case for handle validation
+    if (!handleValidation) return false;
     for (const [, result] of Object.entries(registerStateRes)) {
       if (!result.value && result.required) return false;
     }
@@ -101,6 +105,9 @@ const Register = ({ data }) => {
                 metaData[referenceName] = [...metaData[referenceName], value];
                 // let orderNum = order ? order : -1;
                 // metaData.ORDER = metaData.ORDER ? [...metaData.ORDER, orderNum] : [orderNum];
+              } else if (referenceName === "HANDLE") {
+                if (value && value.length > 0 && value[0] !== '@') value = '@' + value;
+                metaData[referenceName] = value;
               } else metaData[referenceName] = value;
 
               if (storeResponse) {
@@ -140,7 +147,10 @@ const Register = ({ data }) => {
     let value = e.target.value || "";
     let handleState = false;
     if (e.target.name === "HANDLE" && value.length > 0) {
-      if (!regex.test(value)) handleState = true;
+      if (!regex.test(value)) {
+        handleState = true;
+        await setHandleValidation(false);
+      } else await setHandleValidation(true);
     }
     if (!handleState) {
       let newResState = cloneDeep(registerStateRes);
@@ -150,7 +160,7 @@ const Register = ({ data }) => {
       };
       await setRegisterStateRes(newResState);
     } else {
-      dispatch(showErrorSnackbar("Handle should start with @ and only have A-Z, a-z, 0-9 and/or _"));
+      dispatch(showErrorSnackbar("Handle should start with @ or nothing and only have A-Z, a-z, 0-9 and/or _"));
     }
   };
 
@@ -198,6 +208,8 @@ const Register = ({ data }) => {
       return (
         <TextField
           className={classes.marginBottom}
+          error={field.referenceName === "HANDLE" ? !handleValidation : false}
+          helperText={field.referenceName === "HANDLE" && !handleValidation ? "Invalid Input" : null}
           variant="outlined"
           margin="normal"
           fullWidth
@@ -215,6 +227,7 @@ const Register = ({ data }) => {
 
   return (
   <>
+      {data?.richText && <RenderRichTextArea richText={data.richText}/>}
       {registerState?.length > 0 && registerState.map(field => (
         <div key={field._id}>
           {renderDynamicInput(field)}
