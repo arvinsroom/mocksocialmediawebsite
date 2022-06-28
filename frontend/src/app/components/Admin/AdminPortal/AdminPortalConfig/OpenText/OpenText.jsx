@@ -153,7 +153,7 @@ const OpenText = () => {
                 />
               </Tooltip>
             </Grid>
-            <Grid item xs={1} className={classes.floatRight, classes.flexCenter}>
+            <Grid item xs={1} className={`${classes.floatRight} ${classes.flexCenter}`}>
               <Tooltip title="Delete question">
                 <Button
                   aria-label="delete question"
