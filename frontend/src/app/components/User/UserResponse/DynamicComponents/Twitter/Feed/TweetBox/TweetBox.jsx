@@ -17,7 +17,7 @@ import { showInfoSnackbar, showSuccessSnackbar } from '../../../../../../../acti
 import ReplyToQuoteTweetPreview from '../../../../../../Common/UserCommon/SocialMediaPostType/replyToQuoteTweetPreview';
 import "./TweetBox.css";
 
-const TweetBox = ({ placeholderText, replyTo, quoteTweet, handleCloseModal }) => {
+const TweetBox = ({ placeholderText, replyTo, quoteTweet, retweetParentId, handleCloseModal }) => {
   const socialMediaTranslations = useSelector(state => state.socialMedia.socialMediaTranslations);
   const { translations } = useSelector(state => state.userAuth);
   const userRegisterData = useSelector(state => state.userRegister.metaData);
@@ -73,10 +73,19 @@ const TweetBox = ({ placeholderText, replyTo, quoteTweet, handleCloseModal }) =>
         // it is replyTo post
         // set both isReplyTo and parentPostId to UUID of parentPost
         if (replyTo !== null) {
-          postObj.parentPostId = replyTo;
-          postObj.isReplyTo = replyTo;
+          if (retweetParentId !== null) {
+            postObj.parentPostId = retweetParentId;
+            postObj.isReplyTo = retweetParentId;  
+          } else {
+            postObj.parentPostId = replyTo;
+            postObj.isReplyTo = replyTo;
+          }
         } else if (quoteTweet !== null) {
-          postObj.quoteTweetTo = quoteTweet;
+          if (retweetParentId !== null) {
+            postObj.quoteTweetTo = retweetParentId;
+          } else {
+            postObj.quoteTweetTo = quoteTweet;
+          }
         }
         let formData = new FormData();
         formData.append("file", file || null);
@@ -102,11 +111,19 @@ const TweetBox = ({ placeholderText, replyTo, quoteTweet, handleCloseModal }) =>
   return (
     <div className="tweetBox">
       {/* replyTo is also similar to share tweet */}
-      {replyTo && 
+      {replyTo ?
+        retweetParentId ?
+        <div className="sharePostPreview sharePreview">
+          <ReplyToQuoteTweetPreview id={retweetParentId} />
+        </div>
+        :
         <div className="sharePostPreview sharePreview">
           <ReplyToQuoteTweetPreview id={replyTo} />
         </div>
+      :
+      null
       }
+
       <form>
         <div className="tweetBoxInput">
           <Avatar src={(userRegisterData['PROFILEPHOTO'] || "")} />
@@ -133,10 +150,17 @@ const TweetBox = ({ placeholderText, replyTo, quoteTweet, handleCloseModal }) =>
           </div>}
 
         {/* quotetweet is similar to share tweet */}
-        {quoteTweet && 
+        {quoteTweet ?
+          retweetParentId ?
+          <div className="sharePostPreview sharePreview">
+            <ReplyToQuoteTweetPreview id={retweetParentId} />
+          </div>
+          :
           <div className="sharePostPreview sharePreview">
             <ReplyToQuoteTweetPreview id={quoteTweet} />
           </div>
+        :
+        null
         }
 
         <div className="tweetBoxBottom">

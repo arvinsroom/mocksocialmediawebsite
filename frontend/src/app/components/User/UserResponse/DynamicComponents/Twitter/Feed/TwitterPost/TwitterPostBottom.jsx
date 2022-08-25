@@ -169,15 +169,17 @@ const TwitterPostBottom = ({ id }) => {
                 <div key={modalType}>
                   <TweetBox 
                     placeholderText={socialMediaTranslations?.tweet_your_reply || TW_TRANSLATIONS_DEFAULT.TWEET_YOUR_REPLY}
-                    replyTo={postMetadata.type === "RETWEET" ? postMetadata.parentPostId : id}
+                    replyTo={id}
                     quoteTweet={null}
+                    retweetParentId={postMetadata.type === "RETWEET" ? postMetadata.parentPostId : null}
                     handleCloseModal={handleCloseModal} />
                 </div> :
                 <div key={modalType}>
                   <TweetBox
                     placeholderText={socialMediaTranslations?.add_a_comment || TW_TRANSLATIONS_DEFAULT.ADD_A_COMMENT}
                     replyTo={null}
-                    quoteTweet={postMetadata.type === "RETWEET" ? postMetadata.parentPostId : id}
+                    quoteTweet={id}
+                    retweetParentId={postMetadata.type === "RETWEET" ? postMetadata.parentPostId : null}
                     handleCloseModal={handleCloseModal} />
                 </div>
               }
