@@ -372,7 +372,7 @@ const getFacebookPostIds = async (req, res, next) => {
     await transaction.commit();
 
     res.send({
-      totalPosts: data.count,
+      totalPosts: postIds.length ? postIds.length : 0,
       postIds: postIds,
       translations,
       authors: userPostAuthors

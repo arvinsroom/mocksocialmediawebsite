@@ -124,132 +124,126 @@ const TwitterPostTop = ({ id }) => {
   }
 
   useEffect(() => {
-    const likedOrRetweetComp = getLikedOrRetweetedBy();
-    setRenderSinglePost(
-    <>
-      {singlePost &&
+    if (singlePost) {
+      const likedOrRetweetComp = getLikedOrRetweetedBy();
+      setRenderSinglePost(
       <>
-       {singlePost.type === 'RETWEET' && 
-        <div className="twitterRetweeted">
-          <ChatBubbleOutlineIcon fontSize="small" /> &nbsp;&nbsp;&nbsp; {socialMediaTranslations?.you_retweeted || TW_TRANSLATIONS_DEFAULT.YOU_RETWEETED}</div>
-       }
+        {singlePost.type === 'RETWEET' && 
+          <div className="twitterRetweeted">
+            <ChatBubbleOutlineIcon fontSize="small" /> &nbsp;&nbsp;&nbsp; {socialMediaTranslations?.you_retweeted || TW_TRANSLATIONS_DEFAULT.YOU_RETWEETED}</div>
+        }
         
         {likedOrRetweetComp ? 
             <div className="likedOrRetweetComp">
               <FavoriteIcon fontSize="small" /> {likedOrRetweetComp}
             </div>  : null}
-        <div className="twitterPost">
-
-          {singlePost.type === 'RETWEET' ? 
+          
+        {singlePost.type === 'RETWEET' ?
             <TwitterPostTop id={singlePost.parentPostId} /> :
-            <div>
-              <div className="twitterPostAvatar">
-                {
-                  singlePost.attachedAuthorPicture ? <DynamicMediaProfile attachedMedia={singlePost.attachedAuthorPicture} /> :
-                    <Avatar
-                      src={singlePost.userPost ? (userRegisterData['PROFILEPHOTO'] || "") : ""}
-                      className="postTopAvatar"
-                    />
-                }
-              </div>
-              {/* to show a line in the left side of a post to indicate that is a thread, not being used at the moment */}
-              {/* {displayLine && <div className="vertical-line"></div>} */}
-            </div>
-          }
 
-          <div className="twitterPostBody">
-            {singlePost.type === 'RETWEET' ? null :
-              <>
-              <div className="twitterPostHeaderMain">
-                <h3 className="twitterPostHeaderInfo">
-                  {/* username from registration page */}
-                  {singlePost.userPost ? (userRegisterData['USERNAME'] || "") : 
-                    singleAuthor?.authorName || ""
-                  }
-                  {" "}
-                  <span className="twitterPostHeaderSpecial">
-                    {singleAuthor?.authorVerified ? <VerifiedUserIcon className="twitterPostBadge" /> : null}
-                    {" "}
-                    {/* twitter handle from registration page */}
-                    {singlePost.userPost ? (userRegisterData['HANDLE'] || "") : 
-                      singleAuthor?.handle || ""
+          <div className="twitterPost">
+            <div className="twitterPostAvatar">
+              {
+                singlePost.attachedAuthorPicture ? <DynamicMediaProfile attachedMedia={singlePost.attachedAuthorPicture} /> :
+                  <Avatar
+                    src={singlePost.userPost ? (userRegisterData['PROFILEPHOTO'] || "") : ""}
+                    className="postTopAvatar"
+                  />
+              }
+            </div>
+            <div className="twitterPostBody">
+              {singlePost.type === 'RETWEET' ? null :
+                <>
+                <div className="twitterPostHeaderMain">
+                  <h3 className="twitterPostHeaderInfo">
+                    {/* username from registration page */}
+                    {singlePost.userPost ? (userRegisterData['USERNAME'] || "") : 
+                      singleAuthor?.authorName || ""
                     }
                     {" "}
-                    {singlePost.isReplyTo !== null && singlePost.userPost === true ? "2s" : singlePost.datePosted || ""}
-                  </span>
-                </h3>
+                    <span className="twitterPostHeaderSpecial">
+                      {singleAuthor?.authorVerified ? <VerifiedUserIcon className="twitterPostBadge" /> : null}
+                      {" "}
+                      {/* twitter handle from registration page */}
+                      {singlePost.userPost ? (userRegisterData['HANDLE'] || "") : 
+                        singleAuthor?.handle || ""
+                      }
+                      {" "}
+                      {singlePost.isReplyTo !== null && singlePost.userPost === true ? "2s" : singlePost.datePosted || ""}
+                    </span>
+                  </h3>
 
-                {/* <Button variant="outlined" component="label" className="tweetBoxIcons" onClick={handleClick}>
-                  <RepeatOutlinedIcon fontSize="small" />
-                </Button> */}
+                  {/* <Button variant="outlined" component="label" className="tweetBoxIcons" onClick={handleClick}>
+                    <RepeatOutlinedIcon fontSize="small" />
+                  </Button> */}
 
-                <div className="twitterPostHeaderThreeDots">
-                  <Button onClick={handleClick}>
-                    <MoreHorizIcon />
-                  </Button>
+                  <div className="twitterPostHeaderThreeDots">
+                    <Button onClick={handleClick}>
+                      <MoreHorizIcon />
+                    </Button>
+                  </div>
                 </div>
-              </div>
-              <Menu
-                  id="simple-menu"
-                  anchorEl={anchorEl}
-                  keepMounted
-                  open={Boolean(anchorEl)}
-                  onClose={handleClose}
-                >
-                  <MenuItem disabled={singlePost.userPost}>
-                    <div className="report-container-tw" onClick={handleToggleReport}>
-                      <FlagOutlined fontSize="small" style={{ color: reportIconColor, transform: "scaleX(-1)" }} />
-                      <p className="defaultText report-text-tw">{reportText}</p>
-                    </div>
-                  </MenuItem>
-                </Menu>
-              </>
-            }
-              {singlePost.isReplyTo !== null && singlePost.userPost === true ?
-                <ReplyTo id={singlePost.isReplyTo} />
-              : null}
-
-              {singlePost.postMessage &&
-                <div className="twitterPostHeaderDescription">
-                  <Text postMessage={singlePost.postMessage} link={singlePost.link} customClassName="twitterPostTopText"/>
-                </div>
+                <Menu
+                    id="simple-menu"
+                    anchorEl={anchorEl}
+                    keepMounted
+                    open={Boolean(anchorEl)}
+                    onClose={handleClose}
+                  >
+                    <MenuItem disabled={singlePost.userPost}>
+                      <div className="report-container-tw" onClick={handleToggleReport}>
+                        <FlagOutlined fontSize="small" style={{ color: reportIconColor, transform: "scaleX(-1)" }} />
+                        <p className="defaultText report-text-tw">{reportText}</p>
+                      </div>
+                    </MenuItem>
+                  </Menu>
+                </>
               }
+                {singlePost.isReplyTo !== null && singlePost.userPost === true ?
+                  <ReplyTo id={singlePost.isReplyTo} />
+                : null}
 
-              <div className="twitterPostMediaBox">
-                {(singlePost.type === 'PHOTO' || singlePost.type === 'VIDEO') &&
-                  <DynamicMedia attachedMedia={singlePost.attachedMedia[0]} />
+                {singlePost.postMessage &&
+                  <div className="twitterPostHeaderDescription">
+                    <Text postMessage={singlePost.postMessage} link={singlePost.link} customClassName="twitterPostTopText"/>
+                  </div>
                 }
 
-                {singlePost.type === 'LINK' ?
-                  <a href={singlePost.link} className="link-preview" onClick={storeLinkClick} target="_blank" rel="noopener noreferrer">
-                    <div className="link-area">
-                      <div className="og-image">
-                        <DynamicMedia attachedMedia={singlePost.attachedMedia[0]} />
-                      </div>
-                      <div className="descriptions">
-                        <div className="og-title">
-                          {singlePost.linkTitle}
-                        </div>
-                        <div className="og-description">
-                          {singlePost.linkPreview}
-                        </div>
-                      </div>
-                    </div>
-                  </a>
-                  : null}
+                <div className="twitterPostMediaBox">
+                  {(singlePost.type === 'PHOTO' || singlePost.type === 'VIDEO') &&
+                    <DynamicMedia attachedMedia={singlePost.attachedMedia[0]} />
+                  }
 
-                {singlePost.quoteTweetTo ?
-                      <QuoteTweet id={singlePost.quoteTweetTo} />
-                  : null
-                }
-                </div>
+                  {singlePost.type === 'LINK' ?
+                    <a href={singlePost.link} className="link-preview" onClick={storeLinkClick} target="_blank" rel="noopener noreferrer">
+                      <div className="link-area">
+                        <div className="og-image">
+                          <DynamicMedia attachedMedia={singlePost.attachedMedia[0]} />
+                        </div>
+                        <div className="descriptions">
+                          <div className="og-title">
+                            {singlePost.linkTitle}
+                          </div>
+                          <div className="og-description">
+                            {singlePost.linkPreview}
+                          </div>
+                        </div>
+                      </div>
+                    </a>
+                    : null}
+
+                  {singlePost.quoteTweetTo ?
+                        <QuoteTweet id={singlePost.quoteTweetTo} />
+                    : null
+                  }
+                  </div>
             </div>
-        </div>
+          </div>
+        }
       </>
-      }
-    </>
-  );
-}, [id, postMetadata, anchorEl]);
+      )
+    }
+  }, [id, postMetadata, anchorEl, singlePost]);
 
   return (
     <>
