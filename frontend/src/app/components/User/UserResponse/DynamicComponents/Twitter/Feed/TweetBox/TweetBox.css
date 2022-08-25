@@ -153,3 +153,11 @@
   min-width: 0 !important;
   border-radius: 50% !important;
 }
+
+.tweetBoxIcons:hover{
+  background-color: transparent !important;
+}
+
+.tweetBoxStyle:hover {
+  
+}

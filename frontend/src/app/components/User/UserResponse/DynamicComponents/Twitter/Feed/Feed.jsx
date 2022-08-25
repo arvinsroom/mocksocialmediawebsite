@@ -1,7 +1,7 @@
-import { useEffect, useRef, useCallback } from "react";
+import { useEffect, useRef, useCallback, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import {
-  getFacebookPosts
+  getFacebookPosts,
 } from '../../../../../../actions/socialMedia';
 import TwitterPostBottom from "./TwitterPost/TwitterPostBottom";
 import TwitterPostTop from './TwitterPost/TwitterPostTop';
@@ -17,22 +17,62 @@ const Feed = () => {
   const postEachPage = useSelector(state => state.socialMedia.postEachPage);
   const totalPostIds = useSelector(state => state.socialMedia.totalPostIds);
   const finish = useSelector(state => state.socialMedia.finish);
+  const storedPosts = useSelector(state => state.socialMedia.posts);
+  const [postToRender, setPostToRender] = useState(null);
 
   const classes = useStyles();
   const dispatch = useDispatch();
   const observer = useRef();
 
   useEffect(() => {
+    //Handle and sort by type the posts that will be displayed
+    //final result variale will contain the result to later be stored in the created state postsToRender
+    const finalResult = [];
+    //we start by looping in all the posts that we get from db
+    for (let post in storedPosts) {
+      const result = {
+        _id: storedPosts[post]._id,
+        adminPostId: storedPosts[post].adminPostId,
+        replies: []
+      };
+      // if any storedPosts is a user post just send it to the top we always want it there
+      if (storedPosts[post].userPost === true) {
+        finalResult.push(result);
+        continue;
+      }
+      //we store all the posts that are not replays in result obj
+      if (storedPosts[post].isReplyTo === null) {
+        //for each post that is not a REPLYTO, we loop to see if there is REPLYTO  contains an id of the post as parentPostId
+        for (let item in storedPosts) {
+          if (storedPosts[item].isReplyTo !== null && storedPosts[item].parentPostId === storedPosts[post]._id
+            && storedPosts[item].userPost === false) {
+            const reply = {
+              _id: storedPosts[item]._id,
+              parentPostId: storedPosts[post]._id,
+            }
+            result.replies.push(reply);
+          }
+        }
+        finalResult.push(result);
+      }
+    }
+    //we save all results in a state that later will used to render posts, its replay and their replays
+    setPostToRender(finalResult);
+  }, [storedPosts]);
+
+  useEffect(() => {
     if (!finish) {
       const startIndex = currentPostPage * postEachPage;
+      // TODO: modify later and implement lazy loading at the end 40 -> 5
       const slicePosts = totalPostIds.slice(startIndex, startIndex+5);
+
       dispatch(getFacebookPosts({ postIds: slicePosts }));
     }
   }, []);
 
   const lastPostRef = useCallback(node => {
     if (isLoading) return;
-    if (observer.current) observer.current.disconnect()
+    if (observer.current) observer.current.disconnect();
     observer.current = new IntersectionObserver(entries => {
       if (entries[0].isIntersecting && !finish) {
         const startIndex = currentPostPage * postEachPage;
@@ -43,22 +83,33 @@ const Feed = () => {
     if (node) observer.current.observe(node)
   }, [isLoading, finish, currentPostPage, postEachPage, totalPostIds, dispatch])
 
+  // allIds represent the current length of ids start from 5 and at the 5th node
+  // we add a lastPostRef so that when we reach near that ref i.e. post we fetch new posts
   return (
     <>
       <div className={classes.feed}>
-        {allIds.map((postId, index) => {
-          if (allIds.length === index + 1) {
-            return (<div key={postId} ref={lastPostRef} className={classes.post}>
-              <TwitterPostTop id={postId} />
-              <TwitterPostBottom id={postId} />
-            </div>)
-          } else {
-            return (<div key={postId} className={classes.post}>
-              <TwitterPostTop id={postId}/>
-              <TwitterPostBottom id={postId} />
-            </div>)
-          }
-        })}
+      {
+        postToRender && postToRender.map((post, index) => {
+          // first we save all the replies in an array 
+          // note they are not rendered yet
+          const replies = post.replies.map((reply, replyIndex) => {
+              return (
+                <div key={reply._id} ref={post?.replies?.length === replyIndex + 1 ? lastPostRef : null} style={{ paddingLeft: "75px" }}>
+                  <TwitterPostTop id={reply._id} />
+                  <TwitterPostBottom id={reply._id} />
+                </div>
+              )
+            });
+            // show all the replies right here
+            return (
+              <div key={post._id} ref={postToRender?.length === index + 1 ? lastPostRef : null} className={classes.post}>
+                <TwitterPostTop id={post._id} />
+                <TwitterPostBottom id={post._id} />
+                {replies}
+              </div>
+            )
+          })
+      }
       </div>
       <div className="paddingTop">
         {isLoading && <Progress />}

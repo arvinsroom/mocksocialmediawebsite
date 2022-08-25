@@ -9,4 +9,7 @@ router.post("/", media.create);
 // have a upper bound of max media upload of 200
 router.post("/upload/multiple", uploadFiles.array("files", 200), media.uploadMultipleFiles);
 
+// have a upper bound of max media upload of 200
+router.post("/upload/multiple/authors", uploadFiles.array("files", 200), media.uploadMultipleAuthourFiles);
+
 export default router;

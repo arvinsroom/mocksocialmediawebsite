@@ -14,7 +14,7 @@ import PersonAddIcon from '@material-ui/icons/PersonAdd';
 import MoreHorizIcon from '@material-ui/icons/MoreHoriz';
 import RoomIcon from '@material-ui/icons/Room';
 import GifIcon from '@material-ui/icons/Gif';
-import { FB_TRANSLATIONS_DEFAULT } from '../../../../../../../constants';
+import { FB_TRANSLATIONS_DEFAULT, USER_TRANSLATIONS_DEFAULT } from '../../../../../../../constants';
 
 const ShareModal = ({ id, setModalOpen }) => {
   const socialMediaTranslations = useSelector(state => state.socialMedia.socialMediaTranslations);

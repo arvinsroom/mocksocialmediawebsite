@@ -5,6 +5,7 @@ import Text from './Text';
 import { Avatar } from "@material-ui/core";
 import { selectSinglePost } from '../../../../selectors/socialMedia';
 import { selectSocialMediaAuthor } from '../../../../selectors/socialMediaAuthors';
+import DynamicMediaProfile from './DynamicMediaProfile';
 
 const Share = ({ id }) => {
   const parentSharedPost = useSelector(state => selectSinglePost(state, id));
@@ -17,10 +18,13 @@ const Share = ({ id }) => {
       setRenderSharePost(
         <div className="post">
           <div className="postTop">
-            <Avatar
-              src={parentSharedPost.userPost ? (userRegisterData['PROFILEPHOTO'] || "") : ""}
-              className="postTopAvatar"
-            />
+            {
+              parentSharedPost.attachedAuthorPicture ? <DynamicMediaProfile attachedMedia={parentSharedPost.attachedAuthorPicture} /> :
+                <Avatar
+                  src={parentSharedPost.userPost ? (userRegisterData['PROFILEPHOTO'] || "") : ""}
+                  className="postTopAvatar"
+                />
+            }
             <div className="postTopInfo">
             <h3>{parentSharedPost.userPost ? (userRegisterData['USERNAME'] || "") : 
               (singleAuthor?.authorName || "")

@@ -1,5 +1,5 @@
 import db from "../clients/database-client";
-import { checkIfValidAndNotEmptyObj } from "../utils";
+import { checkIfValidAndNotEmptyObj, shuffle, getNumberOrZero } from "../utils";
 const UserPostAction = db.UserPostAction;
 const UserPost = db.UserPost;
 const Media = db.Media;
@@ -111,7 +111,7 @@ const createNewPost = async (req, res, next) => {
       });
       return;
     }
-    const { postMessage, parentPostId, pageId, type } = postObj;
+    const { postMessage, parentPostId, pageId, type, isReplyTo, quoteTweetTo } = postObj;
     if (!pageId) {
       res.status(400).send({
         message: "Please provide a valid pageId!"
@@ -131,6 +131,8 @@ const createNewPost = async (req, res, next) => {
       postMessage: postMessage || "",
       pageId: pageId,
       type,
+      isReplyTo: isReplyTo || null,
+      quoteTweetTo: quoteTweetTo || null,
       parentPostId: parentPostId || null
     };
     const data = await UserPost.create(post, { transaction, logging: false });
@@ -158,6 +160,8 @@ const createNewPost = async (req, res, next) => {
         type: data.type,
         postMessage: data.postMessage,
         parentPostId: data.parentPostId,
+        isReplyTo: data.isReplyTo,
+        quoteTweetTo: data.quoteTweetTo,
       }
     });
   } catch (error) {
@@ -195,32 +199,108 @@ const getFacebookPostIds = async (req, res, next) => {
     };
 
     transaction = await db.sequelize.transaction();
+    // if (order === 'RANDOM') {
+    //   data = await UserPost.findAndCountAll({
+    //     where: whereClause,
+    //     order: db.sequelize.literal('rand()'),
+    //     attributes: ['adminPostId', '_id']
+    //   }, { transaction });
+    // } else if (order === 'DESC') {
+    //   data = await UserPost.findAndCountAll({
+    //     where: whereClause,
+    //     order: [
+    //       ['adminPostId', 'DESC']
+    //     ],
+    //     attributes: ['adminPostId', '_id']
+    //   }, { transaction });
+    // } else {
+    //   // keep default as ASC or any other fallback
+    //   data = await UserPost.findAndCountAll({
+    //     where: whereClause,
+    //     order: [
+    //       ['adminPostId', 'ASC']
+    //     ],
+    //     attributes: ['adminPostId', '_id']
+    //   }, { transaction });
+    // }
+    data = await UserPost.findAndCountAll({
+      where: whereClause,
+      attributes: ['adminPostId', '_id', 'isReplyTo', 'isReplyToOrder']
+    }, { transaction });
+    // need to create a temp object which will fetch all the posts with postId
+    const adminPostIds = {};
+    const adminPostUUIDs = {};
+    // get only the main posts which have no replies
+    data.rows.forEach(row => {
+      if (row.isReplyTo === null) {
+        adminPostIds[row.adminPostId] = {
+          replies: [],
+          _id: row._id
+        }
+        adminPostUUIDs[row._id] = row.adminPostId;
+      }
+    });
+
+    // we iterate over all the array again
+    // and try to associate the replies to there correct parent
+    // if not present we want to skip
+    data.rows.forEach(row => {
+      // check if replyTo is not null
+      if (row.isReplyTo !== null) {
+        // check if assiciated key is present in adminPostIds object
+        if (row.isReplyTo in adminPostUUIDs) {
+          adminPostIds[adminPostUUIDs[row.isReplyTo]].replies.push({
+            _id: row._id,
+            order: getNumberOrZero(row.isReplyToOrder),
+            adminPostId: row.adminPostId
+          });
+        }
+      }
+    });
+
+    let adminPostIdsSorted = [];
+    // sort the adminPostIds according to desired values i.e. input order
     if (order === 'RANDOM') {
-      data = await UserPost.findAndCountAll({
-        where: whereClause,
-        order: db.sequelize.literal('rand()'),
-        attributes: ['adminPostId', '_id']
-      }, { transaction });
+      adminPostIdsSorted = shuffle(Object.keys(adminPostIds))
+      .reduce((accumulator, key) => {
+        accumulator.push({
+          [key]: adminPostIds[key]
+        });
+        return accumulator;
+      }, []);
     } else if (order === 'DESC') {
-      data = await UserPost.findAndCountAll({
-        where: whereClause,
-        order: [
-          ['adminPostId', 'DESC']
-        ],
-        attributes: ['adminPostId', '_id']
-      }, { transaction });
+      adminPostIdsSorted = Object.keys(adminPostIds)
+      .sort((a, b) => (getNumberOrZero(a) > getNumberOrZero(b) ? -1 : 1))
+      .reduce((accumulator, key) => {
+        accumulator.push({
+          [key]: adminPostIds[key]
+        });
+        return accumulator;
+      }, []);
     } else {
-      // keep default as ASC or any other fallback
-      data = await UserPost.findAndCountAll({
-        where: whereClause,
-        order: [
-          ['adminPostId', 'ASC']
-        ],
-        attributes: ['adminPostId', '_id']
-      }, { transaction });
+      adminPostIdsSorted = Object.keys(adminPostIds)
+      .sort((a, b) => (getNumberOrZero(a) < getNumberOrZero(b) ? -1 : 1))
+      .reduce((accumulator, key) => {
+        accumulator.push({
+          [key]: adminPostIds[key]
+        });
+        return accumulator;
+      }, []);
     }
+
+    // lastly need to sort all the replies to
+    adminPostIdsSorted.forEach((item) => {
+      for(const [key, value] of Object.entries(item)) {
+        item[key].replies.sort(
+          (a, b) => a.order - b.order
+        );
+      }
+    });
+
+    // replies are also sorted
     const postIds = [];
-    if (data.count > 0) {
+    // finally form the adminPostId array
+    if (adminPostIdsSorted.length > 0) {
       // fetch the old object, if it exist for that user
       const prevGlobalTrackingObj = await UserGlobalTracking.findOne({
         where: {
@@ -236,9 +316,26 @@ const getFacebookPostIds = async (req, res, next) => {
       }
       parsedMetaData['facebookPostsOrderAdminIds'] = [];
       // fetch the renderering order and store that in database, for post tracking
-      data.rows.forEach(row => {
-        parsedMetaData['facebookPostsOrderAdminIds'].push(row.adminPostId);
-        postIds.push(row._id);
+      // let temp = [];
+      // data.rows.forEach(row => {
+      //   // parsedMetaData['facebookPostsOrderAdminIds'].push(row.adminPostId);
+      //   temp.push(row._id);
+      // });
+
+      // console.log('temptemp: ', temp);
+
+      adminPostIdsSorted.forEach((item) => {
+        for(const [key, value] of Object.entries(item)) {
+          if (item[key]._id) postIds.push(item[key]._id);
+          parsedMetaData['facebookPostsOrderAdminIds'].push(key);
+          // also push all the reply id
+          item[key].replies.forEach((reply) => {
+            if (reply._id) {
+              postIds.push(reply._id);
+              parsedMetaData['facebookPostsOrderAdminIds'].push(reply.adminPostId);
+            }
+          });
+        }
       });
 
       // stringify again the metadata object and upsert it
@@ -321,11 +418,21 @@ const getFacebookPostWithDetails = async (req, res, next) => {
 
     console.log(`Fetching posts with order perserved: ${postIds}.`)
 
-    await transaction.commit();
-    res.send({
-      postDetails: data,
-    });
-
+    const getAuthorMedia = async () => {
+      for (const item of data) {
+        const result = await Media.findOne({
+          where: {
+            authorId: item.dataValues.authorId
+          }
+        });
+        item.dataValues.attachedAuthorPicture = result;
+      }
+      await transaction.commit();
+      res.send({
+        postDetails: data,
+      });
+    };
+    await getAuthorMedia();
   } catch (error) {
     console.log(error.message);
     if (transaction) await transaction.rollback();
@@ -451,6 +558,27 @@ const updatePost = async (req, res, next) => {
   }
 };
 
+const createNewReply = async (obj) => {
+  let transaction;
+  try {
+    
+    transaction = await db.sequelize.transaction();
+    // create post
+    let post = {
+      postMessage: obj.postMessage || "",
+      pageId: obj.pageId,
+      type: obj.type,
+      parentPostId: obj.parentPostId || null
+    };
+    await UserPost.create(obj, { transaction, logging: true });
+    await transaction.commit();
+  } catch (error) {
+    console.log("Error in createNewReply function");
+    // if we reach here, there were some errors thrown, therefore rollback the transaction
+    if (transaction) await transaction.rollback();
+  }
+};
+
 
 export default {
   createAction,
@@ -459,5 +587,6 @@ export default {
   getFacebookPostWithDetails,
   getFacebookFakeActionPosts,
   deleteAction,
-  updatePost
+  updatePost,
+  createNewReply
 };

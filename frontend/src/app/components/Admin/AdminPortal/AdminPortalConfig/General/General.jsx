@@ -1,6 +1,7 @@
 import MediaPosts from './MediaPost/MediaPosts';
 import Language from './Language/Language';
 import Upload from './Upload/Upload';
+import UploadAuthors from './UploadAuthors/UploadAuthors';
 
 import { Redirect } from 'react-router-dom';
 import { useSelector } from "react-redux";
@@ -26,8 +27,13 @@ const General = () => {
     </Container>
     <br />
     <Container component="main" maxWidth="lg" className={classes.card}>
-      <h2>Step 3 - Upload associated media</h2>
+      <h2>Step 2 - Upload associated media</h2>
       <Upload templateId={templateId}/>
+    </Container>
+    <br />
+    <Container component="main" maxWidth="lg" className={classes.card}>
+      <h2>Step 3 - Upload associated authors media</h2>
+      <UploadAuthors templateId={templateId}/>
     </Container>
     <br />
     <Container component="main" maxWidth="lg" className={classes.card}>

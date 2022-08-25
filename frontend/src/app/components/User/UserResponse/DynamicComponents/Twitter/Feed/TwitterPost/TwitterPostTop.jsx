@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
-import { Avatar } from '@material-ui/core';
+import { useSelector, useDispatch } from "react-redux";
+import { Avatar, Button, Menu, MenuItem } from '@material-ui/core';
 import FavoriteIcon from "@material-ui/icons/Favorite";
 import VerifiedUserIcon from '@material-ui/icons/VerifiedUser';
 import ChatBubbleOutlineIcon from "@material-ui/icons/ChatBubbleOutline";
@@ -8,19 +8,33 @@ import ReplyTo from "../../../../../../Common/UserCommon/SocialMediaPostType/Rep
 import { TW_TRANSLATIONS_DEFAULT } from '../../../../../../../constants';
 import { parseNumber } from '../../../../../../../utils';
 import { trackLinkClick } from '../../../../../../../services/user-tracking-service';
-import { selectSinglePost } from '../../../../../../../selectors/socialMedia';
+import { selectSinglePost, selectPostsMetadata } from '../../../../../../../selectors/socialMedia';
 import { selectSocialMediaAuthor } from '../../../../../../../selectors/socialMediaAuthors';
-import DynamicMedia from '../../../../../../Common/UserCommon/SocialMediaPostType/DynamicMedia';
 import Text from '../../../../../../Common/UserCommon/SocialMediaPostType/Text';
+import DynamicMedia from '../../../../../../Common/UserCommon/SocialMediaPostType/DynamicMedia';
+import DynamicMediaProfile from '../../../../../../Common/UserCommon/SocialMediaPostType/DynamicMediaProfile';
+import { FlagOutlined } from '@material-ui/icons/';
+import MoreHorizIcon from '@material-ui/icons/MoreHoriz';
+import { reportPost, unreportPost } from '../../../../../../../actions/socialMedia';
+
 import "./TwitterPost.css";
+import QuoteTweet from "../QuoteTweet/QuoteTweet";
 
 const TwitterPostTop = ({ id }) => {
   const singlePost = useSelector(state => selectSinglePost(state, id));
-  // selector for authors data
   const socialMediaTranslations = useSelector(state => state.socialMedia.socialMediaTranslations);
-  const singleAuthor = useSelector(state => selectSocialMediaAuthor(state, singlePost.authorId));
+  const singleAuthor = singlePost?.authorId ? useSelector(state => selectSocialMediaAuthor(state, singlePost.authorId)) : null;
   const userRegisterData = useSelector(state => state.userRegister.metaData);
   const [renderSinglePost, setRenderSinglePost] = useState(null);
+  const [anchorEl, setAnchorEl] = useState(null);
+  const [quoteTweetPost, setQuoteTweetPost] = useState(null);
+
+  const postMetadata = useSelector(state => selectPostsMetadata(state, id));
+  const dispatch = useDispatch();
+
+  //states for report functionality
+  const [reportText, setReportText] = useState("Report");
+  const [reportIconColor, setReportIconColor] = useState(null);
 
   function storeLinkClick() {
     const track = {
@@ -29,6 +43,26 @@ const TwitterPostTop = ({ id }) => {
     };
     trackLinkClick({ trackObj: track });
   }
+
+  //handle on report click
+  //first we check if it is reported already, if so we unreport it
+  //otherwise we report it 
+  const handleToggleReport = () => {
+    if (postMetadata.reportId) {
+      dispatch(unreportPost(postMetadata.reportId, id))
+      setReportText("Report")
+      setReportIconColor(null)
+    } else {
+      const data = {
+        action: 'REPORT',
+        comment: null,
+        userPostId: id,
+      };
+      dispatch(reportPost(data, id));
+      setReportText("Reported")
+      setReportIconColor("#DF5F5F")
+    }
+  };
 
   function formLikedOrRetweetStr(by, ships, overflow, likeOrRetweet) {
     let relationships = [...ships];
@@ -66,6 +100,15 @@ const TwitterPostTop = ({ id }) => {
     }
   }
 
+  const handleClick = (e) => {
+    e.preventDefault();
+    setAnchorEl(e.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
   // if we more that 2 name and also overflow property then show other...???
   function getLikedOrRetweetedBy() {
     if (!userRegisterData.RELATIONSHIP || userRegisterData.RELATIONSHIP.length < 2) return null;
@@ -99,22 +142,26 @@ const TwitterPostTop = ({ id }) => {
 
           {singlePost.type === 'RETWEET' ? 
             <TwitterPostTop id={singlePost.parentPostId} /> :
-            <div className="twitterPostAvatar">
-              <Avatar
-                src={singlePost.userPost ? (userRegisterData['PROFILEPHOTO'] || "") : ""}
-                className="postTopAvatar"
-              />
+            <div>
+              <div className="twitterPostAvatar">
+                {
+                  singlePost.attachedAuthorPicture ? <DynamicMediaProfile attachedMedia={singlePost.attachedAuthorPicture} /> :
+                    <Avatar
+                      src={singlePost.userPost ? (userRegisterData['PROFILEPHOTO'] || "") : ""}
+                      className="postTopAvatar"
+                    />
+                }
+              </div>
+              {/* to show a line in the left side of a post to indicate that is a thread, not being used at the moment */}
+              {/* {displayLine && <div className="vertical-line"></div>} */}
             </div>
           }
 
           <div className="twitterPostBody">
-          {/* {likedOrRetweetComp ? 
-            <div className="likedOrRetweetComp">
-              
-            </div>  : null} */}
             {singlePost.type === 'RETWEET' ? null :
-              <div className="twitterPostHeaderText">
-                <h3>
+              <>
+              <div className="twitterPostHeaderMain">
+                <h3 className="twitterPostHeaderInfo">
                   {/* username from registration page */}
                   {singlePost.userPost ? (userRegisterData['USERNAME'] || "") : 
                     singleAuthor?.authorName || ""
@@ -128,15 +175,38 @@ const TwitterPostTop = ({ id }) => {
                       singleAuthor?.handle || ""
                     }
                     {" "}
-                    {singlePost.type === 'REPLYTO' ? "2s" : singlePost.datePosted || ""}
+                    {singlePost.isReplyTo !== null && singlePost.userPost === true ? "2s" : singlePost.datePosted || ""}
                   </span>
                 </h3>
-              </div>
-            }
 
-              {/* for replyTo add the text for the parent post handle */}
-              {singlePost.type === 'REPLYTO' ?
-                <ReplyTo id={singlePost.parentPostId} />
+                {/* <Button variant="outlined" component="label" className="tweetBoxIcons" onClick={handleClick}>
+                  <RepeatOutlinedIcon fontSize="small" />
+                </Button> */}
+
+                <div className="twitterPostHeaderThreeDots">
+                  <Button onClick={handleClick}>
+                    <MoreHorizIcon />
+                  </Button>
+                </div>
+              </div>
+              <Menu
+                  id="simple-menu"
+                  anchorEl={anchorEl}
+                  keepMounted
+                  open={Boolean(anchorEl)}
+                  onClose={handleClose}
+                >
+                  <MenuItem disabled={singlePost.userPost}>
+                    <div className="report-container-tw" onClick={handleToggleReport}>
+                      <FlagOutlined fontSize="small" style={{ color: reportIconColor, transform: "scaleX(-1)" }} />
+                      <p className="defaultText report-text-tw">{reportText}</p>
+                    </div>
+                  </MenuItem>
+                </Menu>
+              </>
+            }
+              {singlePost.isReplyTo !== null && singlePost.userPost === true ?
+                <ReplyTo id={singlePost.isReplyTo} />
               : null}
 
               {singlePost.postMessage &&
@@ -146,8 +216,7 @@ const TwitterPostTop = ({ id }) => {
               }
 
               <div className="twitterPostMediaBox">
-                {(singlePost.type === 'PHOTO' || singlePost.type === 'VIDEO' ||
-                  singlePost.type === 'REPLYTO' || singlePost.type === 'QUOTETWEET') &&
+                {(singlePost.type === 'PHOTO' || singlePost.type === 'VIDEO') &&
                   <DynamicMedia attachedMedia={singlePost.attachedMedia[0]} />
                 }
 
@@ -169,10 +238,8 @@ const TwitterPostTop = ({ id }) => {
                   </a>
                   : null}
 
-                {singlePost.type === 'QUOTETWEET' ?
-                    <div className="sharePostPreview">
-                      <TwitterPostTop id={singlePost.parentPostId} />
-                    </div>
+                {singlePost.quoteTweetTo ?
+                      <QuoteTweet id={singlePost.quoteTweetTo} />
                   : null
                 }
                 </div>
@@ -182,11 +249,14 @@ const TwitterPostTop = ({ id }) => {
       }
     </>
   );
-}, [id]);
+}, [id, postMetadata, anchorEl]);
 
   return (
     <>
-      {renderSinglePost ? renderSinglePost : null}
+      < div>
+        {/* the padding left inline styling is to move the post to the left to indicate that is a reply to a reply */}
+        {renderSinglePost ? renderSinglePost : null}
+      </ div>
     </>
   );
 }

@@ -8,7 +8,11 @@ import SentimentSatisfiedOutlinedIcon from '@material-ui/icons/SentimentSatisfie
 import EventOutlinedIcon from '@material-ui/icons/EventOutlined';
 import GifIcon from '@material-ui/icons/Gif';
 import { USER_TRANSLATIONS_DEFAULT, TW_TRANSLATIONS_DEFAULT } from '../../../../../../../constants';
-import { createFbPost } from '../../../../../../../actions/socialMedia';
+import { 
+  createFbPost,
+  incrementRepliesCount,
+  incrementQuoteRetweetCount
+ } from '../../../../../../../actions/socialMedia';
 import { showInfoSnackbar, showSuccessSnackbar } from '../../../../../../../actions/snackbar';
 import ReplyToQuoteTweetPreview from '../../../../../../Common/UserCommon/SocialMediaPostType/replyToQuoteTweetPreview';
 import "./TweetBox.css";
@@ -19,6 +23,7 @@ const TweetBox = ({ placeholderText, replyTo, quoteTweet, handleCloseModal }) =>
   const userRegisterData = useSelector(state => state.userRegister.metaData);
   const [postMessage, setPostMessage] = useState("");
   const pageId = useSelector(state => state.socialMedia.pageId);
+  const [chatBubbleStyle, setChatBubbleStyle] = useState(false)
 
   const [avatar, setAvatar] = useState(null);
   const [videoAvatar, setVideoAvatar] = useState(null);
@@ -63,15 +68,26 @@ const TweetBox = ({ placeholderText, replyTo, quoteTweet, handleCloseModal }) =>
         const postObj = {
           postMessage: postMessage || null,
           type: type,
-          parentPostId: replyTo || quoteTweet,
           pageId,
         };
-        if (replyTo) postObj.type = 'REPLYTO';
-        else if (quoteTweet) postObj.type = 'QUOTETWEET';
+        // it is replyTo post
+        // set both isReplyTo and parentPostId to UUID of parentPost
+        if (replyTo !== null) {
+          postObj.parentPostId = replyTo;
+          postObj.isReplyTo = replyTo;
+        } else if (quoteTweet !== null) {
+          postObj.quoteTweetTo = quoteTweet;
+        }
         let formData = new FormData();
         formData.append("file", file || null);
         formData.append("postObj", JSON.stringify(postObj));
         await dispatch(createFbPost(formData));
+        // update the respective count
+        if (replyTo !== null) {
+          dispatch(incrementRepliesCount({ _id: replyTo }));
+        } else if (quoteTweet !== null) {
+          dispatch(incrementQuoteRetweetCount({ _id: quoteTweet }));
+        }
         await dispatch(showSuccessSnackbar(translations?.['posted!'] || USER_TRANSLATIONS_DEFAULT?.POSTED));
         // clear the file state
         handleDelete();
@@ -125,8 +141,8 @@ const TweetBox = ({ placeholderText, replyTo, quoteTweet, handleCloseModal }) =>
 
         <div className="tweetBoxBottom">
           <div className="newModalOption tweetBoxOtherButton">
-            <Button variant="outlined" component="label" className="tweetBoxIcons">
-              <PhotoLibraryIcon className="buttonTwitterColor" />
+            <Button variant="outlined" component="label" className="tweetBoxStyle"  disableRipple onMouseOver={() => setChatBubbleStyle(true)} onMouseLeave={() => setChatBubbleStyle(false)}>
+              <PhotoLibraryIcon fontSize="small" className={chatBubbleStyle ? 'tweetBoxAllIcon twChatBubbleHover' : 'twBlue tweetBoxAllIcon'} />
               <input
                 type="file"
                 hidden
@@ -137,23 +153,30 @@ const TweetBox = ({ placeholderText, replyTo, quoteTweet, handleCloseModal }) =>
             </Button>
 
             <div className="newModalOption">
-              <Button variant="outlined" component="label" className="tweetBoxIcons">
-                <GifIcon className="buttonTwitterColor" />
+              <Button variant="outlined" component="label" className="tweetBoxIcons" >
+                <GifIcon fontSize="small" className={chatBubbleStyle ? 'tweetBoxAllIcon twChatBubbleHover' : 'twBlue tweetBoxAllIcon'} />
+                <input
+                  type="file"
+                  hidden
+                  multiple={false}
+                  accept="image/gif"
+                  onChange={(e) => mediaHandleChange(e)}
+                />
+                </Button>
+            </div>
+            <div className="newModalOption">
+              <Button variant="outlined" component="label" className="tweetBoxIcons" >
+                <PollOutlinedIcon fontSize="small" className={chatBubbleStyle ? 'tweetBoxAllIcon twChatBubbleHover' : 'twBlue tweetBoxAllIcon'} />
+              </Button>
+            </div>
+            <div className="newModalOption">
+              <Button variant="outlined" component="label" className="tweetBoxIcons" >
+                <SentimentSatisfiedOutlinedIcon fontSize="small" className={chatBubbleStyle ? 'tweetBoxAllIcon twChatBubbleHover' : 'twBlue tweetBoxAllIcon'} />
               </Button>
             </div>
             <div className="newModalOption">
               <Button variant="outlined" component="label" className="tweetBoxIcons">
-                <PollOutlinedIcon className="buttonTwitterColor" />
-              </Button>
-            </div>
-            <div className="newModalOption">
-              <Button variant="outlined" component="label" className="tweetBoxIcons">
-                <SentimentSatisfiedOutlinedIcon className="buttonTwitterColor" />
-              </Button>
-            </div>
-            <div className="newModalOption">
-              <Button variant="outlined" component="label" className="tweetBoxIcons">
-                <EventOutlinedIcon className="buttonTwitterColor" />
+                <EventOutlinedIcon fontSize="small" className={chatBubbleStyle ? 'tweetBoxAllIcon twChatBubbleHover' : 'twBlue tweetBoxAllIcon'} />
               </Button>
             </div>
           </div>

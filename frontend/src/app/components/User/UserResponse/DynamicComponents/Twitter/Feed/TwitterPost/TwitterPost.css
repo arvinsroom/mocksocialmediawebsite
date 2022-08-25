@@ -1,11 +1,13 @@
 .twitterPost {
   display: flex;
   align-items: flex-start;
+  position: relative;
   /* border-bottom: 1px solid var(--twitter-background); */
 }
 
 .twitterPostAvatar {
   padding: 20px;
+  padding-right: 8px;
 }
 
 .twitterPostBody {
@@ -17,6 +19,10 @@
   border-radius: 20px;
 }
 
+.twitterPostHeaderText {
+  display: flex;
+  justify-content: space-between;
+}
 .twitterPostHeaderText > h3 {
   font-size: 15px;
   margin-bottom: 5px;
@@ -40,9 +46,8 @@
 
 .twitterPostFooter {
   display: flex;
-  justify-content: space-evenly;
-  padding-bottom: 15px;
-  padding-top: 15px;
+  justify-content: space-between;
+    padding: 0 8.2%;
 }
 
 @media only screen and (max-width: 750px) {
@@ -75,4 +80,113 @@
   justify-content: flex-start;
   flex-direction: row;
   margin-left: 74px;
+}
+
+/*Report feature Style*/
+.report-container-tw{
+  color: gray;
+  font-size: 10px;
+  border: none;
+  cursor: pointer;
+  text-align: center;
+  right: 0;
+  display: flex;
+  align-items: end;
+  padding: 15px 0 5px;
+}
+.report-text-tw{
+  margin: 0;
+  padding: 0 0 2px 5px;
+}
+
+.report-container-tw:hover{
+  color: rgb(82, 82, 82);
+}
+
+.twitterPostHeaderMain {
+  display: flex;
+}
+
+.twitterPostHeaderInfo {
+  font-size: 15px;
+  margin-bottom: 5px;
+}
+
+.twitterPostHeaderThreeDots {
+  align-self: flex-end;
+  margin-left: auto;
+}
+
+#simple-menu {
+  margin-top: 20px;
+}
+.vertical-line{
+  background-color: #d3d3d3ad;
+  position: absolute;
+  top: 72px;
+  bottom: 0;
+  width: 3px;
+  height: 100%;
+  left: 40px
+}
+
+.tweetBoxFavIconHover{
+  fill: #F91880 !important;
+  background-color: #f9188117;
+}
+
+.twRed{
+  color: #F91880;
+}
+
+.countText{
+  padding-top: 4px;
+}
+
+.commentCountText{
+  padding-top: 2px;
+}
+
+.twGreen {
+  color: #5eaa7b;
+}
+
+.twRetweetIcon:hover {
+  color: #5eaa7b;
+  background-color: #85e2a92a;
+}
+
+.twChatBubbleHover{
+  color: #50b7f5;
+  background-color: #50b6f51a;
+}
+
+.twBlue{
+  color: #50b7f5;
+}
+
+.twitterPostTopText p{
+  font-size: 15px;
+  color: #0F1419;
+  margin-top: 8px;
+}
+
+.tweetBoxAllIcon{
+  border-radius: 50% !important;
+  padding: 9px !important;
+  overflow: visible !important;
+}
+
+.tweetBoxOnHover:hover {
+  border-radius: 50% !important;
+  padding: 9px !important;
+  overflow: visible !important;
+  color: #50b7f5;
+}
+
+.tweetBoxNoHover {
+  color: #50b7f5;
+  border-radius: 50% !important;
+  padding: 9px !important;
+  overflow: visible !important;
 }

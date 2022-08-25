@@ -132,7 +132,7 @@ const normalizeUserPostActionsTracking = (globalActionsResponseData) => {
 };
 
 // manually form the array for all the possible actions and then add postId for that action
-const possiblePostActions = ['LIKE', 'LOVE', 'HAHA', 'WOW', 'SAD', 'ANGRY', 'COMMENT'];
+const possiblePostActions = ['LIKE', 'LOVE', 'HAHA', 'WOW', 'SAD', 'ANGRY', 'COMMENT', 'REPORT'];
 export const formulateUserPostActionsTracking = (postActionsResponseData) => {
   const eachRow = [];
   const normalizeUserPostActionsData = normalizeUserPostActionsTracking(postActionsResponseData);
@@ -162,7 +162,7 @@ const normalizeUserPosts = (responseUserPosts) => {
 
 const possiblePostTypes= ['LINK', 'VIDEO', 'PHOTO', 'TEXT', 'SHARE', 'RETWEET', 'QUOTETWEET', 'REPLYTO', 'UNDORETWEET'];
 export const formulateUserPosts = (userPosts) => {
-  // manually form the array for all the possible actions and then add postId for that action
+  // manually form the array for all the possible post types and then add postId for that action
   const normalizeUserPostsData = normalizeUserPosts(userPosts);
   const eachRow = [];
   for (let i = 0; i < possiblePostTypes.length; i++) {

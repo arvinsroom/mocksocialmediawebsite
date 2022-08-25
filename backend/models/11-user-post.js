@@ -8,7 +8,7 @@ export default (sequelize, DataTypes) => {
     },
     adminPostId: {
       allowNull: true,
-      type: DataTypes.INTEGER
+      type: DataTypes.STRING
     },
     type: {
       allowNull: true,
@@ -46,19 +46,37 @@ export default (sequelize, DataTypes) => {
         key: '_id',
         model: 'UserPostAuthor'
       },
-      type: DataTypes.INTEGER
+      type: DataTypes.STRING
     },
     isReplyTo: {
       allowNull: true,
-      type: DataTypes.INTEGER
+      type: DataTypes.INTEGER,
+      defaultValue: null
     },
     isReplyToOrder: {
       allowNull: true,
-      type: DataTypes.SMALLINT
+      type: DataTypes.STRING,
+      defaultValue: null
+    },
+    quoteTweetTo: {
+      allowNull: true,
+      type: DataTypes.STRING,
+      defaultValue: null
     },
     initLike: {
       allowNull: true,
-      type: DataTypes.INTEGER
+      type: DataTypes.INTEGER,
+      defaultValue: 0
+    },
+    initReply: {
+      allowNull: false,
+      type: DataTypes.INTEGER,
+      defaultValue: 0
+    },
+    initTweet: {
+      allowNull: false,
+      type: DataTypes.INTEGER,
+      defaultValue: 0
     },
     datePosted: {
       allowNull: true,
