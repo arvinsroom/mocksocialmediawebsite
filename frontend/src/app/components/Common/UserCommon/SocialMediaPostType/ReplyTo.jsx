@@ -6,7 +6,7 @@ import { selectSocialMediaAuthor } from '../../../../selectors/socialMediaAuthor
 const ReplyTo = ({ id }) => {
   const parentRepliedPost = useSelector(state => selectSinglePost(state, id));
   const [renderReplyPost, setRenderReplyPost] = useState(null);
-  const singleAuthor = useSelector(state => selectSocialMediaAuthor(state, parentRepliedPost.authorId));
+  const singleAuthor = parentRepliedPost?.authorId ? useSelector(state => selectSocialMediaAuthor(state, parentRepliedPost.authorId)) : null;
 
   useEffect(() => {
     if (parentRepliedPost) {

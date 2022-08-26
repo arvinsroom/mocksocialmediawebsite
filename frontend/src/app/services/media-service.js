@@ -16,3 +16,12 @@ export const uploadMultipleFiles = (filesFormData) => {
     }
   });
 }
+
+export const uploadMultipleAuthourFiles = (filesFormData) => {
+  return http.post("/media/upload/multiple/authors", filesFormData, {
+    headers: {
+      ...authHeader(),
+      "Content-Type": "multipart/form-data",
+    }
+  });
+}

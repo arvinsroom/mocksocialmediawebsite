@@ -27,7 +27,12 @@ export default (sequelize, DataTypes) => {
       },
       type: DataTypes.UUID,
       defaultValue: null
-    }
+    },
+    authorId: {
+      allowNull: true,
+      defaultValue: null,
+      type: DataTypes.STRING,
+    },
   }, {
 		freezeTableName: true, // model name equal to table name
     timestamps: false, // enable timestamps
@@ -37,7 +42,7 @@ export default (sequelize, DataTypes) => {
     Media.belongsTo(models.UserPost, {
       as: 'attachedMedia',
       foreignKey: 'userPostId'
-    })
+    });
   };
 
 	return Media;

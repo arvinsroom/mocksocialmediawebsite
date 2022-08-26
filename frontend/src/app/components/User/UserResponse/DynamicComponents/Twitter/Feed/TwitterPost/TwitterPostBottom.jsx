@@ -4,12 +4,20 @@ import { Button, Menu, MenuItem, Modal, Container } from '@material-ui/core';
 import ChatBubbleOutlineIcon from "@material-ui/icons/ChatBubbleOutline";
 import RepeatOutlinedIcon from '@material-ui/icons/RepeatOutlined';
 import FavoriteBorderIcon from "@material-ui/icons/FavoriteBorder";
+import FavoriteBorder from "@material-ui/icons/Favorite";
 import PublishOutlinedIcon from '@material-ui/icons/PublishOutlined';
 import CreateOutlinedIcon from '@material-ui/icons/CreateOutlined';
 import ClearIcon from '@material-ui/icons/Clear';
 import TweetBox from '../TweetBox/TweetBox';
 import { showSuccessSnackbar } from '../../../../../../../actions/snackbar';
-import { likeFbPost, unlikeFbPost, createFbPost, updatePost } from '../../../../../../../actions/socialMedia';
+import { 
+  likeFbPost,
+  unlikeFbPost,
+  createFbPost,
+  updatePost,
+  incrementQuoteRetweetCount,
+  decrementQuoteRetweetCount
+ } from '../../../../../../../actions/socialMedia';
 import { selectPostsMetadata } from '../../../../../../../selectors/socialMedia';
 import { USER_TRANSLATIONS_DEFAULT, TW_TRANSLATIONS_DEFAULT } from '../../../../../../../constants';
 import "./TwitterPost.css";
@@ -23,6 +31,13 @@ const TwitterPostBottom = ({ id }) => {
   const [modalOpen , setModalOpen] = useState(false);
   const pageId = useSelector(state => state.socialMedia.pageId);
   const dispatch = useDispatch();
+
+  //icons style state
+
+  const [chatBubbleStyle, setChatBubbleStyle] = useState(false)
+  const [favIconStyle, setFavIconStyle] = useState(false)
+  const [repeatStyle, setRepeatStyle] = useState(false)
+
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -57,14 +72,16 @@ const TwitterPostBottom = ({ id }) => {
     formData.append("file", null);
     formData.append("postObj", JSON.stringify(postObj));
     await dispatch(createFbPost(formData));
+    dispatch(incrementQuoteRetweetCount({ _id: id }));
     await dispatch(showSuccessSnackbar(translations?.['posted!'] || USER_TRANSLATIONS_DEFAULT?.POSTED))
     // close the menu
     handleClose();
+    setRepeatStyle(true);
   };
 
   const handleUndoRetweet = async (e) => {
     e.preventDefault();
-    
+    dispatch(decrementQuoteRetweetCount({ _id: postMetadata.parentPostId }));
     await dispatch(updatePost({ type: 'UNDORETWEET', id }));
   };
 
@@ -83,18 +100,27 @@ const TwitterPostBottom = ({ id }) => {
   };
   
   return (
-    <>
+    // {postMetadata &&
+    postMetadata ?
+      <>
       <div className="twitterPostFooter addMarginInMobile">
-        <Button variant="outlined" component="label" className="tweetBoxIcons">
-          <ChatBubbleOutlineIcon fontSize="small" onClick={e => openModal(e, 'REPLY')} />
+        <Button variant="outlined" component="label" className="tweetBoxIcons" disableRipple onClick={e => openModal(e, 'REPLY')} onMouseOver={() => setChatBubbleStyle(true)} onMouseLeave={() => setChatBubbleStyle(false)}>
+          <ChatBubbleOutlineIcon fontSize="small" className={chatBubbleStyle ? 'tweetBoxAllIcon twChatBubbleHover' : 'tweetBoxAllIcon'} />
+          &nbsp; <span className={chatBubbleStyle ? 'twBlue commentCountText' : 'commentCountText'}>{postMetadata.initReply}</span>
         </Button>
 
-        <Button variant="outlined" component="label" className="tweetBoxIcons" onClick={handleClick}>
-          <RepeatOutlinedIcon fontSize="small" />
+        <Button variant="outlined" component="label" className="tweetBoxIcons" onClick={handleClick} disableRipple>
+          <RepeatOutlinedIcon fontSize="small" className='tweetBoxAllIcon twRetweetIcon' style={{ color: repeatStyle ? '#5eaa7b' : '' }} />
+          &nbsp; <span className={chatBubbleStyle ? 'twBlue commentCountText' : 'commentCountText'}>{postMetadata.initTweet}</span>
         </Button>
 
-        <Button variant="outlined" component="label" className="tweetBoxIcons" onClick={(e) => handleToggleLike(e)}>
-          <FavoriteBorderIcon fontSize="small" /> &nbsp; {postMetadata.actionId ? (postMetadata.initLike + 1).toString() : postMetadata.initLike.toString()}
+        <Button variant="outlined" component="label" disableRipple className="tweetBoxIcons" onClick={(e) => handleToggleLike(e)} onMouseOver={() => setFavIconStyle(true)} onMouseLeave={() => setFavIconStyle(false)}>
+          {
+            postMetadata.actionId ?
+              <FavoriteBorder fontSize="small" className='tweetBoxAllIcon twRed' /> :
+              <FavoriteBorderIcon fontSize="small" className={favIconStyle ? 'tweetBoxFavIconHover tweetBoxAllIcon' : 'tweetBoxAllIcon'} />
+          }
+          &nbsp; <span className={favIconStyle ? 'twRed countText' : 'countText'} style={postMetadata.actionId && { color: '#F91880' }}>{postMetadata.actionId ? (postMetadata.initLike + 1).toString() : postMetadata.initLike.toString()}</span>
         </Button>
 
         <Button variant="outlined" component="label" className="tweetBoxIcons">
@@ -145,6 +171,7 @@ const TwitterPostBottom = ({ id }) => {
                     placeholderText={socialMediaTranslations?.tweet_your_reply || TW_TRANSLATIONS_DEFAULT.TWEET_YOUR_REPLY}
                     replyTo={id}
                     quoteTweet={null}
+                    retweetParentId={postMetadata.type === "RETWEET" ? postMetadata.parentPostId : null}
                     handleCloseModal={handleCloseModal} />
                 </div> :
                 <div key={modalType}>
@@ -152,6 +179,7 @@ const TwitterPostBottom = ({ id }) => {
                     placeholderText={socialMediaTranslations?.add_a_comment || TW_TRANSLATIONS_DEFAULT.ADD_A_COMMENT}
                     replyTo={null}
                     quoteTweet={id}
+                    retweetParentId={postMetadata.type === "RETWEET" ? postMetadata.parentPostId : null}
                     handleCloseModal={handleCloseModal} />
                 </div>
               }
@@ -159,7 +187,8 @@ const TwitterPostBottom = ({ id }) => {
             </Container>
           }
         </Modal>}
-    </>
+      </>
+      : null
   );
 }
 

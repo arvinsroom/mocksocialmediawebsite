@@ -1,19 +1,28 @@
 import "./Post.css";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { trackLinkClick } from '../../../../../../../services/user-tracking-service';
-import { selectSinglePost } from '../../../../../../../selectors/socialMedia';
+import { selectSinglePost, selectPostsMetadata } from '../../../../../../../selectors/socialMedia';
 import { selectSocialMediaAuthor } from '../../../../../../../selectors/socialMediaAuthors';
-import DynamicMedia from '../../../../../../Common/UserCommon/SocialMediaPostType/DynamicMedia';
 import Text from '../../../../../../Common/UserCommon/SocialMediaPostType/Text';
 import { Avatar } from "@material-ui/core";
 import { useEffect, useState } from "react";
 import Share from '../../../../../../Common/UserCommon/SocialMediaPostType/Share';
+import DynamicMedia from '../../../../../../Common/UserCommon/SocialMediaPostType/DynamicMedia';
+import DynamicMediaProfile from '../../../../../../Common/UserCommon/SocialMediaPostType/DynamicMediaProfile';
+import { reportPost, unreportPost } from '../../../../../../../actions/socialMedia';
 import MoreHorizIcon from '@material-ui/icons/MoreHoriz';
+import { SmsFailedOutlined } from '@material-ui/icons/'
 
 const PostTop = ({ id }) => {
   const singlePost = useSelector(state => selectSinglePost(state, id));
   const singleAuthor = useSelector(state => selectSocialMediaAuthor(state, singlePost.authorId));
   const userRegisterData = useSelector(state => state.userRegister.metaData);
+
+  const postMetadata = useSelector(state => selectPostsMetadata(state, id));
+  const dispatch = useDispatch();
+  //states for report functionality
+  const [reportText, setReportText] = useState("Report")
+  const [reportIconColor, setReportIconColor] = useState(null)
 
   const [renderSinglePost, setRenderSinglePost] = useState(null);
   function storeLinkClick() {
@@ -23,16 +32,41 @@ const PostTop = ({ id }) => {
     };
     trackLinkClick({ trackObj: track });
   }
+
+  //handle on report click
+  //first we check if it reported already, if so we unreport it
+  //otherwise we report it 
+  const handleToggleReport = () => {
+    if (postMetadata.reportId) {
+      dispatch(unreportPost(postMetadata.reportId, id))
+      setReportText("Report")
+      setReportIconColor(null)
+    } else {
+      const data = {
+        action: 'REPORT',
+        comment: null,
+        userPostId: id,
+      };
+      dispatch(reportPost(data, id));
+      setReportText("Reported")
+      setReportIconColor("#DF5F5F")
+    }
+  };
+
   useEffect(() => {
     setRenderSinglePost(
       <>
         {singlePost &&
           <>
             <div className="postTop">
-              <Avatar
-                src={singlePost.userPost ? (userRegisterData['PROFILEPHOTO'] || "") : ""}
-                className="postTopAvatar"
-              />
+            {
+                //added the posibility to display an author profile image, if no image found, it display a user profile image, and if not found, it will display an mui avatar.
+                singlePost.attachedAuthorPicture ? <DynamicMediaProfile attachedMedia={singlePost.attachedAuthorPicture} /> :
+                  <Avatar
+                    src={singlePost.userPost ? (userRegisterData['PROFILEPHOTO'] || "") : ""}
+                    className="postTopAvatar"
+                  />
+              }
               <div className="postTopInfo">
                 <h3>{singlePost.userPost ? (userRegisterData['USERNAME'] || "") : 
                   singleAuthor?.authorName || ""
@@ -42,6 +76,10 @@ const PostTop = ({ id }) => {
               <div className="postTopThreeDots">
                 <MoreHorizIcon />
               </div>
+              {/* <div className="report-container" onClick={handleToggleReport}>
+                <SmsFailedOutlined fontSize="small" style={{ color: reportIconColor }} />
+                <p className="defaultText report-text">{reportText}</p>
+              </div> */}
             </div>
 
             <Text postMessage={singlePost.postMessage} link={singlePost.link} />
@@ -76,7 +114,7 @@ const PostTop = ({ id }) => {
           </>}
       </>
     );
-  }, [id])
+  }, [id, postMetadata])
 
   return (
     <>

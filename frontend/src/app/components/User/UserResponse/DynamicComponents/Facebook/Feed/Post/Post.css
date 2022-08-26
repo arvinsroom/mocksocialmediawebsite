@@ -256,6 +256,30 @@ a.link-preview .link-area .og-title {
   background-color: rgba(0, 0, 0, 0.05);
 }
 
+.report-container{
+  position: absolute;
+  color: gray;
+  font-size: 10px;
+  border: none;
+  cursor: pointer;
+  text-align: center;
+  right: 0;
+  display: flex;
+  align-items: center;
+  padding: 0 15px 0 20px;
+  width: 80px;
+  top: 20px;
+}
+
+.report-container:hover{
+background-color: rgba(0, 0, 0, 0.05);
+}
+
+.report-text{
+  margin-left: 8px;
+  margin-top: 10px;
+}
+
 .modalTopFont {
   font-family: 'Noto Sans', sans-serif;
   text-align: center;
