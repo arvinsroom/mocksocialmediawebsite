@@ -45,9 +45,11 @@ const MediaPosts = ({ templateId }) => {
           const ws = readedData.Sheets[wsname];
   
           /* Convert array to json*/
-          let dataParse = XLSX.utils.sheet_to_json(ws, {header:1});
-          // filter excel, here only checking rows
-          dataParse = dataParse.filter(arr => arr && arr.length > 0);
+          let dataParse = XLSX.utils.sheet_to_json(ws, { header:1, blankrows: false, defval: null, blankCell : true });
+          // filter excel, and get only expected rows
+          dataParse = dataParse.map(arr => {
+            return arr.splice(0, 20);
+          });
           /* Update state */
           if (sType === 'MEDIA') setMediaJSON(dataParse);
           else setAuthorJSON(dataParse); // sType === 'AUTHOR'

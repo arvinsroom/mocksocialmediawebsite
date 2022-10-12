@@ -108,7 +108,7 @@ const create = async (req, res, next) => {
     /*
       1) Try to push all the parent posts i.e. where isReplyTo === null.
       2) Update authors data from previous created authors (fetch using pageId) to match current 
-          current authors from post spreadsheet
+         current authors from post spreadsheet
       3) Update isReplyTo ID and parentPostID to actuall UUID from parent post.
       4) Update quoteTweetTo ID to actuall UUID from parent post. (NOT parentPost ID)
     */
@@ -149,7 +149,7 @@ const create = async (req, res, next) => {
       //     }
       //     result.push(obj);
       // }
-      if (mediaArrReplies[i].isReplyTo && mediaArrReplies[i].isReplyTo in mediaArrReplies) {
+      if (mediaArrReplies[i].isReplyTo && mediaArrReplies[i].isReplyTo in replyPostData) {
         result.push({
           ...mediaArrReplies[i],
           parentPostId: replyPostData[mediaArrReplies[i].isReplyTo] ? replyPostData[mediaArrReplies[i].isReplyTo] : null,
