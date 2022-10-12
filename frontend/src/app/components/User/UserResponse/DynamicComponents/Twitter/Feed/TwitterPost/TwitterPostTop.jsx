@@ -91,12 +91,21 @@ const TwitterPostTop = ({ id }) => {
       return null;
     } else if (valuesAvail.length === 1) {
       if (overflow) {
-        return `${valuesAvail[0]} and ${overflow} others ${likeOrRetweet}`
-      } else return `${valuesAvail[0]} ${likeOrRetweet}`
+        const nameBreak = valuesAvail[0].length > 57 ? valuesAvail[0].substr(0, 54) + "..." : valuesAvail[0];
+        return `${nameBreak} and ${overflow} others ${likeOrRetweet}`
+      } else {
+        const nameBreak = valuesAvail[0].length > 72 ? valuesAvail[0].substr(0, 67) + "..." : valuesAvail[0];
+        return `${nameBreak} ${likeOrRetweet}`
+      }
     } else {
       if (overflow) {
-        return `${valuesAvail[0]} and ${overflow} others ${likeOrRetweet}`
-      } else return `${valuesAvail[0]} and ${valuesAvail[1]} ${likeOrRetweet}`
+        const nameBreak = valuesAvail[0].length > 57 ? valuesAvail[0].substr(0, 54) + "..." : valuesAvail[0];
+        return `${nameBreak} and ${overflow} others ${likeOrRetweet}`
+      } else {
+        const nameBreak = valuesAvail[0].length > 33 ? valuesAvail[0].substr(0, 30) + "..." : valuesAvail[0];
+        const nameBreak2 = valuesAvail[1].length > 33 ? valuesAvail[1].substr(0, 30) + "..." : valuesAvail[1];
+        return `${nameBreak} and ${nameBreak2} ${likeOrRetweet}`
+      }
     }
   }
 
@@ -121,6 +130,18 @@ const TwitterPostTop = ({ id }) => {
     else if (retweetedBy.length > 0 || retweetedByOverflow) return formLikedOrRetweetStr(retweetedBy, userRegisterData.RELATIONSHIP, retweetedByOverflow, 'retweeted');
 
     return null;
+  }
+
+  function parseUserName() {
+    if (userRegisterData['USERNAME']) {
+      if (userRegisterData['USERNAME'].length > 32) {
+        return userRegisterData['USERNAME'].substr(0, 32) + "...";
+      } else {
+        return userRegisterData['USERNAME'];
+      }
+    } else {
+      return "";
+    }
   }
 
   useEffect(() => {
@@ -157,7 +178,7 @@ const TwitterPostTop = ({ id }) => {
                 <div className="twitterPostHeaderMain">
                   <h3 className="twitterPostHeaderInfo">
                     {/* username from registration page */}
-                    {singlePost.userPost ? (userRegisterData['USERNAME'] || "") : 
+                    {singlePost.userPost ? (parseUserName()) : 
                       singleAuthor?.authorName || ""
                     }
                     {" "}

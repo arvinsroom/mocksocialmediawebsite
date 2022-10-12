@@ -147,7 +147,7 @@ const Register = ({ data }) => {
     let value = e.target.value || "";
     let handleState = false;
     if (e.target.name === "HANDLE" && value.length > 0) {
-      if (!regex.test(value)) {
+      if (value.length > 15 || !regex.test(value)) {
         handleState = true;
         await setHandleValidation(false);
       } else await setHandleValidation(true);
@@ -160,7 +160,7 @@ const Register = ({ data }) => {
       };
       await setRegisterStateRes(newResState);
     } else {
-      dispatch(showErrorSnackbar("Handle should start with @ or nothing and only have A-Z, a-z, 0-9 and/or _"));
+      dispatch(showErrorSnackbar("Handle should start with @ or nothing and only have A-Z, a-z, 0-9 and/or _ with maximum 15 characters."));
     }
   };
 
