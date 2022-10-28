@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import "./DynamicMedia.css";
 
-const DynamicMedia = ({ attachedMedia }) => {
+const DynamicMedia = ({ attachedMedia, customCSS  }) => {
   // we only handle cases for image and videos
   const [mediaType, setMediaType] = useState(null);
   const [isPhoto, setIsPhoto] = useState(null);
@@ -46,8 +46,9 @@ const DynamicMedia = ({ attachedMedia }) => {
   return (
     <>
       {attachedMedia && <div className="postImage">
-        {isPhoto ? <img ref={imageRef} alt="" key={attachedMedia._id} /> :
-          <video ref={videoRef} controls alt="" key={attachedMedia._id}/>
+        {isPhoto ? 
+          <img ref={imageRef} alt="" className={`${customCSS}`} key={attachedMedia._id} /> :
+          <video ref={videoRef} controls alt="" className={`${customCSS}`} key={attachedMedia._id}/>
         }
         </div>
       }

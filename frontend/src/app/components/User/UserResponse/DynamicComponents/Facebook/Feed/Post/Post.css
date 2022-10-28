@@ -6,19 +6,13 @@
   width: 100%;
 } */
 
-.postTopAvatar {
-  margin-right: 10px
-}
-
 .postTopInfo > h3 {
   font-size: small;
-  font-family: 'Noto Sans', sans-serif;
 }
 
 .postTopInfo > p {
   font-size: x-small;
   color: gray;
-  font-family: 'Noto Sans', sans-serif;
 }
 
 .postTop {
@@ -38,7 +32,6 @@
   color: gray;
   cursor: pointer;
   align-items: stretch;
-  font-family: 'Noto Sans', sans-serif;
   font-size: 12px !important;
   margin-left: 8px;
   margin-right: 8px;
@@ -53,7 +46,6 @@
 
 .postOption > p {
   margin-left: 10px;
-  font-family: 'Noto Sans', sans-serif;
   font-size: 12px !important;
 }
 
@@ -89,33 +81,6 @@
   background-color: #eff2f5;
 }
 
-.newFeedInputArea {
-  border-style: none;
-  height: 100px;
-  width: 100%;
-  font-family: 'Noto Sans', sans-serif;
-  border: none;
-  overflow: auto;
-  outline: none;
-  -webkit-box-shadow: none;
-  -moz-box-shadow: none;
-  box-shadow: none;
-  resize: none;
-}
-
-.newFeedInputAreaShare {
-  border-style: none;
-  width: 100%;
-  font-family: 'Noto Sans', sans-serif;
-  border: none;
-  overflow: auto;
-  outline: none;
-  -webkit-box-shadow: none;
-  -moz-box-shadow: none;
-  box-shadow: none;
-  resize: none;
-}
-
 .createCommentInputText {
   flex: 1;
 }
@@ -137,7 +102,6 @@
   padding: 10px;
   margin: 3px 5px;
   font-size: 12px;
-  font-family: 'Noto Sans', sans-serif;
 }
 
 .postComment {
@@ -168,7 +132,6 @@ a.link-preview .link-area .og-title {
 }
 
 .og-title {
-  font-family: 'Noto Sans', sans-serif;
   color: #828282;
   font-size: 12px;
 }
@@ -176,12 +139,10 @@ a.link-preview .link-area .og-title {
 .fontFamily {
   color: black;
   font-size: 12px;
-  font-family: 'Noto Sans', sans-serif;
 }
 
 .og-description {
   text-overflow: ellipsis;
-  font-family: 'Noto Sans', sans-serif;
   color: black;
   font-size: 12px;
 }
@@ -281,7 +242,6 @@ background-color: rgba(0, 0, 0, 0.05);
 }
 
 .modalTopFont {
-  font-family: 'Noto Sans', sans-serif;
   text-align: center;
   font-size: 1.25rem;
   width: 90%;
@@ -333,7 +293,6 @@ background-color: rgba(0, 0, 0, 0.05);
 }
 
 .newModalWidth1 > p {
-  font-family: 'Noto Sans', sans-serif;
   font-size: 15px !important;
 }
 
@@ -359,7 +318,6 @@ background-color: rgba(0, 0, 0, 0.05);
   overflow: scroll;
   overflow-x: hidden;
   font-size: small;
-  font-family: 'Noto Sans', sans-serif;
 }
 
 .sharePostPreview {
@@ -367,7 +325,6 @@ background-color: rgba(0, 0, 0, 0.05);
   border: 1px solid lightgray;
   border-radius: 8px;
   font-size: small;
-  font-family: 'Noto Sans', sans-serif;
 }
 
 .reactionContainer {
@@ -375,19 +332,16 @@ background-color: rgba(0, 0, 0, 0.05);
   width: fit-content !important;
   justify-content: flex-start !important;
   font-size: small;
-  font-family: 'Noto Sans', sans-serif;
 
 }
 
 .reactionContainer > div {
   height: 36px;
   font-size: small;
-  font-family: 'Noto Sans', sans-serif;
 }
 
 .defaultText {
   /* margin: auto; */
-  font-family: 'Noto Sans', sans-serif;
   font-size: 12px !important;
 }
 
@@ -401,7 +355,6 @@ background-color: rgba(0, 0, 0, 0.05);
 
 .likeText {
   color: rgb(32, 120, 244);
-  font-family: 'Noto Sans', sans-serif;
   font-size: 12px !important;
 }
 
@@ -415,7 +368,6 @@ background-color: rgba(0, 0, 0, 0.05);
 
 .loveText {
   color: rgb(243, 62, 88);
-  font-family: 'Noto Sans', sans-serif;
   font-size: 12px !important;
 }
 
@@ -429,7 +381,6 @@ background-color: rgba(0, 0, 0, 0.05);
 
 .hahaText {
   color: rgb(247, 177, 37);
-  font-family: 'Noto Sans', sans-serif;
   font-size: 12px !important;
 }
 
@@ -443,7 +394,6 @@ background-color: rgba(0, 0, 0, 0.05);
 
 .wowText {
   color: rgb(247, 177, 37);
-  font-family: 'Noto Sans', sans-serif;
   font-size: 12px !important;
 }
 
@@ -457,7 +407,6 @@ background-color: rgba(0, 0, 0, 0.05);
 
 .sadText {
   color: rgb(247, 177, 37);
-  font-family: 'Noto Sans', sans-serif;
   font-size: 12px !important;
 }
 
@@ -471,7 +420,6 @@ background-color: rgba(0, 0, 0, 0.05);
 
 .angryText {
   color: rgb(233, 113, 15);
-  font-family: 'Noto Sans', sans-serif;
   font-size: 12px !important;
 }
 
@@ -482,7 +430,6 @@ background-color: rgba(0, 0, 0, 0.05);
 }
 
 .totalComments > p {
-  font-family: 'Noto Sans', sans-serif;
   font-size: 12px !important;
 }
 
@@ -493,7 +440,6 @@ background-color: rgba(0, 0, 0, 0.05);
   color: gray;
   cursor: pointer;
   align-items: stretch;
-  font-family: 'Noto Sans', sans-serif;
   font-size: 12px !important;
 }
 

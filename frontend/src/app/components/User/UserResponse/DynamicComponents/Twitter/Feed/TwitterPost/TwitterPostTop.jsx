@@ -1,21 +1,20 @@
 import { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { Avatar, Button, Menu, MenuItem } from '@material-ui/core';
+import { Avatar, Button, Menu, MenuItem, IconButton } from '@material-ui/core';
 import FavoriteIcon from "@material-ui/icons/Favorite";
-import VerifiedUserIcon from '@material-ui/icons/VerifiedUser';
 import ChatBubbleOutlineIcon from "@material-ui/icons/ChatBubbleOutline";
 import ReplyTo from "../../../../../../Common/UserCommon/SocialMediaPostType/ReplyTo";
 import { TW_TRANSLATIONS_DEFAULT } from '../../../../../../../constants';
 import { parseNumber } from '../../../../../../../utils';
 import { trackLinkClick } from '../../../../../../../services/user-tracking-service';
 import { selectSinglePost, selectPostsMetadata } from '../../../../../../../selectors/socialMedia';
-import { selectSocialMediaAuthor } from '../../../../../../../selectors/socialMediaAuthors';
 import Text from '../../../../../../Common/UserCommon/SocialMediaPostType/Text';
 import DynamicMedia from '../../../../../../Common/UserCommon/SocialMediaPostType/DynamicMedia';
 import DynamicMediaProfile from '../../../../../../Common/UserCommon/SocialMediaPostType/DynamicMediaProfile';
 import { FlagOutlined } from '@material-ui/icons/';
 import MoreHorizIcon from '@material-ui/icons/MoreHoriz';
 import { reportPost, unreportPost } from '../../../../../../../actions/socialMedia';
+import PostHeaderDisplay from "../../../../../../Common/UserCommon/SocialMediaPostType/PostHeaderDisplay/PostHeaderDisplay";
 
 import "./TwitterPost.css";
 import QuoteTweet from "../QuoteTweet/QuoteTweet";
@@ -23,7 +22,6 @@ import QuoteTweet from "../QuoteTweet/QuoteTweet";
 const TwitterPostTop = ({ id }) => {
   const singlePost = useSelector(state => selectSinglePost(state, id));
   const socialMediaTranslations = useSelector(state => state.socialMedia.socialMediaTranslations);
-  const singleAuthor = singlePost?.authorId ? useSelector(state => selectSocialMediaAuthor(state, singlePost.authorId)) : null;
   const userRegisterData = useSelector(state => state.userRegister.metaData);
   const [renderSinglePost, setRenderSinglePost] = useState(null);
   const [anchorEl, setAnchorEl] = useState(null);
@@ -132,18 +130,6 @@ const TwitterPostTop = ({ id }) => {
     return null;
   }
 
-  function parseUserName() {
-    if (userRegisterData['USERNAME']) {
-      if (userRegisterData['USERNAME'].length > 32) {
-        return userRegisterData['USERNAME'].substr(0, 32) + "...";
-      } else {
-        return userRegisterData['USERNAME'];
-      }
-    } else {
-      return "";
-    }
-  }
-
   useEffect(() => {
     if (singlePost) {
       const likedOrRetweetComp = getLikedOrRetweetedBy();
@@ -168,48 +154,31 @@ const TwitterPostTop = ({ id }) => {
                 singlePost.attachedAuthorPicture ? <DynamicMediaProfile attachedMedia={singlePost.attachedAuthorPicture} /> :
                   <Avatar
                     src={singlePost.userPost ? (userRegisterData['PROFILEPHOTO'] || "") : ""}
-                    className="postTopAvatar"
+                    className="twitterPostTopAvatar"
                   />
               }
             </div>
             <div className="twitterPostBody">
               {singlePost.type === 'RETWEET' ? null :
                 <>
-                <div className="twitterPostHeaderMain">
-                  <h3 className="twitterPostHeaderInfo">
-                    {/* username from registration page */}
-                    {singlePost.userPost ? (parseUserName()) : 
-                      singleAuthor?.authorName || ""
-                    }
-                    {" "}
-                    <span className="twitterPostHeaderSpecial">
-                      {singleAuthor?.authorVerified ? <VerifiedUserIcon className="twitterPostBadge" /> : null}
-                      {" "}
-                      {/* twitter handle from registration page */}
-                      {singlePost.userPost ? (userRegisterData['HANDLE'] || "") : 
-                        singleAuthor?.handle || ""
-                      }
-                      {" "}
-                      {singlePost.isReplyTo !== null && singlePost.userPost === true ? "2s" : singlePost.datePosted || ""}
-                    </span>
-                  </h3>
-
-                  {/* <Button variant="outlined" component="label" className="tweetBoxIcons" onClick={handleClick}>
-                    <RepeatOutlinedIcon fontSize="small" />
-                  </Button> */}
-
-                  <div className="twitterPostHeaderThreeDots">
-                    <Button onClick={handleClick}>
+                  <div className="twitterPostHeaderMain">
+                    <PostHeaderDisplay id={id} />
+                    <div className="twitterPostHeaderThreeDots">
+                      <IconButton 
+                        component="label" 
+                        className="tweetTopHeaderDots"
+                        onClick={handleClick}
+                      >
                       <MoreHorizIcon />
-                    </Button>
+                      </IconButton>
+                    </div>
                   </div>
-                </div>
                 <Menu
-                    id="simple-menu"
-                    anchorEl={anchorEl}
-                    keepMounted
-                    open={Boolean(anchorEl)}
-                    onClose={handleClose}
+                  id="simple-menu"
+                  anchorEl={anchorEl}
+                  keepMounted
+                  open={Boolean(anchorEl)}
+                  onClose={handleClose}
                   >
                     <MenuItem disabled={singlePost.userPost}>
                       <div className="report-container-tw" onClick={handleToggleReport}>
@@ -226,29 +195,49 @@ const TwitterPostTop = ({ id }) => {
 
                 {singlePost.postMessage &&
                   <div className="twitterPostHeaderDescription">
-                    <Text postMessage={singlePost.postMessage} link={singlePost.link} customClassName="twitterPostTopText"/>
+                    <Text postMessage={singlePost.postMessage} link={singlePost.link} customClassName="twitterPostTopText" charLimit={280}/>
                   </div>
                 }
 
                 <div className="twitterPostMediaBox">
                   {(singlePost.type === 'PHOTO' || singlePost.type === 'VIDEO') &&
-                    <DynamicMedia attachedMedia={singlePost.attachedMedia[0]} />
+                    <DynamicMedia attachedMedia={singlePost.attachedMedia[0]} customCSS="twitterAllRoundBorder"/>
                   }
 
                   {singlePost.type === 'LINK' ?
-                    <a href={singlePost.link} className="link-preview" onClick={storeLinkClick} target="_blank" rel="noopener noreferrer">
-                      <div className="link-area">
-                        <div className="og-image">
-                          <DynamicMedia attachedMedia={singlePost.attachedMedia[0]} />
-                        </div>
-                        <div className="descriptions">
-                          <div className="og-title">
-                            {singlePost.linkTitle}
+                    <a href={singlePost.link} className="twitter-link-preview" onClick={storeLinkClick} target="_blank" rel="noopener noreferrer">
+                      <div className="twitter-link-area">
+                      {singlePost.attachedMedia[0] && (singlePost.linkTitle || singlePost.linkPreview) ?
+                        <>
+                          <DynamicMedia attachedMedia={singlePost.attachedMedia[0]} customCSS="twitterThreeSideBorder twitterCorrectMargin"/>
+                          <div className="twitterLinkThreeSideBorder twitterLinkCorrectMargin">
+                            <div className="twitter-og-title">
+                              {singlePost.linkTitle}
+                            </div>
+                            <div className="twitter-og-description">
+                              {singlePost.linkPreview}
+                            </div>
                           </div>
-                          <div className="og-description">
-                            {singlePost.linkPreview}
-                          </div>
-                        </div>
+                        </>
+                        :
+                        <>
+                          {singlePost.attachedMedia[0] ?
+                            <DynamicMedia attachedMedia={singlePost.attachedMedia[0]} customCSS="twitterAllRoundBorder" />
+                            :
+                            (singlePost.linkTitle || singlePost.linkPreview) ?
+                              <div className="twitterLinkAllRoundBorder">
+                                <div className="twitter-og-title">
+                                  {singlePost.linkTitle}
+                                </div>
+                                <div className="twitter-og-description">
+                                  {singlePost.linkPreview}
+                                </div>
+                              </div>
+                              :
+                              null
+                          }
+                        </>
+                      }
                       </div>
                     </a>
                     : null}
@@ -267,12 +256,10 @@ const TwitterPostTop = ({ id }) => {
   }, [id, postMetadata, anchorEl, singlePost]);
 
   return (
-    <>
-      < div>
-        {/* the padding left inline styling is to move the post to the left to indicate that is a reply to a reply */}
-        {renderSinglePost ? renderSinglePost : null}
-      </ div>
-    </>
+    <div>
+      {/* the padding left inline styling is to move the post to the left to indicate that is a reply to a reply */}
+      {renderSinglePost ? renderSinglePost : null}
+    </div>
   );
 }
 

@@ -1,41 +1,24 @@
 .twitterPost {
   display: flex;
-  align-items: flex-start;
-  position: relative;
-  /* border-bottom: 1px solid var(--twitter-background); */
 }
 
 .twitterPostAvatar {
-  padding: 20px;
-  padding-right: 8px;
+  margin-right: 12px;
+  flex-basis: 48px;
 }
 
 .twitterPostBody {
   flex: 1;
-  margin-right: 15px;
+  /* width: 82%; */
+  /* margin-right: 16px; */
 }
 
 .twitterPostBody > img {
   border-radius: 20px;
 }
 
-.twitterPostHeaderText {
-  display: flex;
-  justify-content: space-between;
-}
-.twitterPostHeaderText > h3 {
-  font-size: 15px;
-  margin-bottom: 5px;
-}
-
 .twitterPostHeaderDescription {
-  margin-bottom: 10px;
   font-size: 15px;
-}
-
-.twitterPostBadge {
-  font-size: 14px !important;
-  color: var(--twitter-color);
 }
 
 .twitterPostHeaderSpecial {
@@ -44,22 +27,11 @@
   color: gray;
 }
 
-.twitterPostFooter {
-  display: flex;
-  justify-content: space-between;
-    padding: 0 8.2%;
-}
-
 @media only screen and (max-width: 750px) {
   .addMarginInMobile {
     margin-left: 20px;
   }
 }
-
-/* .twitterPostMediaBox {
-  border: 1px solid var(--twitter-background);
-  border-radius: 10px;
-} */
 
 .twitterRetweeted {
   margin-left: 60px;
@@ -103,17 +75,7 @@
   color: rgb(82, 82, 82);
 }
 
-.twitterPostHeaderMain {
-  display: flex;
-}
-
-.twitterPostHeaderInfo {
-  font-size: 15px;
-  margin-bottom: 5px;
-}
-
 .twitterPostHeaderThreeDots {
-  align-self: flex-end;
   margin-left: auto;
 }
 
@@ -130,58 +92,12 @@
   left: 40px
 }
 
-.tweetBoxFavIconHover{
-  fill: #F91880 !important;
-  background-color: #f9188117;
-}
-
-.twRed{
-  color: #F91880;
-}
-
-.countText{
-  padding-top: 4px;
-}
-
-.commentCountText{
-  padding-top: 2px;
-}
-
-.twGreen {
-  color: #5eaa7b;
-}
-
-.twRetweetIcon:hover {
-  color: #5eaa7b;
-  background-color: #85e2a92a;
-}
-
-.twChatBubbleHover{
-  color: #50b7f5;
-  background-color: #50b6f51a;
-}
-
-.twBlue{
-  color: #50b7f5;
-}
-
+/* max-width set on the postcard is 506 with 12 px padding on each side add front and take 12 off again; 506-24-48+12 */
 .twitterPostTopText p{
   font-size: 15px;
   color: #0F1419;
   margin-top: 8px;
-}
-
-.tweetBoxAllIcon{
-  border-radius: 50% !important;
-  padding: 9px !important;
-  overflow: visible !important;
-}
-
-.tweetBoxOnHover:hover {
-  border-radius: 50% !important;
-  padding: 9px !important;
-  overflow: visible !important;
-  color: #50b7f5;
+  max-width: 446px;
 }
 
 .tweetBoxNoHover {
@@ -189,4 +105,140 @@
   border-radius: 50% !important;
   padding: 9px !important;
   overflow: visible !important;
+}
+
+.twitterPostBottomMain {
+  display: flex;
+  height: 21px;
+  margin-top: 12px;
+}
+
+.twitterPostBottomTop {
+  flex-basis: 48px;
+  margin-right: -5px;
+}
+
+.twitterPostHeaderMain {
+  display: flex;
+  align-items: center;
+}
+
+.twitterPostFooter {
+  display: flex;
+  align-items: center;
+  max-width: 425px;
+  width: 75%;
+  justify-content: space-between;
+}
+
+
+.tweetBoxAllIcon{
+  border-radius: 50% !important;
+  padding: 9px !important;
+  height: 1.25em;
+  width: 1.25em;
+  color: var(--twitter-grey);
+}
+
+.tweetBoxFavIconHover{
+  fill: var(--twitter-heart-color) !important;
+  color: var(--twitter-heart-color);
+  background-color: #f9188117;
+}
+
+.twRed{
+  color: var(--twitter-heart-color) !important;
+  fill: var(--twitter-heart-color) !important;
+}
+
+.twGreen {
+  color: var(--twitter-retweet-color) !important;
+}
+
+.twRetweetIconHover {
+  color: var(--twitter-retweet-color);
+  background-color: #85e2a92a;
+}
+
+.twChatBubbleHover{
+  color: var(--twitter-reply-color);
+  background-color: var(--twitter-hover-reply);
+}
+
+.twBlue{
+  color: var(--twitter-reply-color) !important;
+}
+
+.tweetBoxIcons {
+  border: none !important;
+  min-width: 0 !important;
+  border-radius: 50% !important;
+  /* height: 34.750px;
+  width: 34.750px; */
+}
+
+.tweetBoxIcons:hover{
+  background-color: transparent !important;
+}
+
+.tweetButtonIconShare:hover {
+  color: var(--twitter-share-color) !important;
+  background-color: var(--twitter-hover-reply) !important;
+}
+
+.twitterBottomTextProps {
+  color: var(--twitter-grey);
+  font-size: 13px;
+  /* padding-left: 12px; */
+}
+
+.tweetTopHeaderDots {
+  color: var(--twitter-grey);
+}
+
+.tweetTopHeaderDots > span > svg {
+  height: 15px;
+  width: 15px;
+}
+
+.tweetTopHeaderDots:hover {
+  color: rgb(29,155,240);
+  background-color: rgba(29,155,240,0.1) !important;
+}
+
+
+.twitter-link-preview {
+  text-decoration: none;
+}
+
+.twitterLinkAllRoundBorder {
+  border-radius: 16px;
+  border: 1px solid rgb(207,217,222);
+  padding: 12px;
+}
+
+.twitterLinkThreeSideBorder {
+  border-radius: 0 0 16px 16px;
+  border: 1px solid rgb(207,217,222);
+  padding: 12px;
+  /* border-left: 1px solid rgb(207,217,222);
+  border-right: 1px solid rgb(207,217,222); */
+}
+
+.twitter-og-title {
+  color: rgb(15,20,25);
+  font-size: 15px;
+}
+
+.twitter-og-description {
+  color: var(--twitter-grey);
+  font-size: 15px;
+  line-height: 20px;
+  max-height: 88px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.twitterLinkCorrectMargin {
+  margin-top: -5px;
 }

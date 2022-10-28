@@ -20,7 +20,7 @@ const replyToQuoteTweetPreview = ({ id }) => {
           <div className="postTop">
             <Avatar
               src={parentSharedPost.userPost ? (userRegisterData['PROFILEPHOTO'] || "") : ""}
-              className="postTopAvatar"
+              className="twitterPostTopAvatar"
             />
             <div className="postTopInfo">
             <h3>{
@@ -45,7 +45,7 @@ const replyToQuoteTweetPreview = ({ id }) => {
           <Text className="postMessage" postMessage={parentSharedPost.postMessage} link={parentSharedPost.link} />
 
           {(parentSharedPost.type === 'PHOTO' || parentSharedPost.type === 'VIDEO') &&
-            <DynamicMedia attachedMedia={parentSharedPost.attachedMedia[0]} />
+            <DynamicMedia attachedMedia={parentSharedPost.attachedMedia[0]} customCSS="twitterAllRoundBorder"/>
           }
 
           {parentSharedPost.type === 'LINK' ?

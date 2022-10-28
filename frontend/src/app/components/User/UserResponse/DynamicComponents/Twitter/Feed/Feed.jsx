@@ -87,14 +87,15 @@ const Feed = () => {
   // we add a lastPostRef so that when we reach near that ref i.e. post we fetch new posts
   return (
     <>
-      <div className={classes.feed}>
+      <div className="twitterFeedMain">
       {
         postToRender && postToRender.map((post, index) => {
           // first we save all the replies in an array 
           // note they are not rendered yet
           const replies = post.replies.map((reply, replyIndex) => {
               return (
-                <div key={reply._id} ref={post?.replies?.length === replyIndex + 1 ? lastPostRef : null} style={{ paddingLeft: "75px" }}>
+                <div key={reply._id} ref={post?.replies?.length === replyIndex + 1 ? lastPostRef : null} 
+                  className="twitterRepliesPost hoverEffect">
                   <TwitterPostTop id={reply._id} />
                   <TwitterPostBottom id={reply._id} />
                 </div>
@@ -102,7 +103,7 @@ const Feed = () => {
             });
             // show all the replies right here
             return (
-              <div key={post._id} ref={postToRender?.length === index + 1 ? lastPostRef : null} className={classes.post}>
+              <div key={post._id} ref={postToRender?.length === index + 1 ? lastPostRef : null} className="twitterPostCard hoverEffect">
                 <TwitterPostTop id={post._id} />
                 <TwitterPostBottom id={post._id} />
                 {replies}

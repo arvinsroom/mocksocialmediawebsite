@@ -16,7 +16,8 @@
 }
 
 .twitterSidebarOption > h2 {
-  font-weight: 800;
+  color: rgb(15,20,25);
+  font-weight: 400;
   font-size: 20px;
   margin-right: 20px;
 }

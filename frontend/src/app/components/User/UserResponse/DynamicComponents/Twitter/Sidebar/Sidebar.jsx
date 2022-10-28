@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useSelector } from "react-redux";
-import TwitterIcon from "@material-ui/icons/Twitter";
+// import TwitterIcon from "@material-ui/icons/Twitter";
 import SidebarOption from "./SidebarOption/SidebarOption";
 import HomeIcon from "@material-ui/icons/Home";
 import SearchIcon from "@material-ui/icons/Search";
@@ -11,7 +11,7 @@ import ListAltIcon from "@material-ui/icons/ListAlt";
 import PermIdentityIcon from "@material-ui/icons/PermIdentity";
 import ClearIcon from '@material-ui/icons/Clear';
 import MoreHorizIcon from "@material-ui/icons/MoreHoriz";
-import { Button, Modal, Container } from '@material-ui/core';
+import { Modal, Container } from '@material-ui/core';
 import TweetBox from '../Feed/TweetBox/TweetBox';
 import { TW_TRANSLATIONS_DEFAULT } from '../../../../../../constants';
 import "./Sidebar.css";
@@ -29,9 +29,7 @@ const Sidebar = () => {
   return (
     <>
     <div className="twitterSidebar">
-      <TwitterIcon className="twitterSidebarIcon"/>
-
-      <SidebarOption active Icon={HomeIcon} text={socialMediaTranslations?.home || TW_TRANSLATIONS_DEFAULT.HOME} />
+      <SidebarOption Icon={HomeIcon} text={socialMediaTranslations?.home || TW_TRANSLATIONS_DEFAULT.HOME} />
       <SidebarOption Icon={SearchIcon} text={socialMediaTranslations?.explore || TW_TRANSLATIONS_DEFAULT.EXPLORE} />
       <SidebarOption Icon={NotificationsNoneIcon} text={socialMediaTranslations?.notifications || TW_TRANSLATIONS_DEFAULT.NOTIFICATIONS} />
       <SidebarOption Icon={MailOutlineIcon} text={socialMediaTranslations?.messages || TW_TRANSLATIONS_DEFAULT.MESSAGES} />
@@ -40,13 +38,13 @@ const Sidebar = () => {
       <SidebarOption Icon={PermIdentityIcon} text={socialMediaTranslations?.profile || TW_TRANSLATIONS_DEFAULT.PROFILE} />
       <SidebarOption Icon={MoreHorizIcon} text={socialMediaTranslations?.more || TW_TRANSLATIONS_DEFAULT.MORE} />
 
-      <Button
+      <button
         variant="outlined"
         className="sidebarTweet"
         onClick={openModal}
       >
         {socialMediaTranslations?.tweet || TW_TRANSLATIONS_DEFAULT.TWEET}
-      </Button>
+      </button>
     </div>
     {modalOpen && 
       <Modal
