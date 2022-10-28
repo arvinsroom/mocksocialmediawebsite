@@ -15,14 +15,12 @@ a.link-preview .link-area .og-title {
 }
 
 .og-title {
-  font-family: 'Noto Sans', sans-serif;
   color: #828282;
   font-size: 12px;
 }
 
 .og-description {
   text-overflow: ellipsis;
-  font-family: 'Noto Sans', sans-serif;
   color: black;
   font-size: 12px;
 }

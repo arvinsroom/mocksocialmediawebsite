@@ -1,16 +1,54 @@
-body {
-  font-family: 'Noto Sans', sans-serif !important;
+body, html {
+  font-family: 'Libre Franklin', sans-serif;
   font-size: 16px !important;
-  background-color: #E5EBF0 !important;
+  /* background-color: #E5EBF0 !important; */
   margin: 0 !important;
   --twitter-color: #50b7f5;
   --twitter-background: #e6ecf0;
+  --twitter-hover-main: #e8f5fe;
+
+  --twitter-hover-reply: #50b6f51a;
+  --twitter-hover-retweet: #85e2a92a;
+  --twitter-hover-like: #f9188117;
+  --twitter-grey: rgb(83,100,113);
+
+  --twitter-heart-color: rgb(249,24,128);
+  --twitter-share-color: rgb(29,155,240);
+  --twitter-retweet-color: rgb(0,186,124);
+  --twitter-reply-color: rgb(29,155,240);
 }
 
-/* 
-.modalContainerPaper {
-  background-color: white;
-  box-shadow: 0px 5px 7px -7px rgba(0,0,0, 0.75);
-  padding: 8px;
-  border-radius: 8px;
-} */
+
+/* used by facebook only; */
+.textAreaContainer {
+  display: flex;
+  padding-top: 15px;
+  width: 100%;
+}
+
+.textArea {
+  font-family: 'Libre Franklin', sans-serif;
+  border-style: none;
+  width: 100%;
+  border: none;
+  outline: none;
+  -webkit-box-shadow: none;
+  -moz-box-shadow: none;
+  box-shadow: none;
+  display: block;
+  overflow: hidden;
+  resize: none;
+}
+
+/* Used for facebook to move the text towards right */
+.postTopAvatar {
+  margin-right: 10px
+}
+
+/* used on twitter to resize the avatar and media;
+no need to move text to right as we have a margin */
+.twitterPostTopAvatar {
+  height: 48px !important;
+  width: 48px !important;
+}
+

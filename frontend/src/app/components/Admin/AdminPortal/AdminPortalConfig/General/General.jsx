@@ -32,7 +32,7 @@ const General = () => {
     </Container>
     <br />
     <Container component="main" maxWidth="lg" className={classes.card}>
-      <h2>Step 3 - Upload associated authors media</h2>
+      <h2>Step 3 - Upload associated profile photos for authors</h2>
       <UploadAuthors templateId={templateId}/>
     </Container>
     <br />

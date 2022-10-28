@@ -6,7 +6,6 @@ import { Redirect, useHistory } from 'react-router-dom';
 import { getCurrentUTCTime }  from '../../../utils';
 import { trackPageMetaData } from '../../../services/user-tracking-service'
 import "./UserResponse.css";
-// import clsx from 'clsx';
 
 import InfoPage from './DynamicComponents/InfoPage/InfoPage';
 import Finish from './DynamicComponents/Finish/Finish';
@@ -34,8 +33,7 @@ const UserResponse = () => {
   const dispatch = useDispatch();
   const { isLoggedInUser, translations } = useSelector(state => state.userAuth);
   const { flow, active, finished } = useSelector(state => state.flowState);
-  const [isFacebook, setIsFacebook] = useState(false);
-  
+
   let history = useHistory();
 
   const updateFinishTimeAndLogout = async () => {
@@ -68,7 +66,6 @@ const UserResponse = () => {
     }
     else if (currentActive !== -1 && typeof Components[flow[currentActive]?.type] !== "undefined") {
       const pageType = flow[currentActive].type;
-      // if (pageType === 'FACEBOOK') setIsFacebook(true);
       return React.createElement(Components[pageType], {
         key: flow[currentActive]._id,
         data: flow[currentActive],
@@ -79,13 +76,10 @@ const UserResponse = () => {
         () => <div>This Flow component configurations have not been created yet.</div>);
     }
   };
-
   return (
-    // <Container component="main" maxWidth="md" className={clsx({
-    //   [classes.card]: true,
-    //   ['customCSS']: isFacebook
-    // })}>
-    <Container component="main" maxWidth="md" className={`${classes.card} customCSS`}>
+    <Container component="main" maxWidth="md"
+      className={flow[active]?.type === 'TWITTER' ? `${classes.card} twitterCSS` : `${classes.card}`}
+     >
       {block(active)}
     </Container>
   );

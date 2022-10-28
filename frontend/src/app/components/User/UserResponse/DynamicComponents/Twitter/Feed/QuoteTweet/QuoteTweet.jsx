@@ -10,6 +10,7 @@ import Text from '../../../../../../Common/UserCommon/SocialMediaPostType/Text';
 import DynamicMedia from '../../../../../../Common/UserCommon/SocialMediaPostType/DynamicMedia';
 import DynamicMediaProfile from '../../../../../../Common/UserCommon/SocialMediaPostType/DynamicMediaProfile';
 import { getFacebookPost } from '../../../../../../../actions/socialMedia';
+import PostHeaderDisplay from "../../../../../../Common/UserCommon/SocialMediaPostType/PostHeaderDisplay/PostHeaderDisplay";
 
 const QuoteTweet = ({ id }) => {
   const dispatch = useDispatch();
@@ -42,7 +43,7 @@ const QuoteTweet = ({ id }) => {
                   singlePost.attachedAuthorPicture ? <DynamicMediaProfile attachedMedia={singlePost.attachedAuthorPicture} /> :
                     <Avatar
                       src={singlePost.userPost ? (userRegisterData['PROFILEPHOTO'] || "") : ""}
-                      className="postTopAvatar"
+                      className="twitterPostTopAvatar"
                     />
                 }
               </div>
@@ -50,23 +51,7 @@ const QuoteTweet = ({ id }) => {
               <div className="twitterPostBody">
                   <>
                   <div className="twitterPostHeaderMain">
-                    <h3 className="twitterPostHeaderInfo">
-                      {/* username from registration page */}
-                      {singlePost.userPost ? (userRegisterData['USERNAME'] || "") : 
-                        singleAuthor?.authorName || ""
-                      }
-                      {" "}
-                      <span className="twitterPostHeaderSpecial">
-                        {singleAuthor?.authorVerified ? <VerifiedUserIcon className="twitterPostBadge" /> : null}
-                        {" "}
-                        {/* twitter handle from registration page */}
-                        {singlePost.userPost ? (userRegisterData['HANDLE'] || "") : 
-                          singleAuthor?.handle || ""
-                        }
-                        {" "}
-                        {singlePost.isReplyTo !== null && singlePost.userPost === true ? "2s" : singlePost.datePosted || ""}
-                      </span>
-                    </h3>
+                    <PostHeaderDisplay id={id} />
                   </div>
                   </>
 
@@ -77,13 +62,13 @@ const QuoteTweet = ({ id }) => {
 
                   {singlePost.postMessage &&
                     <div className="twitterPostHeaderDescription">
-                      <Text postMessage={singlePost.postMessage} link={singlePost.link} customClassName="twitterPostTopText"/>
+                      <Text postMessage={singlePost.postMessage} link={singlePost.link} customClassName="twitterPostTopText" charLimit={280}/>
                     </div>
                   }
 
                   <div className="twitterPostMediaBox">
                     {(singlePost.type === 'PHOTO' || singlePost.type === 'VIDEO') &&
-                      <DynamicMedia attachedMedia={singlePost.attachedMedia[0]} />
+                      <DynamicMedia attachedMedia={singlePost.attachedMedia[0]} customCSS="twitterAllRoundBorder" />
                     }
 
                     {singlePost.type === 'LINK' ?
