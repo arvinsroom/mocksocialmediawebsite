@@ -1,0 +1,50 @@
+
+.twitterQuoteTweetBorderBox {
+  margin-top: 12px;
+  border: 1px solid rgb(207,217,222);
+  border-radius: 15px;
+}
+
+
+/* @media only screen and (max-width: 506px) {
+  .twitterQuoteTweetBorderBoxPhone {
+    margin-left: -75px;
+  }
+} */
+
+
+.twitterPostQuoteTweet {
+  display: flex;
+  flex-direction: column;
+  padding-top: 12px;
+  padding-bottom: 12px;
+}
+
+.twitterPostAvatarQuoteTweet {
+  display: flex;
+  align-items: center;
+  padding-left: 12px;
+  padding-right: 12px;
+  height: 20px;
+}
+
+.twitterPostHeaderMainQuoteTweet {
+  margin-left: 15px;
+  display: flex;
+  align-items: center;
+}
+
+.twitterPostAvatarQuoteTweet > div > img {
+  height: 20px;
+  width: 20px;
+}
+
+.twitterPaddingLeftAndRight {
+  padding-left: 12px;
+  padding-right: 12px;
+}
+
+.twitterPostHeaderDescriptionQuoteTweet {
+  padding-left: 12px;
+  padding-right: 12px;
+}

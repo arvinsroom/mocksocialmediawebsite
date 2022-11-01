@@ -43,17 +43,25 @@ const PostHeaderDisplay = ({ id }) => {
           <span className="dynamicPostHeaderHandle">
             {singlePost.userPost ? 
             <div>
-              {userRegisterData['HANDLE'] || ""}
-              <span>&#183;</span>
+              {userRegisterData['HANDLE'] || null}
             </div> : 
             <div>
-              {singleAuthor?.handle  || ""}
-              <span>&#183;</span>
+              {singleAuthor?.handle  || null}
             </div>}
           </span>
 
           <span className="dynamicPostHeaderTime">
-            {singlePost.isReplyTo !== null && singlePost.userPost === true ? "2s" : singlePost.datePosted || ""}
+            {singlePost.isReplyTo !== null && singlePost.userPost === true ? 
+            <div>
+              <span>&#183;</span>
+              {"2s"}
+            </div> : 
+            singlePost.datePosted ?
+            <div>
+              <span>&#183;</span>
+              {singlePost.datePosted}
+            </div>
+            : null}
           </span>
         </>
       )

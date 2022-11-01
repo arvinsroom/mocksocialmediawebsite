@@ -48,7 +48,7 @@ body, html {
 /* used on twitter to resize the avatar and media;
 no need to move text to right as we have a margin */
 .twitterPostTopAvatar {
-  height: 48px !important;
-  width: 48px !important;
+  height: 48px;
+  width: 48px;
 }
 

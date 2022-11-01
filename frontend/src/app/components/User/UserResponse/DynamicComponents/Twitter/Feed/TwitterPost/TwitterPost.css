@@ -21,28 +21,6 @@
   font-size: 15px;
 }
 
-.twitterPostHeaderSpecial {
-  font-weight: 600;
-  font-size: 12px;
-  color: gray;
-}
-
-@media only screen and (max-width: 750px) {
-  .addMarginInMobile {
-    margin-left: 20px;
-  }
-}
-
-.twitterRetweeted {
-  margin-left: 60px;
-  margin-top: 10px;
-  display: flex;
-  align-content: center;
-  flex-wrap: nowrap;
-  justify-content: flex-start;
-  align-items: flex-end;
-}
-
 .likedOrRetweetComp {
   color: rgb(83, 100, 113);
   font: 14px -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
@@ -97,7 +75,7 @@
   font-size: 15px;
   color: #0F1419;
   margin-top: 8px;
-  max-width: 446px;
+  /* max-width: 446px; */
 }
 
 .tweetBoxNoHover {
@@ -115,7 +93,7 @@
 
 .twitterPostBottomTop {
   flex-basis: 48px;
-  margin-right: -5px;
+  margin-right: 8px;
 }
 
 .twitterPostHeaderMain {
@@ -126,15 +104,16 @@
 .twitterPostFooter {
   display: flex;
   align-items: center;
-  max-width: 425px;
-  width: 75%;
+  /* max-width: 425px; */
+  /* width: 75%; */
+  width: 100%;
   justify-content: space-between;
 }
 
 
 .tweetBoxAllIcon{
   border-radius: 50% !important;
-  padding: 9px !important;
+  padding: 5px;
   height: 1.25em;
   width: 1.25em;
   color: var(--twitter-grey);
@@ -170,11 +149,13 @@
 }
 
 .tweetBoxIcons {
+  display: flex;
+  align-items: center;
   border: none !important;
-  min-width: 0 !important;
-  border-radius: 50% !important;
-  /* height: 34.750px;
-  width: 34.750px; */
+  /* min-width: 0 !important;
+  border-radius: 50% !important; */
+  transition: .2s;
+  background: transparent;
 }
 
 .tweetBoxIcons:hover{
@@ -207,38 +188,44 @@
 }
 
 
-.twitter-link-preview {
-  text-decoration: none;
+/* .twitterRetweeted {
+  margin-left: 60px;
+  margin-top: 10px;
+  display: flex;
+  align-content: center;
+  flex-wrap: nowrap;
+  justify-content: flex-start;
+  align-items: flex-end;
+} */
+
+.twitterRetweeted {
+  display: flex;
+  height: 16px;
+  color: rgb(83,100,113);
+  margin-bottom: 4px;
+  margin-top: -4px;
 }
 
-.twitterLinkAllRoundBorder {
-  border-radius: 16px;
-  border: 1px solid rgb(207,217,222);
-  padding: 12px;
+.twitterRetweetedIcon {
+  margin-right: 12px;
+  flex-basis: 48px;
+  display: flex;
+  flex-direction: row-reverse;
 }
 
-.twitterLinkThreeSideBorder {
-  border-radius: 0 0 16px 16px;
-  border: 1px solid rgb(207,217,222);
-  padding: 12px;
-  /* border-left: 1px solid rgb(207,217,222);
-  border-right: 1px solid rgb(207,217,222); */
+.twitterRetweetedIcon > svg {
+  height: 16px;
+  width: 16px;
 }
 
-.twitter-og-title {
-  color: rgb(15,20,25);
-  font-size: 15px;
-}
-
-.twitter-og-description {
-  color: var(--twitter-grey);
-  font-size: 15px;
-  line-height: 20px;
-  max-height: 88px;
+.twitterRetweetedText {
+  font-size: 13px;
+  font-weight: 600;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
-.twitterLinkCorrectMargin {
-  margin-top: -5px;
+.twitterRetweetedIconFill {
+  fill: rgb(83,100,113);
+  color: rgb(83,100,113);
 }

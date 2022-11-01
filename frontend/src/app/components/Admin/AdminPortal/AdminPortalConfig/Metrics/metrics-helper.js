@@ -152,10 +152,19 @@ const normalizeUserPosts = (responseUserPosts) => {
   for (let i = 0; i < responseUserPosts.length; i++) {
     const currentPost = responseUserPosts[i];
 
-    const sharePostId = currentPost.parentUserPost ? (currentPost.parentUserPost.adminPostId || currentPost.parentUserPost._id) : "-9999";
+    let dynamicPostID = currentPost.parentUserPost ? (currentPost.parentUserPost.adminPostId || currentPost.parentUserPost._id) : "-9999";
+    let dynamicPostType = currentPost.type || "-9999";
+    if (currentPost.isReplyTo) {
+      dynamicPostType = "REPLYTO";
+      dynamicPostID = currentPost.isReplyTo;
+    }
+    if (currentPost.quoteTweetTo) {
+      dynamicPostType = "QUOTETWEET";
+      dynamicPostID = currentPost.quoteTweetTo;
+    }
     const postId = (currentPost.adminPostId || currentPost._id);
     const attachedMediaId = currentPost?.attachedMedia?.length > 0 ? (currentPost.attachedMedia[0]._id || "-9999") : "-9999";
-    normalize[currentPost.type] = (normalize[currentPost.type] || "") + postId + "!~*!" + escapeChars(currentPost.postMessage) + "!~*!" + attachedMediaId + "!~*!" + sharePostId + "|$|";
+    normalize[dynamicPostType] = (normalize[dynamicPostType] || "") + postId + "!~*!" + escapeChars(currentPost.postMessage) + "!~*!" + attachedMediaId + "!~*!" + dynamicPostID + "|$|";
   }
   return normalize;
 };

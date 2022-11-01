@@ -10,13 +10,13 @@
   font-size: '15px'
 }
 
-.dynamicPostHeaderHandle > div > span {
-  padding-left: 4px;
-  padding-right: 4px;
-}
-
 .dynamicPostHeaderTime {
   color: rgb(83,100,113)
+}
+
+.dynamicPostHeaderTime > div > span {
+  padding-left: 4px;
+  padding-right: 4px;
 }
 
 .dynamicPostBadge {
