@@ -14,8 +14,8 @@ import {
   incrementQuoteRetweetCount
  } from '../../../../../../../actions/socialMedia';
 import { showInfoSnackbar, showSuccessSnackbar } from '../../../../../../../actions/snackbar';
-import ReplyToQuoteTweetPreview from '../../../../../../Common/UserCommon/SocialMediaPostType/replyToQuoteTweetPreview';
 import "./TweetBox.css";
+import QuoteTweet from '../QuoteTweet/QuoteTweet';
 
 const TweetBox = ({ placeholderText, replyTo, quoteTweet, retweetParentId, handleCloseModal }) => {
   const socialMediaTranslations = useSelector(state => state.socialMedia.socialMediaTranslations);
@@ -121,12 +121,9 @@ const TweetBox = ({ placeholderText, replyTo, quoteTweet, retweetParentId, handl
     // min-height + lines x line-height + padding + border
     let newLineHeight = 35 + numberOfLineBreaks * 35;
     let newValueLengthHeight = 35 + Math.ceil(valueLength / 40) * 35;
-    console.log('newLineHeight: ', newLineHeight);
-    console.log('newValueLengthHeight: ', newValueLengthHeight);
 
     let newHeight = Math.max(newLineHeight, newValueLengthHeight);
     setDynamicHeight(newHeight.toString() + "px");
-    console.log(dynamicHeight)
 
     if (valueLength > 280) {
       dispatch(showInfoSnackbar("Please limit characters to 280"));         
@@ -140,12 +137,12 @@ const TweetBox = ({ placeholderText, replyTo, quoteTweet, retweetParentId, handl
       {/* replyTo is also similar to share tweet */}
       {replyTo ?
         retweetParentId ?
-        <div className="sharePostPreview sharePreview">
-          <ReplyToQuoteTweetPreview id={retweetParentId} />
+        <div className="twitterReplyToPreview">
+          <QuoteTweet id={retweetParentId} preview={true} />
         </div>
         :
-        <div className="sharePostPreview sharePreview">
-          <ReplyToQuoteTweetPreview id={replyTo} />
+        <div className="twitterReplyToPreview">
+          <QuoteTweet id={replyTo} preview={true} />
         </div>
       :
       null
@@ -186,12 +183,12 @@ const TweetBox = ({ placeholderText, replyTo, quoteTweet, retweetParentId, handl
         {/* quotetweet is similar to share tweet */}
         {quoteTweet ?
           retweetParentId ?
-          <div className="sharePostPreview sharePreview">
-            <ReplyToQuoteTweetPreview id={retweetParentId} />
+          <div>
+            <QuoteTweet id={retweetParentId} preview={true} />
           </div>
           :
-          <div className="sharePostPreview sharePreview">
-            <ReplyToQuoteTweetPreview id={quoteTweet} />
+          <div>
+            <QuoteTweet id={quoteTweet} preview={true} />
           </div>
         :
         null

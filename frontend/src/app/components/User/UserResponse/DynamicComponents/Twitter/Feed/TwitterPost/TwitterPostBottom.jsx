@@ -1,17 +1,12 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useSelector, useDispatch } from "react-redux";
-import { Button, Menu, MenuItem, Modal, Container, IconButton } from '@material-ui/core';
-import ChatBubbleOutlineIcon from "@material-ui/icons/ChatBubbleOutline";
+import { Menu, MenuItem, Modal, Container } from '@material-ui/core';
 import RepeatOutlinedIcon from '@material-ui/icons/RepeatOutlined';
-import FavoriteBorderIcon from "@material-ui/icons/FavoriteBorder";
-import FavoriteBorder from "@material-ui/icons/Favorite";
-import PublishOutlinedIcon from '@material-ui/icons/PublishOutlined';
 import CreateOutlinedIcon from '@material-ui/icons/CreateOutlined';
 import { IconRepeat } from '@tabler/icons';
 import { IconUpload } from '@tabler/icons';
 import { IconMessageCircle2 } from '@tabler/icons';
 import { IconHeart } from '@tabler/icons';
-
 import ClearIcon from '@material-ui/icons/Clear';
 import TweetBox from '../TweetBox/TweetBox';
 import { showSuccessSnackbar } from '../../../../../../../actions/snackbar';
@@ -105,8 +100,8 @@ const TwitterPostBottom = ({ id }) => {
     postMetadata ?
       <div className="twitterPostBottomMain">
       <div className="twitterPostBottomTop"></div>
-      <div className="twitterPostFooter addMarginInMobile">
-        <Button 
+      <div className="twitterPostFooter">
+        <button 
           component="label"
           className="tweetBoxIcons"
           onClick={e => openModal(e, 'REPLY')}
@@ -118,9 +113,9 @@ const TwitterPostBottom = ({ id }) => {
           <span className={chatBubbleStyle ? 'twBlue twitterBottomTextProps' : 'twitterBottomTextProps'}>
             {postMetadata.initReply}
           </span>
-        </Button>
+        </button>
 
-        <Button 
+        <button 
           component="label"
           className="tweetBoxIcons" 
           onClick={handleClick}
@@ -132,9 +127,9 @@ const TwitterPostBottom = ({ id }) => {
             <span className={repeatStyle ? 'twGreen twitterBottomTextProps' : 'twitterBottomTextProps'} >
               {postMetadata.initTweet}
             </span>
-        </Button>
+        </button>
 
-        <Button 
+        <button 
           component="label" 
           className="tweetBoxIcons" 
           onClick={(e) => handleToggleLike(e)} 
@@ -142,20 +137,20 @@ const TwitterPostBottom = ({ id }) => {
           onMouseLeave={() => setFavIconStyle(false)}>
           <IconHeart 
             className={postMetadata.actionId ? 'tweetBoxAllIcon twRed' : 
-              favIconStyle ? 'tweetBoxFavIconHover tweetBoxAllIcon ' : 'tweetBoxAllIcon '} />
+              favIconStyle ? 'tweetBoxFavIconHover tweetBoxAllIcon' : 'tweetBoxAllIcon '} />
           &nbsp;
           <span 
-            className={favIconStyle ? 'twRed twitterBottomTextProps' : 'twitterBottomTextProps'} 
-            style={postMetadata.actionId && { color: 'var(--twitter-heart-color)'}}>
+            className={postMetadata.actionId || favIconStyle ? 'twitterBottomTextProps twRed' : 'twitterBottomTextProps'}
+            >
               {postMetadata.actionId ? (postMetadata.initLike + 1).toString() : postMetadata.initLike.toString()}
           </span>
-        </Button>
+        </button>
 
-        <Button 
+        <button 
           component="label"
           className="tweetBoxIcons">
           <IconUpload className='tweetBoxAllIcon tweetButtonIconShare' />
-        </Button>
+        </button>
       </div>
 
         <Menu

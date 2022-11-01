@@ -71,7 +71,17 @@
   box-shadow: 0px 5px 7px -7px rgba(0,0,0, 0.75);
   padding: 8px;
   border-radius: 8px;
+  max-height: 700px;
+  overflow: scroll;
+  overflow-x: hidden;
 }
+
+@media only screen and (max-width: 600px) {
+  .modalContainerPaper {
+    height: 75vh;
+  }
+}
+
 
 .modalTop {
   height: 60px;
@@ -176,4 +186,9 @@
 
 .twitterOverlayButton:hover {
   background-color: var(--twitter-grey);
+}
+
+.twitterReplyToPreview {
+  margin-bottom: 12px;
+  margin-top: -12px;
 }

@@ -33,7 +33,6 @@ const DynamicMediaProfile = ({ attachedMedia }) => {
     <>
       {attachedMedia && <div className="author-profile-img-container">
         {isPhoto && <img ref={imageRef} key={attachedMedia._id} className="author-profile-img" />
-
         }
       </div>
       }

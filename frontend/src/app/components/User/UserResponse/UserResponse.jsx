@@ -1,10 +1,9 @@
 import { Container } from '@material-ui/core';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import useStyles from '../../style';
 import { useSelector, useDispatch } from "react-redux";
-import { Redirect, useHistory } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import { getCurrentUTCTime }  from '../../../utils';
-import { trackPageMetaData } from '../../../services/user-tracking-service'
 import "./UserResponse.css";
 
 import InfoPage from './DynamicComponents/InfoPage/InfoPage';
@@ -55,10 +54,8 @@ const UserResponse = () => {
         <Container component="main" maxWidth="md" className={classes.centerCard}>
           <div>
             <h1>{(translations && translations['thank_you!']) || 'Thank You!'}</h1>
-            <p className="lead">
-            <strong>
+            <p>
               {translations?.['your_response_has_been_recorded,_and_you_can_safely_close_this_page.'] || USER_TRANSLATIONS_DEFAULT.RESPONSE_SUCCESSFULLY_RECORDED_CLOSE_TAB}
-            </strong>
             </p>
           </div>
         </Container>
@@ -86,4 +83,3 @@ const UserResponse = () => {
 }
 
 export default UserResponse;
-

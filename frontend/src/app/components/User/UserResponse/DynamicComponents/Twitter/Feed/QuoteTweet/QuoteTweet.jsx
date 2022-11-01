@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Avatar } from '@material-ui/core';
-import VerifiedUserIcon from '@material-ui/icons/VerifiedUser';
 import ReplyTo from "../../../../../../Common/UserCommon/SocialMediaPostType/ReplyTo";
 import { trackLinkClick } from '../../../../../../../services/user-tracking-service';
 import { selectSinglePost } from '../../../../../../../selectors/socialMedia';
@@ -10,14 +9,19 @@ import Text from '../../../../../../Common/UserCommon/SocialMediaPostType/Text';
 import DynamicMedia from '../../../../../../Common/UserCommon/SocialMediaPostType/DynamicMedia';
 import DynamicMediaProfile from '../../../../../../Common/UserCommon/SocialMediaPostType/DynamicMediaProfile';
 import { getFacebookPost } from '../../../../../../../actions/socialMedia';
-import PostHeaderDisplay from "../../../../../../Common/UserCommon/SocialMediaPostType/PostHeaderDisplay/PostHeaderDisplay";
+import PostHeaderDisplay from "../../../../../../Common/UserCommon/Twitter/PostHeaderDisplay/PostHeaderDisplay";
+import "./QuoteTweet.css";
 
-const QuoteTweet = ({ id }) => {
+const QuoteTweet = ({ id, preview }) => {
   const dispatch = useDispatch();
   const [singlePost, setSinglePost] = useState(useSelector(state => selectSinglePost(state, id)));
   const singleAuthor = useSelector(state => selectSocialMediaAuthor(state, singlePost?.authorId));
   const userRegisterData = useSelector(state => state.userRegister.metaData);
   const [renderSinglePost, setRenderSinglePost] = useState(null);
+
+  const getSinglePost = async () => {
+    setSinglePost(await dispatch(getFacebookPost({ postIds: [id]})));
+  };
 
   function storeLinkClick() {
     const track = {
@@ -27,41 +31,33 @@ const QuoteTweet = ({ id }) => {
     trackLinkClick({ trackObj: track });
   }
 
-  const getSinglePost = async () => {
-    setSinglePost(await dispatch(getFacebookPost({ postIds: [id]})));
-  };
-
   useEffect(() => {
     if (singlePost) {
       setRenderSinglePost(
-          <>
-          <div className="sharePostPreview">
-            <div className="twitterPost">
-
-              <div className="twitterPostAvatar">
+          <div className={preview ? "twitterQuoteTweetBorderBox" : "twitterQuoteTweetBorderBox twitterQuoteTweetBorderBoxPhone"}>
+            <div className="twitterPostQuoteTweet">
+              <div className="twitterPostAvatarQuoteTweet">
                 {
                   singlePost.attachedAuthorPicture ? <DynamicMediaProfile attachedMedia={singlePost.attachedAuthorPicture} /> :
                     <Avatar
                       src={singlePost.userPost ? (userRegisterData['PROFILEPHOTO'] || "") : ""}
-                      className="twitterPostTopAvatar"
+                      style={{ height: '20px', width: '20px' }}
+                      className="twitterPostTopAvatarQuoteTweet"
                     />
                 }
+                <div className="twitterPostHeaderMainQuoteTweet">
+                  <PostHeaderDisplay id={id} />
+                </div>
               </div>
 
               <div className="twitterPostBody">
-                  <>
-                  <div className="twitterPostHeaderMain">
-                    <PostHeaderDisplay id={id} />
-                  </div>
-                  </>
-
                   {/* for replyTo add the text for the parent post handle */}
                   {singlePost.isReplyTo !== null && singlePost.userPost === true ?
                     <ReplyTo id={singlePost.isReplyTo} />
                   : null}
 
                   {singlePost.postMessage &&
-                    <div className="twitterPostHeaderDescription">
+                    <div className="twitterPostHeaderDescriptionQuoteTweet">
                       <Text postMessage={singlePost.postMessage} link={singlePost.link} customClassName="twitterPostTopText" charLimit={280}/>
                     </div>
                   }
@@ -72,27 +68,45 @@ const QuoteTweet = ({ id }) => {
                     }
 
                     {singlePost.type === 'LINK' ?
-                      <a href={singlePost.link} className="link-preview" onClick={storeLinkClick} target="_blank" rel="noopener noreferrer">
-                        <div className="link-area">
-                          <div className="og-image">
-                            <DynamicMedia attachedMedia={singlePost.attachedMedia[0]} />
-                          </div>
-                          <div className="descriptions">
-                            <div className="og-title">
+                      <a href={singlePost.link} className="twitter-link-preview" onClick={storeLinkClick} target="_blank" rel="noopener noreferrer">
+                      {singlePost.attachedMedia[0] && (singlePost.linkTitle || singlePost.linkPreview) ?
+                        <>
+                          <DynamicMedia attachedMedia={singlePost.attachedMedia[0]}/>
+                          <div className="twitterPaddingLeftAndRight">
+                            <div className="twitter-og-title">
                               {singlePost.linkTitle}
                             </div>
-                            <div className="og-description">
+                            <div className="twitter-og-description">
                               {singlePost.linkPreview}
                             </div>
                           </div>
-                        </div>
-                      </a>
-                      : null}
+                        </>
+                        :
+                        <>
+                          {singlePost.attachedMedia[0] ?
+                            <DynamicMedia attachedMedia={singlePost.attachedMedia[0]} />
+                            :
+                            (singlePost.linkTitle || singlePost.linkPreview) ?
+                              <div className="twitterPaddingLeftAndRight">
+                                <div className="twitter-og-title">
+                                  {singlePost.linkTitle}
+                                </div>
+                                <div className="twitter-og-description">
+                                  {singlePost.linkPreview}
+                                </div>
+                              </div>
+                              :
+                              null
+                          }
+                        </>
+                      }
+                    </a>
+                      :
+                    null}
                     </div>
                 </div>
             </div>
-          </div>
-          </>
+        </div>
       );
     } else {
       getSinglePost();

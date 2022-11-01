@@ -180,7 +180,7 @@ const getUsersPostsData = async (req, res, next) => {
           // will only select the posts which have userId associated with them
           model: db.UserPost,
           as: 'userPosts',
-          attributes: ['_id', 'adminPostId', 'postMessage', 'type'],
+          attributes: ['_id', 'adminPostId', 'postMessage', 'type', 'isReplyTo', 'quoteTweetTo'],
           include: [
             {
               // fetch any media associated with user created post
