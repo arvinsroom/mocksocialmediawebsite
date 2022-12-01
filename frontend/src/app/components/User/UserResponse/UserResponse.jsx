@@ -75,7 +75,7 @@ const UserResponse = () => {
   };
   return (
     <Container component="main" maxWidth="md"
-      className={flow[active]?.type === 'TWITTER' ? `${classes.card} twitterCSS` : `${classes.card}`}
+      className={flow[active]?.type === 'TWITTER' || flow[active]?.type === 'FACEBOOK' ? `${classes.card} twitterCSS` : `${classes.card}`}
      >
       {block(active)}
     </Container>

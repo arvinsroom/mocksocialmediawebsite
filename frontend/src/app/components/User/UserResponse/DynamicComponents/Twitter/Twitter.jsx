@@ -73,7 +73,9 @@ const Twitter = ({ data }) => {
               handleCloseModal={null} />
           </div>
           {/* twitter feed */}
-          {totalPostCount && totalPostCount > 0 ? <Feed /> : <p>No Posts Exists!</p>}
+          {totalPostCount && totalPostCount > 0 ? 
+            <Feed omitInteractionBar={data?.omitInteractionBar || false}/> 
+          : <p>No Posts Exists!</p>}
 
           <div className="twitterNextScreen">
             <Button

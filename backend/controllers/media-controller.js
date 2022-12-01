@@ -17,7 +17,7 @@ const create = async (req, res, next) => {
       });
       return;
     }
-    const { templateId, type, name, mediaPosts, pageDataOrder, author } = req.body;
+    const { templateId, type, name, mediaPosts, pageDataOrder, author, omitInteractionBar } = req.body;
     if (!templateId) {
       res.status(400).send({
         message: "Template Id is required!"
@@ -54,6 +54,7 @@ const create = async (req, res, next) => {
       name: name,
       templateId,
       type,
+      omitInteractionBar,
       pageDataOrder: pageDataOrder || null
     }, transaction);
     // bulk create the authors
@@ -82,7 +83,7 @@ const create = async (req, res, next) => {
       if (mediaPosts[i].length > 0) {
         let obj = {};
         for (let j = 0; j < mediaPosts[i].length; j++) {
-          if (mediaKeys[j] === 'initTweet' || mediaKeys[j] === 'initReply') {
+          if (mediaKeys[j] === 'initTweet' || mediaKeys[j] === 'initReply' || mediaKeys[j] === 'isFake') {
             obj[mediaKeys[j]] = mediaPosts[i][j] ? mediaPosts[i][j] : 0;
           } else {
             obj[mediaKeys[j]] = mediaPosts[i][j];

@@ -1,0 +1,14 @@
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" x="0" y="0" viewBox="0 0 20 20"
+	style="enable-background:new 0 0 20 20" xml:space="preserve">
+	<style>
+		.st0 {
+			fill: none;
+			stroke: current;
+			stroke-linecap: round;
+			stroke-linejoin: round
+		}
+	</style>
+	<path class="st0" d="M9.3 18.5H2.5c-1.1 0-2-.9-2-2v-12c0-1.1.9-2 2-2h12c1.1 0 2 .9 2 2v4" />
+	<circle class="st0" cx="15.5" cy="15.5" r="4" />
+	<path class="st0" d="M12.5.5v4m-8-4v4m-4 4h16m-1 5.5v1.5l1 1" />
+</svg>

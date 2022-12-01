@@ -11,7 +11,7 @@ import DynamicMedia from '../../../../../../Common/UserCommon/SocialMediaPostTyp
 import DynamicMediaProfile from '../../../../../../Common/UserCommon/SocialMediaPostType/DynamicMediaProfile';
 import { reportPost, unreportPost } from '../../../../../../../actions/socialMedia';
 import MoreHorizIcon from '@material-ui/icons/MoreHoriz';
-import { SmsFailedOutlined } from '@material-ui/icons/'
+// import { SmsFailedOutlined } from '@material-ui/icons/'
 
 const PostTop = ({ id }) => {
   const singlePost = useSelector(state => selectSinglePost(state, id));
@@ -60,12 +60,13 @@ const PostTop = ({ id }) => {
           <>
             <div className="postTop">
             {
-                //added the posibility to display an author profile image, if no image found, it display a user profile image, and if not found, it will display an mui avatar.
-                singlePost.attachedAuthorPicture ? <DynamicMediaProfile attachedMedia={singlePost.attachedAuthorPicture} /> :
-                  <Avatar
-                    src={singlePost.userPost ? (userRegisterData['PROFILEPHOTO'] || "") : ""}
-                    className="postTopAvatar"
-                  />
+              //added the posibility to display an author profile image, if no image found, it display a user profile image, and if not found, it will display an mui avatar.
+              singlePost.attachedAuthorPicture ? 
+                <DynamicMediaProfile attachedMedia={singlePost.attachedAuthorPicture} customCSS="fbAuthorProfileImage" /> :
+                <Avatar
+                  src={singlePost.userPost ? (userRegisterData['PROFILEPHOTO'] || "") : ""}
+                  className="fbPostTopAvatar"
+                />
               }
               <div className="postTopInfo">
                 <h3>{singlePost.userPost ? (userRegisterData['USERNAME'] || "") : 
@@ -94,7 +95,7 @@ const PostTop = ({ id }) => {
                   <div className="og-image">
                     <DynamicMedia attachedMedia={singlePost.attachedMedia[0]} />
                   </div>
-                  <div className="descriptions">
+                  <div className="fbPostdescriptions">
                     <div className="og-title">
                       {singlePost.linkTitle}
                     </div>

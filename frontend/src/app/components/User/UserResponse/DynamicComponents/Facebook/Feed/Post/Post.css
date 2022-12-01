@@ -63,8 +63,11 @@
 
 .createComment {
   display: flex;
-  border-bottom: 1px solid #eff2f5;
-  padding: 15px;
+  padding-left: 16px;
+  padding-bottom: 4px;
+  padding-right: 16px;
+  padding-top: 4px;
+  /* height: 40px; */
 }
 
 .createComment > form {
@@ -85,25 +88,6 @@
   flex: 1;
 }
 
-.showComment {
-  border-bottom: 1px solid #eff2f5;
-  padding: 10px;
-  display: flex;
-  margin-left: 5%;
-}
-
-.displayIndividualComment {
-  outline-width: 0;
-  overflow-wrap: 'anywhere';
-  border: none;
-  border-radius: 20px 20px;
-  background-color: #eff2f5;
-  flex: 1;
-  padding: 10px;
-  margin: 3px 5px;
-  font-size: 12px;
-}
-
 .postComment {
   border-radius: 10px;
   display: flex;
@@ -121,9 +105,11 @@
   text-decoration: none;
 }
 
-.descriptions {
+.fbPostdescriptions {
   background-color: #F2F3F5;
   padding: 5px;
+  margin-left: 1px;
+  margin-right: 1px;
 }
 
 a.link-preview .link-area .og-title {
@@ -473,4 +459,17 @@ background-color: rgba(0, 0, 0, 0.05);
   background-size: 100% 100%;
   opacity: .4;
   background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgd2lkdGg9IjI0IiBoZWlnaHQ9IjI0Ij48cGF0aCBmaWxsPSJub25lIiBkPSJNMCAwaDI0djI0SDB6Ii8+PHBhdGggZD0iTTEzIDE0aC0yYTguOTk5IDguOTk5IDAgMCAwLTcuOTY4IDQuODFBMTAuMTM2IDEwLjEzNiAwIDAgMSAzIDE4QzMgMTIuNDc3IDcuNDc3IDggMTMgOFYyLjVMMjMuNSAxMSAxMyAxOS41VjE0em0tMi0yaDR2My4zMDhMMjAuMzIxIDExIDE1IDYuNjkyVjEwaC0yYTcuOTgyIDcuOTgyIDAgMCAwLTYuMDU3IDIuNzczQTEwLjk4OCAxMC45ODggMCAwIDEgMTEgMTJ6Ii8+PC9zdmc+');
+}
+
+/* .emoji-mart-category {
+  display: none;
+}
+*/
+
+.react-emoji {
+  word-break: break-word;
+}
+
+.react-emoji-picker > section {
+  width: 100% !important;
 }

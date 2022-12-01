@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from "react-redux";
 import { Button, Avatar, IconButton } from '@material-ui/core';
-import PhotoLibraryIcon from '@material-ui/icons/PhotoLibrary';
+import WhatsHappeningMedia from '../../../../../../../../assets/Twitter/whats-happening-media.svg';
+import WhatsHappeningGif from '../../../../../../../../assets/Twitter/whats-happening-gif.svg';
+import WhatsHappeningPoll from '../../../../../../../../assets/Twitter/whats-happening-poll.svg';
+import WhatsHappeningEmoji from '../../../../../../../../assets/Twitter/whats-happening-emoji.svg';
+import WhatsHappeningSchedule from '../../../../../../../../assets/Twitter/whats-happening-schedule.svg';
+import WhatsHappeningLocation from '../../../../../../../../assets/Twitter/whats-happening-location.svg';
 import ClearIcon from '@material-ui/icons/Clear';
-import PollOutlinedIcon from '@material-ui/icons/PollOutlined';
-import SentimentSatisfiedOutlinedIcon from '@material-ui/icons/SentimentSatisfiedOutlined';
-import EventOutlinedIcon from '@material-ui/icons/EventOutlined';
-import GifIcon from '@material-ui/icons/Gif';
 import { USER_TRANSLATIONS_DEFAULT, TW_TRANSLATIONS_DEFAULT } from '../../../../../../../constants';
 import { 
   createFbPost,
@@ -63,7 +64,7 @@ const TweetBox = ({ placeholderText, replyTo, quoteTweet, retweetParentId, handl
       dispatch(showSuccessSnackbar(translations?.please_enter_a_valid_response || USER_TRANSLATIONS_DEFAULT.PLEASE_ENTER_A_VALID_RESPONSE));
     }
     else if (count > 280) {
-      dispatch(showInfoSnackbar("Please limit characters to 280"));
+      dispatch(showInfoSnackbar(socialMediaTranslations?.please_limit_characters_to_280 || TW_TRANSLATIONS_DEFAULT.PLEASE_LIMIT_CHARACTERS_TO_280));
     }
     else {
       const totalFileSize = file?.size || 0;
@@ -126,7 +127,7 @@ const TweetBox = ({ placeholderText, replyTo, quoteTweet, retweetParentId, handl
     setDynamicHeight(newHeight.toString() + "px");
 
     if (valueLength > 280) {
-      dispatch(showInfoSnackbar("Please limit characters to 280"));         
+      dispatch(showInfoSnackbar(socialMediaTranslations?.please_limit_characters_to_280 || TW_TRANSLATIONS_DEFAULT.PLEASE_LIMIT_CHARACTERS_TO_280));         
     }
     setPostMessage(value);
     setCount(valueLength);
@@ -167,7 +168,7 @@ const TweetBox = ({ placeholderText, replyTo, quoteTweet, retweetParentId, handl
               placeholder={placeholderText} />
           </div>
         </div>
-        {count > 0 && <p className='textAreaWordCount'>Total characters: {count}</p>}
+        {count > 0 && <p className='textAreaWordCount'>{socialMediaTranslations?.total_characters || TW_TRANSLATIONS_DEFAULT.TOTAL_CHARACTERS}: {count}</p>}
 
         {avatar &&
           <div className="twitterMediaContainer">
@@ -205,7 +206,7 @@ const TweetBox = ({ placeholderText, replyTo, quoteTweet, retweetParentId, handl
                 accept="image/*, video/*"
                 onChange={(e) => mediaHandleChange(e)}
               />
-              <PhotoLibraryIcon />
+              <WhatsHappeningMedia className="twTweetBoxIcons"/>
             </IconButton>
 
             <IconButton component="label" className="tweetButtonMain">
@@ -216,19 +217,23 @@ const TweetBox = ({ placeholderText, replyTo, quoteTweet, retweetParentId, handl
                 accept="image/gif"
                 onChange={(e) => mediaHandleChange(e)}
               />
-              <GifIcon />
+              <WhatsHappeningGif className="twTweetBoxIcons"/>
             </IconButton>
 
             <IconButton component="label" className="tweetButtonMain">
-              <PollOutlinedIcon />
+              <WhatsHappeningPoll className="twTweetBoxIcons"/>
             </IconButton>
 
             <IconButton component="label" className="tweetButtonMain">
-              <SentimentSatisfiedOutlinedIcon />
+              <WhatsHappeningEmoji className="twTweetBoxIcons"/>
             </IconButton>
 
             <IconButton component="label" className="tweetButtonMain">
-              <EventOutlinedIcon />
+              <WhatsHappeningSchedule className="twTweetBoxIcons"/>
+            </IconButton>
+
+            <IconButton component="label" className="tweetButtonMain">
+              <WhatsHappeningLocation className="twTweetBoxIcons"/>
             </IconButton>
 
             <div className="pushItemLeft">

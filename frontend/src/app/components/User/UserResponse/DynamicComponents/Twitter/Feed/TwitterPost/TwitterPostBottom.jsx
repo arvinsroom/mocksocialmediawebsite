@@ -3,10 +3,10 @@ import { useSelector, useDispatch } from "react-redux";
 import { Menu, MenuItem, Modal, Container } from '@material-ui/core';
 import RepeatOutlinedIcon from '@material-ui/icons/RepeatOutlined';
 import CreateOutlinedIcon from '@material-ui/icons/CreateOutlined';
-import { IconRepeat } from '@tabler/icons';
-import { IconUpload } from '@tabler/icons';
-import { IconMessageCircle2 } from '@tabler/icons';
-import { IconHeart } from '@tabler/icons';
+import InteractionReply from '../../../../../../../../assets/Twitter/interaction-reply.svg';
+import InteractionLike from '../../../../../../../../assets/Twitter/interaction-like.svg';
+import InteractionRetweet from '../../../../../../../../assets/Twitter/interaction-retweet.svg';
+import InteractionShare from '../../../../../../../../assets/Twitter/interaction-share.svg';
 import ClearIcon from '@material-ui/icons/Clear';
 import TweetBox from '../TweetBox/TweetBox';
 import { showSuccessSnackbar } from '../../../../../../../actions/snackbar';
@@ -107,8 +107,12 @@ const TwitterPostBottom = ({ id }) => {
           onClick={e => openModal(e, 'REPLY')}
           onMouseOver={() => setChatBubbleStyle(true)}
           onMouseLeave={() => setChatBubbleStyle(false)}>
-          <IconMessageCircle2 
-            className={chatBubbleStyle ? 'tweetBoxAllIcon twChatBubbleHover ' : 'tweetBoxAllIcon '} />
+          <InteractionReply 
+            fill="none"
+            strokeWidth="1.5"
+            stroke={chatBubbleStyle ? '#1d9bf0' : '#536471'}
+            className={chatBubbleStyle ? 'twReplyHover tweetBoxAllIcon' : 'tweetBoxAllIcon'}
+          />
           &nbsp;
           <span className={chatBubbleStyle ? 'twBlue twitterBottomTextProps' : 'twitterBottomTextProps'}>
             {postMetadata.initReply}
@@ -121,8 +125,12 @@ const TwitterPostBottom = ({ id }) => {
           onClick={handleClick}
           onMouseOver={() => setRepeatStyle(true)}
           onMouseLeave={() => setRepeatStyle(false)}>
-          <IconRepeat 
-            className={repeatStyle ? 'tweetBoxAllIcon twRetweetIconHover' : 'tweetBoxAllIcon' } />
+         <InteractionRetweet 
+            fill="none"
+            strokeWidth="1.5"
+            stroke={repeatStyle ? '#00ba7c' : '#536471'}
+            className={repeatStyle ? 'twRetweetHover tweetBoxAllIcon' : 'tweetBoxAllIcon'}
+          />
             &nbsp;
             <span className={repeatStyle ? 'twGreen twitterBottomTextProps' : 'twitterBottomTextProps'} >
               {postMetadata.initTweet}
@@ -135,12 +143,15 @@ const TwitterPostBottom = ({ id }) => {
           onClick={(e) => handleToggleLike(e)} 
           onMouseOver={() => setFavIconStyle(true)} 
           onMouseLeave={() => setFavIconStyle(false)}>
-          <IconHeart 
-            className={postMetadata.actionId ? 'tweetBoxAllIcon twRed' : 
-              favIconStyle ? 'tweetBoxFavIconHover tweetBoxAllIcon' : 'tweetBoxAllIcon '} />
+          <InteractionLike 
+            stroke={postMetadata.actionId || favIconStyle ? '#f91880' : '#536471'}
+            strokeWidth="1.5"
+            fill={postMetadata.actionId ? '#f91880' : 'none'}
+            className={favIconStyle ? 'twLikeHover tweetBoxAllIcon' : 'tweetBoxAllIcon'}
+          />
           &nbsp;
           <span 
-            className={postMetadata.actionId || favIconStyle ? 'twitterBottomTextProps twRed' : 'twitterBottomTextProps'}
+            className={postMetadata.actionId || favIconStyle ? 'twRed twitterBottomTextProps' : 'twitterBottomTextProps'}
             >
               {postMetadata.actionId ? (postMetadata.initLike + 1).toString() : postMetadata.initLike.toString()}
           </span>
@@ -149,7 +160,11 @@ const TwitterPostBottom = ({ id }) => {
         <button 
           component="label"
           className="tweetBoxIcons">
-          <IconUpload className='tweetBoxAllIcon tweetButtonIconShare' />
+          <InteractionShare 
+            strokeWidth="1.5"
+            fill="none"
+            className='tweetBoxAllIcon twButtonIconShare'
+          />
         </button>
       </div>
 
@@ -163,7 +178,7 @@ const TwitterPostBottom = ({ id }) => {
           { 
           postMetadata.type === "RETWEET" ?
             <MenuItem onClick={e => handleUndoRetweet(e)}>
-              <RepeatOutlinedIcon /> {" "} {"Undo Retweet"}
+              <RepeatOutlinedIcon /> {" "} {socialMediaTranslations?.undo_retweet || TW_TRANSLATIONS_DEFAULT.UNDO_RETWEET}
             </MenuItem>
           :
             <MenuItem onClick={e => handleRetweet(e)}>

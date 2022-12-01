@@ -68,7 +68,7 @@ const ShareModal = ({ id, setModalOpen }) => {
             <div className="postTop">
               <Avatar
                 src={userRegisterData['PROFILEPHOTO'] || ""}
-                className="postTopAvatar"
+                className="fbPostTopAvatar"
               />
               <div className="postTopInfo">
                 <h3>{userRegisterData['USERNAME'] || ""}</h3>

@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import "./DynamicMediaProfile.css";
 
-const DynamicMediaProfile = ({ attachedMedia }) => {
+const DynamicMediaProfile = ({ attachedMedia, customCSS }) => {
   // we only handle cases for author image profile in this component
   const [mediaType, setMediaType] = useState(null);
   const [isPhoto, setIsPhoto] = useState(null);
@@ -31,10 +31,8 @@ const DynamicMediaProfile = ({ attachedMedia }) => {
 
   return (
     <>
-      {attachedMedia && <div className="author-profile-img-container">
-        {isPhoto && <img ref={imageRef} key={attachedMedia._id} className="author-profile-img" />
-        }
-      </div>
+      {attachedMedia && 
+        isPhoto && <img ref={imageRef} key={attachedMedia._id} className={customCSS} />
       }
     </>
   );

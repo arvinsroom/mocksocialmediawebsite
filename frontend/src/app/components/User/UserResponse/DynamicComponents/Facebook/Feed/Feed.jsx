@@ -1,16 +1,16 @@
-import { useEffect, useRef, useCallback } from "react";
+import { useEffect, useRef, useCallback, useState } from "react";
 import PostTop from './Post/PostTop';
 import { useSelector, useDispatch } from "react-redux";
 import { selectAllPostIds } from '../../../../../../selectors/socialMedia';
 import PostBottom from "./Post/PostBottom";
 import useStyles from '../../../../../style';
 import {
-  getFacebookPosts
+  getFacebookWithCommentsPosts
 } from '../../../../../../actions/socialMedia';
 import Progress from '../../../../../Common/Progress';
 import "./Feed.css";
 
-const Feed = () => {
+const Feed = ({ omitInteractionBar }) => {
   const allIds = useSelector(state => selectAllPostIds(state));
   const currentPostPage = useSelector(state => state.socialMedia.currentPostPage);
   const isLoading = useSelector(state => state.socialMedia.isLoading);
@@ -26,7 +26,7 @@ const Feed = () => {
     if (!finish) {
       const startIndex = currentPostPage * postEachPage;
       const slicePosts = totalPostIds.slice(startIndex, startIndex+5);
-      dispatch(getFacebookPosts({ postIds: slicePosts }));
+      dispatch(getFacebookWithCommentsPosts({ postIds: slicePosts }));
     }
   }, []);
 
@@ -37,7 +37,7 @@ const Feed = () => {
       if (entries[0].isIntersecting && !finish) {
         const startIndex = currentPostPage * postEachPage;
         const slicePosts = totalPostIds.slice(startIndex, startIndex+5);
-        dispatch(getFacebookPosts({ postIds: slicePosts }))
+        dispatch(getFacebookWithCommentsPosts({ postIds: slicePosts }))
       }
     })
     if (node) observer.current.observe(node)
@@ -50,12 +50,12 @@ const Feed = () => {
           if (allIds.length === index + 1) {
             return (<div key={postId} ref={lastPostRef} className={classes.post}>
               <PostTop id={postId} />
-              <PostBottom id={postId} />
+              <PostBottom id={postId} omitInteractionBar={omitInteractionBar}/>
             </div>)
           } else {
             return (<div key={postId} className={classes.post}>
-              <PostTop id={postId}/>
-              <PostBottom id={postId} />
+              <PostTop id={postId} />
+              <PostBottom id={postId} omitInteractionBar={omitInteractionBar}/>
             </div>)
           }
         })}

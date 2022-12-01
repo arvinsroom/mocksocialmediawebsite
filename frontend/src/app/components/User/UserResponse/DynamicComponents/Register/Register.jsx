@@ -7,7 +7,11 @@ import useStyles from '../../../../style';
 import { showErrorSnackbar, showInfoSnackbar, showSuccessSnackbar } from '../../../../../actions/snackbar';
 import { updateFlowActiveState } from '../../../../../actions/flowState';
 import { setRegisterMetaData } from '../../../../../actions/userRegister';
-import { USER_TRANSLATIONS_DEFAULT, WINDOW_GLOBAL } from '../../../../../constants';
+import { 
+  USER_TRANSLATIONS_DEFAULT, 
+  WINDOW_GLOBAL,
+  USER_REGISTER
+ } from '../../../../../constants';
 import cloneDeep from 'lodash/cloneDeep';
 import { IconCloudUpload, IconChevronRight } from '@tabler/icons';
 import RenderRichTextArea from '../../../../Common/UserCommon/RenderRichTextArea';
@@ -160,7 +164,7 @@ const Register = ({ data }) => {
       };
       await setRegisterStateRes(newResState);
     } else {
-      dispatch(showErrorSnackbar("Handle should start with @ or nothing and only have A-Z, a-z, 0-9 and/or _ with maximum 15 characters."));
+      dispatch(showErrorSnackbar(translations?.['handle_should_start_with_@_or_nothing_and_only_have_a-z,_a-z,_0-9_and/or___with_maximum_15_characters.']) || USER_REGISTER.REGISTER_HANDLE_PARSING_ERROR);
     }
   };
 

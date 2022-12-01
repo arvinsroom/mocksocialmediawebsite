@@ -51,6 +51,7 @@
   display: flex;
   width: 100%;
   align-items: center;
+  flex-wrap: wrap;
 }
 
 .buttonTwitterColor {
@@ -109,11 +110,6 @@
 
 .tweetButtonMain {
   color: rgb(29,155,240) !important;
-}
-
-.tweetButtonMain > span > svg {
-  height: 20px;
-  width: 20px;
 }
 
 .tweetButtonMain:hover {
@@ -191,4 +187,10 @@
 .twitterReplyToPreview {
   margin-bottom: 12px;
   margin-top: -12px;
+}
+
+.twTweetBoxIcons {
+  height: 16px;
+  width: 16px;
+  stroke: var(--twitter-color);
 }
