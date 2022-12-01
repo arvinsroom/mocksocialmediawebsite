@@ -12,11 +12,11 @@ import { FlagOutlined } from '@material-ui/icons/';
 import MoreHorizIcon from '@material-ui/icons/MoreHoriz';
 import { reportPost, unreportPost } from '../../../../../../../actions/socialMedia';
 import PostHeaderDisplay from "../../../../../../Common/UserCommon/Twitter/PostHeaderDisplay/PostHeaderDisplay";
-import { IconRepeat, IconHeart } from '@tabler/icons';
-
-import "./TwitterPost.css";
+import InteractionRetweet from '../../../../../../../../assets/Twitter/interaction-retweet.svg';
+import InteractionLike from '../../../../../../../../assets/Twitter/interaction-like.svg';
 import QuoteTweet from "../QuoteTweet/QuoteTweet";
 import DynamicLink from "../../../../../../Common/UserCommon/Twitter/DynamicLink/DynamicLink";
+import "./TwitterPost.css";
 
 const TwitterPostTop = ({ id }) => {
   const singlePost = useSelector(state => selectSinglePost(state, id));
@@ -26,11 +26,19 @@ const TwitterPostTop = ({ id }) => {
   const [anchorEl, setAnchorEl] = useState(null);
   const [retweetOrLikeIcon, setRetweetOrLikeIcon] = useState(null);
 
+  const FRIENDS = socialMediaTranslations?.friends || TW_TRANSLATIONS_DEFAULT.FRIENDS;
+  const AND = socialMediaTranslations?.and || TW_TRANSLATIONS_DEFAULT.AND;
+  const OTHERS = socialMediaTranslations?.others || TW_TRANSLATIONS_DEFAULT.OTHERS;
+  const LIKED = socialMediaTranslations?.liked || TW_TRANSLATIONS_DEFAULT.LIKED;
+  const RETWEETED = socialMediaTranslations?.retweeted || TW_TRANSLATIONS_DEFAULT.RETWEETED;
+  const REPORT = socialMediaTranslations?.report || TW_TRANSLATIONS_DEFAULT.REPORT;
+  const REPORTED = socialMediaTranslations?.reported || TW_TRANSLATIONS_DEFAULT.REPORTED;
+
   const postMetadata = useSelector(state => selectPostsMetadata(state, id));
   const dispatch = useDispatch();
 
   //states for report functionality
-  const [reportText, setReportText] = useState("Report");
+  const [reportText, setReportText] = useState(REPORT);
   const [reportIconColor, setReportIconColor] = useState(null);
 
   //handle on report click
@@ -39,7 +47,7 @@ const TwitterPostTop = ({ id }) => {
   const handleToggleReport = () => {
     if (postMetadata.reportId) {
       dispatch(unreportPost(postMetadata.reportId, id))
-      setReportText("Report")
+      setReportText(REPORT)
       setReportIconColor(null)
     } else {
       const data = {
@@ -48,14 +56,14 @@ const TwitterPostTop = ({ id }) => {
         userPostId: id,
       };
       dispatch(reportPost(data, id));
-      setReportText("Reported")
+      setReportText(REPORTED)
       setReportIconColor("#DF5F5F")
     }
   };
 
   function formLikedOrRetweetStr(by, ships, overflow, likeOrRetweet) {
     let relationships = [...ships];
-    if (by.length === 0 && overflow) return `${overflow} friends ${likeOrRetweet}`;
+    if (by.length === 0 && overflow) return `${overflow} ${FRIENDS} ${likeOrRetweet}`;
     const valuesAvail = [];
     for (let i = 0; i < by.length; ++i) {
       const index = parseNumber(by[i]);
@@ -76,12 +84,12 @@ const TwitterPostTop = ({ id }) => {
     }
 
     if (valuesAvail.length < 1) {
-      if (overflow) return `${overflow} friends ${likeOrRetweet}`
+      if (overflow) return `${overflow} ${FRIENDS} ${likeOrRetweet}`
       return null;
     } else if (valuesAvail.length === 1) {
       if (overflow) {
         const nameBreak = valuesAvail[0].length > 39 ? valuesAvail[0].substr(0, 36) + "..." : valuesAvail[0];
-        return `${nameBreak} and ${overflow} others ${likeOrRetweet}`
+        return `${nameBreak} ${AND} ${overflow} ${OTHERS} ${likeOrRetweet}`
       } else {
         const nameBreak = valuesAvail[0].length > 55 ? valuesAvail[0].substr(0, 52) + "..." : valuesAvail[0];
         return `${nameBreak} ${likeOrRetweet}`
@@ -89,11 +97,11 @@ const TwitterPostTop = ({ id }) => {
     } else {
       if (overflow) {
         const nameBreak = valuesAvail[0].length > 39 ? valuesAvail[0].substr(0, 36) + "..." : valuesAvail[0];
-        return `${nameBreak} and ${overflow} others ${likeOrRetweet}`
+        return `${nameBreak} ${AND} ${overflow} ${OTHERS} ${likeOrRetweet}`
       } else {
         const nameBreak = valuesAvail[0].length > 25 ? valuesAvail[0].substr(0, 22) + "..." : valuesAvail[0];
         const nameBreak2 = valuesAvail[1].length > 24 ? valuesAvail[1].substr(0, 21) + "..." : valuesAvail[1];
-        return `${nameBreak} and ${nameBreak2} ${likeOrRetweet}`
+        return `${nameBreak} ${AND} ${nameBreak2} ${likeOrRetweet}`
       }
     }
   }
@@ -117,11 +125,11 @@ const TwitterPostTop = ({ id }) => {
 
     if (likedBy.length > 0 || likedByOverflow) {
       setRetweetOrLikeIcon('LIKE');
-      return formLikedOrRetweetStr(likedBy, userRegisterData.RELATIONSHIP, likedByOverflow, 'liked')
+      return formLikedOrRetweetStr(likedBy, userRegisterData.RELATIONSHIP, likedByOverflow, LIKED)
     }
     else if (retweetedBy.length > 0 || retweetedByOverflow) {
       setRetweetOrLikeIcon('RETWEET');
-      return formLikedOrRetweetStr(retweetedBy, userRegisterData.RELATIONSHIP, retweetedByOverflow, 'retweeted');
+      return formLikedOrRetweetStr(retweetedBy, userRegisterData.RELATIONSHIP, retweetedByOverflow, RETWEETED);
     }
 
     return null;
@@ -135,7 +143,10 @@ const TwitterPostTop = ({ id }) => {
         {singlePost.type === 'RETWEET' && 
           <div className="twitterRetweeted">
             <div className="twitterRetweetedIcon">
-              <IconRepeat />
+              <InteractionRetweet 
+                className="twUserPostRetweet"
+              />
+
             </div>
             <div className="twitterRetweetedText">
               {socialMediaTranslations?.you_retweeted || TW_TRANSLATIONS_DEFAULT.YOU_RETWEETED}
@@ -146,8 +157,13 @@ const TwitterPostTop = ({ id }) => {
         {likedOrRetweetComp ? 
             <div className="twitterRetweeted">
               <div className="twitterRetweetedIcon">
-                {retweetOrLikeIcon === 'RETWEET' && <IconRepeat />}
-                {retweetOrLikeIcon === 'LIKE' && <IconHeart className="twitterRetweetedIconFill"/>}
+                {retweetOrLikeIcon === 'RETWEET' && 
+                  <InteractionRetweet 
+                    className="twUserPostRetweet"
+                  />}
+                {retweetOrLikeIcon === 'LIKE' && 
+                  <InteractionLike className="twUserPostLike"/>
+                }
               </div>
               <div className="twitterRetweetedText">
                 {likedOrRetweetComp}
@@ -160,7 +176,8 @@ const TwitterPostTop = ({ id }) => {
           <div className="twitterPost">
             <div className="twitterPostAvatar">
               {
-                singlePost.attachedAuthorPicture ? <DynamicMediaProfile attachedMedia={singlePost.attachedAuthorPicture} /> :
+                singlePost.attachedAuthorPicture ? 
+                  <DynamicMediaProfile attachedMedia={singlePost.attachedAuthorPicture} customCSS="twAuthorProfileImage" /> :
                   <Avatar
                     src={singlePost.userPost ? (userRegisterData['PROFILEPHOTO'] || "") : ""}
                     className="twitterPostTopAvatar"
@@ -198,31 +215,30 @@ const TwitterPostTop = ({ id }) => {
                   </Menu>
                 </>
               }
-                {singlePost.isReplyTo !== null && singlePost.userPost === true ?
-                  <ReplyTo id={singlePost.isReplyTo} />
-                : null}
+              
+              {singlePost.isReplyTo !== null && <ReplyTo id={singlePost.isReplyTo} /> }
 
-                {singlePost.postMessage &&
-                  <div className="twitterPostHeaderDescription">
-                    <Text postMessage={singlePost.postMessage} link={singlePost.link} customClassName="twitterPostTopText" charLimit={280}/>
-                  </div>
+              {singlePost.postMessage &&
+                <div className="twitterPostHeaderDescription">
+                  <Text postMessage={singlePost.postMessage} link={singlePost.link} customClassName="twitterPostTopText" charLimit={280}/>
+                </div>
+              }
+
+              <div className="twitterPostMediaBox">
+                {(singlePost.type === 'PHOTO' || singlePost.type === 'VIDEO') &&
+                  <DynamicMedia attachedMedia={singlePost.attachedMedia[0]} customCSS="twitterAllRoundBorder"/>
                 }
 
-                <div className="twitterPostMediaBox">
-                  {(singlePost.type === 'PHOTO' || singlePost.type === 'VIDEO') &&
-                    <DynamicMedia attachedMedia={singlePost.attachedMedia[0]} customCSS="twitterAllRoundBorder"/>
-                  }
+                {singlePost.type === 'LINK' ?
+                  <DynamicLink id={id} />
+                  :
+                  null}
 
-                  {singlePost.type === 'LINK' ?
-                    <DynamicLink id={id} />
-                    :
-                    null}
-
-                  {singlePost.quoteTweetTo ?
-                    <QuoteTweet id={singlePost.quoteTweetTo} />
-                  : null
-                  }
-                </div>
+                {singlePost.quoteTweetTo ?
+                  <QuoteTweet id={singlePost.quoteTweetTo} />
+                : null
+                }
+              </div>
             </div>
           </div>
         }

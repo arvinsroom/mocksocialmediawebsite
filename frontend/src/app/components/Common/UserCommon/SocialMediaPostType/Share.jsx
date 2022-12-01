@@ -6,7 +6,9 @@ import { Avatar } from "@material-ui/core";
 import { selectSinglePost } from '../../../../selectors/socialMedia';
 import { selectSocialMediaAuthor } from '../../../../selectors/socialMediaAuthors';
 import DynamicMediaProfile from './DynamicMediaProfile';
+import "./Share.css";
 
+// Used for only Facebook share
 const Share = ({ id }) => {
   const parentSharedPost = useSelector(state => selectSinglePost(state, id));
   const singleAuthor = useSelector(state => selectSocialMediaAuthor(state, parentSharedPost.authorId));
@@ -19,10 +21,11 @@ const Share = ({ id }) => {
         <div className="post">
           <div className="postTop">
             {
-              parentSharedPost.attachedAuthorPicture ? <DynamicMediaProfile attachedMedia={parentSharedPost.attachedAuthorPicture} /> :
+              parentSharedPost.attachedAuthorPicture ? 
+                <DynamicMediaProfile attachedMedia={parentSharedPost.attachedAuthorPicture} customCSS="fbAuthorProfileImage" /> :
                 <Avatar
                   src={parentSharedPost.userPost ? (userRegisterData['PROFILEPHOTO'] || "") : ""}
-                  className="postTopAvatar"
+                  className="fbPostTopAvatar"
                 />
             }
             <div className="postTopInfo">
@@ -45,7 +48,7 @@ const Share = ({ id }) => {
                 <div className="og-image">
                   <DynamicMedia attachedMedia={parentSharedPost.attachedMedia[0]} />
                 </div>
-                <div className="descriptions">
+                <div className="fbSharedescriptions">
                   <div className="og-title">
                     {parentSharedPost.linkTitle}
                   </div>

@@ -38,11 +38,11 @@ const QuoteTweet = ({ id, preview }) => {
             <div className="twitterPostQuoteTweet">
               <div className="twitterPostAvatarQuoteTweet">
                 {
-                  singlePost.attachedAuthorPicture ? <DynamicMediaProfile attachedMedia={singlePost.attachedAuthorPicture} /> :
+                  singlePost.attachedAuthorPicture ? 
+                    <DynamicMediaProfile attachedMedia={singlePost.attachedAuthorPicture} customCSS="twAuthorProfileImage" /> :
                     <Avatar
                       src={singlePost.userPost ? (userRegisterData['PROFILEPHOTO'] || "") : ""}
                       style={{ height: '20px', width: '20px' }}
-                      className="twitterPostTopAvatarQuoteTweet"
                     />
                 }
                 <div className="twitterPostHeaderMainQuoteTweet">

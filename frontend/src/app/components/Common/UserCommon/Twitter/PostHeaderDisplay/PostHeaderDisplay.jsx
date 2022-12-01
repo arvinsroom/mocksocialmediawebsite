@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { selectSinglePost } from '../../../../../selectors/socialMedia';
 import { selectSocialMediaAuthor } from '../../../../../selectors/socialMediaAuthors';
-import VerifiedUserIcon from '@material-ui/icons/VerifiedUser';
+import VerifiedIcon from '../../../../../../assets/Twitter/verified-icon.svg';
 
 import "./PostHeaderDisplay.css";
 
@@ -37,7 +37,7 @@ const PostHeaderDisplay = ({ id }) => {
           
           {singleAuthor?.authorVerified ? 
           <>
-            <VerifiedUserIcon className="dynamicPostBadge" />
+            <VerifiedIcon className="dynamicPostBadge"/>
           </> : null}
         
           <span className="dynamicPostHeaderHandle">

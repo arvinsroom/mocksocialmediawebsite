@@ -9,6 +9,7 @@
 
 .twitterPostBody {
   flex: 1;
+  word-break: break-word;
   /* width: 82%; */
   /* margin-right: 16px; */
 }
@@ -110,44 +111,6 @@
   justify-content: space-between;
 }
 
-
-.tweetBoxAllIcon{
-  border-radius: 50% !important;
-  padding: 5px;
-  height: 1.25em;
-  width: 1.25em;
-  color: var(--twitter-grey);
-}
-
-.tweetBoxFavIconHover{
-  fill: var(--twitter-heart-color) !important;
-  color: var(--twitter-heart-color);
-  background-color: #f9188117;
-}
-
-.twRed{
-  color: var(--twitter-heart-color) !important;
-  fill: var(--twitter-heart-color) !important;
-}
-
-.twGreen {
-  color: var(--twitter-retweet-color) !important;
-}
-
-.twRetweetIconHover {
-  color: var(--twitter-retweet-color);
-  background-color: #85e2a92a;
-}
-
-.twChatBubbleHover{
-  color: var(--twitter-reply-color);
-  background-color: var(--twitter-hover-reply);
-}
-
-.twBlue{
-  color: var(--twitter-reply-color) !important;
-}
-
 .tweetBoxIcons {
   display: flex;
   align-items: center;
@@ -160,17 +123,6 @@
 
 .tweetBoxIcons:hover{
   background-color: transparent !important;
-}
-
-.tweetButtonIconShare:hover {
-  color: var(--twitter-share-color) !important;
-  background-color: var(--twitter-hover-reply) !important;
-}
-
-.twitterBottomTextProps {
-  color: var(--twitter-grey);
-  font-size: 13px;
-  /* padding-left: 12px; */
 }
 
 .tweetTopHeaderDots {
@@ -213,9 +165,20 @@
   flex-direction: row-reverse;
 }
 
-.twitterRetweetedIcon > svg {
+.twUserPostRetweet {
   height: 16px;
   width: 16px;
+  stroke: var(--twitter-grey);
+  stroke-width: 2.5;
+  fill: none;
+}
+
+.twUserPostLike {
+  height: 16px;
+  width: 16px;
+  stroke: var(--twitter-grey);
+  stroke-width: 1;
+  fill: var(--twitter-grey);
 }
 
 .twitterRetweetedText {
@@ -225,7 +188,62 @@
   text-overflow: ellipsis;
 }
 
-.twitterRetweetedIconFill {
-  fill: rgb(83,100,113);
-  color: rgb(83,100,113);
+.twUserPostLike {
+  height: 16px;
+  width: 16px;
+  stroke: var(--twitter-grey);
+  stroke-width: 1.5;
+  fill: var(--twitter-grey);
+}
+
+.twitterBottomTextProps {
+  color: var(--twitter-grey);
+  font-size: 13px;
+  /* padding-left: 12px; */
+}
+
+/* Twitter Like */
+.twRed {
+  color: var(--twitter-heart-color) !important;
+}
+
+.tweetBoxAllIcon{
+  border-radius: 50% !important;
+  padding: 5px;
+  height: 1.25em;
+  width: 1.25em;
+  color: var(--twitter-grey);
+}
+
+.twLikeHover{
+  background-color: var(--twitter-hover-like);
+}
+
+/* Twitter Reply */
+.twBlue{
+  color: var(--twitter-reply-color) !important;
+}
+
+.twReplyHover{
+  background-color: var(--twitter-hover-reply);
+}
+
+
+/* Twitter Retweet */
+.twGreen {
+  color: var(--twitter-retweet-color) !important;
+}
+
+.twRetweetHover {
+  background-color: var(--twitter-hover-retweet);
+}
+
+/* Twitter share */
+.twButtonIconShare {
+  stroke: var(--twitter-grey);
+}
+
+.twButtonIconShare:hover {
+  background-color: var(--twitter-hover-reply) !important;
+  stroke: var(--twitter-share-color);
 }

@@ -1,7 +1,8 @@
 body, html {
-  font-family: 'Libre Franklin', sans-serif;
+  font-family: 'Noto Sans', sans-serif;
   font-size: 16px !important;
-  /* background-color: #E5EBF0 !important; */
+  background-color: #E5EBF0 !important;
+
   margin: 0 !important;
   --twitter-color: #50b7f5;
   --twitter-background: #e6ecf0;
@@ -10,12 +11,14 @@ body, html {
   --twitter-hover-reply: #50b6f51a;
   --twitter-hover-retweet: #85e2a92a;
   --twitter-hover-like: #f9188117;
-  --twitter-grey: rgb(83,100,113);
+  --twitter-grey: #536471;
 
-  --twitter-heart-color: rgb(249,24,128);
-  --twitter-share-color: rgb(29,155,240);
-  --twitter-retweet-color: rgb(0,186,124);
-  --twitter-reply-color: rgb(29,155,240);
+  --twitter-heart-color: #f91880;
+  --twitter-share-color: #1d9bf0;
+  --twitter-retweet-color: #00ba7c;
+  --twitter-reply-color: #1d9bf0;
+
+  --twitter-sidebar-color: #0F1419;
 }
 
 
@@ -27,7 +30,7 @@ body, html {
 }
 
 .textArea {
-  font-family: 'Libre Franklin', sans-serif;
+  font-family: 'Noto Sans', sans-serif;
   border-style: none;
   width: 100%;
   border: none;
@@ -41,14 +44,14 @@ body, html {
 }
 
 /* Used for facebook to move the text towards right */
-.postTopAvatar {
+.fbPostTopAvatar {
   margin-right: 10px
 }
 
 /* used on twitter to resize the avatar and media;
 no need to move text to right as we have a margin */
 .twitterPostTopAvatar {
-  height: 48px;
-  width: 48px;
+  height: 48px !important;
+  width: 48px !important;
 }
 

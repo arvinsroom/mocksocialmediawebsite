@@ -1,9 +1,6 @@
 .twitterRepliesPost {
-  margin-left: 60px;
   padding: 12px;
-  border: 1px solid rgb(207,217,222);
-  border-radius: 15px;
-  margin-top: 12px;
+  margin: 12px -16px -12px -16px;
 }
 
 /* @media only screen and (max-width: 506px) {

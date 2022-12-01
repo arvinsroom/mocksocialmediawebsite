@@ -151,7 +151,16 @@ export default function (state = initialState, action) {
           ...state.metaData,
           [payload.postId]: {
             ...state.metaData[payload.postId],
-            comments: [ payload.comment, ...state.metaData[payload.postId].comments]
+            comments: 
+              [
+                ...state.metaData[payload.postId].comments,
+                {
+                  comment: payload.comment,
+                  userComment: payload.userComment,
+                  attachedAuthorPicture: payload.attachedAuthorPicture,
+                  authorId: payload.authorId
+                }
+              ]
           }
         }
       };

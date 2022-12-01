@@ -79,6 +79,113 @@ export const getFacebookPostsCount = (data) => (dispatch) => {
   );
 };
 
+// Facebook original with comments rendered here
+export const getFacebookWithCommentsPosts = (data) => (dispatch) => {
+  dispatch({
+    type: SET_FB_LOADING,
+    payload: {
+      isLoading: true,
+    }
+  });
+  return FacebookPostService.getMediaPostDetails(data).then(
+    (response) => {
+      let postRecords = response.data?.postDetails || [];
+      // normalize the data
+      const posts = {};
+      const metaData = {};
+      let allIds = [];
+      for (let i = 0; i < postRecords.length; i++) {
+        const eachId = postRecords[i]._id;
+        if (postRecords[i].isReplyTo !== null) {
+          const parentId = postRecords[i].parentPostId;
+          // find the parent post from metaData and add the
+          // postMessage from current post to the comment section of that post
+          if (metaData[parentId]) {
+            metaData[parentId] = {
+              ...metaData[parentId],
+              comments: [
+                ...metaData[parentId].comments,
+                {
+                  postId: parentId,
+                  attachedAuthorPicture: postRecords[i].attachedAuthorPicture,
+                  comment: postRecords[i].postMessage,
+                  userComment: false,
+                  authorId: postRecords[i].authorId
+                }
+              ]
+            }
+          } else {
+            const obj = {
+              postId: parentId,
+              attachedAuthorPicture: postRecords[i].attachedAuthorPicture,
+              comment: postRecords[i].postMessage,
+              userComment: false,
+              authorId: postRecords[i].authorId
+            };
+            dispatch({
+              type: SET_FB_POST_COMMENT,
+              payload: obj
+            });
+          }
+        } else {
+          posts[eachId] = { ...postRecords[i], userPost: false };
+          metaData[eachId] = {
+            like: 'default',
+            type: postRecords[i].type,
+            initLike: postRecords[i].initLike || 0,
+            actionId: null,
+            parentPostId: null,
+            comments: [],
+            initReply: postRecords[i].initReply,
+            initTweet: postRecords[i].initTweet
+          };
+          allIds.push(eachId);
+        }
+      }
+      dispatch({
+        type: STACK_FB_STATE,
+        payload: {
+          posts: posts,
+          metaData: metaData,
+          allIds: allIds,
+          isLoading: false,
+        }
+      });
+
+      dispatch({
+        type: UPDATE_FACEBOOK_PAGE_STATE,
+      });
+      return Promise.resolve();
+    },
+    (error) => {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+
+      dispatch({
+        type: SNACKBAR_ERROR,
+        payload: message,
+      });
+
+      dispatch({
+        type: SET_FB_LOADING,
+        payload: {
+          isLoading: false,
+        }
+      });
+
+      dispatch({
+        type: CLEAR_FB_STATE
+      });
+      return Promise.reject();
+    }
+  );
+};
+
+// Change this completely for FACEBOOK
 export const getFacebookPosts = (data) => (dispatch) => {
   dispatch({
     type: SET_FB_LOADING,
@@ -263,7 +370,10 @@ export const commentFbPost = (data, id) => (dispatch) => {
         type: SET_FB_POST_COMMENT,
         payload: {
           postId: id,
-          comment: data.comment
+          attachedAuthorPicture: null,
+          comment: data.comment,
+          userComment: true,
+          authorId: null
         }
       });
 

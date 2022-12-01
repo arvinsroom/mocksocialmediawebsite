@@ -10,7 +10,7 @@ import { selectAllPostIds } from '../../../../../../selectors/socialMedia';
 import useStyles from '../../../../../style';
 import "./Feed.css";
 
-const Feed = () => {
+const Feed = ({ omitInteractionBar }) => {
   const allIds = useSelector(state => selectAllPostIds(state));
   const currentPostPage = useSelector(state => state.socialMedia.currentPostPage);
   const isLoading = useSelector(state => state.socialMedia.isLoading);
@@ -105,7 +105,7 @@ const Feed = () => {
             return (
               <div key={post._id} ref={postToRender?.length === index + 1 ? lastPostRef : null} className="twitterPostCard hoverEffect">
                 <TwitterPostTop id={post._id} />
-                <TwitterPostBottom id={post._id} />
+                {!omitInteractionBar && <TwitterPostBottom id={post._id} /> }
                 {replies}
               </div>
             )

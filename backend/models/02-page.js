@@ -41,6 +41,11 @@ export default (sequelize, DataTypes) => {
       allowNull: false,
       type: DataTypes.SMALLINT,
       defaultValue: 0
+    },
+    omitInteractionBar: {
+      allowNull: false,
+      type: DataTypes.BOOLEAN,
+      defaultValue: false
     }
   }, {
 		freezeTableName: true, // model name equal to table name

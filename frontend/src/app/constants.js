@@ -244,5 +244,19 @@ export const TW_TRANSLATIONS_DEFAULT = Object.freeze({
   ADD_A_COMMENT: 'Add a comment',
   YOU_RETWEETED: 'You Retweeted',
   RETWEET: 'Retweet',
-  QUOTE_TWEET: 'Quote Tweet'
+  QUOTE_TWEET: 'Quote Tweet',
+  UNDO_RETWEET: 'Undo Retweet',
+  FRIENDS: 'friends',
+  LIKED: 'liked',
+  AND: 'and',
+  OTHERS: 'others',
+  REPORTED: 'Reported',
+  REPORT: 'Report',
+  RETWEETED: 'retweeted',
+  PLEASE_LIMIT_CHARACTERS_TO_280: 'Please limit characters to 280',
+  TOTAL_CHARACTERS: 'Total characters'
+});
+
+export const USER_REGISTER = Object.freeze({
+  REGISTER_HANDLE_PARSING_ERROR: 'Handle should start with @ or nothing and only have A-Z, a-z, 0-9 and/or _ with maximum 15 characters.'
 });
