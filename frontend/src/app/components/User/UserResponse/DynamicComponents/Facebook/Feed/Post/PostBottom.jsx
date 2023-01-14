@@ -110,6 +110,14 @@ const PostBottom = ({ id, omitInteractionBar }) => {
 
     {(openCommentBox || omitInteractionBar) && 
       <div className="comment">
+        {postMetadata.comments?.length > 0 ? postMetadata.comments.map((commentMetaData, index) => (
+          <div key={index}
+            className={index === 0 ? 'fbPostBottomTopMargin' : ''}
+          >
+            <PostBottomComments commentMetaData={commentMetaData} />
+          </div>
+        )) : null}
+
         <div className="createComment">
           <Avatar 
             src={userRegisterData['PROFILEPHOTO'] || ""}
@@ -123,20 +131,15 @@ const PostBottom = ({ id, omitInteractionBar }) => {
           <InputEmoji
             value={currentComment}
             onChange={setCurrentComment}
+            onKeyDown={e => (e.key === 'Enter' ? handleSubmitComment(e) : null)}
             theme={"light"}
             placeholder={socialMediaTranslations?.write_a_comment || FB_TRANSLATIONS_DEFAULT.WRITE_A_COMMENT}
             className="createCommentInputText"
           />
-          <button className="postComment" onClick={e => handleSubmitComment(e)} type="submit">
+          {/* <button className="postComment" onClick={e => handleSubmitComment(e)} type="submit">
             {socialMediaTranslations?.post || FB_TRANSLATIONS_DEFAULT.POST}
-          </button>
+          </button> */}
         </div>
-
-        {postMetadata.comments?.length > 0 ? postMetadata.comments.map((commentMetaData, index) => (
-          <div key={index}>
-            <PostBottomComments commentMetaData={commentMetaData} />
-          </div>
-        )) : null}
       </div>
     }
    </> 

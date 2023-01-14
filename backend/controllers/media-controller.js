@@ -223,11 +223,10 @@ const create = async (req, res, next) => {
       response: "Success"
     });
   } catch (error) {
-    console.log(error.message);
     // if we reach here, there were some errors thrown, therefore roolback the transaction
     if (transaction) await transaction.rollback();
     res.status(500).send({
-      message: "Some error occurred while creating the Admin Post record. Make sure post ID(s) are not same!"
+      message: `Error: ${error.message ? error.message : error}`
     });
   }
 };
@@ -295,11 +294,10 @@ const uploadMultipleFiles = async (req, res, next) => {
       response: "Success"
     });
   } catch (error) {
-    console.log(error.message);
     // if we reach here, there were some errors thrown, therefore roolback the transaction
     if (transaction) await transaction.rollback();
     res.status(500).send({
-      message: "Some error occurred while storing multi post media."
+      message: `Error: ${error.message ? error.message : error}`
     });
   }
 };
@@ -368,11 +366,10 @@ const uploadMultipleAuthourFiles = async (req, res, next) => {
       response: "Success"
     });
   } catch (error) {
-    console.log(error.message);
     // if we reach here, there were some errors thrown, therefore roolback the transaction
     if (transaction) await transaction.rollback();
     res.status(500).send({
-      message: "Some error occurred while storing multi Author media."
+      message: `Error: ${error.message ? error.message : error}`
     });
   }
 };

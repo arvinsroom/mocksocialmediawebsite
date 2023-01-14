@@ -199,7 +199,7 @@ const TwitterPostBottom = ({ id }) => {
           >
             {
               <Container component="main" className="modalContainer" maxWidth="sm">
-              <div className="modalContainerPaper">
+              <div className="twModalContainerPaper">
                 <div className="modalTop">
                   <div className="modalTopBtn">
                     <ClearIcon className="btn" onClick={handleCloseModal} />

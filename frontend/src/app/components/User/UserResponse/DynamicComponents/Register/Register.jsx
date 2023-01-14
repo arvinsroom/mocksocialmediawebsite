@@ -164,7 +164,7 @@ const Register = ({ data }) => {
       };
       await setRegisterStateRes(newResState);
     } else {
-      dispatch(showErrorSnackbar(translations?.['handle_should_start_with_@_or_nothing_and_only_have_a-z,_a-z,_0-9_and/or___with_maximum_15_characters.']) || USER_REGISTER.REGISTER_HANDLE_PARSING_ERROR);
+      dispatch(showErrorSnackbar(translations?.['handles_can_start_with_@_or_nothing_and_must_contain_only_alphanumeric_characters_and/or_underscores,_up_to_a_maximum_of_15_characters.']) || USER_REGISTER.REGISTER_HANDLE_PARSING_ERROR);
     }
   };
 

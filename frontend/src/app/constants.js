@@ -258,5 +258,5 @@ export const TW_TRANSLATIONS_DEFAULT = Object.freeze({
 });
 
 export const USER_REGISTER = Object.freeze({
-  REGISTER_HANDLE_PARSING_ERROR: 'Handle should start with @ or nothing and only have A-Z, a-z, 0-9 and/or _ with maximum 15 characters.'
+  REGISTER_HANDLE_PARSING_ERROR: 'Handles can start with @ or nothing and must contain only alphanumeric characters and/or underscores, up to a maximum of 15 characters.'
 });

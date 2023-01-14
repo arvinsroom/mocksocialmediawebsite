@@ -35,7 +35,7 @@ export const clearFacebookState = () => (dispatch) => {
 export const getFacebookPostsCount = (data) => (dispatch) => {
   return FacebookPostService.getFacebookAllPostsCount(data).then(
     (response) => {
-      // these are all the facebook post
+      // these are all the posts
       const totalPostCount = response.data?.totalPosts || 0;
       const postIds = response.data?.postIds || [];
       const socialMediaTranslations = response.data?.translations?.translations || null;
@@ -257,6 +257,41 @@ export const getFacebookPosts = (data) => (dispatch) => {
     }
   );
 };
+
+export const getFacebookPost = (data) => (dispatch) => {
+  return FacebookPostService.getMediaPostDetails(data).then(
+    (response) => {
+      let postRecords = response.data?.postDetails || [];
+      // normalize the data
+      const posts = {};
+      let eachId = null;
+      for (let i = 0; i < postRecords.length; i++) {
+        eachId = postRecords[i]._id;
+        let userPostCheck = postRecords[i].adminPostId ? false : true;
+        posts[eachId] = { ...postRecords[i], userPost: userPostCheck };
+      }
+      if (eachId) {
+        return Promise.resolve(posts[eachId]);
+      }
+      return Promise.resolve();
+    },
+    (error) => {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+
+      dispatch({
+        type: SNACKBAR_ERROR,
+        payload: message,
+      });
+      return Promise.reject();
+    }
+  );
+};
+
 
 // create a action for specific user with 
 // adminPostId, actionType, isAdminPost, userPostId, platformType, comment
@@ -539,39 +574,4 @@ export const decrementQuoteRetweetCount = (data) => (dispatch) => {
       _id: data._id,
     }
   });
-};
-
-export const getFacebookPost = (data) => (dispatch) => {
-  return FacebookPostService.getMediaPostDetails(data).then(
-    (response) => {
-      let postRecords = response.data?.postDetails || [];
-      // normalize the data
-      const posts = {};
-      let eachId = null;
-      for (let i = 0; i < postRecords.length; i++) {
-        eachId = postRecords[i]._id;
-        let userPostCheck = postRecords[i].adminPostId ? false : true;
-        posts[eachId] = { ...postRecords[i], userPost: userPostCheck };
-      }
-
-      if (eachId) {
-        return Promise.resolve(posts[eachId]);
-      }
-      return Promise.resolve();
-    },
-    (error) => {
-      const message =
-        (error.response &&
-          error.response.data &&
-          error.response.data.message) ||
-        error.message ||
-        error.toString();
-
-      dispatch({
-        type: SNACKBAR_ERROR,
-        payload: message,
-      });
-      return Promise.reject();
-    }
-  );
 };

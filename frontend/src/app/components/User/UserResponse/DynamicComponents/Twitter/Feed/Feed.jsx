@@ -18,8 +18,7 @@ const Feed = ({ omitInteractionBar }) => {
   const totalPostIds = useSelector(state => state.socialMedia.totalPostIds);
   const finish = useSelector(state => state.socialMedia.finish);
   const storedPosts = useSelector(state => state.socialMedia.posts);
-  const [postToRender, setPostToRender] = useState(null);
-
+  const [postToRender, setPostToRender] = useState([]);
   const classes = useStyles();
   const dispatch = useDispatch();
   const observer = useRef();
@@ -89,27 +88,25 @@ const Feed = ({ omitInteractionBar }) => {
     <>
       <div className="twitterFeedMain">
       {
-        postToRender && postToRender.map((post, index) => {
+        postToRender.length > 0 && postToRender.map((post, index) => {
           // first we save all the replies in an array 
           // note they are not rendered yet
-          const replies = post.replies.map((reply, replyIndex) => {
-              return (
-                <div key={reply._id} ref={post?.replies?.length === replyIndex + 1 ? lastPostRef : null} 
-                  className="twitterRepliesPost hoverEffect">
-                  <TwitterPostTop id={reply._id} />
-                  <TwitterPostBottom id={reply._id} />
-                </div>
-              )
-            });
-            // show all the replies right here
-            return (
-              <div key={post._id} ref={postToRender?.length === index + 1 ? lastPostRef : null} className="twitterPostCard hoverEffect">
-                <TwitterPostTop id={post._id} />
-                {!omitInteractionBar && <TwitterPostBottom id={post._id} /> }
-                {replies}
-              </div>
-            )
-          })
+          const replies = post.replies.map((reply, replyIndex) => (
+            <div key={reply._id} ref={post?.replies?.length === replyIndex + 1 ? lastPostRef : null}
+              className="twitterRepliesPost hoverEffect">
+              <TwitterPostTop id={reply._id} />
+              <TwitterPostBottom id={reply._id} />
+            </div>
+          ));
+          // show all the replies right here
+          return (
+            <div key={post._id} ref={postToRender?.length === index + 1 ? lastPostRef : null} className="twitterPostCard hoverEffect">
+              <TwitterPostTop id={post._id} />
+              {!omitInteractionBar && <TwitterPostBottom id={post._id} /> }
+              {replies}
+            </div>
+          )
+        })
       }
       </div>
       <div className="paddingTop">

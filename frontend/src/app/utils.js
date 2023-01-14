@@ -34,3 +34,13 @@ export const parseNumber = (str) => {
 export const getCurrentUTCTime = () => new Date().toISOString().replace('Z', '').replace('T', ' ');
 
 export const removePropery = (prop, { [prop]: exclProp, ...rest }) => rest;
+
+export const parseUserRegisterName = (data) => {
+  if (data && data['USERNAME']) {
+    if (data['USERNAME'].length > 32) {
+      return data['USERNAME'].substr(0, 32) + "...";
+    }
+    return data['USERNAME'];
+  }
+  return "";
+}

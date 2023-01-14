@@ -56,7 +56,7 @@ const ShareModal = ({ id, setModalOpen }) => {
     >
       {
         <Container component="main" className="modalContainerShare" maxWidth="sm">
-          <div className="modalContainerPaper">
+          <div className="fbModalContainerPaper">
           <form onSubmit={handleSubmit}>
             <div className="modalTop">
               <h2 className="modalTopFont">{socialMediaTranslations?.write_post || FB_TRANSLATIONS_DEFAULT.WRITE_POST}</h2>

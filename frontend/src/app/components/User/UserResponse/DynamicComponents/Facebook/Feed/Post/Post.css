@@ -67,6 +67,7 @@
   padding-bottom: 4px;
   padding-right: 16px;
   padding-top: 4px;
+  align-items: center;
   /* height: 40px; */
 }
 
@@ -289,7 +290,7 @@ background-color: rgba(0, 0, 0, 0.05);
   width: 55%;
 }
 
-.modalContainerPaper {
+.fbModalContainerPaper {
   /* background-color: rgba(192,192,192,0.6); */
   background-color: white;
   box-shadow: 0px 5px 7px -7px rgba(0,0,0, 0.75);
@@ -472,4 +473,8 @@ background-color: rgba(0, 0, 0, 0.05);
 
 .react-emoji-picker > section {
   width: 100% !important;
+}
+
+.fbPostBottomTopMargin {
+  margin-top: 10px;
 }
