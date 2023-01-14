@@ -55,3 +55,32 @@
   height: 20px;
   width: 20px;
 }
+
+
+/* CSS for PostHeaderDisplay */
+.dynamicPostHeaderInfo {
+  font-size: 15px;
+  font-weight: 600;
+  color: rgb(15,20,25);
+  margin-right: 2px;
+}
+
+.dynamicPostHeaderHandle > div {
+  color: rgb(83,100,113);
+  font-size: '15px'
+}
+
+.dynamicPostHeaderTime {
+  color: rgb(83,100,113)
+}
+
+.dynamicPostHeaderTime > div > span {
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+.dynamicPostBadge {
+  color: var(--twitter-color);
+  height: 16.41px !important;
+  width: 16.41px !important;
+}

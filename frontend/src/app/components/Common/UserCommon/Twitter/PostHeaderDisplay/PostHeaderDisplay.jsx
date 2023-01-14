@@ -3,7 +3,7 @@ import { useSelector } from "react-redux";
 import { selectSinglePost } from '../../../../../selectors/socialMedia';
 import { selectSocialMediaAuthor } from '../../../../../selectors/socialMediaAuthors';
 import VerifiedIcon from '../../../../../../assets/Twitter/verified-icon.svg';
-
+import { parseUserRegisterName } from '../../../../../utils';
 import "./PostHeaderDisplay.css";
 
 const PostHeaderDisplay = ({ id }) => {
@@ -12,28 +12,16 @@ const PostHeaderDisplay = ({ id }) => {
   const singleAuthor = singlePost?.authorId ? useSelector(state => selectSocialMediaAuthor(state, singlePost.authorId)) : null;
   const [renderDynamicHeader, setRenderDynamicHeader] = useState(null);
 
-  function parseUserName() {
-    if (userRegisterData['USERNAME']) {
-      if (userRegisterData['USERNAME'].length > 32) {
-        return userRegisterData['USERNAME'].substr(0, 32) + "...";
-      } else {
-        return userRegisterData['USERNAME'];
-      }
-    } else {
-      return "";
-    }
-  }
-
   useEffect(() => {
     if (singlePost) {
       setRenderDynamicHeader(
         <>
-          <h3 className="dynamicPostHeaderInfo">
+          <div className="dynamicPostHeaderInfo">
             {/* username from registration page */}
-            {singlePost.userPost ? (parseUserName()) : 
+            {singlePost.userPost ? (parseUserRegisterName(userRegisterData)) : 
               singleAuthor?.authorName || ""
             }
-          </h3>
+          </div>
           
           {singleAuthor?.authorVerified ? 
           <>
@@ -66,7 +54,7 @@ const PostHeaderDisplay = ({ id }) => {
         </>
       )
     }
-  }, [id, singlePost]);
+  }, [id, singlePost, singleAuthor]);
 
   return (
     <>

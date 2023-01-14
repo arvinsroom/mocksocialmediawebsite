@@ -47,19 +47,27 @@ const UserResponse = () => {
     if (finished) updateFinishTimeAndLogout();
   }, [finished]);
 
+  const dynamicClasses = () => {
+    let customCSS = `${classes.card}`;
+    if (flow[active]?.type === 'TWITTER' || flow[active]?.type === 'FACEBOOK') {
+      customCSS += ' twitterCSS';
+    }
+    if (finished) {
+      customCSS += ` ${classes.centerCard}`;
+    }
+    return customCSS;
+  }
+
   const block = (currentActive) => {
     if (finished) {
-      return React.createElement(
-        () =>
-        <Container component="main" maxWidth="md" className={classes.centerCard}>
-          <div>
-            <h1>{(translations && translations['thank_you!']) || 'Thank You!'}</h1>
-            <p>
-              {translations?.['your_response_has_been_recorded,_and_you_can_safely_close_this_page.'] || USER_TRANSLATIONS_DEFAULT.RESPONSE_SUCCESSFULLY_RECORDED_CLOSE_TAB}
-            </p>
-          </div>
-        </Container>
-      );  
+      return (
+        <div>
+          <h1>{(translations && translations['thank_you!']) || 'Thank You!'}</h1>
+          <p>
+            {translations?.['your_response_has_been_recorded,_and_you_can_safely_close_this_page.'] || USER_TRANSLATIONS_DEFAULT.RESPONSE_SUCCESSFULLY_RECORDED_CLOSE_TAB}
+          </p>
+        </div>
+      )
     }
     else if (currentActive !== -1 && typeof Components[flow[currentActive]?.type] !== "undefined") {
       const pageType = flow[currentActive].type;
@@ -69,13 +77,16 @@ const UserResponse = () => {
       });
     }
     else {
-      return React.createElement(
-        () => <div>This Flow component configurations have not been created yet.</div>);
+      return (
+        <>
+          This Flow component configurations have not been created yet.
+        </>
+      )
     }
   };
   return (
     <Container component="main" maxWidth="md"
-      className={flow[active]?.type === 'TWITTER' || flow[active]?.type === 'FACEBOOK' ? `${classes.card} twitterCSS` : `${classes.card}`}
+      className={dynamicClasses()}
      >
       {block(active)}
     </Container>

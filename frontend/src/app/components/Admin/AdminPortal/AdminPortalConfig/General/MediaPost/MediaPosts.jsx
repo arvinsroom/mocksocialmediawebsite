@@ -218,9 +218,9 @@ const MediaPosts = ({ templateId }) => {
               onChange={handleOmitInteractionBar}
               color="primary"
               name="consent"
-              inputProps={{ 'aria-label': 'Omit user interaction bar' }}
+              inputProps={{ 'aria-label': 'Remove the ability for participants to interact (e.g., like, share, comment) with posts. Please note this only applies to parent posts.' }}
             />}
-            label={"Omit user interaction bar"}
+            label={"Remove the ability for participants to interact (e.g., like, share, comment) with posts. Please note this only applies to parent posts."}
           />
         </FormGroup>
 

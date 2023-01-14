@@ -225,7 +225,7 @@ const getFacebookPostIds = async (req, res, next) => {
     // }
     data = await UserPost.findAndCountAll({
       where: whereClause,
-      attributes: ['adminPostId', '_id', 'isReplyTo', 'isReplyToOrder']
+      attributes: ['adminPostId', '_id', 'isReplyTo', 'isReplyToOrder', 'quoteTweetTo']
     }, { transaction });
     // need to create a temp object which will fetch all the posts with postId
     const adminPostIds = {};
@@ -235,6 +235,7 @@ const getFacebookPostIds = async (req, res, next) => {
       if (row.isReplyTo === null) {
         adminPostIds[row.adminPostId] = {
           replies: [],
+          childQuoteTweet: {},
           _id: row._id
         }
         adminPostUUIDs[row._id] = row.adminPostId;
@@ -256,8 +257,29 @@ const getFacebookPostIds = async (req, res, next) => {
           });
         }
       }
+      if (row.quoteTweetTo !== null) {
+        if (row.quoteTweetTo in adminPostUUIDs && row._id in adminPostUUIDs) {
+          adminPostIds[adminPostUUIDs[row._id]].childQuoteTweet = {
+            _id: row.quoteTweetTo || '',
+            adminPostId: adminPostUUIDs[row.quoteTweetTo] || ''
+          };
+        }
+      }
     });
 
+    // iterate over adminPostIds and find childQuoteTweet append the
+    for (const [, value] of Object.entries(adminPostIds)) {
+      if (Object.keys(value.childQuoteTweet).length !== 0) {
+        if (value.childQuoteTweet.adminPostId in adminPostIds) {
+          if (adminPostIds[value.childQuoteTweet.adminPostId]?.replies?.length > 0) {
+            value.replies = [
+              ...value.replies,
+              ...adminPostIds[value.childQuoteTweet.adminPostId].replies
+            ];
+          }
+        }
+      }
+    };
     let adminPostIdsSorted = [];
     // sort the adminPostIds according to desired values i.e. input order
     if (order === 'RANDOM') {
@@ -316,20 +338,20 @@ const getFacebookPostIds = async (req, res, next) => {
       }
       parsedMetaData['facebookPostsOrderAdminIds'] = [];
       // fetch the renderering order and store that in database, for post tracking
-      // let temp = [];
-      // data.rows.forEach(row => {
-      //   // parsedMetaData['facebookPostsOrderAdminIds'].push(row.adminPostId);
-      //   temp.push(row._id);
-      // });
-
-      // console.log('temptemp: ', temp);
-
       adminPostIdsSorted.forEach((item) => {
         for(const [key, value] of Object.entries(item)) {
-          if (item[key]._id) postIds.push(item[key]._id);
+          if (value._id) postIds.push(value._id);
+          // if (value.childQuoteTweet._id) {
+          //   postIds.push(value.childQuoteTweet._id);
+          // }
           parsedMetaData['facebookPostsOrderAdminIds'].push(key);
+
+          // TODO: Do we really have to push quote tweet Ids here?
+          // if (value.childQuoteTweet.adminPostId) {
+          //   parsedMetaData['facebookPostsOrderAdminIds'].push(value.childQuoteTweet.adminPostId);
+          // }
           // also push all the reply id
-          item[key].replies.forEach((reply) => {
+          value.replies.forEach((reply) => {
             if (reply._id) {
               postIds.push(reply._id);
               parsedMetaData['facebookPostsOrderAdminIds'].push(reply.adminPostId);

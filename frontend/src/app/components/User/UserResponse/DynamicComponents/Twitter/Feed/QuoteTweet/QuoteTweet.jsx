@@ -9,7 +9,9 @@ import Text from '../../../../../../Common/UserCommon/SocialMediaPostType/Text';
 import DynamicMedia from '../../../../../../Common/UserCommon/SocialMediaPostType/DynamicMedia';
 import DynamicMediaProfile from '../../../../../../Common/UserCommon/SocialMediaPostType/DynamicMediaProfile';
 import { getFacebookPost } from '../../../../../../../actions/socialMedia';
-import PostHeaderDisplay from "../../../../../../Common/UserCommon/Twitter/PostHeaderDisplay/PostHeaderDisplay";
+// import PostHeaderDisplay from "../../../../../../Common/UserCommon/Twitter/PostHeaderDisplay/PostHeaderDisplay";
+import VerifiedIcon from '../../../../../../../../assets/Twitter/verified-icon.svg';
+import { parseUserRegisterName } from '../../../../../../../utils';
 import "./QuoteTweet.css";
 
 const QuoteTweet = ({ id, preview }) => {
@@ -45,8 +47,51 @@ const QuoteTweet = ({ id, preview }) => {
                       style={{ height: '20px', width: '20px' }}
                     />
                 }
+
+                 {/* Problem */}
                 <div className="twitterPostHeaderMainQuoteTweet">
-                  <PostHeaderDisplay id={id} />
+                  {/* <PostHeaderDisplay id={id} /> */}
+
+                  {/* TODO: Folliwing code is copied from PostHeaderDisplay as is however we should make use of same logic.
+                      Problem: When we pass some postID to quoteTweetTo column in spreadsheet and that post hasn't been rendered yet we have
+                      to pull that post on the fly and it is not cached as of now. Therefore on line 26 I pull them again. */}
+                  <>
+                    <div className="dynamicPostHeaderInfo">
+                      {/* username from registration page */}
+                      {singlePost.userPost ? (parseUserRegisterName(userRegisterData)) : 
+                        singleAuthor?.authorName || ""
+                      }
+                    </div>
+                    
+                    {singleAuthor?.authorVerified ? 
+                    <>
+                      <VerifiedIcon className="dynamicPostBadge"/>
+                    </> : null}
+                  
+                    <span className="dynamicPostHeaderHandle">
+                      {singlePost.userPost ? 
+                      <div>
+                        {userRegisterData['HANDLE'] || null}
+                      </div> : 
+                      <div>
+                        {singleAuthor?.handle  || null}
+                      </div>}
+                    </span>
+
+                    <span className="dynamicPostHeaderTime">
+                      {singlePost.isReplyTo !== null && singlePost.userPost === true ? 
+                      <div>
+                        <span>&#183;</span>
+                        {"2s"}
+                      </div> : 
+                      singlePost.datePosted ?
+                      <div>
+                        <span>&#183;</span>
+                        {singlePost.datePosted}
+                      </div>
+                      : null}
+                    </span>
+                  </>
                 </div>
               </div>
 
@@ -111,7 +156,7 @@ const QuoteTweet = ({ id, preview }) => {
     } else {
       getSinglePost();
     }
-  }, [singlePost, singleAuthor]);
+  }, [id, singlePost, singleAuthor]);
 
 
   return (

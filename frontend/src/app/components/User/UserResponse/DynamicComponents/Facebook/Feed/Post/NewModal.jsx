@@ -96,7 +96,7 @@ const NewModal = ({ setModalOpen }) => {
       >
         {
           <Container component="main" className="modalContainer" maxWidth="sm">
-          <div className="modalContainerPaper">
+          <div className="fbModalContainerPaper">
             <form onSubmit={handleSubmit}>
               <div className="modalTop">
                 <h2 className="modalTopFont">{socialMediaTranslations?.create_post || FB_TRANSLATIONS_DEFAULT.CREATE_POST}</h2>

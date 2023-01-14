@@ -123,10 +123,9 @@ const getUserData = async (req, res, next) => {
       allUserData: allUserData || [],
     });
   } catch (error) {
-    console.log(error);
     if (transaction) await transaction.rollback();
     res.status(500).send({
-      message: "Some error occurred while fetching metrics data."
+      message: `Error: ${error.message ? error.message : error}`
     });
   }
 };
@@ -216,10 +215,9 @@ const getUsersPostsData = async (req, res, next) => {
       allUsersPostsData: allUsersPostsData || [],
     });
   } catch (error) {
-    console.log(error);
     if (transaction) await transaction.rollback();
     res.status(500).send({
-      message: "Some error occurred while fetching userpost metrics data."
+      message: `Error: ${error.message ? error.message : error}`
     });
   }
 };
@@ -291,10 +289,9 @@ const getUsersPostsActionsData = async (req, res, next) => {
       allUsersPostsActionsData: allUsersPostsActionsData || [],
     });
   } catch (error) {
-    console.log(error);
     if (transaction) await transaction.rollback();
     res.status(500).send({
-      message: "Some error occurred while fetching userPostActions metrics data."
+      message: `Error: ${error.message ? error.message : error}`
     });
   }
 };
@@ -336,7 +333,7 @@ const getTemplatesWithUserCounts = async (req, res, next) => {
     console.log(error.message);
     if (transaction) await transaction.rollback();
     res.status(500).send({
-      message: "Some error occurred while fetching Templates with user Counts."
+      message: `Error: ${error.message ? error.message : error}`
     });
   }
 };
@@ -409,10 +406,9 @@ const downloadAllMedia = async (req, res, next) => {
 
     res.send(data);
   } catch (error) {
-    console.log(error.message);
     if (transaction) await transaction.rollback();
     res.status(500).send({
-      message: "Some error occurred while fetching Template Media."
+      message: `Error: ${error.message ? error.message : error}`
     });
   }
 };
@@ -463,7 +459,7 @@ const getUserDataSocialMediaData = async (req, res, next) => {
     console.log(error);
     if (transaction) await transaction.rollback();
     res.status(500).send({
-      message: "Some error occurred while fetching socialmedia metrics data."
+      message: `Error: ${error.message ? error.message : error}`
     });
   }
 };
@@ -517,10 +513,9 @@ const getUserDataQuestionData = async (req, res, next) => {
       templateAdminPortalQuestionsData: templateAdminPortalQuestionsData || null,
     });
   } catch (error) {
-    console.log(error);
     if (transaction) await transaction.rollback();
     res.status(500).send({
-      message: "Some error occurred while fetching question metrics data."
+      message: `Error: ${error.message ? error.message : error}`
     });
   }
 };
