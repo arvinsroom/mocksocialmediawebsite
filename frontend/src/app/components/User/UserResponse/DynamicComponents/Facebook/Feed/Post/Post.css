@@ -80,10 +80,15 @@
   }
   .postCommentMobile {
     display: block;
+    border-radius: 50%;
+    border: none;
+    cursor: pointer;
+    pointer-events: auto;
+    background-color: transparent;
   }
-  .postCommentMobileIcon:hover {
-    color: #4267B2
-  }
+  /* .postCommentMobile:hover {
+    background-color: #f0f0f0;
+  } */
 }
 
 @media only screen and (min-width: 481px) {
