@@ -8,11 +8,15 @@
 
 .postTopInfo > h3 {
   font-size: small;
+  margin-top: 0;
+  margin-bottom: 0;
 }
 
 .postTopInfo > p {
   font-size: x-small;
   color: gray;
+  margin-top: 0;
+  margin-bottom: 0;
 }
 
 .postTop {
@@ -68,7 +72,34 @@
   padding-right: 16px;
   padding-top: 4px;
   align-items: center;
-  /* height: 40px; */
+}
+
+@media only screen and (max-width: 481px) {
+  .postComment {
+    display: none;
+  }
+  .postCommentMobile {
+    display: block;
+  }
+  .postCommentMobileIcon:hover {
+    color: #4267B2
+  }
+}
+
+@media only screen and (min-width: 481px) {
+  .postComment {
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 5px;
+    border: none;
+    color: grey;
+    cursor: pointer;
+  }
+  .postCommentMobile {
+    display: none;
+  }
 }
 
 .createComment > form {
@@ -87,17 +118,6 @@
 
 .createCommentInputText {
   flex: 1;
-}
-
-.postComment {
-  border-radius: 10px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 5px;
-  border: none;
-  color: grey;
-  cursor: pointer;
 }
 
 .link-preview {
