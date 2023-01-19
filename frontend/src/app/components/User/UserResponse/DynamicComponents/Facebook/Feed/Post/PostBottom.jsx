@@ -7,6 +7,7 @@ import ShareModal from './ShareModal';
 import { FB_TRANSLATIONS_DEFAULT } from '../../../../../../../constants';
 import { FacebookSelector } from '@charkour/react-reactions';
 import InputEmoji from "react-input-emoji";
+import IconSendViaIconduckSvg from '../../../../../../../../assets/Facebook/icon-send-via-iconduck.svg';
 import PostBottomComments from "./PostBottomComments/PostBottomComments";
 import "./Post.css";
 
@@ -136,9 +137,18 @@ const PostBottom = ({ id, omitInteractionBar }) => {
             placeholder={socialMediaTranslations?.write_a_comment || FB_TRANSLATIONS_DEFAULT.WRITE_A_COMMENT}
             className="createCommentInputText"
           />
-          {/* <button className="postComment" onClick={e => handleSubmitComment(e)} type="submit">
+          <button className="postComment" onClick={e => handleSubmitComment(e)} type="submit">
             {socialMediaTranslations?.post || FB_TRANSLATIONS_DEFAULT.POST}
-          </button> */}
+          </button>
+          <button 
+            className="postCommentMobile" 
+            onClick={e => handleSubmitComment(e)}
+            type="submit"
+          >
+            <IconSendViaIconduckSvg 
+              fill='gray'
+            />
+          </button>
         </div>
       </div>
     }
