@@ -1,0 +1,86 @@
+
+.twitterQuoteTweetBorderBox {
+  margin-top: 12px;
+  border: 1px solid rgb(207,217,222);
+  border-radius: 15px;
+}
+
+
+/* @media only screen and (max-width: 506px) {
+  .twitterQuoteTweetBorderBoxPhone {
+    margin-left: -75px;
+  }
+} */
+
+
+.twitterPostQuoteTweet {
+  display: flex;
+  flex-direction: column;
+  padding-top: 12px;
+  padding-bottom: 12px;
+}
+
+.twitterPostAvatarQuoteTweet {
+  display: flex;
+  align-items: center;
+  padding-left: 12px;
+  padding-right: 12px;
+  height: 20px;
+}
+
+.twitterPostAvatarQuoteTweet > img {
+  height: 20px !important;
+  width: 20px !important;
+}
+
+.twitterPostHeaderMainQuoteTweet {
+  margin-left: 15px;
+  display: flex;
+  align-items: center;
+}
+
+
+
+.twitterPaddingLeftAndRight {
+  padding-left: 12px;
+  padding-right: 12px;
+}
+
+.twitterPostHeaderDescriptionQuoteTweet {
+  padding-left: 12px;
+  padding-right: 12px;
+}
+
+.twitterPostTopAvatarQuoteTweet {
+  height: 20px;
+  width: 20px;
+}
+
+
+/* CSS for PostHeaderDisplay */
+.dynamicPostHeaderInfo {
+  font-size: 15px;
+  font-weight: 600;
+  color: rgb(15,20,25);
+  margin-right: 2px;
+}
+
+.dynamicPostHeaderHandle > div {
+  color: rgb(83,100,113);
+  font-size: '15px'
+}
+
+.dynamicPostHeaderTime {
+  color: rgb(83,100,113)
+}
+
+.dynamicPostHeaderTime > div > span {
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+.dynamicPostBadge {
+  color: var(--twitter-color);
+  height: 16.41px !important;
+  width: 16.41px !important;
+}

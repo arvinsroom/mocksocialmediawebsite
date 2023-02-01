@@ -5,3 +5,12 @@
 .postImage > video {
   width: 100%;
 }
+
+.twitterCorrectMargin {
+  width: 99.6% !important;
+}
+
+.twitterImageFixPadding {
+  padding-left: -12px;
+  padding-right: -12px;
+}

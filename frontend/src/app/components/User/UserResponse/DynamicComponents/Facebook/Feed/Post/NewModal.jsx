@@ -96,7 +96,7 @@ const NewModal = ({ setModalOpen }) => {
       >
         {
           <Container component="main" className="modalContainer" maxWidth="sm">
-          <div className="modalContainerPaper">
+          <div className="fbModalContainerPaper">
             <form onSubmit={handleSubmit}>
               <div className="modalTop">
                 <h2 className="modalTopFont">{socialMediaTranslations?.create_post || FB_TRANSLATIONS_DEFAULT.CREATE_POST}</h2>
@@ -108,7 +108,7 @@ const NewModal = ({ setModalOpen }) => {
               <div className="postTop">
                 <Avatar
                   src={userRegisterData['PROFILEPHOTO'] || ""}
-                  className="postTopAvatar"
+                  className="fbPostTopAvatar"
                 />
                 <div className="postTopInfo">
                   <h3>{userRegisterData['USERNAME'] || ""}</h3>
@@ -121,9 +121,8 @@ const NewModal = ({ setModalOpen }) => {
                   value={postMessage}
                   autoFocus={true}
                   onChange={({ target }) => setPostMessage(target.value)}
-                  className="newFeedInputArea"
+                  className="textArea"
                   type="text"
-                  // placeholder={`What's on your mind, ${userName.split(' ')[0]}?`} />
                   placeholder={socialMediaTranslations?.["what's_on_your_mind?"] || FB_TRANSLATIONS_DEFAULT.WHATS_ON_YOUR_MIND} />
               </div>
 

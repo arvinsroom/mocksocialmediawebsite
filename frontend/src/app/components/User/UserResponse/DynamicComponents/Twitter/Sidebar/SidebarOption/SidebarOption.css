@@ -2,25 +2,41 @@
   display: flex;
   align-items: center;
   cursor: pointer;
+  padding: 12px;
+  width: fit-content;
+  color: var(--twitter-sidebar-color);
 }
 
 .twitterSidebarOption:hover {
-  background-color: #e8f5fe;
+  background-color: var(--twitter-hover-main);
   border-radius: 30px;
-  color: var(--twitter-color);
   transition: color 100ms ease-out;
 }
 
-.twitterSidebarOption > .MuiSvgIcon-root {
-  padding: 20px;
+.twSidebarIcon {
+  height: 24px;
+  width: 24px;
+  stroke: var(--twitter-sidebar-color);
 }
 
-.twitterSidebarOption > h2 {
-  font-weight: 800;
+.twSidebarText {
+  margin-left: 20px;
+  margin-right: 16px;
+  color: rgb(15,20,25);
+  font-weight: 400;
   font-size: 20px;
-  margin-right: 20px;
 }
+
+.twSideItem {
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
 
 .twitterSidebarOption--active {
   color: var(--twitter-color);
+}
+
+.twSidebarText--active {
+  font-weight: 600;
 }

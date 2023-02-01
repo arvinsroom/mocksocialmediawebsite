@@ -12,10 +12,11 @@ import {
   Grid
 } from '@material-ui/core';
 import { useEffect, useState } from 'react';
-import AddIcon from '@material-ui/icons/Add';
 import useStyles from '../../../../style';
+import { checkIfEmptyRichText } from '../../../../../utils';
 import { useSelector, useDispatch } from "react-redux";
 import { create } from '../../../../../services/register-service';
+import RichTextArea from '../../../../Common/AdminCommon/RichTextArea';
 import { Redirect } from 'react-router-dom';
 import { showErrorSnackbar, showSuccessSnackbar, showInfoSnackbar } from '../../../../../actions/snackbar';
 import {
@@ -31,6 +32,8 @@ import clsx from 'clsx';
 const Register = () => {
   const [customFieldArr, setCustomFieldArr] = useState([]);
   const [pageName, setPageName] = useState("");
+  const [clearRichText, setClearRichText] = useState(false);
+  const [richText, setRichText] = useState(null);
 
   const [customFields, setCustomFields] = useState([]);
   const [customRefs, setCustomRefs] = useState([]);
@@ -57,6 +60,7 @@ const Register = () => {
   }, []);
 
   const resetValues = () => {
+    setClearRichText(true);
     setCustomFieldArr([]);
     setPageName("");
   };
@@ -70,7 +74,8 @@ const Register = () => {
       templateId: templateId,
       name: pageName,
       type: "REGISTER",
-      register: customFieldArr
+      register: customFieldArr,
+      richText: checkIfEmptyRichText(richText) ? null : richText,
     };
 
     try {
@@ -141,6 +146,8 @@ const Register = () => {
             onChange={({ target }) => setPageName(target.value)}
             autoFocus
           />
+        <RichTextArea setRichText={setRichText} clearRichText={clearRichText}/>
+
         <Button
           variant="contained"
           component="label"
@@ -199,7 +206,7 @@ const Register = () => {
                 />
             </Tooltip>
             </Grid>
-            <Grid item xs={1} className={classes.floatRight, classes.flexCenter}>
+            <Grid item xs={1} className={`${classes.floatRight} ${classes.flexCenter}`}>
               <Tooltip title="Delete field">
                 <Button
                   aria-label="Delete field"

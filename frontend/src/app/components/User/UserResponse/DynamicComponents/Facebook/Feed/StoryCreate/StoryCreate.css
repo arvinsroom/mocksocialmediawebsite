@@ -1,6 +1,6 @@
 .storyCreate {
   display: flex;
-  margin-top: 30px;
+  padding-top: 30px;
   flex-direction: column;
   background-color: white;
   border-radius: 15px;
@@ -47,7 +47,6 @@
 
 .storyCreateOption > h3 {
   font-size: small;
-  font-family: 'Noto Sans', sans-serif;
   margin-left: 10px;
   cursor: pointer;
 }
@@ -67,7 +66,6 @@
 
 .postOption > p {
   margin-left: 10px;
-  font-family: 'Noto Sans', sans-serif;
   font-size: 12px !important;
 }
 
@@ -83,7 +81,6 @@
   color: gray;
   cursor: pointer;
   align-items: stretch;
-  font-family: 'Noto Sans', sans-serif;
   font-size: 12px;
 }
 

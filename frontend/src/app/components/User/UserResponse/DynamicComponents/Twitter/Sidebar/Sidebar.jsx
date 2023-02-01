@@ -1,18 +1,17 @@
 import { useState } from "react";
 import { useSelector } from "react-redux";
-import TwitterIcon from "@material-ui/icons/Twitter";
 import SidebarOption from "./SidebarOption/SidebarOption";
-import HomeIcon from "@material-ui/icons/Home";
-import SearchIcon from "@material-ui/icons/Search";
-import NotificationsNoneIcon from "@material-ui/icons/NotificationsNone";
-import MailOutlineIcon from "@material-ui/icons/MailOutline";
-import BookmarkBorderIcon from "@material-ui/icons/BookmarkBorder";
-import ListAltIcon from "@material-ui/icons/ListAlt";
-import PermIdentityIcon from "@material-ui/icons/PermIdentity";
+import SidebarHome from '../../../../../../../assets/Twitter/sidebar-home.svg';
+import SidebarExplore from '../../../../../../../assets/Twitter/sidebar-explore.svg';
+import SidebarNotifications from '../../../../../../../assets/Twitter/sidebar-notifications.svg';
+import SidebarMessages from '../../../../../../../assets/Twitter/sidebar-messages.svg';
+import SidebarBookmarks from '../../../../../../../assets/Twitter/sidebar-bookmarks.svg';
+import SidebarLists from '../../../../../../../assets/Twitter/sidebar-lists.svg';
+import SidebarProfile from '../../../../../../../assets/Twitter/sidebar-profile.svg';
+import SidebarMore from '../../../../../../../assets/Twitter/sidebar-more.svg';
 import ClearIcon from '@material-ui/icons/Clear';
-import MoreHorizIcon from "@material-ui/icons/MoreHoriz";
-import { Button, Modal, Container } from '@material-ui/core';
-import TweetBox from "../Feed/TweetBox";
+import { Modal, Container } from '@material-ui/core';
+import TweetBox from '../Feed/TweetBox/TweetBox';
 import { TW_TRANSLATIONS_DEFAULT } from '../../../../../../constants';
 import "./Sidebar.css";
 
@@ -29,24 +28,22 @@ const Sidebar = () => {
   return (
     <>
     <div className="twitterSidebar">
-      <TwitterIcon className="twitterSidebarIcon"/>
+      <SidebarOption Icon={SidebarHome} active={true} text={socialMediaTranslations?.home || TW_TRANSLATIONS_DEFAULT.HOME} />
+      <SidebarOption Icon={SidebarExplore} text={socialMediaTranslations?.explore || TW_TRANSLATIONS_DEFAULT.EXPLORE} />
+      <SidebarOption Icon={SidebarNotifications} text={socialMediaTranslations?.notifications || TW_TRANSLATIONS_DEFAULT.NOTIFICATIONS} />
+      <SidebarOption Icon={SidebarMessages} text={socialMediaTranslations?.messages || TW_TRANSLATIONS_DEFAULT.MESSAGES} />
+      <SidebarOption Icon={SidebarBookmarks} text={socialMediaTranslations?.bookmarks || TW_TRANSLATIONS_DEFAULT.BOOKMARKS} />
+      <SidebarOption Icon={SidebarLists} text={socialMediaTranslations?.lists || TW_TRANSLATIONS_DEFAULT.LISTS} />
+      <SidebarOption Icon={SidebarProfile} text={socialMediaTranslations?.profile || TW_TRANSLATIONS_DEFAULT.PROFILE} />
+      <SidebarOption Icon={SidebarMore} text={socialMediaTranslations?.more || TW_TRANSLATIONS_DEFAULT.MORE} />
 
-      <SidebarOption active Icon={HomeIcon} text={socialMediaTranslations?.home || TW_TRANSLATIONS_DEFAULT.HOME} />
-      <SidebarOption Icon={SearchIcon} text={socialMediaTranslations?.explore || TW_TRANSLATIONS_DEFAULT.EXPLORE} />
-      <SidebarOption Icon={NotificationsNoneIcon} text={socialMediaTranslations?.notifications || TW_TRANSLATIONS_DEFAULT.NOTIFICATIONS} />
-      <SidebarOption Icon={MailOutlineIcon} text={socialMediaTranslations?.messages || TW_TRANSLATIONS_DEFAULT.MESSAGES} />
-      <SidebarOption Icon={BookmarkBorderIcon} text={socialMediaTranslations?.bookmarks || TW_TRANSLATIONS_DEFAULT.BOOKMARKS} />
-      <SidebarOption Icon={ListAltIcon} text={socialMediaTranslations?.lists || TW_TRANSLATIONS_DEFAULT.LISTS} />
-      <SidebarOption Icon={PermIdentityIcon} text={socialMediaTranslations?.profile || TW_TRANSLATIONS_DEFAULT.PROFILE} />
-      <SidebarOption Icon={MoreHorizIcon} text={socialMediaTranslations?.more || TW_TRANSLATIONS_DEFAULT.MORE} />
-
-      <Button
+      <button
         variant="outlined"
         className="sidebarTweet"
         onClick={openModal}
       >
         {socialMediaTranslations?.tweet || TW_TRANSLATIONS_DEFAULT.TWEET}
-      </Button>
+      </button>
     </div>
     {modalOpen && 
       <Modal
@@ -58,7 +55,7 @@ const Sidebar = () => {
       >
         {
           <Container component="main" className="modalContainer" maxWidth="sm">
-            <div className="modalContainerPaper">
+            <div className="twModalContainerPaper">
               <div className="modalTop">
                 <div className="modalTopBtn">
                   <ClearIcon className="btn" onClick={handleCloseModal} />

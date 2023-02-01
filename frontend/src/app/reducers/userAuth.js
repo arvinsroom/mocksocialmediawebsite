@@ -36,7 +36,7 @@ export default function (state = initialState, action) {
       return {
         ...state,
         isLoggedInUser: false,
-        translations: null,
+        // translations: null,
         templateId: null,
         languageName: ""
       };

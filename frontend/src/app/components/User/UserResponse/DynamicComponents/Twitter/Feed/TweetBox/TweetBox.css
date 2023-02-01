@@ -1,0 +1,190 @@
+.tweetBox {
+  justify-content: 'center';
+  background-color: 'white';
+  border-bottom: 1px solid rgb(0 0 0 / 10%);
+  padding-top: 12px;
+  padding-bottom: 12px;
+  padding-left: 16px;
+  padding-right: 16px;
+  /* max-height: 598px; */
+  max-width: 506px;
+}
+
+.tweetBoxInput {
+  display: flex;
+}
+
+.tweetBoxInput > input {
+  flex: 1;
+  margin-left: 20px;
+  font-size: 20px;
+  border: none;
+}
+
+.tweetBoxImageInput {
+  border: none;
+  padding: 10px;
+}
+
+.tweetBoxButton {
+  background-color: var(--twitter-color) !important;
+  border: none !important;
+  color: white !important;
+  font-weight: 900 !important;
+  text-transform: inherit !important;
+  border-radius: 30px !important;
+  width: 74px;
+  height: 34px !important;
+  margin-left: auto !important;
+}
+
+.tweetBoxTweetButton {
+  width: 30%;
+}
+
+.tweetBoxBottom {
+  display: flex;
+  align-items: center;
+}
+
+.tweetBoxOtherButton {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.buttonTwitterColor {
+  color: var(--twitter-color);
+}
+
+.twitterMediaContainer {
+  border-radius: 15px;
+  /* max-height: 487px; */
+  overflow: auto;
+  overflow-x: hidden;
+  margin-left: 60px;
+  position: relative;
+}
+
+.twModalContainerPaper {
+  background-color: white;
+  box-shadow: 0px 5px 7px -7px rgba(0,0,0, 0.75);
+  padding: 8px;
+  border-radius: 8px;
+  max-height: 700px;
+  overflow: scroll;
+  overflow-x: hidden;
+}
+
+
+.modalTop {
+  height: 60px;
+  align-items: center;
+  border-bottom: 1px solid #E8E8E8;
+  flex-direction: row;
+  display: flex;
+  /* width: 90%; */
+  width: 100%;
+}
+
+.modalTopBtn {
+  width: 10%;
+  display: flex;
+  align-content: center;
+  justify-content: center;
+}
+
+.textAreaWordCount {
+  font-size: 12px;
+  display: flex;
+  flex-direction: row-reverse;
+  align-items: center;
+}
+
+.tweetButtonMain {
+  color: rgb(29,155,240) !important;
+}
+
+.tweetButtonMain:hover {
+  background-color: rgba(29,155,240,0.1) !important;
+}
+
+.pushItemLeft {
+  margin-left: auto;
+}
+
+.twitterBoxBottomTop {
+  flex-basis: 48px;
+  margin-right: 3px;
+}
+
+.tweetBoxTextAreaContainer {
+  display: flex;
+  width: 100%;
+  padding-bottom: 12px;
+  padding-top: 12px;
+}
+
+/* Hide scrollbar for Chrome, Safari and Opera */
+.tweetBoxTextArea::-webkit-scrollbar {
+  display: none;
+}
+
+/* Hide scrollbar for IE, Edge and Firefox */
+.tweetBoxTextArea {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
+
+.tweetBoxTextArea {
+  padding-left: 0;
+  font-family: 'Libre Franklin', sans-serif;
+  border-style: none;
+  font-size: 20px;
+  color: rgb(15,20,25);
+  width: 100%;
+  border: none;
+  outline: none;
+  -webkit-box-shadow: none;
+  -moz-box-shadow: none;
+  box-shadow: none;
+  display: block;
+  /* overflow: auto;
+  overflow-y: hidden; */
+  resize: none;
+  /* max-height: 250px; */
+}
+
+.selectedFile {
+  width: 100%;
+}
+
+.twitterOverlayButton {
+  background-color: rgba(39,44,48,0.75);
+  color: white;
+  position: absolute;
+  border: none;
+  cursor: pointer;
+  border-radius: 50%;
+  text-align: center;
+  top: 6px;
+  left: 6px;
+  width: 30px;
+  height: 30px;
+}
+
+.twitterOverlayButton:hover {
+  background-color: var(--twitter-grey);
+}
+
+.twitterReplyToPreview {
+  margin-bottom: 12px;
+  margin-top: -12px;
+}
+
+.twTweetBoxIcons {
+  height: 16px;
+  width: 16px;
+  stroke: var(--twitter-color);
+}

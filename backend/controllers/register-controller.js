@@ -11,7 +11,8 @@ const create = async (req, res, next) => {
       templateId,
       name,
       type,
-      register
+      register,
+      richText
     } = req.body;
     if (!templateId) {
       res.status(400).send({
@@ -43,7 +44,8 @@ const create = async (req, res, next) => {
     const pageId = await Page.pageCreate({
       templateId,
       name,
-      type
+      type,
+      richText
     }, transaction);
 
     const bulkRegisterRecords = [];

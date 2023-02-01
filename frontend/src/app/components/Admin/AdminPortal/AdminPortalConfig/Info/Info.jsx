@@ -107,7 +107,7 @@ const InfoPage = () => {
 
       <RichTextArea setRichText={setRichText} clearRichText={clearRichText}/>
 
-      <FormGroup  style={{ padding: '15px' }}>
+      <FormGroup style={{ padding: '15px' }}>
         <FormControlLabel
           control={<Switch
             checked={consent}
@@ -120,7 +120,7 @@ const InfoPage = () => {
         />
       </FormGroup>
 
-      <FormGroup  style={{ padding: '15px' }}>
+      <FormGroup style={{ padding: '15px' }}>
         <FormControlLabel
           control={<Switch
             checked={isFinish}

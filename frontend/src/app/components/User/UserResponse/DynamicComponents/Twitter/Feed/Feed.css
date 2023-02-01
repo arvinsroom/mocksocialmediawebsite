@@ -1,32 +1,37 @@
-.twitterFeed {
-  /* flex: 0.7; */
-  border-right: 1px solid var(--twitter-background);
-  /* min-width: fit-content; */
-  overflow-y: scroll;
-  border-left: 1px solid var(--twitter-background);
+.twitterRepliesPost {
+  padding: 12px;
+  margin: 12px -16px -12px -16px;
 }
 
-/* hide scrollbar in chrome, safari, opera */
-.twitterFeed::-webkit-scrollbar {
-  display: none;
+/* @media only screen and (max-width: 506px) {
+  .twitterRepliesPost {
+    margin-left: 0;
+  }
+} */
+
+.hoverEffect:hover {
+  /* background-color: rgba(0, 0, 0, 0.18); */
+  background-color: rgba(0, 0, 0, 0.03);
+  transition: 0.3s
 }
 
-/* hide scrollbar in IE, Edge and Firefox */
-.twitterFeed {
-  -ms-overflow-style: none;
-  scrollbar-width: none;
+/* here max-width takes into account the padding of 12px on left and right */
+.twitterPostCard {
+  justify-content: 'center';
+  background-color: 'white';
+  border-bottom: 1px solid rgb(0 0 0 / 10%) !important;
+  padding-top: 12px;
+  padding-bottom: 12px;
+  padding-left: 16px;
+  padding-right: 16px;
+  /* max-height: 598px; */
+  max-width: 506px;
 }
 
-.twitterFeedHeader {
-  position: sticky;
-  top: 0;
-  background-color: white;
-  z-index: 100;
-  border-bottom: 1px solid var(--twitter-background);
-  padding: 15px;
+@media only screen and (max-width: 506px) {
+  .twitterPostCard {
+    padding-left: 5px;
+    padding-right: 5px;
+  }
 }
 
-.twitterFeedHeader > h2 {
-  font-size: 20px;
-  font-weight: 800;
-}

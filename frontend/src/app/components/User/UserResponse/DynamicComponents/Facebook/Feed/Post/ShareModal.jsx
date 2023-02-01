@@ -14,7 +14,7 @@ import PersonAddIcon from '@material-ui/icons/PersonAdd';
 import MoreHorizIcon from '@material-ui/icons/MoreHoriz';
 import RoomIcon from '@material-ui/icons/Room';
 import GifIcon from '@material-ui/icons/Gif';
-import { FB_TRANSLATIONS_DEFAULT } from '../../../../../../../constants';
+import { FB_TRANSLATIONS_DEFAULT, USER_TRANSLATIONS_DEFAULT } from '../../../../../../../constants';
 
 const ShareModal = ({ id, setModalOpen }) => {
   const socialMediaTranslations = useSelector(state => state.socialMedia.socialMediaTranslations);
@@ -56,7 +56,7 @@ const ShareModal = ({ id, setModalOpen }) => {
     >
       {
         <Container component="main" className="modalContainerShare" maxWidth="sm">
-          <div className="modalContainerPaper">
+          <div className="fbModalContainerPaper">
           <form onSubmit={handleSubmit}>
             <div className="modalTop">
               <h2 className="modalTopFont">{socialMediaTranslations?.write_post || FB_TRANSLATIONS_DEFAULT.WRITE_POST}</h2>
@@ -68,7 +68,7 @@ const ShareModal = ({ id, setModalOpen }) => {
             <div className="postTop">
               <Avatar
                 src={userRegisterData['PROFILEPHOTO'] || ""}
-                className="postTopAvatar"
+                className="fbPostTopAvatar"
               />
               <div className="postTopInfo">
                 <h3>{userRegisterData['USERNAME'] || ""}</h3>
@@ -81,7 +81,7 @@ const ShareModal = ({ id, setModalOpen }) => {
                 value={sharePostText}
                 autoFocus={true}
                 onChange={({ target }) => setSharePostText(target.value)}
-                className="newFeedInputAreaShare"
+                className="textArea"
                 type="text"
                 // placeholder={`What's on your mind, ${userName.split(' ')[0]}?`} />
                 placeholder={socialMediaTranslations?.["what's_on_your_mind?"] || FB_TRANSLATIONS_DEFAULT.WHATS_ON_YOUR_MIND} />

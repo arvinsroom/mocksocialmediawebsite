@@ -1,8 +1,10 @@
 .twitter {
+  font-family: 'Libre Franklin', sans-serif;
   display: flex;
   max-width: 1300px;
   margin-left: auto;
   margin-right: auto;
+  background-color: white;
 }
 
 @media only screen and (max-width: 750px) {
@@ -19,4 +21,38 @@
 
 .twitterNextScreen {
   padding-top: 30px;
+}
+
+.twitterFeedHeader {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  padding-left: 16px;
+  /* padding-right: 26px;  */
+  font-size: 20px;
+  height: 53px;
+}
+
+.twitterFeedHeader > h2 {
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.twitterFeed {
+  /* flex: 0.7; */
+  border-right: 1px solid var(--twitter-background);
+  /* min-width: fit-content; */
+  overflow-y: scroll;
+  border-left: 1px solid var(--twitter-background);
+}
+
+/* hide scrollbar in chrome, safari, opera */
+.twitterFeed::-webkit-scrollbar {
+  display: none;
+}
+
+/* hide scrollbar in IE, Edge and Firefox */
+.twitterFeed {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }

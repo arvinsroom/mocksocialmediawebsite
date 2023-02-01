@@ -16,6 +16,10 @@
 # production
 /build
 
+# dev files
+/backend/config-development.json
+/backend/config-development*.json
+
 # misc
 .DS_Store
 .env.local

@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import * as XLSX from 'xlsx';
-import { Button, Input, TextField, FormControl, MenuItem, InputLabel, Select } from '@material-ui/core';
+import { Button, Input, TextField, FormControl, FormGroup, FormControlLabel, MenuItem, InputLabel, Select,
+  Switch } from '@material-ui/core';
 import { create } from "../../../../../../services/media-service";
 import { useDispatch } from "react-redux";
 import useStyles from '../../../../../style';
@@ -17,6 +18,7 @@ const MediaPosts = ({ templateId }) => {
   const [orderType, setOrderType] = useState("");
   const [uploadPostSpreadsheetName, setUploadPostSpreadsheetName] = useState("");
   const [uploadAuthorSpreadsheetName, setUploadAuthorSpreadsheetName] = useState("");
+  const [omitInteractionBar, setOmitInteractionBar] = useState(false);
 
   const classes = useStyles();
   const dispatch = useDispatch();
@@ -45,9 +47,11 @@ const MediaPosts = ({ templateId }) => {
           const ws = readedData.Sheets[wsname];
   
           /* Convert array to json*/
-          let dataParse = XLSX.utils.sheet_to_json(ws, {header:1});
-          // filter excel, here only checking rows
-          dataParse = dataParse.filter(arr => arr && arr.length > 0);
+          let dataParse = XLSX.utils.sheet_to_json(ws, { header:1, blankrows: false, defval: null, blankCell : true });
+          // filter excel, and get only expected rows
+          dataParse = dataParse.map(arr => {
+            return arr.splice(0, 20);
+          });
           /* Update state */
           if (sType === 'MEDIA') setMediaJSON(dataParse);
           else setAuthorJSON(dataParse); // sType === 'AUTHOR'
@@ -63,6 +67,7 @@ const MediaPosts = ({ templateId }) => {
     setOrderType("");
     setMediaJSON(null);
     setAuthorJSON(null);
+    setOmitInteractionBar(false);
     setUploadPostSpreadsheetName("");
   };
 
@@ -79,6 +84,7 @@ const MediaPosts = ({ templateId }) => {
             pageDataOrder: orderType,
             templateId: templateId,
             mediaPosts: mediaJSON,
+            omitInteractionBar,
             author: authorJSON
           });
           dispatch(showSuccessSnackbar(GENERAL_PAGE.SUCCESSFULLY_UPLOADED_SOCIAL_MEDIA_SPREADSHEET));
@@ -100,6 +106,10 @@ const MediaPosts = ({ templateId }) => {
 
   const handleType = (event) => {
     setTemplateType(event.target.value);
+  };
+
+  const handleOmitInteractionBar = (e) => {
+    setOmitInteractionBar(e.target.checked);
   };
 
   const createMenuItems = () => {
@@ -200,6 +210,19 @@ const MediaPosts = ({ templateId }) => {
         </Button>
         <br/>
         <p>{" Spreadsheet that will be uploaded upon clicking next step: " + (uploadPostSpreadsheetName || "")}</p>
+
+        <FormGroup>
+          <FormControlLabel
+            control={<Switch
+              checked={omitInteractionBar}
+              onChange={handleOmitInteractionBar}
+              color="primary"
+              name="consent"
+              inputProps={{ 'aria-label': 'Remove the ability for participants to interact (e.g., like, share, comment) with posts. Please note this only applies to parent posts.' }}
+            />}
+            label={"Remove the ability for participants to interact (e.g., like, share, comment) with posts. Please note this only applies to parent posts."}
+          />
+        </FormGroup>
 
         <Button
           type="submit"

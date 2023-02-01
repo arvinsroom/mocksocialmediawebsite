@@ -24,3 +24,23 @@ export const escapeChars = (str) => {
   if (!str) return "-9999"; // special case
   return str.replace(/(?:\r\n|\r|\n)/g, '<br>').replace(/"/g, '\'');
 }
+
+export const parseNumber = (str) => {
+  if (!str) return null;
+  const num = parseInt(str);
+  return num !== NaN ? num : null;
+}
+
+export const getCurrentUTCTime = () => new Date().toISOString().replace('Z', '').replace('T', ' ');
+
+export const removePropery = (prop, { [prop]: exclProp, ...rest }) => rest;
+
+export const parseUserRegisterName = (data) => {
+  if (data && data['USERNAME']) {
+    if (data['USERNAME'].length > 32) {
+      return data['USERNAME'].substr(0, 32) + "...";
+    }
+    return data['USERNAME'];
+  }
+  return "";
+}

@@ -1,4 +1,5 @@
 import db from "../clients/database-client";
+import { shuffle } from '../utils';
 const Page = db.Page;
 
 const pageCreate = async (pageObj, transaction) => {
@@ -35,24 +36,6 @@ const findOne = (req, res) => {
       });
     });
 };
-
-// this will shuffle the array in place
-// make sure to give this a new array
-const shuffle = (array) => {
-  let currentIndex = array.length, temporaryValue, randomIndex;
-  // While there remain elements to shuffle...
-  while ( 0 !== currentIndex ) {
-    // Pick a remaining element...
-    randomIndex = Math.floor(Math.random() * currentIndex);
-    currentIndex -= 1;
-    // And swap it with the current element.
-    temporaryValue = array[currentIndex];
-    array[currentIndex] = array[randomIndex];
-    array[randomIndex] = temporaryValue;
-  }
-
-  return array;
-}
 
 const randomizeSamePages = (pages, pagesLength) => {
   try {

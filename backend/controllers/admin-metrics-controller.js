@@ -77,7 +77,7 @@ const getUserData = async (req, res, next) => {
         {
           model: db.UserGlobalTracking,
           as: 'userGlobalTracking',
-          attributes: ['pageMetaData'],
+          attributes: ['pageMetaData', 'createdAt'],
           include: [
             {
               model: db.Page,
@@ -123,10 +123,9 @@ const getUserData = async (req, res, next) => {
       allUserData: allUserData || [],
     });
   } catch (error) {
-    console.log(error);
     if (transaction) await transaction.rollback();
     res.status(500).send({
-      message: "Some error occurred while fetching metrics data."
+      message: `Error: ${error.message ? error.message : error}`
     });
   }
 };
@@ -180,7 +179,7 @@ const getUsersPostsData = async (req, res, next) => {
           // will only select the posts which have userId associated with them
           model: db.UserPost,
           as: 'userPosts',
-          attributes: ['_id', 'adminPostId', 'postMessage', 'type'],
+          attributes: ['_id', 'adminPostId', 'postMessage', 'type', 'isReplyTo', 'quoteTweetTo'],
           include: [
             {
               // fetch any media associated with user created post
@@ -216,10 +215,9 @@ const getUsersPostsData = async (req, res, next) => {
       allUsersPostsData: allUsersPostsData || [],
     });
   } catch (error) {
-    console.log(error);
     if (transaction) await transaction.rollback();
     res.status(500).send({
-      message: "Some error occurred while fetching userpost metrics data."
+      message: `Error: ${error.message ? error.message : error}`
     });
   }
 };
@@ -262,7 +260,8 @@ const getUsersPostsActionsData = async (req, res, next) => {
         templateId,
       },
       order: [
-        ['startedAt', 'ASC']
+        ['startedAt', 'ASC'],
+        [ { model: db.UserPostAction, as: 'userPostActions' } , 'createdAt', 'ASC']
       ],
       limit: Number(limit),
       offset: Number(offset),
@@ -272,7 +271,7 @@ const getUsersPostsActionsData = async (req, res, next) => {
         {
           model: db.UserPostAction,
           as: 'userPostActions',
-          attributes: ['_id', 'action', 'comment'],
+          attributes: ['_id', 'action', 'comment', 'createdAt'],
           include: [
             {
               // we might need to show adminId where applicable
@@ -291,10 +290,9 @@ const getUsersPostsActionsData = async (req, res, next) => {
       allUsersPostsActionsData: allUsersPostsActionsData || [],
     });
   } catch (error) {
-    console.log(error);
     if (transaction) await transaction.rollback();
     res.status(500).send({
-      message: "Some error occurred while fetching userPostActions metrics data."
+      message: `Error: ${error.message ? error.message : error}`
     });
   }
 };
@@ -336,7 +334,7 @@ const getTemplatesWithUserCounts = async (req, res, next) => {
     console.log(error.message);
     if (transaction) await transaction.rollback();
     res.status(500).send({
-      message: "Some error occurred while fetching Templates with user Counts."
+      message: `Error: ${error.message ? error.message : error}`
     });
   }
 };
@@ -409,10 +407,9 @@ const downloadAllMedia = async (req, res, next) => {
 
     res.send(data);
   } catch (error) {
-    console.log(error.message);
     if (transaction) await transaction.rollback();
     res.status(500).send({
-      message: "Some error occurred while fetching Template Media."
+      message: `Error: ${error.message ? error.message : error}`
     });
   }
 };
@@ -463,7 +460,7 @@ const getUserDataSocialMediaData = async (req, res, next) => {
     console.log(error);
     if (transaction) await transaction.rollback();
     res.status(500).send({
-      message: "Some error occurred while fetching socialmedia metrics data."
+      message: `Error: ${error.message ? error.message : error}`
     });
   }
 };
@@ -517,10 +514,9 @@ const getUserDataQuestionData = async (req, res, next) => {
       templateAdminPortalQuestionsData: templateAdminPortalQuestionsData || null,
     });
   } catch (error) {
-    console.log(error);
     if (transaction) await transaction.rollback();
     res.status(500).send({
-      message: "Some error occurred while fetching question metrics data."
+      message: `Error: ${error.message ? error.message : error}`
     });
   }
 };

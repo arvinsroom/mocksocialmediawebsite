@@ -7,14 +7,22 @@ import useStyles from '../../../../style';
 import { showErrorSnackbar, showInfoSnackbar, showSuccessSnackbar } from '../../../../../actions/snackbar';
 import { updateFlowActiveState } from '../../../../../actions/flowState';
 import { setRegisterMetaData } from '../../../../../actions/userRegister';
-import { USER_TRANSLATIONS_DEFAULT, WINDOW_GLOBAL } from '../../../../../constants';
+import { 
+  USER_TRANSLATIONS_DEFAULT, 
+  WINDOW_GLOBAL,
+  USER_REGISTER
+ } from '../../../../../constants';
 import cloneDeep from 'lodash/cloneDeep';
 import { IconCloudUpload, IconChevronRight } from '@tabler/icons';
+import RenderRichTextArea from '../../../../Common/UserCommon/RenderRichTextArea';
 import "./Register.css";
+
+const regex = /^@?[A-Za-z0-9\_]+$/i;
 
 const Register = ({ data }) => {
   const { isLoggedInUser, translations } = useSelector(state => state.userAuth);
   const [registerState, setRegisterState] = useState([]);
+  const [handleValidation, setHandleValidation] = useState(true);
   // const [avatar, setAvatar] = useState("");
   const [registerStateRes, setRegisterStateRes] = useState({});
 
@@ -57,6 +65,8 @@ const Register = ({ data }) => {
   }, []);
 
   const checkValidity = () => {
+    // special case for handle validation
+    if (!handleValidation) return false;
     for (const [, result] of Object.entries(registerStateRes)) {
       if (!result.value && result.required) return false;
     }
@@ -73,11 +83,14 @@ const Register = ({ data }) => {
         const regesterIds = [];
         // for now save the result in redux store
         const metaData = {};
+        // add a default empty value for off by 1 cases
+        metaData.RELATIONSHIP = [''];
         // get the profile pic and username to store in the redux state
         for (const [key, response] of Object.entries(registerStateRes)) {
           const { 
             referenceName,
             value,
+            // order,
             storeResponse
           } = response;
           if (value) {
@@ -92,12 +105,23 @@ const Register = ({ data }) => {
               }
             }
             else {
+              if (referenceName === 'RELATIONSHIP') {
+                metaData[referenceName] = [...metaData[referenceName], value];
+                // let orderNum = order ? order : -1;
+                // metaData.ORDER = metaData.ORDER ? [...metaData.ORDER, orderNum] : [orderNum];
+              } else if (referenceName === "HANDLE") {
+                if (value && value.length > 0 && value[0] !== '@') value = '@' + value;
+                metaData[referenceName] = value;
+              } else metaData[referenceName] = value;
+
               if (storeResponse) {
                 regesterIds.push(key);
                 formData.append(key, value.toString());
               }
-              metaData[referenceName] = value;
             }
+          }
+          else {
+            if (referenceName === 'RELATIONSHIP') metaData[referenceName] = [...metaData[referenceName], ""];
           }
         }
         if (regesterIds.length > 0) {
@@ -124,12 +148,24 @@ const Register = ({ data }) => {
 
   const handleTextField = async (_id, e) => {
     e.preventDefault();
-    let newResState = cloneDeep(registerStateRes);
-    newResState[_id] = {
-      ...newResState[_id],
-      value: e.target.value
-    };
-    await setRegisterStateRes(newResState);
+    let value = e.target.value || "";
+    let handleState = false;
+    if (e.target.name === "HANDLE" && value.length > 0) {
+      if (value.length > 15 || !regex.test(value)) {
+        handleState = true;
+        await setHandleValidation(false);
+      } else await setHandleValidation(true);
+    }
+    if (!handleState) {
+      let newResState = cloneDeep(registerStateRes);
+      newResState[_id] = {
+        ...newResState[_id],
+        value: value
+      };
+      await setRegisterStateRes(newResState);
+    } else {
+      dispatch(showErrorSnackbar(translations?.['handles_can_start_with_@_or_nothing_and_must_contain_only_alphanumeric_characters_and/or_underscores,_up_to_a_maximum_of_15_characters.']) || USER_REGISTER.REGISTER_HANDLE_PARSING_ERROR);
+    }
   };
 
   const handleFileField = async (_id, e) => {
@@ -176,6 +212,8 @@ const Register = ({ data }) => {
       return (
         <TextField
           className={classes.marginBottom}
+          error={field.referenceName === "HANDLE" ? !handleValidation : false}
+          helperText={field.referenceName === "HANDLE" && !handleValidation ? "Invalid Input" : null}
           variant="outlined"
           margin="normal"
           fullWidth
@@ -193,6 +231,7 @@ const Register = ({ data }) => {
 
   return (
   <>
+      {data?.richText && <RenderRichTextArea richText={data.richText}/>}
       {registerState?.length > 0 && registerState.map(field => (
         <div key={field._id}>
           {renderDynamicInput(field)}

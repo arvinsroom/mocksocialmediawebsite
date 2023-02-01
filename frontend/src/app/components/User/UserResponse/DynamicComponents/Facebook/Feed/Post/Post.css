@@ -6,19 +6,17 @@
   width: 100%;
 } */
 
-.postTopAvatar {
-  margin-right: 10px
-}
-
 .postTopInfo > h3 {
   font-size: small;
-  font-family: 'Noto Sans', sans-serif;
+  margin-top: 0;
+  margin-bottom: 0;
 }
 
 .postTopInfo > p {
   font-size: x-small;
   color: gray;
-  font-family: 'Noto Sans', sans-serif;
+  margin-top: 0;
+  margin-bottom: 0;
 }
 
 .postTop {
@@ -38,7 +36,6 @@
   color: gray;
   cursor: pointer;
   align-items: stretch;
-  font-family: 'Noto Sans', sans-serif;
   font-size: 12px !important;
   margin-left: 8px;
   margin-right: 8px;
@@ -53,7 +50,6 @@
 
 .postOption > p {
   margin-left: 10px;
-  font-family: 'Noto Sans', sans-serif;
   font-size: 12px !important;
 }
 
@@ -71,8 +67,44 @@
 
 .createComment {
   display: flex;
-  border-bottom: 1px solid #eff2f5;
-  padding: 15px;
+  padding-left: 16px;
+  padding-bottom: 4px;
+  padding-right: 16px;
+  padding-top: 4px;
+  align-items: center;
+}
+
+@media only screen and (max-width: 481px) {
+  .postComment {
+    display: none;
+  }
+  .postCommentMobile {
+    display: block;
+    border-radius: 50%;
+    border: none;
+    cursor: pointer;
+    pointer-events: auto;
+    background-color: transparent;
+  }
+  /* .postCommentMobile:hover {
+    background-color: #f0f0f0;
+  } */
+}
+
+@media only screen and (min-width: 481px) {
+  .postComment {
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 5px;
+    border: none;
+    color: grey;
+    cursor: pointer;
+  }
+  .postCommentMobile {
+    display: none;
+  }
 }
 
 .createComment > form {
@@ -89,66 +121,8 @@
   background-color: #eff2f5;
 }
 
-.newFeedInputArea {
-  border-style: none;
-  height: 100px;
-  width: 100%;
-  font-family: 'Noto Sans', sans-serif;
-  border: none;
-  overflow: auto;
-  outline: none;
-  -webkit-box-shadow: none;
-  -moz-box-shadow: none;
-  box-shadow: none;
-  resize: none;
-}
-
-.newFeedInputAreaShare {
-  border-style: none;
-  width: 100%;
-  font-family: 'Noto Sans', sans-serif;
-  border: none;
-  overflow: auto;
-  outline: none;
-  -webkit-box-shadow: none;
-  -moz-box-shadow: none;
-  box-shadow: none;
-  resize: none;
-}
-
 .createCommentInputText {
   flex: 1;
-}
-
-.showComment {
-  border-bottom: 1px solid #eff2f5;
-  padding: 10px;
-  display: flex;
-  margin-left: 5%;
-}
-
-.displayIndividualComment {
-  outline-width: 0;
-  overflow-wrap: 'anywhere';
-  border: none;
-  border-radius: 20px 20px;
-  background-color: #eff2f5;
-  flex: 1;
-  padding: 10px;
-  margin: 3px 5px;
-  font-size: 12px;
-  font-family: 'Noto Sans', sans-serif;
-}
-
-.postComment {
-  border-radius: 10px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 5px;
-  border: none;
-  color: grey;
-  cursor: pointer;
 }
 
 .link-preview {
@@ -157,9 +131,11 @@
   text-decoration: none;
 }
 
-.descriptions {
+.fbPostdescriptions {
   background-color: #F2F3F5;
   padding: 5px;
+  margin-left: 1px;
+  margin-right: 1px;
 }
 
 a.link-preview .link-area .og-title {
@@ -168,7 +144,6 @@ a.link-preview .link-area .og-title {
 }
 
 .og-title {
-  font-family: 'Noto Sans', sans-serif;
   color: #828282;
   font-size: 12px;
 }
@@ -176,12 +151,10 @@ a.link-preview .link-area .og-title {
 .fontFamily {
   color: black;
   font-size: 12px;
-  font-family: 'Noto Sans', sans-serif;
 }
 
 .og-description {
   text-overflow: ellipsis;
-  font-family: 'Noto Sans', sans-serif;
   color: black;
   font-size: 12px;
 }
@@ -256,8 +229,31 @@ a.link-preview .link-area .og-title {
   background-color: rgba(0, 0, 0, 0.05);
 }
 
+.report-container{
+  position: absolute;
+  color: gray;
+  font-size: 10px;
+  border: none;
+  cursor: pointer;
+  text-align: center;
+  right: 0;
+  display: flex;
+  align-items: center;
+  padding: 0 15px 0 20px;
+  width: 80px;
+  top: 20px;
+}
+
+.report-container:hover{
+background-color: rgba(0, 0, 0, 0.05);
+}
+
+.report-text{
+  margin-left: 8px;
+  margin-top: 10px;
+}
+
 .modalTopFont {
-  font-family: 'Noto Sans', sans-serif;
   text-align: center;
   font-size: 1.25rem;
   width: 90%;
@@ -309,7 +305,6 @@ a.link-preview .link-area .og-title {
 }
 
 .newModalWidth1 > p {
-  font-family: 'Noto Sans', sans-serif;
   font-size: 15px !important;
 }
 
@@ -320,7 +315,7 @@ a.link-preview .link-area .og-title {
   width: 55%;
 }
 
-.modalContainerPaper {
+.fbModalContainerPaper {
   /* background-color: rgba(192,192,192,0.6); */
   background-color: white;
   box-shadow: 0px 5px 7px -7px rgba(0,0,0, 0.75);
@@ -335,7 +330,6 @@ a.link-preview .link-area .og-title {
   overflow: scroll;
   overflow-x: hidden;
   font-size: small;
-  font-family: 'Noto Sans', sans-serif;
 }
 
 .sharePostPreview {
@@ -343,7 +337,6 @@ a.link-preview .link-area .og-title {
   border: 1px solid lightgray;
   border-radius: 8px;
   font-size: small;
-  font-family: 'Noto Sans', sans-serif;
 }
 
 .reactionContainer {
@@ -351,19 +344,16 @@ a.link-preview .link-area .og-title {
   width: fit-content !important;
   justify-content: flex-start !important;
   font-size: small;
-  font-family: 'Noto Sans', sans-serif;
 
 }
 
 .reactionContainer > div {
   height: 36px;
   font-size: small;
-  font-family: 'Noto Sans', sans-serif;
 }
 
 .defaultText {
   /* margin: auto; */
-  font-family: 'Noto Sans', sans-serif;
   font-size: 12px !important;
 }
 
@@ -377,7 +367,6 @@ a.link-preview .link-area .og-title {
 
 .likeText {
   color: rgb(32, 120, 244);
-  font-family: 'Noto Sans', sans-serif;
   font-size: 12px !important;
 }
 
@@ -391,7 +380,6 @@ a.link-preview .link-area .og-title {
 
 .loveText {
   color: rgb(243, 62, 88);
-  font-family: 'Noto Sans', sans-serif;
   font-size: 12px !important;
 }
 
@@ -405,7 +393,6 @@ a.link-preview .link-area .og-title {
 
 .hahaText {
   color: rgb(247, 177, 37);
-  font-family: 'Noto Sans', sans-serif;
   font-size: 12px !important;
 }
 
@@ -419,7 +406,6 @@ a.link-preview .link-area .og-title {
 
 .wowText {
   color: rgb(247, 177, 37);
-  font-family: 'Noto Sans', sans-serif;
   font-size: 12px !important;
 }
 
@@ -433,7 +419,6 @@ a.link-preview .link-area .og-title {
 
 .sadText {
   color: rgb(247, 177, 37);
-  font-family: 'Noto Sans', sans-serif;
   font-size: 12px !important;
 }
 
@@ -447,7 +432,6 @@ a.link-preview .link-area .og-title {
 
 .angryText {
   color: rgb(233, 113, 15);
-  font-family: 'Noto Sans', sans-serif;
   font-size: 12px !important;
 }
 
@@ -458,7 +442,6 @@ a.link-preview .link-area .og-title {
 }
 
 .totalComments > p {
-  font-family: 'Noto Sans', sans-serif;
   font-size: 12px !important;
 }
 
@@ -469,7 +452,6 @@ a.link-preview .link-area .og-title {
   color: gray;
   cursor: pointer;
   align-items: stretch;
-  font-family: 'Noto Sans', sans-serif;
   font-size: 12px !important;
 }
 
@@ -503,4 +485,21 @@ a.link-preview .link-area .og-title {
   background-size: 100% 100%;
   opacity: .4;
   background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgd2lkdGg9IjI0IiBoZWlnaHQ9IjI0Ij48cGF0aCBmaWxsPSJub25lIiBkPSJNMCAwaDI0djI0SDB6Ii8+PHBhdGggZD0iTTEzIDE0aC0yYTguOTk5IDguOTk5IDAgMCAwLTcuOTY4IDQuODFBMTAuMTM2IDEwLjEzNiAwIDAgMSAzIDE4QzMgMTIuNDc3IDcuNDc3IDggMTMgOFYyLjVMMjMuNSAxMSAxMyAxOS41VjE0em0tMi0yaDR2My4zMDhMMjAuMzIxIDExIDE1IDYuNjkyVjEwaC0yYTcuOTgyIDcuOTgyIDAgMCAwLTYuMDU3IDIuNzczQTEwLjk4OCAxMC45ODggMCAwIDEgMTEgMTJ6Ii8+PC9zdmc+');
+}
+
+/* .emoji-mart-category {
+  display: none;
+}
+*/
+
+.react-emoji {
+  word-break: break-word;
+}
+
+.react-emoji-picker > section {
+  width: 100% !important;
+}
+
+.fbPostBottomTopMargin {
+  margin-top: 10px;
 }

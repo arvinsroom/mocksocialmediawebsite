@@ -26,7 +26,8 @@ export const REGISTER_PAGE_CUSTOM_REFERENCES = Object.freeze({
   PASSWORD: "Password",
   DATE: "Date",
   NUMBER: "Number",
-  HANDLE: "Handle"
+  HANDLE: "Handle",
+  RELATIONSHIP: "Relationship"
 });
 
 export const TEMPLATE = Object.freeze({
@@ -112,6 +113,7 @@ export const GENERAL_PAGE = Object.freeze({
   UPLOAD_POST_SPREADSHEET: 'UPLOAD POST SPREADSHEET',
   UPLOAD_AUTHOR_SPREADSHEET: 'UPLOAD AUTHOR SPREADSHEET',
   UPLOAD_POST_MEDIA: 'UPLOAD POST MEDIA',
+  UPLOAD_AUTHOR_MEDIA: 'UPLOAD AUTHOR MEDIA',
   UPLOAD_LANGUAGE_SPREADSHEET: 'UPLOAD LANGUAGE SPREADSHEET'
 });
 
@@ -242,5 +244,19 @@ export const TW_TRANSLATIONS_DEFAULT = Object.freeze({
   ADD_A_COMMENT: 'Add a comment',
   YOU_RETWEETED: 'You Retweeted',
   RETWEET: 'Retweet',
-  QUOTE_TWEET: 'Quote Tweet'
+  QUOTE_TWEET: 'Quote Tweet',
+  UNDO_RETWEET: 'Undo Retweet',
+  FRIENDS: 'friends',
+  LIKED: 'liked',
+  AND: 'and',
+  OTHERS: 'others',
+  REPORTED: 'Reported',
+  REPORT: 'Report',
+  RETWEETED: 'retweeted',
+  PLEASE_LIMIT_CHARACTERS_TO_280: 'Please limit characters to 280',
+  TOTAL_CHARACTERS: 'Total characters'
+});
+
+export const USER_REGISTER = Object.freeze({
+  REGISTER_HANDLE_PARSING_ERROR: 'Handles can start with @ or nothing and must contain only alphanumeric characters and/or underscores, up to a maximum of 15 characters.'
 });

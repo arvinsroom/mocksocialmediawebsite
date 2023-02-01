@@ -14,6 +14,12 @@ export const deleteFbAction = (likeActionId) => {
   });
 }
 
+export const updatePost = (data) => {
+  return http.post(`/user/facebook/post`, data, {
+    headers: userAuthHeader()
+  });
+}
+
 export const createFbPost = (data) => {
   return http.post("/user/facebook/new", data, {
     headers: {

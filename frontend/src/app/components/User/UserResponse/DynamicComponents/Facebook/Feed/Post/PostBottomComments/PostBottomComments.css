@@ -1,0 +1,25 @@
+.fbListComments {
+  /* border-bottom: 1px solid #eff2f5; */
+  /* padding: 10px; */
+  font-size: .9375rem;
+  display: flex;
+  /* margin-left: 1%; */
+  padding-left: 16px;
+  padding-right: 16px;
+  margin-bottom: 2px;
+}
+
+.fbCommentBar {
+  outline-width: 0;
+  border: none;
+  border-radius: 20px 20px;
+  background-color: #eff2f5;
+  padding: 10px;
+  margin: 3px 5px;
+  font-size: .9375rem;
+  word-break: break-word;
+}
+
+.displayIndividualUserName {
+  font-weight: 600;
+}

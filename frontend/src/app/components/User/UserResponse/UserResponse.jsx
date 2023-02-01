@@ -1,11 +1,10 @@
 import { Container } from '@material-ui/core';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import useStyles from '../../style';
 import { useSelector, useDispatch } from "react-redux";
-import { Redirect, useHistory } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
+import { getCurrentUTCTime }  from '../../../utils';
 import "./UserResponse.css";
-import { USER_TRANSLATIONS_DEFAULT } from '../../../constants';
-import clsx from 'clsx';
 
 import InfoPage from './DynamicComponents/InfoPage/InfoPage';
 import Finish from './DynamicComponents/Finish/Finish';
@@ -17,6 +16,7 @@ import Twitter from './DynamicComponents/Twitter/Twitter';
 
 import { userLogout } from "../../../actions/userAuth";
 import { updateUserMain } from '../../../actions/user';
+import { USER_TRANSLATIONS_DEFAULT } from '../../../constants';
 
 const Components = {
   MCQ: MCQ,
@@ -32,14 +32,12 @@ const UserResponse = () => {
   const dispatch = useDispatch();
   const { isLoggedInUser, translations } = useSelector(state => state.userAuth);
   const { flow, active, finished } = useSelector(state => state.flowState);
-  const [isFacebook, setIsFacebook] = useState(false);
-  
+
   let history = useHistory();
 
   const updateFinishTimeAndLogout = async () => {
-    const utcDateTime = new Date();
-    var utcDateTimeString = utcDateTime.toISOString().replace('Z', '').replace('T', ' ');
-    await dispatch(updateUserMain({ finishedAt: utcDateTimeString }));
+    // update last flow data
+    await dispatch(updateUserMain({ finishedAt: getCurrentUTCTime() }));
     await dispatch(userLogout());
   };
 
@@ -49,46 +47,50 @@ const UserResponse = () => {
     if (finished) updateFinishTimeAndLogout();
   }, [finished]);
 
+  const dynamicClasses = () => {
+    let customCSS = `${classes.card}`;
+    if (flow[active]?.type === 'TWITTER' || flow[active]?.type === 'FACEBOOK') {
+      customCSS += ' twitterCSS';
+    }
+    if (finished) {
+      customCSS += ` ${classes.centerCard}`;
+    }
+    return customCSS;
+  }
+
   const block = (currentActive) => {
     if (finished) {
-      return React.createElement(
-        () =>
-        <Container component="main" maxWidth="md" className={classes.centerCard}>
-          <div>
-            <h1>{(translations && translations['thank_you!']) || 'Thank You!'}</h1>
-            <p className="lead">
-            <strong>
-              {translations?.['your_response_has_been_recorded,_and_you_can_safely_close_this_page.'] || USER_TRANSLATIONS_DEFAULT.RESPONSE_SUCCESSFULLY_RECORDED_CLOSE_TAB}
-            </strong>
-            </p>
-          </div>
-        </Container>
-      );  
+      return (
+        <div>
+          <h1>{(translations && translations['thank_you!']) || 'Thank You!'}</h1>
+          <p>
+            {translations?.['your_response_has_been_recorded,_and_you_can_safely_close_this_page.'] || USER_TRANSLATIONS_DEFAULT.RESPONSE_SUCCESSFULLY_RECORDED_CLOSE_TAB}
+          </p>
+        </div>
+      )
     }
     else if (currentActive !== -1 && typeof Components[flow[currentActive]?.type] !== "undefined") {
       const pageType = flow[currentActive].type;
-      // if (pageType === 'FACEBOOK') setIsFacebook(true);
       return React.createElement(Components[pageType], {
         key: flow[currentActive]._id,
         data: flow[currentActive],
       });
     }
     else {
-      return React.createElement(
-        () => <div>This Flow component configurations have not been created yet.</div>);
+      return (
+        <>
+          This Flow component configurations have not been created yet.
+        </>
+      )
     }
   };
-
   return (
-    // <Container component="main" maxWidth="md" className={clsx({
-    //   [classes.card]: true,
-    //   ['customCSS']: isFacebook
-    // })}>
-    <Container component="main" maxWidth="md" className={classes.card, 'customCSS'}>
+    <Container component="main" maxWidth="md"
+      className={dynamicClasses()}
+     >
       {block(active)}
     </Container>
   );
 }
 
 export default UserResponse;
-
