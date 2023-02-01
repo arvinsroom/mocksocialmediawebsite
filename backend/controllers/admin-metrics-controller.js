@@ -260,7 +260,8 @@ const getUsersPostsActionsData = async (req, res, next) => {
         templateId,
       },
       order: [
-        ['startedAt', 'ASC']
+        ['startedAt', 'ASC'],
+        [ { model: db.UserPostAction, as: 'userPostActions' } , 'createdAt', 'ASC']
       ],
       limit: Number(limit),
       offset: Number(offset),
@@ -270,7 +271,7 @@ const getUsersPostsActionsData = async (req, res, next) => {
         {
           model: db.UserPostAction,
           as: 'userPostActions',
-          attributes: ['_id', 'action', 'comment'],
+          attributes: ['_id', 'action', 'comment', 'createdAt'],
           include: [
             {
               // we might need to show adminId where applicable
