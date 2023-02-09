@@ -7,7 +7,7 @@ import { useDispatch } from "react-redux";
 import useStyles from '../../../../../style';
 import { showErrorSnackbar, showInfoSnackbar, showSuccessSnackbar } from '../../../../../../actions/snackbar';
 import { GENERAL_PAGE, TEMPLATE, TEMPLATE_TYPES, ORDER_TYPES } from '../../../../../../constants';
-import { IconTableImport, IconDeviceFloppy } from '@tabler/icons';
+import { IconTableImport, IconDeviceFloppy } from '@tabler/icons-react';
 import clsx from 'clsx';
 
 const MediaPosts = ({ templateId }) => {

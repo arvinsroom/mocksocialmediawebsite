@@ -1,13 +1,15 @@
-export async function down(queryInterface, DataTypes) {
+const { Sequelize } = require('sequelize');
+
+export async function down({ context: queryInterface }) {
   await queryInterface.dropTable('User');
 }
 
-export async function up(queryInterface, DataTypes) {
+export async function up({ context: queryInterface }) {
   await queryInterface.createTable('User', {
     _id: {
       allowNull: false,
       primaryKey: true,
-      type: DataTypes.UUID
+      type: Sequelize.UUID
     },
     templateId: {
       allowNull: false,
@@ -16,24 +18,24 @@ export async function up(queryInterface, DataTypes) {
         key: '_id',
         model: 'Template'
       },
-      type: DataTypes.UUID
+      type: Sequelize.UUID
     },
     qualtricsId: {
       allowNull: true,
-      type: DataTypes.STRING,
+      type: Sequelize.STRING,
     },
     consent: {
       allowNull: true,
       defaultValue: false,
-      type: DataTypes.BOOLEAN,
+      type: Sequelize.BOOLEAN,
     },
     startedAt: {
       allowNull: false,
-      type: DataTypes.DATE(3),
+      type: Sequelize.DATE(3),
     },
     finishedAt: {
       allowNull: true,
-      type: DataTypes.DATE(3),
+      type: Sequelize.DATE(3),
     },
   });
   await queryInterface.addIndex('User', ['templateId']);

@@ -10,17 +10,17 @@ import Metrics from './AdminPortalConfig/Metrics/Metrics';
 import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../../../actions/auth";
 import { clearTemplate } from "../../../actions/template";
-import { Redirect } from 'react-router-dom';
+import { Navigate } from 'react-router-dom';
 import { ADMIN_TAB_NAMES, TEMPLATE } from '../../../constants';
 import { useState } from 'react';
 import clsx from 'clsx';
 import { makeStyles, useTheme } from '@material-ui/core/styles';
-import { Drawer, AppBar, Toolbar, List, CssBaseline, Typography, Divider, IconButton, ListItem, ListItemIcon, ListItemText, Button } from '@material-ui/core';
+import { Drawer, AppBar, Toolbar, List, Typography, Divider, IconButton, ListItem, ListItemIcon, ListItemText, Button } from '@material-ui/core';
 import MenuIcon from '@material-ui/icons/Menu';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import { IconSettings, IconBrowser, IconUserPlus, IconInfoCircle, IconCheckbox, IconForms, IconExternalLink,
-  IconAdjustments, IconDatabase, IconLogout } from '@tabler/icons';
+  IconAdjustments, IconDatabase, IconLogout } from '@tabler/icons-react';
 
 const drawerWidth = 240;
 const useStyles = makeStyles((theme) => ({
@@ -100,7 +100,7 @@ const AdminPortalDrawer = () => {
   const dispatch = useDispatch();
 
   if (!isLoggedInAdmin) {
-    return <Redirect to="/admin" />;
+    return <Navigate to="/admin" />;
   }
 
   const handleDrawerOpen = () => {

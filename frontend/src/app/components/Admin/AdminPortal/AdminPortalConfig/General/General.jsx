@@ -3,10 +3,9 @@ import Language from './Language/Language';
 import Upload from './Upload/Upload';
 import UploadAuthors from './UploadAuthors/UploadAuthors';
 
-import { Redirect } from 'react-router-dom';
+import { Navigate } from 'react-router-dom';
 import { useSelector } from "react-redux";
 import { Container } from '@material-ui/core';
-import { useEffect } from 'react';
 import useStyles from '../../../../style';
 
 const General = () => {
@@ -15,7 +14,7 @@ const General = () => {
   const classes = useStyles();
 
   if (!isLoggedInAdmin) {
-    return <Redirect to="/admin" />;
+    return <Navigate to="/admin" />;
   }
 
   return (

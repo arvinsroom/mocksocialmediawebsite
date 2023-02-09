@@ -11,13 +11,13 @@ import { useState } from 'react';
 import { create } from '../../../../../services/info-service';
 import useStyles from '../../../../style';
 import { useSelector, useDispatch } from "react-redux";
-import { Redirect } from 'react-router-dom';
+import { Navigate } from 'react-router-dom';
 import { showErrorSnackbar, showSuccessSnackbar, showInfoSnackbar } from '../../../../../actions/snackbar';
 import { TEMPLATE, INFO_PAGE } from '../../../../../constants';
 import SocialMediaPages from '../../../../Common/AdminCommon/SocialMediaPages';
 import RichTextArea from '../../../../Common/AdminCommon/RichTextArea';
 import { checkIfEmptyRichText } from '../../../../../utils';
-import { IconDeviceFloppy } from '@tabler/icons';
+import { IconDeviceFloppy } from '@tabler/icons-react';
 import clsx from 'clsx';
 
 const InfoPage = () => {
@@ -89,7 +89,7 @@ const InfoPage = () => {
   };
 
   if (!isLoggedInAdmin) {
-    return <Redirect to="/admin" />;
+    return <Navigate to="/admin" />;
   }
 
   return (

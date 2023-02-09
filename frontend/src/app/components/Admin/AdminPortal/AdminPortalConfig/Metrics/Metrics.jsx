@@ -17,9 +17,9 @@ import {
   fetchTemplateDataQuestionData,
   downloadMediaData
 } from '../../../../../services/metrics-service';
-import { IconTableExport, IconDatabaseExport, IconFileExport } from '@tabler/icons';
+import { IconTableExport, IconDatabaseExport, IconFileExport } from '@tabler/icons-react';
 import { useSelector, useDispatch } from "react-redux";
-import { Redirect } from 'react-router-dom';
+import { Navigate } from 'react-router-dom';
 import useStyles from '../../../../style';
 import { showErrorSnackbar, showInfoSnackbar } from '../../../../../actions/snackbar';
 import { CSVLink } from "react-csv";
@@ -69,7 +69,7 @@ const Template = () => {
 
 
   if (!isLoggedInAdmin) {
-    return <Redirect to="/admin" />;
+    return <Navigate to="/admin" />;
   }
   
   const downloadTemplateMedia = async (templateId, templateName, e) => {

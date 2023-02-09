@@ -17,7 +17,7 @@ import { checkIfEmptyRichText } from '../../../../../utils';
 import { useSelector, useDispatch } from "react-redux";
 import { create } from '../../../../../services/register-service';
 import RichTextArea from '../../../../Common/AdminCommon/RichTextArea';
-import { Redirect } from 'react-router-dom';
+import { Navigate } from 'react-router-dom';
 import { showErrorSnackbar, showSuccessSnackbar, showInfoSnackbar } from '../../../../../actions/snackbar';
 import {
   TEMPLATE,
@@ -26,7 +26,7 @@ import {
   REGISTER_PAGE_CUSTOM_REFERENCES
 } from '../../../../../constants';
 import cloneDeep from 'lodash/cloneDeep';
-import { IconCirclePlus, IconTrash, IconDeviceFloppy } from '@tabler/icons';
+import { IconCirclePlus, IconTrash, IconDeviceFloppy } from '@tabler/icons-react';
 import clsx from 'clsx';
 
 const Register = () => {
@@ -98,7 +98,7 @@ const Register = () => {
   };
 
   if (!isLoggedInAdmin) {
-    return <Redirect to="/admin" />;
+    return <Navigate to="/admin" />;
   }
 
   const addCustomField = async () => {

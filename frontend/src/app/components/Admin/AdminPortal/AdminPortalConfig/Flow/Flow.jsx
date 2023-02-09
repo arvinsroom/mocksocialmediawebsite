@@ -16,11 +16,11 @@ import { Button,
 import { useEffect, useState } from 'react';
 import { update, get, deletePage } from '../../../../../services/page-service';
 import { useSelector, useDispatch } from "react-redux";
-import { Redirect } from 'react-router-dom';
+import { Navigate } from 'react-router-dom';
 import useStyles from '../../../../style';
 import { showErrorSnackbar, showSuccessSnackbar, showInfoSnackbar } from '../../../../../actions/snackbar';
 import { TEMPLATE, FLOW_PAGE } from '../../../../../constants';
-import { IconRefresh, IconTrash } from '@tabler/icons';
+import { IconRefresh, IconTrash } from '@tabler/icons-react';
 import clsx from 'clsx';
 
 const Flow = () => {
@@ -79,7 +79,7 @@ const Flow = () => {
   };
 
   if (!isLoggedInAdmin) {
-    return <Redirect to="/admin" />;
+    return <Navigate to="/admin" />;
   }
 
   const handleClickOpen = (pageId, name, e) => {
@@ -109,11 +109,11 @@ const Flow = () => {
     <Table aria-label="Configure Page Ordering">
       <TableHead>
         <TableRow>
-          <TableCell className={classes.body, classes.head} align="center"><p>{FLOW_PAGE.PAGE_NAME}</p></TableCell>
-          <TableCell className={classes.body, classes.head} align="center"><p>{FLOW_PAGE.PAGE_TYPE}</p></TableCell>
-          <TableCell className={classes.body, classes.head} align="center"><p>{FLOW_PAGE.CURRENT_FLOW_ORDER}</p></TableCell>
-          <TableCell className={classes.body, classes.head} align="center"><p>{FLOW_PAGE.SET_FLOW_ORDER}</p></TableCell>
-          <TableCell className={classes.body, classes.head} align="center"><p>Delete Page</p></TableCell>
+          <TableCell className={`${classes.body}, ${classes.head}`} align="center"><p>{FLOW_PAGE.PAGE_NAME}</p></TableCell>
+          <TableCell className={`${classes.body}, ${classes.head}`} align="center"><p>{FLOW_PAGE.PAGE_TYPE}</p></TableCell>
+          <TableCell className={`${classes.body}, ${classes.head}`} align="center"><p>{FLOW_PAGE.CURRENT_FLOW_ORDER}</p></TableCell>
+          <TableCell className={`${classes.body}, ${classes.head}`} align="center"><p>{FLOW_PAGE.SET_FLOW_ORDER}</p></TableCell>
+          <TableCell className={`${classes.body}, ${classes.head}`} align="center"><p>Delete Page</p></TableCell>
         </TableRow>
       </TableHead>
       <TableBody>
@@ -153,7 +153,6 @@ const Flow = () => {
       variant="contained"
       fullWidth
       disabled={!pageOrderData}
-      className={classes.submit}
       onClick={handleSubmit}
       component="label"
       startIcon={<IconRefresh />}

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useHistory, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { Button, TextField } from '@material-ui/core';
 import Container from '@material-ui/core/Container';
 import { useDispatch } from "react-redux";
@@ -8,11 +8,11 @@ import { userLogin } from "../../../actions/userAuth";
 import useStyles from '../../style';
 import { showInfoSnackbar } from "../../../actions/snackbar";
 import { USER_TRANSLATIONS_DEFAULT } from '../../../constants';
-import { IconKey } from '@tabler/icons';
+import { IconKey } from '@tabler/icons-react';
 import "./UserLogin.css";
 
 const UserLogin = () => {
-  let history = useHistory();
+  let history = useNavigate();
   const classes = useStyles();
   const dispatch = useDispatch();
   const { accessCode } = useParams();
@@ -29,9 +29,9 @@ const UserLogin = () => {
       const tempCode = Number(code);
       try {
         await dispatch(userLogin(tempCode));
-        history.push(`/${tempCode}/participantId`);
+        history(`/${tempCode}/participantId`);
       } catch (error) {
-        history.push("/");
+        history("/");
       }
     } else if (accessCode) {
       dispatch(showInfoSnackbar(USER_TRANSLATIONS_DEFAULT.INCORRECT_ACCESS_LOGIN_CODES));

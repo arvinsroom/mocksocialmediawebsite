@@ -1,5 +1,5 @@
 # multi-stage docker for build and then run production specific
-FROM node:13.12.0-alpine as builder
+FROM node:18.14.0-alpine as builder
 
 # this will be temporary working directory
 WORKDIR /app/temp
@@ -35,7 +35,7 @@ RUN rm -rf node_modules/rxjs/_esm5/
 RUN rm -rf node_modules/rxjs/_esm2015/
 RUN rm -rf node_modules/swagger-ui-dist/*.map
 
-FROM node:13.12.0-alpine
+FROM node:18.14.0-alpine
 
 # this will be working directory
 WORKDIR /app/backend

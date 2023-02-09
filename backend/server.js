@@ -1,9 +1,6 @@
 import * as express from "express";
 import cors from "cors";
-import {
-  umzugUp,
-  umzugDown
-} from './migrations';
+import { umzugUp } from './migrations';
 import db from "./clients/database-client";
 
 import auth from './routes/auth-routes';

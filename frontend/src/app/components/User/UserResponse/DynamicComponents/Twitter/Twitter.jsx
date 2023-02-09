@@ -5,10 +5,10 @@ import {
   clearFacebookState
 } from '../../../../../actions/socialMedia';
 import useStyles from '../../../../style';
-import { Redirect } from 'react-router-dom';
+import { Navigate } from 'react-router-dom';
 import { updateFlowActiveState } from '../../../../../actions/flowState';
 import { Button } from '@material-ui/core';
-import { IconChevronRight } from '@tabler/icons';
+import { IconChevronRight } from '@tabler/icons-react';
 import Sidebar from './Sidebar/Sidebar';
 import Feed from './Feed/Feed';
 import TweetBox from './Feed/TweetBox/TweetBox';
@@ -39,7 +39,7 @@ const Twitter = ({ data }) => {
   };
 
   useEffect(() => {
-    if (!isLoggedInUser) return <Redirect to="/" />;
+    if (!isLoggedInUser) return <Navigate to="/" />;
     fetch();
     window.onbeforeunload = function() {
       return WINDOW_GLOBAL.RELOAD_ALERT_MESSAGE;

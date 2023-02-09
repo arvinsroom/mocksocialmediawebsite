@@ -3,11 +3,11 @@ import { useState } from 'react';
 import { create } from '../../../../../services/finish-service';
 import useStyles from '../../../../style';
 import { useSelector, useDispatch } from "react-redux";
-import { Redirect } from 'react-router-dom';
+import { Navigate } from 'react-router-dom';
 import { showErrorSnackbar, showSuccessSnackbar, showInfoSnackbar } from '../../../../../actions/snackbar';
 import { TEMPLATE, FINISH_PAGE } from '../../../../../constants';
 import { checkIfEmptyRichText } from '../../../../../utils';
-import { IconDeviceFloppy } from '@tabler/icons';
+import { IconDeviceFloppy } from '@tabler/icons-react';
 import clsx from 'clsx';
 
 const Finish = () => {
@@ -64,7 +64,7 @@ const Finish = () => {
   };
 
   if (!isLoggedInAdmin) {
-    return <Redirect to="/admin" />;
+    return <Navigate to="/admin" />;
   }
 
   return (

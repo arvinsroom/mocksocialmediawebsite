@@ -2,7 +2,7 @@ import { getUserRegisterDetails, createUserRegister } from '../../../../../servi
 import { useEffect, useState } from "react";
 import { Button, Input, Avatar, TextField } from '@material-ui/core';
 import { useSelector, useDispatch } from "react-redux";
-import { Redirect } from 'react-router-dom';
+import { Navigate } from 'react-router-dom';
 import useStyles from '../../../../style';
 import { showErrorSnackbar, showInfoSnackbar, showSuccessSnackbar } from '../../../../../actions/snackbar';
 import { updateFlowActiveState } from '../../../../../actions/flowState';
@@ -13,7 +13,7 @@ import {
   USER_REGISTER
  } from '../../../../../constants';
 import cloneDeep from 'lodash/cloneDeep';
-import { IconCloudUpload, IconChevronRight } from '@tabler/icons';
+import { IconCloudUpload, IconChevronRight } from '@tabler/icons-react';
 import RenderRichTextArea from '../../../../Common/UserCommon/RenderRichTextArea';
 import "./Register.css";
 
@@ -56,7 +56,7 @@ const Register = ({ data }) => {
   };
 
   useEffect(() => {
-    if (!isLoggedInUser) return <Redirect to="/" />;
+    if (!isLoggedInUser) return <Navigate to="/" />;
     fetch();
 
     window.onbeforeunload = function() {

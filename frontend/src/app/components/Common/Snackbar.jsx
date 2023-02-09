@@ -3,7 +3,7 @@ import Snackbar from "@material-ui/core/Snackbar";
 import { clearSnackbar } from "../../actions/snackbar";
 import CloseIcon from '@material-ui/icons/Close';
 import IconButton from '@material-ui/core/IconButton';
-import { IconCircleCheck, IconInfoCircle, IconAlertCircle } from '@tabler/icons';
+import { IconCircleCheck, IconInfoCircle, IconAlertCircle } from '@tabler/icons-react';
 import useStyles from '../style';
 
 export default function CustomSnackbar() {
