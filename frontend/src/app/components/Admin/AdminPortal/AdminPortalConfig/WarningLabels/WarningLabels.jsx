@@ -256,7 +256,7 @@ const WarningLabels = () => {
             onClick={(e) => handleChange(e, templateDialogBox.postId, 'richText')}
             color="primary"
           >
-            Save
+            Done
           </Button>
         </DialogActions>
       </Dialog>
