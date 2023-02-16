@@ -276,9 +276,9 @@ export const SEE_WHY_MODAL = Object.freeze({
 });
 
 export const SHARE_ANYWAY_MODAL = Object.freeze({
-  SHARE_ANYWAY: 'Share Anyway',
+  SHARE_ANYWAY: 'Share anyway',
   FALSE_INFORMATION_IN_THIS_POST: 'False information in this post',
   INDEPENDENT_FACT_CHECKERS: 'Independent fact-checkers',
-  GO_BACK: 'GO BACK',
+  GO_BACK: 'Go Back',
   SAY_THIS_POST_HAS_FALSE_INFORMATION: 'say this post has false information. To help stop the spread of false news, a notice will be added to your post if you decide to share this.'
 });
