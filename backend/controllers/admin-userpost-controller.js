@@ -37,6 +37,9 @@ const getAdminPosts = async (req, res, next) => {
     let data = null;
     data = await UserPost.findAll({
       where: whereClause,
+      order: [
+        ['adminPostId', 'ASC'],
+      ],
       attributes: ['adminPostId', '_id', 'type', 'postMessage', 'warningLabel', 'labelRichText', 'checkersLink']
     }, { transaction });
 
