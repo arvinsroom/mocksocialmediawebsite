@@ -118,7 +118,7 @@ const MediaPosts = ({ templateId }) => {
       menuItems.push(<MenuItem value={item} key={item}>{item}</MenuItem>)
     }
     return menuItems;
-  }
+  };
 
   const handleOrder = (event) => {
     setOrderType(event.target.value);
@@ -234,7 +234,7 @@ const MediaPosts = ({ templateId }) => {
           className={clsx(classes.submit, classes.widthFitContent)}
         >
           {GENERAL_PAGE.SAVE_RESPONSES}
-        </Button>    
+        </Button>
       </form>
     </>
   );

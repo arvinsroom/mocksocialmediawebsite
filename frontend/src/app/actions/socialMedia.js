@@ -137,7 +137,9 @@ export const getFacebookWithCommentsPosts = (data) => (dispatch) => {
             parentPostId: null,
             comments: [],
             initReply: postRecords[i].initReply,
-            initTweet: postRecords[i].initTweet
+            initTweet: postRecords[i].initTweet,
+            checkersLink: postRecords[i].checkersLink,
+            warningLabel: postRecords[i].warningLabel,
           };
           allIds.push(eachId);
         }
@@ -185,8 +187,7 @@ export const getFacebookWithCommentsPosts = (data) => (dispatch) => {
   );
 };
 
-// Change this completely for FACEBOOK
-export const getFacebookPosts = (data) => (dispatch) => {
+export const getTwitterPosts = (data) => (dispatch) => {
   dispatch({
     type: SET_FB_LOADING,
     payload: {

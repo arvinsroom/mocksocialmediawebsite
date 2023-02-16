@@ -19,8 +19,10 @@ import { Drawer, AppBar, Toolbar, List, Typography, Divider, IconButton, ListIte
 import MenuIcon from '@material-ui/icons/Menu';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
+import LabelOutlinedIcon from '@material-ui/icons/LabelOutlined';
 import { IconSettings, IconBrowser, IconUserPlus, IconInfoCircle, IconCheckbox, IconForms, IconExternalLink,
   IconAdjustments, IconDatabase, IconLogout } from '@tabler/icons-react';
+import WarningLabels from './AdminPortalConfig/WarningLabels/WarningLabels';
 
 const drawerWidth = 240;
 const useStyles = makeStyles((theme) => ({
@@ -186,6 +188,10 @@ const AdminPortalDrawer = () => {
             <ListItemIcon><IconBrowser/></ListItemIcon>
             <ListItemText primary={ADMIN_TAB_NAMES.SOCIAL_MEDIA} />
           </ListItem>
+          <ListItem button key={ADMIN_TAB_NAMES.WARNING_LABELS} onClick={e => handleState(e, 'WARNING-LABELS')} disabled={!templateId ? true : false}>
+            <ListItemIcon><LabelOutlinedIcon/></ListItemIcon>
+            <ListItemText primary={ADMIN_TAB_NAMES.WARNING_LABELS} />
+          </ListItem>
           <ListItem button key={ADMIN_TAB_NAMES.REGISTRATION} onClick={e => handleState(e, 'REGISTRATION')} disabled={!templateId ? true : false}>
             <ListItemIcon><IconUserPlus/></ListItemIcon>
             <ListItemText primary={ADMIN_TAB_NAMES.REGISTRATION} />
@@ -220,6 +226,7 @@ const AdminPortalDrawer = () => {
         <div className={classes.toolbar} />
           {activeState === 'CONDITION-SETTINGS' && <Template />}
           {activeState === 'SOCIAL-MEDIA' && <General />}
+          {activeState === 'WARNING-LABELS' && <WarningLabels />}
           {activeState === 'REGISTRATION' && <Register />}
           {activeState === 'INFORMATION' && <Info />}
           {activeState === 'MULTIPLE-CHOICE' && <MCQ />}

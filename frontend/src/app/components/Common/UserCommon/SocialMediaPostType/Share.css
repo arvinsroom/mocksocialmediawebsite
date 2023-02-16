@@ -5,6 +5,7 @@
 .link-preview {
   /* display: table-caption; */             
   /* make text wrap under image  */
+  font-size: small;
   text-decoration: none;
 }
 
@@ -13,14 +14,11 @@
   padding: 5px;
 }
 
-a.link-preview .link-area .og-title {
-  font-size: small;
-  padding-bottom: 15px;
-}
-
 .og-title {
   color: #828282;
   font-size: 12px !important;
+  font-size: small;
+  padding-bottom: 15px;
 }
 
 .og-description {

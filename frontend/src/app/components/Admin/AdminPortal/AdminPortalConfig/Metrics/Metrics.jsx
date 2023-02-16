@@ -200,7 +200,7 @@ const Template = () => {
               // userPostActions
               ...formulateUserPostActionsTracking(userPostActions),
               // userPostTracking
-              formulateUserPostLinkClickTracking(userPostTracking),
+              ...formulateUserPostLinkClickTracking(userPostTracking),
               // userPosts
               ...formulateUserPosts(userPosts),
               // userRegistrations, return only a string

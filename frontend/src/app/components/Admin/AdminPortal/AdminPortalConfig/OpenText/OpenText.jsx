@@ -1,4 +1,4 @@
-import { Button, TextField, IconButton, Container, Tooltip, Grid, Switch } from '@material-ui/core';
+import { Button, TextField, Container, Tooltip, Grid, Switch } from '@material-ui/core';
 import { useState } from 'react';
 import { create } from "../../../../../services/questions-service";
 import cloneDeep from 'lodash/cloneDeep';

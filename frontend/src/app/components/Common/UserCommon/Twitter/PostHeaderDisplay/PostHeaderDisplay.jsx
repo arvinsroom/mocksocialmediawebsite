@@ -9,6 +9,7 @@ import "./PostHeaderDisplay.css";
 const PostHeaderDisplay = ({ id }) => {
   const userRegisterData = useSelector(state => state.userRegister.metaData);
   const singlePost = useSelector(state => selectSinglePost(state, id));
+  // eslint-disable-next-line react-hooks/rules-of-hooks
   const singleAuthor = singlePost?.authorId ? useSelector(state => selectSocialMediaAuthor(state, singlePost.authorId)) : null;
   const [renderDynamicHeader, setRenderDynamicHeader] = useState(null);
 

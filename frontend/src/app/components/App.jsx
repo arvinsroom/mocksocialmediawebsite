@@ -17,6 +17,7 @@ function App() {
         <Route path="/admin" element={<AdminLogin />}></Route>
         <Route path="/:accessCode/user-response" element={<UserResponse />}></Route>
         <Route path="/:accessCode/participantId" element={<UserLoginWithQualtricsId />}></Route>
+        <Route path="/:accessCode/:participantId" element={<UserLogin />}></Route>
         <Route path="/:accessCode?" element={<UserLogin />}></Route>
       </Routes>
     </div>
