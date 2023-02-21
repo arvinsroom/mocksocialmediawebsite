@@ -29,10 +29,18 @@
 }
 
 .mediaOverlay {
+  width: 77%;
+  line-height: 1.34;
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
+}
+
+.mediaOverlayButtons {
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .mediaOverlaySeeWhyButton {
