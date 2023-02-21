@@ -1,8 +1,9 @@
 import { useEffect, useRef, useState } from "react";
+import { useDispatch } from "react-redux";
 import InfoIcon from '@material-ui/icons/Info';
 import { Button } from "@material-ui/core";
 import RenderRichTextArea from "../RenderRichTextArea";
-import { trackLinkClick } from "../../../../services/user-tracking-service";
+import { trackUserClick } from "../../../../actions/userTracking";
 import "./DynamicMedia.css";
 
 const DynamicMedia = ({
@@ -13,8 +14,7 @@ const DynamicMedia = ({
     labelText,
     type,
     openModal,
-    postLink,
-    storeLinkClick
+    activateLink
   }) => {
   // we only handle cases for image and videos
   const [mediaType, setMediaType] = useState(attachedMedia ? attachedMedia.mimeType : null);
@@ -23,24 +23,23 @@ const DynamicMedia = ({
   const [blur, setBlur] = useState(showWarningLabel);
   const imageRef = useRef(null);
   const videoRef = useRef(null);
+  const dispatch = useDispatch();
 
-  const removeBlurAndTrack = () => {
+  const removeBlurAndTrack = (e) => {
+    e.preventDefault();
     setBlur(false);
     setShowWarningLabel(false);
     const track = {
       action: 'SEE' + type,
       userPostId: id
     };
-    trackLinkClick({ trackObj: track });
+    dispatch(trackUserClick(track));
+    if (activateLink) activateLink(e);
   };
 
-  function openSeeWhyModal() {
-    openModal();
-    const track = {
-      action: 'SEEWHY',
-      userPostId: id
-    };
-    trackLinkClick({ trackObj: track });
+  function openSeeWhyModal(e) {
+    e.preventDefault();
+    if (openModal) openModal(e);
   }
 
   useEffect(() => {
@@ -80,29 +79,15 @@ const DynamicMedia = ({
         <div className="postImage">
           {isPhoto ? 
             <>
-              {type === 'LINK' ? 
-                <a href={postLink} onClick={storeLinkClick} target="_blank" rel="noopener noreferrer">
-                  <img
-                    ref={imageRef}
-                    alt=""
-                    className={customCSS ? `${customCSS}` : ''}
-                    key={attachedMedia._id}
-                    style={{
-                      filter: blur ? 'blur(5rem)' : ''
-                    }}
-                  />
-                </a>
-                :
-                <img
-                  ref={imageRef}
-                  alt=""
-                  className={customCSS ? `${customCSS}` : ''}
-                  key={attachedMedia._id}
-                  style={{
-                    filter: blur ? 'blur(5rem)' : ''
-                  }}
-                />
-              }
+              <img
+                ref={imageRef}
+                alt=""
+                className={customCSS ? `${customCSS}` : ''}
+                key={attachedMedia._id}
+                style={{
+                  filter: blur ? 'blur(5rem)' : ''
+                }}
+              />
             </>
           : 
             <video
@@ -127,14 +112,14 @@ const DynamicMedia = ({
                 <RenderRichTextArea richText={labelText} inheritFontSize={false}/>
                 <div className="mediaOverlayButtons">
                   <Button
-                    onClick={openSeeWhyModal}
+                    onClick={e => openSeeWhyModal(e)}
                     variant="contained"
                     className="mediaOverlaySeeWhyButton"
                     >
                     See Why
                   </Button>
                   <Button
-                    onClick={removeBlurAndTrack}
+                    onClick={e => removeBlurAndTrack(e)}
                     className="mediaOverlaySeeButton"
                     variant="contained"
                     style={{

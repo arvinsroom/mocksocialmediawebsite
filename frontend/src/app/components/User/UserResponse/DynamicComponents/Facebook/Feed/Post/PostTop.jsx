@@ -1,9 +1,9 @@
 import "./Post.css";
 import { 
+  useDispatch,
   useSelector, 
 } from "react-redux";
-import { trackLinkClick } from '../../../../../../../services/user-tracking-service';
-import { selectSinglePost, selectPostsMetadata } from '../../../../../../../selectors/socialMedia';
+import { selectSinglePost } from '../../../../../../../selectors/socialMedia';
 import { selectSocialMediaAuthor } from '../../../../../../../selectors/socialMediaAuthors';
 import Text from '../../../../../../Common/UserCommon/SocialMediaPostType/Text';
 import { Avatar, Button } from "@material-ui/core";
@@ -15,30 +15,40 @@ import MoreHorizIcon from '@material-ui/icons/MoreHoriz';
 import InfoIcon from '@material-ui/icons/Info';
 import RenderRichTextArea from "../../../../../../Common/UserCommon/RenderRichTextArea";
 import SeeWhyModal from "./SeeWhyModal";
+import { trackUserClick } from '../../../../../../../actions/userTracking';
 
 const PostTop = ({ id }) => {
   const singlePost = useSelector(state => selectSinglePost(state, id));
   const singleAuthor = useSelector(state => selectSocialMediaAuthor(state, singlePost.authorId));
   const userRegisterData = useSelector(state => state.userRegister.metaData);
-  const postMetadata = useSelector(state => selectPostsMetadata(state, id));
-  const [modalOpen , setModalOpen] = useState(false);
+  const [modalOpen, setModalOpen] = useState(false);
   const [renderSinglePost, setRenderSinglePost] = useState(null);
+  const [activeLink, setActiveLink] = useState(singlePost.warningLabel === "OVERPOSTNOTE" ? false : true);
+  const dispatch = useDispatch();
 
   function storeLinkClick() {
-    const track = {
-      action: 'LINKCLICK',
-      userPostId: id
-    };
-    trackLinkClick({ trackObj: track });
+    if (activeLink) {
+      const track = {
+        action: 'LINKCLICK',
+        userPostId: id
+      };
+      dispatch(trackUserClick(track));
+    }
   }
 
-  const openModal = () => {
+  const openModal = (e) => {
+    e.preventDefault();
     setModalOpen(!modalOpen);
     const track = {
       action: 'SEEWHY',
       userPostId: id
     };
-    trackLinkClick({ trackObj: track });
+    dispatch(trackUserClick(track));
+  };
+
+  const activateLink = (e) => {
+    e.preventDefault();
+    setActiveLink(true);
   };
 
   useEffect(() => {
@@ -81,6 +91,7 @@ const PostTop = ({ id }) => {
             }
 
             {singlePost.type === 'LINK' ?
+              <a href={activeLink ? singlePost.link : undefined} className="link-preview" onClick={storeLinkClick} target="_blank" rel="noopener noreferrer">
                 <div className="link-area">
                   <div className="og-image">
                     <DynamicMedia 
@@ -89,12 +100,10 @@ const PostTop = ({ id }) => {
                       warningLabel={singlePost.warningLabel === "OVERPOSTNOTE"}
                       labelText={singlePost.labelRichText}
                       type={singlePost.type}
-                      postLink={singlePost.link}
-                      storeLinkClick={storeLinkClick}
                       openModal={openModal}
+                      activateLink={activateLink}
                     />
                   </div>
-                  <a href={singlePost.link} className="link-preview" onClick={storeLinkClick} target="_blank" rel="noopener noreferrer">
                     <div className="fbPostdescriptions">
                       <div className="og-title">
                         {singlePost.linkTitle}
@@ -103,9 +112,8 @@ const PostTop = ({ id }) => {
                         {singlePost.linkPreview}
                       </div>
                     </div>
-                  </a>
-
-                </div>
+                  </div>
+                </a>
               : null}
 
             {singlePost.type === 'SHARE' ?
@@ -130,7 +138,7 @@ const PostTop = ({ id }) => {
                   className="footNoteLabelBottom"
                   variant="contained"
                   fullWidth
-                  onClick={openModal}
+                  onClick={e => openModal(e)}
                 >
                   See Why
                 </Button>
@@ -141,7 +149,7 @@ const PostTop = ({ id }) => {
           </>}
       </>
     );
-  }, [id, postMetadata, modalOpen])
+  }, [id, modalOpen, activeLink])
 
   return (
     <>

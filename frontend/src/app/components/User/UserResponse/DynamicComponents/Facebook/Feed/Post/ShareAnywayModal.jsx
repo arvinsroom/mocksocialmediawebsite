@@ -1,23 +1,27 @@
 import { Container, Modal, Button } from "@material-ui/core";
 import ClearIcon from '@material-ui/icons/Clear';
 import InfoIcon from '@material-ui/icons/Info';
-import { trackLinkClick } from "../../../../../../../services/user-tracking-service";
+import { useDispatch } from "react-redux";
+import { trackUserClick } from "../../../../../../../actions/userTracking";
 import { SHARE_ANYWAY_MODAL } from '../../../../../../../constants';
 import "./Post.css";
 
 const ShareAnywayModal = ({ id, link, setModalOpen, setModalShareOpen }) => {
+  const dispatch = useDispatch();
+
   const handleClose = () => {
     setModalShareOpen(false);
   };
 
-  const handleShareAnyway = () => {
+  const handleShareAnyway = (e) => {
+    e.preventDefault();
     setModalShareOpen(false);
     setModalOpen(false);
     const track = {
       action: 'SHAREANYWAY',
       userPostId: id
     };
-    trackLinkClick({ trackObj: track });
+    dispatch(trackUserClick(track));
   };
 
   return (
@@ -60,7 +64,7 @@ const ShareAnywayModal = ({ id, link, setModalOpen, setModalShareOpen }) => {
             </div>
             <div className="shareAnywayBottom">
               <Button
-                onClick={handleShareAnyway}
+                onClick={e => handleShareAnyway(e)}
                 variant="contained"
                 className="shareAnywayMainButton"
                 >

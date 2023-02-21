@@ -140,6 +140,7 @@ export const getFacebookWithCommentsPosts = (data) => (dispatch) => {
             initTweet: postRecords[i].initTweet,
             checkersLink: postRecords[i].checkersLink,
             warningLabel: postRecords[i].warningLabel,
+            labelRichText: postRecords[i].labelRichText
           };
           allIds.push(eachId);
         }
