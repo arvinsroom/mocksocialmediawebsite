@@ -169,7 +169,7 @@
 
 .modalContainer {
   position: absolute;
-  left: 50%;
+  left: 49.5%;
   top: 50%;
   transform: translate(-50%, -50%);
   border: none;
@@ -183,7 +183,7 @@
 
 .modalContainerShare {
   position: absolute;
-  left: 50%;
+  left: 49.5%;
   top: 50%;
   transform: translate(-50%, -50%);
   border: none;
