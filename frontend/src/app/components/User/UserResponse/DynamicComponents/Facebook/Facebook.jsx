@@ -22,12 +22,12 @@ const Facebook = ({ data }) => {
   const classes = useStyles();
 
   //add timer counter
-  const [timer, setTimer] = useState(60);    
-  const timeOutCallback = useCallback(() => setTimer(currTimer => currTimer - 1), []);
-  useEffect(() => {
-    timer > 0 && setTimeout(timeOutCallback, 1000);
-  }, [timer, timeOutCallback]);
-  console.log(timer);
+  // const [timer, setTimer] = useState(60);    
+  // const timeOutCallback = useCallback(() => setTimer(currTimer => currTimer - 1), []);
+  // useEffect(() => {
+  //   timer > 0 && setTimeout(timeOutCallback, 1000);
+  // }, [timer, timeOutCallback]);
+  // console.log(timer);
 
   const fetch = async () => {
     dispatch(clearFacebookState());
@@ -76,7 +76,7 @@ const Facebook = ({ data }) => {
             className={classes.submit}
             endIcon={<IconChevronRight />}
           >
-            {translations?.next || "NEXT"} ({timer})
+            {translations?.next || "NEXT"}
           </Button>
         </div>
       </Container>
