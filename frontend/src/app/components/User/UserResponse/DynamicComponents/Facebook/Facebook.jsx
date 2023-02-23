@@ -21,6 +21,14 @@ const Facebook = ({ data }) => {
   const dispatch = useDispatch();
   const classes = useStyles();
 
+  //add timer counter
+  const [timer, setTimer] = useState(60);    
+  const timeOutCallback = useCallback(() => setTimer(currTimer => currTimer - 1), []);
+  useEffect(() => {
+    timer > 0 && setTimeout(timeOutCallback, 1000);
+  }, [timer, timeOutCallback]);
+  console.log(timer);
+
   const fetch = async () => {
     dispatch(clearFacebookState());
     // fetch all facebook Ids and their counts
@@ -58,7 +66,7 @@ const Facebook = ({ data }) => {
           : <p>No Posts Exists!</p>}
         </div>
 
-        {/* <div className="fbNextBotton">
+        <div className="fbNextBotton">
           <Button
             type="submit"
             variant="contained"
@@ -68,9 +76,9 @@ const Facebook = ({ data }) => {
             className={classes.submit}
             endIcon={<IconChevronRight />}
           >
-            {translations?.next || "NEXT"}
+            {translations?.next || "NEXT"} ({timer})
           </Button>
-        </div> */}
+        </div>
       </Container>
     </>
   )
