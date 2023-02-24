@@ -66,7 +66,7 @@ const Facebook = ({ data }) => {
           : <p>No Posts Exists!</p>}
         </div>
 
-        {/* <div className="fbNextBotton">
+        <div className="fbNextBotton">
           <Button
             type="submit"
             variant="contained"
@@ -78,7 +78,7 @@ const Facebook = ({ data }) => {
           >
             {translations?.next || "NEXT"}
           </Button>
-        </div> */}
+        </div>
       </Container>
     </>
   )
