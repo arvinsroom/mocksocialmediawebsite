@@ -1,25 +1,27 @@
-export async function down(queryInterface, DataTypes) {
+const { Sequelize } = require('sequelize');
+
+export async function down({ context: queryInterface }) {
   await queryInterface.dropTable('Media');
 }
 
-export async function up(queryInterface, DataTypes) {
+export async function up({ context: queryInterface }) {
   await queryInterface.createTable('Media', {
     _id: {
       allowNull: false,
       primaryKey: true,
-      type: DataTypes.UUID
+      type: Sequelize.UUID
     },
     mimeType: {
       allowNull: false,
-      type: DataTypes.STRING
+      type: Sequelize.STRING
     },
     media: {
       allowNull: false,
-      type: DataTypes.BLOB('long')
+      type: Sequelize.BLOB('long')
     },
     isThumbnail: {
       allowNull: false,
-      type: DataTypes.BOOLEAN
+      type: Sequelize.BOOLEAN
     },
     userPostId: {
       allowNull: true,
@@ -28,7 +30,7 @@ export async function up(queryInterface, DataTypes) {
         key: '_id',
         model: 'UserPost'
       },
-      type: DataTypes.UUID
+      type: Sequelize.UUID
     }
   });
   await queryInterface.addIndex('Media', ['userPostId']);

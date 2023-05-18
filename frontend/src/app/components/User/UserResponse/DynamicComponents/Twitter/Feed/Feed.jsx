@@ -1,17 +1,14 @@
 import { useEffect, useRef, useCallback, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import {
-  getFacebookPosts,
+  getTwitterPosts,
 } from '../../../../../../actions/socialMedia';
 import TwitterPostBottom from "./TwitterPost/TwitterPostBottom";
 import TwitterPostTop from './TwitterPost/TwitterPostTop';
 import Progress from '../../../../../Common/Progress';
-import { selectAllPostIds } from '../../../../../../selectors/socialMedia';
-import useStyles from '../../../../../style';
 import "./Feed.css";
 
 const Feed = ({ omitInteractionBar }) => {
-  const allIds = useSelector(state => selectAllPostIds(state));
   const currentPostPage = useSelector(state => state.socialMedia.currentPostPage);
   const isLoading = useSelector(state => state.socialMedia.isLoading);
   const postEachPage = useSelector(state => state.socialMedia.postEachPage);
@@ -19,7 +16,6 @@ const Feed = ({ omitInteractionBar }) => {
   const finish = useSelector(state => state.socialMedia.finish);
   const storedPosts = useSelector(state => state.socialMedia.posts);
   const [postToRender, setPostToRender] = useState([]);
-  const classes = useStyles();
   const dispatch = useDispatch();
   const observer = useRef();
 
@@ -65,7 +61,7 @@ const Feed = ({ omitInteractionBar }) => {
       // TODO: modify later and implement lazy loading at the end 40 -> 5
       const slicePosts = totalPostIds.slice(startIndex, startIndex+5);
 
-      dispatch(getFacebookPosts({ postIds: slicePosts }));
+      dispatch(getTwitterPosts({ postIds: slicePosts }));
     }
   }, []);
 
@@ -76,7 +72,7 @@ const Feed = ({ omitInteractionBar }) => {
       if (entries[0].isIntersecting && !finish) {
         const startIndex = currentPostPage * postEachPage;
         const slicePosts = totalPostIds.slice(startIndex, startIndex+5);
-        dispatch(getFacebookPosts({ postIds: slicePosts }))
+        dispatch(getTwitterPosts({ postIds: slicePosts }))
       }
     })
     if (node) observer.current.observe(node)

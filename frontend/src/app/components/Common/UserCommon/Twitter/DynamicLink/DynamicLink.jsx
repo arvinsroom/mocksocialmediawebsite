@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { trackUserClick } from "../../../../../actions/userTracking";
 import { selectSinglePost } from '../../../../../selectors/socialMedia';
-import { trackLinkClick } from '../../../../../services/user-tracking-service';
 import DynamicMedia from "../../SocialMediaPostType/DynamicMedia";
 
 import "./DynamicLink.css";
@@ -9,13 +9,14 @@ import "./DynamicLink.css";
 const DynamicLink = ({ id }) => {
   const singlePost = useSelector(state => selectSinglePost(state, id));
   const [renderDynamicLink, setRenderDynamicLink] = useState(null);
+  const dispatch = useDispatch();
 
   function storeLinkClick() {
     const track = {
       action: 'LINKCLICK',
       userPostId: id
     };
-    trackLinkClick({ trackObj: track });
+    dispatch(trackUserClick(track));
   }
 
   useEffect(() => {

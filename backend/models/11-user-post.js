@@ -98,6 +98,21 @@ export default (sequelize, DataTypes) => {
       allowNull: true,
       type: DataTypes.STRING
     },
+    warningLabel: {
+      allowNull: true,
+      type: DataTypes.ENUM('FOOTNOTE', 'OVERPOSTNOTE', 'NONE'),
+      defaultValue: null
+    },
+    labelRichText: {
+      allowNull: true,
+      type: DataTypes.TEXT,
+      defaultValue: null
+    },
+    checkersLink: {
+      allowNull: true,
+      type: DataTypes.STRING(1024),
+      defaultValue: null
+    },
     userId: {
       allowNull: true,
       references: {

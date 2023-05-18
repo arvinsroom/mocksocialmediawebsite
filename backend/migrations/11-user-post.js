@@ -1,45 +1,47 @@
-export async function down(queryInterface, DataTypes) {
+const { Sequelize } = require('sequelize');
+
+export async function down({ context: queryInterface }) {
   await queryInterface.dropTable('UserPost');
 }
 
-export async function up(queryInterface, DataTypes) {
+export async function up({ context: queryInterface }) {
   await queryInterface.createTable('UserPost', {
     _id: {
       allowNull: false,
       primaryKey: true,
-      type: DataTypes.UUID,
+      type: Sequelize.UUID,
     },
     adminPostId: {
       allowNull: true,
-      type: DataTypes.INTEGER
+      type: Sequelize.INTEGER
     },
     type: {
       allowNull: true,
-      type: DataTypes.ENUM('LINK', 'VIDEO', 'PHOTO', 'TEXT', 'SHARE')
+      type: Sequelize.ENUM('LINK', 'VIDEO', 'PHOTO', 'TEXT', 'SHARE')
     },
     linkTitle: {
       allowNull: true,
-      type: DataTypes.STRING(1024)
+      type: Sequelize.STRING(1024)
     },
     link: {
       allowNull: true,
-      type: DataTypes.STRING(1024)
+      type: Sequelize.STRING(1024)
     },
     linkPreview: {
       allowNull: true,
-      type: DataTypes.STRING(1024)
+      type: Sequelize.STRING(1024)
     },
     postMessage: {
       allowNull: true,
-      type: DataTypes.STRING(1024)
+      type: Sequelize.STRING(1024)
     },
     isFake: {
       allowNull: false,
-      type: DataTypes.BOOLEAN,
+      type: Sequelize.BOOLEAN,
     },
     sourceTweet: {
       allowNull: true,
-      type: DataTypes.STRING(1024)
+      type: Sequelize.STRING(1024)
     },
     parentPostId: {
       allowNull: true,
@@ -48,7 +50,7 @@ export async function up(queryInterface, DataTypes) {
         key: '_id',
         model: 'UserPost'
       },
-      type: DataTypes.UUID
+      type: Sequelize.UUID
     },
     pageId: {
       allowNull: false,
@@ -57,7 +59,7 @@ export async function up(queryInterface, DataTypes) {
         key: '_id',
         model: 'Page'
       },
-      type: DataTypes.UUID
+      type: Sequelize.UUID
     },
     userId: {
       allowNull: true,
@@ -66,11 +68,11 @@ export async function up(queryInterface, DataTypes) {
         key: '_id',
         model: 'User'
       },
-      type: DataTypes.UUID
+      type: Sequelize.UUID
     },
     createdAt: {
       allowNull: false,
-      type: DataTypes.DATE(3),
+      type: Sequelize.DATE(3),
     },
   });
   await queryInterface.addIndex('UserPost', ['userId', 'adminPostId', 'pageId', 'parentPostId']);

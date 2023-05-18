@@ -5,6 +5,7 @@ import DynamicMediaProfile from "../../../../../../../Common/UserCommon/SocialMe
 import "./PostBottomComments.css";
 
 const PostBottomComments = ({ commentMetaData }) => {
+  // eslint-disable-next-line react-hooks/rules-of-hooks
   const singleAuthor = commentMetaData.authorId ? useSelector(state => selectSocialMediaAuthor(state, commentMetaData.authorId)) : null;
   const userRegisterData = useSelector(state => state.userRegister.metaData);
 

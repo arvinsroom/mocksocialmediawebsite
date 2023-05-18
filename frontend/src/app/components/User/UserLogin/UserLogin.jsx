@@ -1,21 +1,22 @@
 import React, { useEffect, useState } from "react";
-import { useHistory, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { Button, TextField } from '@material-ui/core';
 import Container from '@material-ui/core/Container';
 import { useDispatch } from "react-redux";
 import InputAdornment from '@material-ui/core/InputAdornment';
 import { userLogin } from "../../../actions/userAuth";
+import { updateUserMain } from '../../../actions/user';
 import useStyles from '../../style';
 import { showInfoSnackbar } from "../../../actions/snackbar";
 import { USER_TRANSLATIONS_DEFAULT } from '../../../constants';
-import { IconKey } from '@tabler/icons';
+import { IconKey } from '@tabler/icons-react';
 import "./UserLogin.css";
 
 const UserLogin = () => {
-  let history = useHistory();
+  let history = useNavigate();
   const classes = useStyles();
   const dispatch = useDispatch();
-  const { accessCode } = useParams();
+  const { accessCode, participantId } = useParams();
   const [templateId, setTemplateId] = useState("");
 
   const checkValidity = (id) => {
@@ -23,15 +24,27 @@ const UserLogin = () => {
     else return false;
   }
 
-  const checkTemplateExist = async (code) => {
+  const checkTemplateExist = async (code, parId) => {
     // dispatch
     if (checkValidity(code)) {
       const tempCode = Number(code);
-      try {
-        await dispatch(userLogin(tempCode));
-        history.push(`/${tempCode}/participantId`);
-      } catch (error) {
-        history.push("/");
+      if (checkValidity(parId)) {
+        const qualCode = Number(parId);
+        try {
+          await dispatch(userLogin(tempCode));
+          await dispatch(updateUserMain({ qualtricsId: qualCode }));
+          history(`/${accessCode}/user-response`);
+        } catch (error) {
+          history("/");
+        }
+      }
+      else {
+        try {
+          await dispatch(userLogin(tempCode));
+          history(`/${tempCode}/participantId`);
+        } catch (error) {
+          history("/");
+        }
       }
     } else if (accessCode) {
       dispatch(showInfoSnackbar(USER_TRANSLATIONS_DEFAULT.INCORRECT_ACCESS_LOGIN_CODES));
@@ -39,12 +52,12 @@ const UserLogin = () => {
   };
 
   useEffect(() => {
-    checkTemplateExist(accessCode);
+    checkTemplateExist(accessCode, participantId);
   }, []);
 
   const handleSubmit = async e => {
     e.preventDefault();
-    await checkTemplateExist(templateId);
+    await checkTemplateExist(templateId, undefined);
   };
 
   return (

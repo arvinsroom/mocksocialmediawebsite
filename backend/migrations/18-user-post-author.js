@@ -1,37 +1,39 @@
-export async function down(queryInterface, DataTypes) {
+const { Sequelize } = require('sequelize');
+
+export async function down({ context: queryInterface }) {
   await queryInterface.dropTable('UserPostAuthor');
 }
 
-export async function up(queryInterface, DataTypes) {
+export async function up({ context: queryInterface }) {
   await queryInterface.createTable('UserPostAuthor', {
     _id: {
       allowNull: false,
       primaryKey: true,
-      type: DataTypes.UUID,
+      type: Sequelize.UUID,
     },
     authorId: {
       allowNull: false,
-      type: DataTypes.INTEGER
+      type: Sequelize.INTEGER
     },
     authorName: {
       allowNull: false,
-      type: DataTypes.STRING(1024)
+      type: Sequelize.STRING(1024)
     },
     authorVerified: {
       allowNull: false,
-      type: DataTypes.BOOLEAN,
+      type: Sequelize.BOOLEAN,
     },
     totalPosts: {
       allowNull: false,
-      type: DataTypes.INTEGER,
+      type: Sequelize.INTEGER,
     },
     totalFollowing: {
       allowNull: false,
-      type: DataTypes.INTEGER,
+      type: Sequelize.INTEGER,
     },
     totalFollower: {
       allowNull: false,
-      type: DataTypes.INTEGER,
+      type: Sequelize.INTEGER,
     },
     pageId: {
       allowNull: false, // ???
@@ -40,11 +42,11 @@ export async function up(queryInterface, DataTypes) {
         key: '_id',
         model: 'Page'
       },
-      type: DataTypes.UUID
+      type: Sequelize.UUID
     },
     createdAt: {
       allowNull: false,
-      type: DataTypes.DATE(3),
+      type: Sequelize.DATE(3),
     },
   });
   await queryInterface.addIndex('UserPostAuthor', ['authorId', 'pageId']);

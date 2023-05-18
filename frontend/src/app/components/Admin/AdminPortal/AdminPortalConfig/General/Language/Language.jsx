@@ -7,7 +7,7 @@ import useStyles from '../../../../../style';
 import SelectLanguage from './SelectLanguage';
 import { showErrorSnackbar, showInfoSnackbar, showSuccessSnackbar } from '../../../../../../actions/snackbar';
 import { GENERAL_PAGE, TEMPLATE } from '../../../../../../constants';
-import { IconLanguage, IconDeviceFloppy } from '@tabler/icons';
+import { IconLanguage, IconDeviceFloppy } from '@tabler/icons-react';
 import clsx from 'clsx';
 
 const Language = ({ disable, templateId }) => {

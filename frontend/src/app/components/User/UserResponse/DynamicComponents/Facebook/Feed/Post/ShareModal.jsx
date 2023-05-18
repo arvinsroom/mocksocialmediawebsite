@@ -2,10 +2,8 @@ import "./Post.css";
 import { useDispatch, useSelector } from "react-redux";
 import { createFbPost } from '../../../../../../../actions/socialMedia';
 import { useState } from "react";
-import { Avatar, Container } from "@material-ui/core";
+import { Avatar, Container, Modal, Button } from "@material-ui/core";
 import { showSuccessSnackbar } from '../../../../../../../actions/snackbar';
-import Modal from '@material-ui/core/Modal';
-import { Button } from "@material-ui/core";
 import Share from '../../../../../../Common/UserCommon/SocialMediaPostType/Share';
 import PhotoLibraryIcon from '@material-ui/icons/PhotoLibrary';
 import ClearIcon from '@material-ui/icons/Clear';
@@ -15,11 +13,13 @@ import MoreHorizIcon from '@material-ui/icons/MoreHoriz';
 import RoomIcon from '@material-ui/icons/Room';
 import GifIcon from '@material-ui/icons/Gif';
 import { FB_TRANSLATIONS_DEFAULT, USER_TRANSLATIONS_DEFAULT } from '../../../../../../../constants';
+import { selectPostsMetadata } from "../../../../../../../selectors/socialMedia";
 
 const ShareModal = ({ id, setModalOpen }) => {
   const socialMediaTranslations = useSelector(state => state.socialMedia.socialMediaTranslations);
   const userRegisterData = useSelector(state => state.userRegister.metaData);
   const { translations } = useSelector(state => state.userAuth);
+  const postMetadata = useSelector(state => selectPostsMetadata(state, id));
 
   const [sharePostText, setSharePostText] = useState("");
   const dispatch = useDispatch();
@@ -37,6 +37,9 @@ const ShareModal = ({ id, setModalOpen }) => {
       postMessage: sharePostText || null,
       parentPostId: id,
       type: 'SHARE',
+      checkersLink: postMetadata.checkersLink,
+      warningLabel: postMetadata.warningLabel,
+      labelRichText: postMetadata.labelRichText,
       pageId
     };
     

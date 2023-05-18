@@ -1,13 +1,15 @@
-export async function down(queryInterface, DataTypes) {
+const { Sequelize } = require('sequelize');
+
+export async function down({ context: queryInterface }) {
   await queryInterface.dropTable('Finish');
 }
 
-export async function up(queryInterface, DataTypes) {
+export async function up({ context: queryInterface }) {
   await queryInterface.createTable('Finish', {
     _id: {
       allowNull: false,
       primaryKey: true,
-      type: DataTypes.UUID
+      type: Sequelize.UUID
     },
     templateId: {
       allowNull: false,
@@ -16,7 +18,7 @@ export async function up(queryInterface, DataTypes) {
         key: '_id',
         model: 'Template'
       },
-      type: DataTypes.UUID
+      type: Sequelize.UUID
     },
     pageId: {
       allowNull: false,
@@ -25,15 +27,15 @@ export async function up(queryInterface, DataTypes) {
         key: '_id',
         model: 'Page'
       },
-      type: DataTypes.UUID
+      type: Sequelize.UUID
     },
     text: {
       allowNull: true,
-      type: DataTypes.STRING(1024)
+      type: Sequelize.STRING(1024)
     },
     redirectionLink: {
       allowNull: true,
-      type: DataTypes.STRING(1024)
+      type: Sequelize.STRING(1024)
     }
     // also output _id of user table for further analysis, everything should be connected to that id
   });

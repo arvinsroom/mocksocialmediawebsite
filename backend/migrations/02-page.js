@@ -1,17 +1,19 @@
-export async function down(queryInterface, DataTypes) {
+const { Sequelize } = require('sequelize');
+
+export async function down({ context: queryInterface }) {
   await queryInterface.dropTable('Page');
 }
 
-export async function up(queryInterface, DataTypes) {
+export async function up({ context: queryInterface }) {
   await queryInterface.createTable('Page', {
     _id: {
       allowNull: false,
       primaryKey: true,
-      type: DataTypes.UUID
+      type: Sequelize.UUID
     },
     name: {
       allowNull: false,
-      type: DataTypes.STRING
+      type: Sequelize.STRING
     },
     templateId: {
       allowNull: false,
@@ -20,28 +22,28 @@ export async function up(queryInterface, DataTypes) {
         key: '_id',
         model: 'Template'
       },
-      type: DataTypes.UUID
+      type: Sequelize.UUID
     },
     pageDataOrder: {
       allowNull: true,
-      type: DataTypes.ENUM('DESC', 'ASC', 'RANDOM')
+      type: Sequelize.ENUM('DESC', 'ASC', 'RANDOM')
     },
     type: {
       allowNull: false,
-      type: DataTypes.ENUM('MCQ', 'OPENTEXT', 'INFO', 'REGISTER', 'FINISH', 'FACEBOOK', 'REDDIT', 'TWITTER', 'INSTAGRAM',
+      type: Sequelize.ENUM('MCQ', 'OPENTEXT', 'INFO', 'REGISTER', 'FINISH', 'FACEBOOK', 'REDDIT', 'TWITTER', 'INSTAGRAM',
       'YOUTUBE', 'SLACK', 'TIKTOK')
     },
     flowOrder: {
       allowNull: false,
-      type: DataTypes.SMALLINT
+      type: Sequelize.SMALLINT
     },
     richText: {
       allowNull: true,
-      type: DataTypes.TEXT
+      type: Sequelize.TEXT
     },
     appearTime: {
       allowNull: false,
-      type: DataTypes.SMALLINT
+      type: Sequelize.SMALLINT
     }
   });
   await queryInterface.addIndex('Page', ['templateId', 'type']);

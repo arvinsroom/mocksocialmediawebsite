@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Avatar } from '@material-ui/core';
 import ReplyTo from "../../../../../../Common/UserCommon/SocialMediaPostType/ReplyTo";
-import { trackLinkClick } from '../../../../../../../services/user-tracking-service';
 import { selectSinglePost } from '../../../../../../../selectors/socialMedia';
 import { selectSocialMediaAuthor } from '../../../../../../../selectors/socialMediaAuthors';
 import Text from '../../../../../../Common/UserCommon/SocialMediaPostType/Text';
@@ -13,6 +12,7 @@ import { getFacebookPost } from '../../../../../../../actions/socialMedia';
 import VerifiedIcon from '../../../../../../../../assets/Twitter/verified-icon.svg';
 import { parseUserRegisterName } from '../../../../../../../utils';
 import "./QuoteTweet.css";
+import { trackUserClick } from "../../../../../../../actions/userTracking";
 
 const QuoteTweet = ({ id, preview }) => {
   const dispatch = useDispatch();
@@ -30,7 +30,7 @@ const QuoteTweet = ({ id, preview }) => {
       action: 'LINKCLICK',
       userPostId: id
     };
-    trackLinkClick({ trackObj: track });
+    dispatch(trackUserClick(track));
   }
 
   useEffect(() => {
@@ -52,9 +52,9 @@ const QuoteTweet = ({ id, preview }) => {
                 <div className="twitterPostHeaderMainQuoteTweet">
                   {/* <PostHeaderDisplay id={id} /> */}
 
-                  {/* TODO: Folliwing code is copied from PostHeaderDisplay as is however we should make use of same logic.
+                  {/* TODO: Folliwing code is copied from PostHeaderDisplay AS IS.
                       Problem: When we pass some postID to quoteTweetTo column in spreadsheet and that post hasn't been rendered yet we have
-                      to pull that post on the fly and it is not cached as of now. Therefore on line 26 I pull them again. */}
+                      to pull that post on the fly and it is not cached as of now. Therefore on line 25 I pull them again. */}
                   <>
                     <div className="dynamicPostHeaderInfo">
                       {/* username from registration page */}

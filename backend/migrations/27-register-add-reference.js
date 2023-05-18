@@ -1,13 +1,15 @@
-export async function up(queryInterface, DataTypes) {
+const { Sequelize } = require('sequelize');
+
+export async function up({ context: queryInterface }) {
   await queryInterface.changeColumn('Register', 'referenceName', {
-    type: DataTypes.ENUM('PROFILEPHOTO', 'EMAIL', 'USERNAME', 'REALNAME', 'PASSWORD', 'DATE', 'NUMBER', 'HANDLE', 'RELATIONSHIP'),
+    type: Sequelize.ENUM('PROFILEPHOTO', 'EMAIL', 'USERNAME', 'REALNAME', 'PASSWORD', 'DATE', 'NUMBER', 'HANDLE', 'RELATIONSHIP'),
     allowNull: false
   });
 }
 
-export async function down(queryInterface, DataTypes) {
+export async function down({ context: queryInterface }) {
   await queryInterface.changeColumn('Register', 'referenceName', {
-    type: DataTypes.ENUM('PROFILEPHOTO', 'EMAIL', 'USERNAME', 'REALNAME', 'PASSWORD', 'DATE', 'NUMBER', 'HANDLE'),
+    type: Sequelize.ENUM('PROFILEPHOTO', 'EMAIL', 'USERNAME', 'REALNAME', 'PASSWORD', 'DATE', 'NUMBER', 'HANDLE'),
     allowNull: false
   });
 }

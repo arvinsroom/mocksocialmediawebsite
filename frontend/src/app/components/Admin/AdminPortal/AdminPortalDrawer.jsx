@@ -10,17 +10,19 @@ import Metrics from './AdminPortalConfig/Metrics/Metrics';
 import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../../../actions/auth";
 import { clearTemplate } from "../../../actions/template";
-import { Redirect } from 'react-router-dom';
+import { Navigate } from 'react-router-dom';
 import { ADMIN_TAB_NAMES, TEMPLATE } from '../../../constants';
 import { useState } from 'react';
 import clsx from 'clsx';
 import { makeStyles, useTheme } from '@material-ui/core/styles';
-import { Drawer, AppBar, Toolbar, List, CssBaseline, Typography, Divider, IconButton, ListItem, ListItemIcon, ListItemText, Button } from '@material-ui/core';
+import { Drawer, AppBar, Toolbar, List, Typography, Divider, IconButton, ListItem, ListItemIcon, ListItemText, Button } from '@material-ui/core';
 import MenuIcon from '@material-ui/icons/Menu';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
+import LabelOutlinedIcon from '@material-ui/icons/LabelOutlined';
 import { IconSettings, IconBrowser, IconUserPlus, IconInfoCircle, IconCheckbox, IconForms, IconExternalLink,
-  IconAdjustments, IconDatabase, IconLogout } from '@tabler/icons';
+  IconAdjustments, IconDatabase, IconLogout } from '@tabler/icons-react';
+import WarningLabels from './AdminPortalConfig/WarningLabels/WarningLabels';
 
 const drawerWidth = 240;
 const useStyles = makeStyles((theme) => ({
@@ -100,7 +102,7 @@ const AdminPortalDrawer = () => {
   const dispatch = useDispatch();
 
   if (!isLoggedInAdmin) {
-    return <Redirect to="/admin" />;
+    return <Navigate to="/admin" />;
   }
 
   const handleDrawerOpen = () => {
@@ -186,6 +188,10 @@ const AdminPortalDrawer = () => {
             <ListItemIcon><IconBrowser/></ListItemIcon>
             <ListItemText primary={ADMIN_TAB_NAMES.SOCIAL_MEDIA} />
           </ListItem>
+          <ListItem button key={ADMIN_TAB_NAMES.WARNING_LABELS} onClick={e => handleState(e, 'WARNING-LABELS')} disabled={!templateId ? true : false}>
+            <ListItemIcon><LabelOutlinedIcon/></ListItemIcon>
+            <ListItemText primary={ADMIN_TAB_NAMES.WARNING_LABELS} />
+          </ListItem>
           <ListItem button key={ADMIN_TAB_NAMES.REGISTRATION} onClick={e => handleState(e, 'REGISTRATION')} disabled={!templateId ? true : false}>
             <ListItemIcon><IconUserPlus/></ListItemIcon>
             <ListItemText primary={ADMIN_TAB_NAMES.REGISTRATION} />
@@ -220,6 +226,7 @@ const AdminPortalDrawer = () => {
         <div className={classes.toolbar} />
           {activeState === 'CONDITION-SETTINGS' && <Template />}
           {activeState === 'SOCIAL-MEDIA' && <General />}
+          {activeState === 'WARNING-LABELS' && <WarningLabels />}
           {activeState === 'REGISTRATION' && <Register />}
           {activeState === 'INFORMATION' && <Info />}
           {activeState === 'MULTIPLE-CHOICE' && <MCQ />}

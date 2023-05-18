@@ -1,15 +1,15 @@
-import { Button, TextField, IconButton, Container, Tooltip, Grid, Switch } from '@material-ui/core';
+import { Button, TextField, Container, Tooltip, Grid, Switch } from '@material-ui/core';
 import { useState } from 'react';
 import { create } from "../../../../../services/questions-service";
 import cloneDeep from 'lodash/cloneDeep';
 import { useSelector, useDispatch } from "react-redux";
-import { Redirect } from 'react-router-dom';
+import { Navigate } from 'react-router-dom';
 import useStyles from '../../../../style';
 import { showErrorSnackbar, showSuccessSnackbar, showInfoSnackbar } from '../../../../../actions/snackbar';
 import { TEMPLATE, MCQ_PAGE } from '../../../../../constants';
 import RichTextArea from '../../../../Common/AdminCommon/RichTextArea';
 import { checkIfEmptyRichText } from '../../../../../utils';
-import { IconCirclePlus, IconTrash, IconDeviceFloppy } from '@tabler/icons';
+import { IconCirclePlus, IconTrash, IconDeviceFloppy } from '@tabler/icons-react';
 import clsx from 'clsx';
 
 const MCQ = () => {
@@ -106,7 +106,7 @@ const MCQ = () => {
   }
 
   if (!isLoggedInAdmin) {
-    return <Redirect to="/admin" />;
+    return <Navigate to="/admin" />;
   }
 
   return (
@@ -179,7 +179,7 @@ const MCQ = () => {
                   />
                 </Tooltip>
               </Grid>
-              <Grid item xs={1} className={classes.floatRight, classes.flexCenter}>
+              <Grid item xs={1} className={`${classes.floatRight}, ${classes.flexCenter}`}>
                 <Tooltip title="Delete question">
                   <Button
                     aria-label="delete question"
@@ -227,7 +227,7 @@ const MCQ = () => {
                         label="Order"
                       />
                     </Grid>
-                    <Grid item xs={1} className={classes.floatRight, classes.flexCenter}>
+                    <Grid item xs={1} className={`${classes.floatRight}, ${classes.flexCenter}`}>
                       <Tooltip title="Delete Mcq Option">
                         <Button
                           aria-label="Delete Mcq Option"

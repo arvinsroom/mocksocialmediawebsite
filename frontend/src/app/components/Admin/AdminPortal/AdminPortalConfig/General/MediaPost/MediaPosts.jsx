@@ -7,7 +7,7 @@ import { useDispatch } from "react-redux";
 import useStyles from '../../../../../style';
 import { showErrorSnackbar, showInfoSnackbar, showSuccessSnackbar } from '../../../../../../actions/snackbar';
 import { GENERAL_PAGE, TEMPLATE, TEMPLATE_TYPES, ORDER_TYPES } from '../../../../../../constants';
-import { IconTableImport, IconDeviceFloppy } from '@tabler/icons';
+import { IconTableImport, IconDeviceFloppy } from '@tabler/icons-react';
 import clsx from 'clsx';
 
 const MediaPosts = ({ templateId }) => {
@@ -118,7 +118,7 @@ const MediaPosts = ({ templateId }) => {
       menuItems.push(<MenuItem value={item} key={item}>{item}</MenuItem>)
     }
     return menuItems;
-  }
+  };
 
   const handleOrder = (event) => {
     setOrderType(event.target.value);
@@ -234,7 +234,7 @@ const MediaPosts = ({ templateId }) => {
           className={clsx(classes.submit, classes.widthFitContent)}
         >
           {GENERAL_PAGE.SAVE_RESPONSES}
-        </Button>    
+        </Button>
       </form>
     </>
   );

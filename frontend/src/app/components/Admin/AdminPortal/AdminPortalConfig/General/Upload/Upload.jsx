@@ -7,7 +7,7 @@ import { showErrorSnackbar, showSuccessSnackbar, showInfoSnackbar } from '../../
 import { GENERAL_PAGE } from '../../../../../../constants';
 import Progress from '../../../../../Common/Progress';
 import SocialMediaPages from '../../../../../Common/AdminCommon/SocialMediaPages';
-import { IconPhoto, IconDeviceFloppy } from '@tabler/icons';
+import { IconPhoto, IconDeviceFloppy } from '@tabler/icons-react';
 import clsx from 'clsx';
 
 const Upload = ({ templateId }) => {

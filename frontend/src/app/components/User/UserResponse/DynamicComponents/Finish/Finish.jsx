@@ -2,11 +2,11 @@ import { getUserFinishDetails } from '../../../../../services/finish-service';
 import { useEffect, useState } from "react";
 import { Button, Link } from '@material-ui/core';
 import { useSelector, useDispatch } from "react-redux";
-import { Redirect } from 'react-router-dom';
+import { Navigate } from 'react-router-dom';
 import useStyles from '../../../../style';
 import "./Finish.css";
 import { updateFlowActiveState } from '../../../../../actions/flowState';
-import { IconChevronRight } from '@tabler/icons';
+import { IconChevronRight } from '@tabler/icons-react';
 import { USER_TRANSLATIONS_DEFAULT, WINDOW_GLOBAL } from '../../../../../constants';
 
 const Finish = ({ data }) => {
@@ -23,7 +23,7 @@ const Finish = ({ data }) => {
   };
 
   useEffect(() => {
-    if (!isLoggedInUser) return <Redirect to="/" />;
+    if (!isLoggedInUser) return <Navigate to="/" />;
     fetch();
     window.onbeforeunload = function() {
       return WINDOW_GLOBAL.RELOAD_ALERT_MESSAGE;

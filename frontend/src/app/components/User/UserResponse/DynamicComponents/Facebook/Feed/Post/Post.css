@@ -128,7 +128,9 @@
 .link-preview {
   /* display: table-caption; */             
   /* make text wrap under image  */
+  font-size: small;
   text-decoration: none;
+  margin-top: -5px;
 }
 
 .fbPostdescriptions {
@@ -138,14 +140,11 @@
   margin-right: 1px;
 }
 
-a.link-preview .link-area .og-title {
-  font-size: small;
-  padding-bottom: 15px;
-}
-
 .og-title {
   color: #828282;
   font-size: 12px;
+  font-size: small;
+  padding-bottom: 15px;
 }
 
 .fontFamily {
@@ -170,7 +169,7 @@ a.link-preview .link-area .og-title {
 
 .modalContainer {
   position: absolute;
-  left: 50%;
+  left: 49.5%;
   top: 50%;
   transform: translate(-50%, -50%);
   border: none;
@@ -184,7 +183,7 @@ a.link-preview .link-area .og-title {
 
 .modalContainerShare {
   position: absolute;
-  left: 50%;
+  left: 49.5%;
   top: 50%;
   transform: translate(-50%, -50%);
   border: none;
@@ -277,6 +276,12 @@ background-color: rgba(0, 0, 0, 0.05);
   display: flex;
   align-content: center;
   justify-content: center;
+}
+
+.modalTopBtn .btn:hover {
+  /* background-color: #dbdfe7; */
+  border-radius: 50%;
+  cursor: pointer;
 }
 
 .modalTopBtn .btn {
@@ -480,11 +485,12 @@ background-color: rgba(0, 0, 0, 0.05);
 }
 
 .shareEmoji {
+  margin-top: 2px;
   width: 18px;
-  height: 44px;
+  height: 18px;
   background-size: 100% 100%;
   opacity: .4;
-  background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgd2lkdGg9IjI0IiBoZWlnaHQ9IjI0Ij48cGF0aCBmaWxsPSJub25lIiBkPSJNMCAwaDI0djI0SDB6Ii8+PHBhdGggZD0iTTEzIDE0aC0yYTguOTk5IDguOTk5IDAgMCAwLTcuOTY4IDQuODFBMTAuMTM2IDEwLjEzNiAwIDAgMSAzIDE4QzMgMTIuNDc3IDcuNDc3IDggMTMgOFYyLjVMMjMuNSAxMSAxMyAxOS41VjE0em0tMi0yaDR2My4zMDhMMjAuMzIxIDExIDE1IDYuNjkyVjEwaC0yYTcuOTgyIDcuOTgyIDAgMCAwLTYuMDU3IDIuNzczQTEwLjk4OCAxMC45ODggMCAwIDEgMTEgMTJ6Ii8+PC9zdmc+');
+  background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjMgMi41IDIwLjUgMTciPjxwYXRoIGZpbGw9Im5vbmUiIGQ9Ik0wIDBoMjR2MjRIMHoiLz48cGF0aCBkPSJNMTMgMTRoLTJhOC45OTkgOC45OTkgMCAwIDAtNy45NjggNC44MUExMC4xMzYgMTAuMTM2IDAgMCAxIDMgMThDMyAxMi40NzcgNy40NzcgOCAxMyA4VjIuNUwyMy41IDExIDEzIDE5LjVWMTR6bS0yLTJoNHYzLjMwOEwyMC4zMjEgMTEgMTUgNi42OTJWMTBoLTJhNy45ODIgNy45ODIgMCAwIDAtNi4wNTcgMi43NzNBMTAuOTg4IDEwLjk4OCAwIDAgMSAxMSAxMnoiLz48L3N2Zz4=');
 }
 
 /* .emoji-mart-category {
@@ -502,4 +508,58 @@ background-color: rgba(0, 0, 0, 0.05);
 
 .fbPostBottomTopMargin {
   margin-top: 10px;
+}
+
+.footNoteLabelMainBox {
+  display: flex;
+  flex-direction: column;
+  padding: 16px;
+  box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+  margin: 16px;
+}
+
+.footNoteLabelTop {
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+}
+
+.footNoteLabelIcon {
+  margin-bottom: -5px;
+  margin-right: 5px;
+}
+
+.footNoteLabelBottom {
+  text-transform: none !important;
+  box-shadow: none !important;
+  /* background-color: #F2F3F5 !important;
+  border: 1px solid #dbdfe7 !important; */
+  /* width: 100% !important; */
+  border-radius: 0 !important;
+  height: 30px !important;
+  margin-top: 10px !important;
+}
+
+.shareAnywayBottom {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  margin: 16px;
+}
+
+.shareAnywayMainButton {
+  text-transform: none !important;
+  box-shadow: none !important;
+}
+
+.shareAnywayGoBackButton {
+  margin-left: 10px !important;
+  text-transform: none !important;
+  box-shadow: none !important;
+}
+
+.modalTopFrontShareAnyway {
+  font-size: 1.25rem;
+  width: 90%;
+  margin-left: 10px;
 }

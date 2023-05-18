@@ -9,6 +9,7 @@ import { FacebookSelector } from '@charkour/react-reactions';
 import InputEmoji from "react-input-emoji";
 import IconSendViaIconduckSvg from '../../../../../../../../assets/Facebook/icon-send-via-iconduck.svg';
 import PostBottomComments from "./PostBottomComments/PostBottomComments";
+import ShareAnywayModal from "./ShareAnywayModal";
 import "./Post.css";
 
 const PostBottom = ({ id, omitInteractionBar }) => {
@@ -19,6 +20,7 @@ const PostBottom = ({ id, omitInteractionBar }) => {
   const [openCommentBox, setOpenCommentBox] = useState(false);
   const [currentComment, setCurrentComment] = useState("");
   const [modalOpen , setModalOpen] = useState(false);
+  const [modalShareOpen , setModalShareOpen] = useState(false);
   const [display, setDisplay] = useState(false);
   const dispatch = useDispatch();
 
@@ -57,6 +59,16 @@ const PostBottom = ({ id, omitInteractionBar }) => {
   const openModal = () => {
     setModalOpen(!modalOpen);
   };
+
+  const openShareModal = () => {
+    if (postMetadata.warningLabel === "FOOTNOTE" || 
+        postMetadata.warningLabel === "OVERPOSTNOTE") {
+        setModalShareOpen(!modalShareOpen);
+    }
+    else {
+      setModalOpen(!modalOpen);
+    }
+  }
 
   const handleReactions = async (reaction) => {
     setDisplay(false);
@@ -98,13 +110,14 @@ const PostBottom = ({ id, omitInteractionBar }) => {
             <div className={'commentEmoji'}></div>
             <p><strong>{socialMediaTranslations?.comment || FB_TRANSLATIONS_DEFAULT.COMMENT}</strong></p>
           </div>
-          <div className="postOption" onClick={openModal}>
+          <div className="postOption" onClick={openShareModal}>
             <div className={'shareEmoji'}></div>
             <p><strong>{socialMediaTranslations?.share || FB_TRANSLATIONS_DEFAULT.SHARE}</strong></p>
           </div>
         </div>
 
         {/* preserve the parent post data */}
+        {modalShareOpen && <ShareAnywayModal id={id} link={postMetadata.checkersLink} setModalOpen={openModal} setModalShareOpen={setModalShareOpen}/>}
         {modalOpen && <ShareModal id={postMetadata.parentPostId || id} setModalOpen={setModalOpen}/>}
       </div>
     }

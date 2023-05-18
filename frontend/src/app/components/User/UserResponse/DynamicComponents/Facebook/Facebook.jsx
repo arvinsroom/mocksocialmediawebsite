@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import useStyles from '../../../../style';
 import Feed from './Feed/Feed';
-import { Redirect } from 'react-router-dom';
+import { Navigate } from 'react-router-dom';
 import "./Facebook.css";
 import {
   getFacebookPostsCount,
@@ -11,7 +11,7 @@ import {
 import { updateFlowActiveState } from '../../../../../actions/flowState';
 import { Button, Container } from '@material-ui/core';
 import StoryCreate from "./Feed/StoryCreate/StoryCreate";
-import { IconChevronRight } from '@tabler/icons';
+import { IconChevronRight } from '@tabler/icons-react';
 import { WINDOW_GLOBAL } from '../../../../../constants';
 
 const Facebook = ({ data }) => {
@@ -20,6 +20,14 @@ const Facebook = ({ data }) => {
 
   const dispatch = useDispatch();
   const classes = useStyles();
+
+  //add timer counter
+  // const [timer, setTimer] = useState(60);    
+  // const timeOutCallback = useCallback(() => setTimer(currTimer => currTimer - 1), []);
+  // useEffect(() => {
+  //   timer > 0 && setTimeout(timeOutCallback, 1000);
+  // }, [timer, timeOutCallback]);
+  // console.log(timer);
 
   const fetch = async () => {
     dispatch(clearFacebookState());
@@ -35,7 +43,7 @@ const Facebook = ({ data }) => {
   };
 
   useEffect(() => {
-    if (!isLoggedInUser) return <Redirect to="/" />;
+    if (!isLoggedInUser) return <Navigate to="/" />;
     fetch();
     window.onbeforeunload = function() {
       return WINDOW_GLOBAL.RELOAD_ALERT_MESSAGE;

@@ -1,39 +1,41 @@
-export async function down(queryInterface, DataTypes) {
+const { Sequelize } = require('sequelize');
+
+export async function down({ context: queryInterface }) {
   await queryInterface.dropTable('Register');
 }
 
-export async function up(queryInterface, DataTypes) {
+export async function up({ context: queryInterface }) {
   await queryInterface.createTable('Register', {
     _id: {
       allowNull: false,
       primaryKey: true,
-      type: DataTypes.UUID
+      type: Sequelize.UUID
     },
     type: {
       allowNull: false,
-      type: DataTypes.ENUM('TEXT', 'NUMBER', 'EMAIL', 'IMAGE', 'PASSWORD', 'DATE')
+      type: Sequelize.ENUM('TEXT', 'NUMBER', 'EMAIL', 'IMAGE', 'PASSWORD', 'DATE')
     },
     displayName: {
       allowNull: false,
-      type: DataTypes.STRING // 255
+      type: Sequelize.STRING // 255
     },
     required: {
       allowNull: false,
       defaultValue: false,
-      type: DataTypes.BOOLEAN,
+      type: Sequelize.BOOLEAN,
     },
     referenceName: {
       allowNull: true,
-      type: DataTypes.ENUM('PROFILEPHOTO', 'EMAIL', 'USERNAME', 'REALNAME', 'PASSWORD', 'DATE', 'NUMBER')
+      type: Sequelize.ENUM('PROFILEPHOTO', 'EMAIL', 'USERNAME', 'REALNAME', 'PASSWORD', 'DATE', 'NUMBER')
     },
     storeResponse: {
       allowNull: false,
       defaultValue: false,
-      type: DataTypes.BOOLEAN,
+      type: Sequelize.BOOLEAN,
     },
     order: {
       allowNull: false,
-      type: DataTypes.SMALLINT
+      type: Sequelize.SMALLINT
     },
     pageId: {
       allowNull: false,
@@ -42,7 +44,7 @@ export async function up(queryInterface, DataTypes) {
         key: '_id',
         model: 'Page'
       },
-      type: DataTypes.UUID
+      type: Sequelize.UUID
     },
     templateId: {
       allowNull: false,
@@ -51,7 +53,7 @@ export async function up(queryInterface, DataTypes) {
         key: '_id',
         model: 'Template'
       },
-      type: DataTypes.UUID
+      type: Sequelize.UUID
     },
   });
   await queryInterface.addIndex('Register', ['templateId', 'pageId']);

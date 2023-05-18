@@ -3,7 +3,6 @@ import { Button,
   Switch,
   FormControlLabel,
   FormGroup,
-  IconButton,
   Table,
   TableBody,
   TableCell,
@@ -22,12 +21,12 @@ import { useEffect, useState } from 'react';
 import { create } from '../../../../../services/template-service';
 import { updateTemplate } from '../../../../../actions/template';
 import { useSelector, useDispatch } from "react-redux";
-import { Redirect } from 'react-router-dom';
+import { Navigate } from 'react-router-dom';
 import useStyles from '../../../../style';
 import { setTemplateId, getPrevTemplate, deletePrevTemplate } from "../../../../../actions/template";
 import { showErrorSnackbar, showInfoSnackbar, showSuccessSnackbar } from '../../../../../actions/snackbar';
 import { TEMPLATE } from '../../../../../constants';
-import { IconEdit, IconTrash, IconDeviceFloppy } from '@tabler/icons';
+import { IconEdit, IconTrash, IconDeviceFloppy } from '@tabler/icons-react';
 import clsx from 'clsx';
 
 const Template = () => {
@@ -117,7 +116,7 @@ const Template = () => {
   };
 
   if (!isLoggedInAdmin) {
-    return <Redirect to="/admin" />;
+    return <Navigate to="/admin" />;
   }
 
   const removeTemplate = async () => {
@@ -241,12 +240,12 @@ const Template = () => {
       <Table aria-label="Template(s)">
         <TableHead>
           <TableRow>
-            <TableCell className={classes.body, classes.head} align="center"><p>{TEMPLATE.CONDITION_NAME}</p></TableCell>
-            <TableCell className={classes.body, classes.head} align="center"><p>{TEMPLATE.LANGUAGE}</p></TableCell>
-            <TableCell className={classes.body, classes.head} align="center"><p>{TEMPLATE.SET_AS_ACTIVE}</p></TableCell>
-            <TableCell className={classes.body, classes.head} align="center"><p>{TEMPLATE.ACCESS_CODE}</p></TableCell>
-            <TableCell className={classes.body, classes.head} align="center"><p>{TEMPLATE.CHANGE_ACCESS_CODE}</p></TableCell>
-            <TableCell className={classes.body, classes.head} align="center"><p>{TEMPLATE.DELETE}</p></TableCell>
+            <TableCell className={`${classes.body}, ${classes.head}`} align="center"><p>{TEMPLATE.CONDITION_NAME}</p></TableCell>
+            <TableCell className={`${classes.body}, ${classes.head}`} align="center"><p>{TEMPLATE.LANGUAGE}</p></TableCell>
+            <TableCell className={`${classes.body}, ${classes.head}`} align="center"><p>{TEMPLATE.SET_AS_ACTIVE}</p></TableCell>
+            <TableCell className={`${classes.body}, ${classes.head}`} align="center"><p>{TEMPLATE.ACCESS_CODE}</p></TableCell>
+            <TableCell className={`${classes.body}, ${classes.head}`} align="center"><p>{TEMPLATE.CHANGE_ACCESS_CODE}</p></TableCell>
+            <TableCell className={`${classes.body}, ${classes.head}`} align="center"><p>{TEMPLATE.DELETE}</p></TableCell>
           </TableRow>
         </TableHead>
         <TableBody>

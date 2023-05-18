@@ -1,18 +1,18 @@
 import React, { useEffect, useState } from "react";
-import { Redirect, useHistory, useParams } from "react-router-dom";
-import { Button, CssBaseline, TextField } from '@material-ui/core';
+import { Navigate, useNavigate, useParams } from "react-router-dom";
+import { Button, TextField } from '@material-ui/core';
 import Container from '@material-ui/core/Container';
 import { useDispatch, useSelector } from "react-redux";
 import useStyles from '../../style';
 import InputAdornment from '@material-ui/core/InputAdornment';
-import { IconKey } from '@tabler/icons';
+import { IconKey } from '@tabler/icons-react';
 import { showInfoSnackbar } from "../../../actions/snackbar";
 import { updateUserMain } from '../../../actions/user';
 import { USER_TRANSLATIONS_DEFAULT, WINDOW_GLOBAL } from '../../../constants';
 import "./UserLogin.css";
 
 const UserLoginWithQualtricsId = () => {
-  let history = useHistory();
+  let history = useNavigate();
   const [qualtricsId, setQualtricsId] = useState("");
   const classes = useStyles();
   const dispatch = useDispatch();
@@ -20,7 +20,7 @@ const UserLoginWithQualtricsId = () => {
   const { accessCode } = useParams();
 
   useEffect(() => {
-    if (!isLoggedInUser) return <Redirect to="/" />;
+    if (!isLoggedInUser) return <Navigate to="/" />;
     window.onbeforeunload = function() {
       return WINDOW_GLOBAL.RELOAD_ALERT_MESSAGE;
     };
@@ -38,9 +38,9 @@ const UserLoginWithQualtricsId = () => {
       const qualCode = Number(qualtricsId);
       try {
         await dispatch(updateUserMain({ qualtricsId: qualCode }));
-        history.push(`/${accessCode}/user-response`);
+        history(`/${accessCode}/user-response`);
       } catch (error) {
-        // history.push("/");
+        // history("/");
       }
     } else {
       dispatch(showInfoSnackbar((translations?.incorrect_access_code_or_participant_id) || USER_TRANSLATIONS_DEFAULT.INCORRECT_ACCESS_LOGIN_CODES));

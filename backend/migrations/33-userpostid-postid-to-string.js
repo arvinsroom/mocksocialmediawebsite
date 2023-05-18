@@ -1,37 +1,39 @@
-export async function down(queryInterface, DataTypes) {
+const { Sequelize } = require('sequelize');
+
+export async function down({ context: queryInterface }) {
   await queryInterface.changeColumn("UserPost", "adminPostId", {
     allowNull: true,
-    type: DataTypes.INTEGER
+    type: Sequelize.INTEGER
   });
   await queryInterface.changeColumn("UserPost", "authorId", {
-    type: DataTypes.INTEGER
+    type: Sequelize.INTEGER
   });
   await queryInterface.changeColumn("UserPostAuthor", "authorId", {
     allowNull: false,
-    type: DataTypes.INTEGER
+    type: Sequelize.INTEGER
   });
   await queryInterface.changeColumn("Media", "authorId", {
     allowNull: true,
     defaultValue: null,
-    type: DataTypes.INTEGER
+    type: Sequelize.INTEGER
   });
 }
 
-export async function up(queryInterface, DataTypes) {
+export async function up({ context: queryInterface }) {
   await queryInterface.changeColumn("UserPost", "adminPostId", {
     allowNull: true,
-    type: DataTypes.STRING
+    type: Sequelize.STRING
   });
   await queryInterface.changeColumn("UserPost", "authorId", {
-    type: DataTypes.STRING
+    type: Sequelize.STRING
   });
   await queryInterface.changeColumn("UserPostAuthor", "authorId", {
     allowNull: false,
-    type: DataTypes.STRING
+    type: Sequelize.STRING
   });
   await queryInterface.changeColumn("Media", "authorId", {
     allowNull: true,
     defaultValue: null,
-    type: DataTypes.STRING
+    type: Sequelize.STRING
   });
 }

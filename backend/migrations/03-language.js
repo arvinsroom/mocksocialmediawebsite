@@ -1,17 +1,19 @@
-export async function down(queryInterface, DataTypes) {
+const { Sequelize } = require('sequelize');
+
+export async function down({ context: queryInterface }) {
   await queryInterface.dropTable('Language');
 }
 
-export async function up(queryInterface, DataTypes) {
+export async function up({ context: queryInterface }) {
   await queryInterface.createTable('Language', {
     _id: {
       allowNull: false,
       primaryKey: true,
-      type: DataTypes.UUID
+      type: Sequelize.UUID
     },
     name: {
       allowNull: false,
-      type: DataTypes.STRING // 255
+      type: Sequelize.STRING // 255
     },
     templateId: {
       allowNull: false,
@@ -20,15 +22,15 @@ export async function up(queryInterface, DataTypes) {
         key: '_id',
         model: 'Template'
       },
-      type: DataTypes.UUID
+      type: Sequelize.UUID
     },
     platform: {
       allowNull: false,
-      type: DataTypes.STRING
+      type: Sequelize.STRING
     },
     translations: {
       allowNull: false,
-      type: DataTypes.TEXT
+      type: Sequelize.TEXT
     }
   });
   await queryInterface.addIndex('Language', ['templateId', 'name', 'platform']);

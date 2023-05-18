@@ -1,10 +1,12 @@
-export async function down(queryInterface, DataTypes) {
+const { Sequelize } = require('sequelize');
+
+export async function down({ context: queryInterface }) {
   await queryInterface.removeColumn('Info', 'showResponseCode');
 }
 
-export async function up(queryInterface, DataTypes) {
+export async function up({ context: queryInterface }) {
   await queryInterface.addColumn('Info', 'showResponseCode', {
     allowNull: true,
-    type: DataTypes.BOOLEAN
+    type: Sequelize.BOOLEAN
   });
 }

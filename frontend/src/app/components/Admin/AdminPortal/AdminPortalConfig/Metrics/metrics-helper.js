@@ -99,23 +99,34 @@ export const formulateUserGlobalTracking = (globalAdminData, globalResponseData)
 };
 
 /* userPostTracking */
-
-const possiblePostTracking = ['LINKCLICK'];
-export const formulateUserPostLinkClickTracking = (globalResponseData) => {
-  let stringTempEntry = "";
-  if (globalResponseData) {
-    for (let i = 0; i < globalResponseData.length; i++) {
-      // linkclick is always done on a post
-      const currentItem = globalResponseData[i]?.userPosts || null;
-      if (currentItem) stringTempEntry = stringTempEntry + (currentItem.adminPostId || currentItem._id) + "!~*!";
-    }
+// Action are formulated as postId|$|postId
+const normalizeUserPostTracking = (globalTrakingResponseData) => {
+  const normalize = {};
+  for (let i = 0; i < globalTrakingResponseData.length; i++) {
+    const currentAction = globalTrakingResponseData[i].action;
+    const createdAtTime = globalTrakingResponseData[i].createdAt;
+    const currentPostData = globalTrakingResponseData[i].userPosts;
+    const postId = (currentPostData.adminPostId || currentPostData._id);
+    if (!normalize[currentAction]) normalize[currentAction] = "";
+    normalize[currentAction] = normalize[currentAction] + postId + "!~*!" + createdAtTime + "|$|";
   }
-  return stringTempEntry;
+  return normalize;
+};
+
+const possiblePostTracking = ['LINKCLICK', 'SEEWHY', 'SHAREANYWAY', 'SEEPHOTO', 'SEEVIDEO', 'SEELINK'];
+export const formulateUserPostLinkClickTracking = (globalResponseData) => {
+  const eachRow = [];
+  const normalizeUserPostTrackingData = normalizeUserPostTracking(globalResponseData);
+  for (let i = 0; i < possiblePostTracking.length; i++) {
+    const result = normalizeUserPostTrackingData[possiblePostTracking[i]];
+    if (result) eachRow.push(result);
+    else eachRow.push("");
+  }
+  return eachRow;
 };
 
 
 /* userPostActions */
-
 // comments are formulated as  postId!~*!comment|$|
 // any other action as postId|$|postId
 const normalizeUserPostActionsTracking = (globalActionsResponseData) => {

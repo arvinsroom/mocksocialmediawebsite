@@ -3,12 +3,12 @@ import { useSelector, useDispatch } from "react-redux";
 import { getQuestions } from '../../../../../services/questions-service';
 import { createMCQ } from '../../../../../services/user-answer-service';
 import { Button, RadioGroup, FormControlLabel, Radio, FormGroup, Checkbox } from '@material-ui/core';
-import { Redirect } from 'react-router-dom';
+import { Navigate } from 'react-router-dom';
 import useStyles from '../../../../style';
 import { showErrorSnackbar, showInfoSnackbar, showSuccessSnackbar } from '../../../../../actions/snackbar';
 import { updateFlowActiveState } from '../../../../../actions/flowState';
 import "./MCQ.css";
-import { IconChevronRight } from '@tabler/icons';
+import { IconChevronRight } from '@tabler/icons-react';
 import Progress from '../../../../Common/Progress';
 import { USER_TRANSLATIONS_DEFAULT, WINDOW_GLOBAL } from '../../../../../constants';
 import RenderRichTextArea from '../../../../Common/UserCommon/RenderRichTextArea';
@@ -65,7 +65,7 @@ const MCQ = ({ data }) => {
   };
 
   useEffect(() => {
-    if (!isLoggedInUser) return <Redirect to="/" />;
+    if (!isLoggedInUser) return <Navigate to="/" />;
     setIsLoading(true);
     fetch();
     window.onbeforeunload = function() {

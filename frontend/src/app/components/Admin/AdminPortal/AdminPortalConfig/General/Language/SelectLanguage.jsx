@@ -6,7 +6,7 @@ import { GENERAL_PAGE, TEMPLATE } from '../../../../../../constants';
 import { useState } from 'react';
 import useStyles from '../../../../../style';
 import clsx from 'clsx';
-import { IconDeviceFloppy } from '@tabler/icons';
+import { IconDeviceFloppy } from '@tabler/icons-react';
 
 const SelectLanguage = ({ currentLanguages, templateId }) => {
   const [active, setActive] = useState("");
