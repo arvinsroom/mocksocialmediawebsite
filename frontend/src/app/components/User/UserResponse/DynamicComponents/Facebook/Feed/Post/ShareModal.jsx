@@ -20,6 +20,7 @@ const ShareModal = ({ id, setModalOpen }) => {
   const userRegisterData = useSelector(state => state.userRegister.metaData);
   const { translations } = useSelector(state => state.userAuth);
   const postMetadata = useSelector(state => selectPostsMetadata(state, id));
+  const [textAreaHeight, setTextAreaHeight] = useState(3);
 
   const [sharePostText, setSharePostText] = useState("");
   const dispatch = useDispatch();
@@ -29,6 +30,13 @@ const ShareModal = ({ id, setModalOpen }) => {
   const handleClose = () => {
     setModalOpen(false)
   };
+
+  const handleChange = (e) => {
+    e.preventDefault();
+    setSharePostText(e.target.value);
+    const trows = Math.ceil(e.target.scrollHeight / 15) - 1;
+    setTextAreaHeight(Math.min(8, trows));
+  }
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -83,7 +91,8 @@ const ShareModal = ({ id, setModalOpen }) => {
               <textarea
                 value={sharePostText}
                 autoFocus={true}
-                onChange={({ target }) => setSharePostText(target.value)}
+                onChange={e => handleChange(e)}
+                rows={textAreaHeight}
                 className="textArea"
                 type="text"
                 // placeholder={`What's on your mind, ${userName.split(' ')[0]}?`} />

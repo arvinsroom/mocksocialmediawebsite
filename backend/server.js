@@ -136,11 +136,14 @@ try {
   app.use(cors(corsOptions));
 
   // parse requests of content-type - application/json
-  app.use(express.json());
+  app.use(express.json({
+    limit: '1gb'
+  }));
 
   // parse requests of content-type - application/x-www-form-urlencoded
   app.use(express.urlencoded({
-    extended: true
+    extended: true,
+    limit: '1gb'
   }));
 
   // add middleware where we check of x-access-token with each request

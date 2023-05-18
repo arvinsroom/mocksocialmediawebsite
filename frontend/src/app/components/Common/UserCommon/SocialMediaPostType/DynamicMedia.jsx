@@ -85,7 +85,7 @@ const DynamicMedia = ({
                 className={customCSS ? `${customCSS}` : ''}
                 key={attachedMedia._id}
                 style={{
-                  filter: blur ? 'blur(5rem)' : ''
+                  filter: blur ? 'blur(4rem)' : ''
                 }}
               />
             </>
@@ -97,7 +97,7 @@ const DynamicMedia = ({
               className={customCSS ? `${customCSS}` : ''}
               key={attachedMedia._id}
               style={{
-                filter: blur ? 'blur(5rem)' : ''
+                filter: blur ? 'blur(4rem)' : ''
               }}
             />
           }

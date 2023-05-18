@@ -18,6 +18,7 @@ const NewModal = ({ setModalOpen }) => {
   const socialMediaTranslations = useSelector(state => state.socialMedia.socialMediaTranslations);
   const userRegisterData = useSelector(state => state.userRegister.metaData);
   const { translations } = useSelector(state => state.userAuth);
+  const [textAreaHeight, setTextAreaHeight] = useState(3);
 
   const [avatar, setAvatar] = useState(null);
   const [videoAvatar, setVideoAvatar] = useState(null);
@@ -39,6 +40,13 @@ const NewModal = ({ setModalOpen }) => {
     setFile(null);
     setType("TEXT");
   };
+
+  const handleChange = (e) => {
+    e.preventDefault();
+    setPostMessage(e.target.value);
+    const trows = Math.ceil(e.target.scrollHeight / 15) - 1;
+    setTextAreaHeight(Math.min(8, trows));
+  }
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -120,7 +128,8 @@ const NewModal = ({ setModalOpen }) => {
                 <textarea
                   value={postMessage}
                   autoFocus={true}
-                  onChange={({ target }) => setPostMessage(target.value)}
+                  onChange={e => handleChange(e)}
+                  rows={textAreaHeight}
                   className="textArea"
                   type="text"
                   placeholder={socialMediaTranslations?.["what's_on_your_mind?"] || FB_TRANSLATIONS_DEFAULT.WHATS_ON_YOUR_MIND} />
@@ -171,7 +180,7 @@ const NewModal = ({ setModalOpen }) => {
                     <MoreHorizIcon />
                   </div>
                 </div>
-            </div>
+              </div>
 
               <Button
                 type="submit"

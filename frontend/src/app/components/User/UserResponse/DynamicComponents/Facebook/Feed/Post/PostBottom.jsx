@@ -60,7 +60,8 @@ const PostBottom = ({ id, omitInteractionBar }) => {
     setModalOpen(!modalOpen);
   };
 
-  const openShareModal = () => {
+  const openShareModal = (e) => {
+    e.preventDefault();
     if (postMetadata.warningLabel === "FOOTNOTE" || 
         postMetadata.warningLabel === "OVERPOSTNOTE") {
         setModalShareOpen(!modalShareOpen);
@@ -110,7 +111,7 @@ const PostBottom = ({ id, omitInteractionBar }) => {
             <div className={'commentEmoji'}></div>
             <p><strong>{socialMediaTranslations?.comment || FB_TRANSLATIONS_DEFAULT.COMMENT}</strong></p>
           </div>
-          <div className="postOption" onClick={openShareModal}>
+          <div className="postOption" onClick={e => openShareModal(e)}>
             <div className={'shareEmoji'}></div>
             <p><strong>{socialMediaTranslations?.share || FB_TRANSLATIONS_DEFAULT.SHARE}</strong></p>
           </div>
