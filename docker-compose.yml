@@ -16,7 +16,7 @@ services:
     restart: always
     build:
       context: ./backend
-      dockerfile: ./Dockerfile.dev
+      dockerfile: ./Dockerfile
     ports:
       - "8081:8081"
     environment:
@@ -29,7 +29,7 @@ services:
     restart: always
     build:
       context: ./frontend
-      dockerfile: ./Dockerfile.dev
+      dockerfile: ./Dockerfile
     ports:
       - "80:80"
     links:
