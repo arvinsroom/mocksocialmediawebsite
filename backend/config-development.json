@@ -1,8 +1,8 @@
 {
   "database": {
     "name": "mocksocialmediadb",
-    "username": "root",
-    "password": "rootroot",
+    "username": "appuser",
+    "password": "bright79",
     "host": "localhost", 
     "port": "3306",
     "dialect": "mysql"

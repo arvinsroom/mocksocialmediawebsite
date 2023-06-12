@@ -14,7 +14,7 @@ RUN npm install
 COPY . .
 
 # build a development executable
-RUN npm run build-prod
+RUN npm run build-dev
 
 # delete dev dependencies
 RUN npm prune --production

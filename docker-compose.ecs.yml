@@ -14,9 +14,7 @@ services:
       - "3306:3306"
   backend:
     restart: always
-    build:
-      context: ./backend
-      dockerfile: ./Dockerfile.dev
+    image: 353386523821.dkr.ecr.eu-west-2.amazonaws.com/public-tech/ofcom-user-controls-application-backend:latest
     ports:
       - "8081:8081"
     environment:
@@ -27,9 +25,7 @@ services:
       - db
   frontend:
     restart: always
-    build:
-      context: ./frontend
-      dockerfile: ./Dockerfile.dev
+    image: 353386523821.dkr.ecr.eu-west-2.amazonaws.com/public-tech/ofcom-user-controls-application-frontend:latest
     ports:
       - "80:80"
     links:
