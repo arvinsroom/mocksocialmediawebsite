@@ -1,13 +1,15 @@
-export async function down(queryInterface, DataTypes) {
+const { Sequelize } = require('sequelize');
+
+export async function down({ context: queryInterface }) {
   await queryInterface.changeColumn('UserPostAction', 'action', {
       allowNull: false,
-      type: DataTypes.ENUM('LIKE', 'LOVE', 'HAHA', 'WOW', 'SAD', 'ANGRY', 'COMMENT', 'TWEET', 'RETWEET')
+      type: Sequelize.ENUM('LIKE', 'LOVE', 'HAHA', 'WOW', 'SAD', 'ANGRY', 'COMMENT', 'TWEET', 'RETWEET')
   });
 }
 
-export async function up(queryInterface, DataTypes) {
+export async function up({ context: queryInterface }) {
   await queryInterface.changeColumn('UserPostAction', 'action', {
       allowNull: false,
-      type: DataTypes.ENUM('LIKE', 'LOVE', 'HAHA', 'WOW', 'SAD', 'ANGRY', 'COMMENT', 'TWEET', 'RETWEET', 'REPORT')
+      type: Sequelize.ENUM('LIKE', 'LOVE', 'HAHA', 'WOW', 'SAD', 'ANGRY', 'COMMENT', 'TWEET', 'RETWEET', 'REPORT')
   });
 }

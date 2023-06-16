@@ -1,17 +1,19 @@
-export async function down(queryInterface, DataTypes) {
+const { Sequelize } = require('sequelize');
+
+export async function down({ context: queryInterface }) {
   await queryInterface.dropTable('UserPostTracking');
 }
 
-export async function up(queryInterface, DataTypes) {
+export async function up({ context: queryInterface }) {
   await queryInterface.createTable('UserPostTracking', {
     _id: {
       allowNull: false,
       primaryKey: true,
-      type: DataTypes.UUID,
+      type: Sequelize.UUID,
     },
     action: {
       allowNull: false,
-      type: DataTypes.ENUM('LIKE', 'LINKCLICK', 'LOVE', 'HAHA', 'WOW', 'SAD', 'ANGRY', 'TWEET', 'RETWEET')
+      type: Sequelize.ENUM('LIKE', 'LINKCLICK', 'LOVE', 'HAHA', 'WOW', 'SAD', 'ANGRY', 'TWEET', 'RETWEET')
     },
     userPostId: {
       allowNull: false,
@@ -20,7 +22,7 @@ export async function up(queryInterface, DataTypes) {
         key: '_id',
         model: 'UserPost'
       },
-      type: DataTypes.UUID
+      type: Sequelize.UUID
     },
     userId: {
       allowNull: false,
@@ -29,11 +31,11 @@ export async function up(queryInterface, DataTypes) {
         key: '_id',
         model: 'User'
       },
-      type: DataTypes.UUID
+      type: Sequelize.UUID
     },
     createdAt: {
       allowNull: false,
-      type: DataTypes.DATE(3),
+      type: Sequelize.DATE(3),
     }
   });
   await queryInterface.addIndex('UserPostTracking', ['userId', 'userPostId']);

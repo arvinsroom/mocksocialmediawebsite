@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { Button, CssBaseline, TextField, Typography } from '@material-ui/core';
 import Container from '@material-ui/core/Container';
 import { useDispatch, useSelector } from "react-redux";
@@ -8,7 +8,7 @@ import useStyles from '../../style';
 import Progress from '../../Common/Progress';
 
 const Admin = () => {
-  let history = useHistory();
+  let history = useNavigate();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -17,7 +17,7 @@ const Admin = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    if (isLoggedInAdmin) history.push("/admin/configure");
+    if (isLoggedInAdmin) history("/admin/configure");
   }, [history, isLoggedInAdmin]);
 
   const handleSubmit = async e => {
@@ -26,7 +26,7 @@ const Admin = () => {
     // send the username and password to the server
     dispatch(login(username, password))
       .then(() => {
-        history.push("/admin/configure");
+        history("/admin/configure");
       })
       .catch(() => {
         setIsLoading(false);

@@ -1,9 +1,22 @@
+.postImage {
+  position: relative;
+  text-align: center;
+  overflow: hidden;
+}
+
 .postImage > img {
   width: 100%;
+  margin-bottom: -5px;
+}
+
+.postImage > a > img {
+  width: 100%;
+  margin-bottom: -5px;
 }
 
 .postImage > video {
   width: 100%;
+  margin-bottom: -5px;
 }
 
 .twitterCorrectMargin {
@@ -13,4 +26,30 @@
 .twitterImageFixPadding {
   padding-left: -12px;
   padding-right: -12px;
+}
+
+.mediaOverlay {
+  width: 77%;
+  line-height: 1.34;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.mediaOverlayButtons {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.mediaOverlaySeeWhyButton {
+  text-transform: none !important;
+  box-shadow: none !important;
+}
+
+.mediaOverlaySeeButton {
+  margin-left: 10px !important;
+  text-transform: none !important;
+  box-shadow: none !important;
 }

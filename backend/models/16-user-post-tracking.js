@@ -8,7 +8,8 @@ export default (sequelize, DataTypes) => {
     },
     action: {
       allowNull: false,
-      type: DataTypes.ENUM('LIKE', 'LINKCLICK', 'LOVE', 'HAHA', 'WOW', 'SAD', 'ANGRY', 'TWEET', 'RETWEET', 'REPORT')
+      type: DataTypes.ENUM('LIKE', 'LINKCLICK', 'LOVE', 'HAHA', 'WOW', 'SAD', 'ANGRY', 'TWEET', 'RETWEET', 'REPORT', 'SEEWHY', 'SHAREANYWAY', 'SEEPHOTO', 'SEEVIDEO', 'SEELINK')
+      // For now we only use 'LINKCLICK', 'SEEWHY', 'SHAREANYWAY', 'SEEPHOTO', 'SEEVIDEO', 'SEELINK' in the output
     },
     userPostId: {
       allowNull: false,

@@ -1,5 +1,5 @@
 # multi-stage docker for build and then run production specific
-FROM node:13.12.0-alpine as builder
+FROM node:18.14.0-alpine as builder
 
 # this will be temporary working directory
 WORKDIR /app/frontend

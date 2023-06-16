@@ -7,6 +7,8 @@
 
 .postBottom > p {
   font-size: 15px !important;
+  word-break: break-all;
+  white-space: pre-wrap;
 }
 
 .twitterPostTopText {

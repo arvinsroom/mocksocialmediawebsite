@@ -97,7 +97,6 @@ const deleteAction = async (req, res, next) => {
 const createNewPost = async (req, res, next) => {
   let transaction;
   try {
-    const postObj = JSON.parse(req.body.postObj);
     // fetch userId from middleware
     if (!req.userId) {
       res.status(400).send({
@@ -105,6 +104,7 @@ const createNewPost = async (req, res, next) => {
       });
       return;
     }
+    const postObj = JSON.parse(req.body.postObj);
     if (!postObj && !req.file) {
       res.status(400).send({
         message: "Please create a valid post!"

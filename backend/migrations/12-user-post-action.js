@@ -1,25 +1,27 @@
-export async function down(queryInterface, DataTypes) {
+const { Sequelize } = require('sequelize');
+
+export async function down({ context: queryInterface }) {
   await queryInterface.dropTable('UserPostAction');
 }
 
-export async function up(queryInterface, DataTypes) {
+export async function up({ context: queryInterface }) {
   await queryInterface.createTable('UserPostAction', {
     _id: {
       allowNull: false,
       primaryKey: true,
-      type: DataTypes.UUID
+      type: Sequelize.UUID
     },
     action: {
       allowNull: false,
-      type: DataTypes.ENUM('LIKE', 'LOVE', 'HAHA', 'WOW', 'SAD', 'ANGRY', 'COMMENT', 'TWEET', 'RETWEET')
+      type: Sequelize.ENUM('LIKE', 'LOVE', 'HAHA', 'WOW', 'SAD', 'ANGRY', 'COMMENT', 'TWEET', 'RETWEET')
     },
     comment: {
       allowNull: true,
-      type: DataTypes.STRING
+      type: Sequelize.STRING
     },
     createdAt: {
       allowNull: false,
-      type: DataTypes.DATE(3),
+      type: Sequelize.DATE(3),
     },
     userId: {
       allowNull: false,
@@ -28,7 +30,7 @@ export async function up(queryInterface, DataTypes) {
         key: '_id',
         model: 'User'
       },
-      type: DataTypes.UUID
+      type: Sequelize.UUID
     },
     userPostId: {
       allowNull: false,
@@ -37,7 +39,7 @@ export async function up(queryInterface, DataTypes) {
         key: '_id',
         model: 'UserPost'
       },
-      type: DataTypes.UUID
+      type: Sequelize.UUID
     }
   });
   await queryInterface.addIndex('UserPostAction', ['userPostId', 'userId']);

@@ -1,9 +1,6 @@
 import * as express from "express";
 import cors from "cors";
-import {
-  umzugUp,
-  umzugDown
-} from './migrations';
+import { umzugUp } from './migrations';
 import db from "./clients/database-client";
 
 import auth from './routes/auth-routes';
@@ -18,6 +15,7 @@ import media from './routes/media-routes';
 import language from './routes/language-routes';
 import page from './routes/page-routes';
 import metrics from './routes/admin-metrics-routes';
+import adminUserPost from './routes/admin-userpost-routes';
 
 import userRegister from './routes/user-register-routes';
 import userFinish from './routes/user-finish-routes';
@@ -138,11 +136,14 @@ try {
   app.use(cors(corsOptions));
 
   // parse requests of content-type - application/json
-  app.use(express.json());
+  app.use(express.json({
+    limit: '1gb'
+  }));
 
   // parse requests of content-type - application/x-www-form-urlencoded
   app.use(express.urlencoded({
-    extended: true
+    extended: true,
+    limit: '1gb'
   }));
 
   // add middleware where we check of x-access-token with each request
@@ -170,6 +171,7 @@ try {
   app.use('/api/page', [verifyToken, isAdmin], page);
   app.use('/api/media', [verifyToken, isAdmin], media);
   app.use('/api/metrics', [verifyToken, isAdmin], metrics);
+  app.use('/api/userposts', [verifyToken, isAdmin], adminUserPost);
 
   app.use('/api/user/questions', [verifyUserToken, isUser], userQuesion);
   app.use('/api/user/answer', [verifyUserToken, isUser], userAnswer);

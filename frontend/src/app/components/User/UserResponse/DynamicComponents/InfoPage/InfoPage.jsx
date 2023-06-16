@@ -10,12 +10,12 @@ import {
   FormControlLabel,
  } from '@material-ui/core';
 import { useSelector, useDispatch } from "react-redux";
-import { Redirect } from 'react-router-dom';
+import { Navigate } from 'react-router-dom';
 import useStyles from '../../../../style';
 import { showSuccessSnackbar, showInfoSnackbar, showErrorSnackbar } from '../../../../../actions/snackbar';
 import { updateUserMain } from '../../../../../actions/user';
 import { updateFlowActiveState } from '../../../../../actions/flowState';
-import { IconChevronRight } from '@tabler/icons';
+import { IconChevronRight } from '@tabler/icons-react';
 import Progress from '../../../../Common/Progress';
 import { USER_TRANSLATIONS_DEFAULT, WINDOW_GLOBAL } from '../../../../../constants';
 import RenderRichTextArea from '../../../../Common/UserCommon/RenderRichTextArea';
@@ -60,7 +60,7 @@ const InfoPage = ({ data }) => {
   };
 
   useEffect(() => {
-    if (!isLoggedInUser) return <Redirect to="/" />;
+    if (!isLoggedInUser) return <Navigate to="/" />;
     setIsLoading(true);
     fetchInfoDetails();
     window.scrollTo(0,0);

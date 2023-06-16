@@ -3,10 +3,10 @@
       {
         "name": "backend",
         "script": "./db/index.js",
-        "merge_logs": true,
+        "merge_logs": false,
         "max_restarts": 10,
         "instances": 2,
-        "max_memory_restart": "500M"
+        "max_memory_restart": "750M"
       }
   ]
 }

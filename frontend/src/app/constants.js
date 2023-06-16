@@ -130,6 +130,7 @@ export const CONFIGURE_PAGE = Object.freeze({
 export const ADMIN_TAB_NAMES = Object.freeze({
   CONDITION_SETTINGS: 'Condition Settings',
   SOCIAL_MEDIA: 'Social Media',
+  WARNING_LABELS: 'Warning Labels',
   REGISTRATION: 'Registration',
   INFORMATION: 'Information',
   MULTIPLE_CHOICE: 'Multiple-choice',
@@ -259,4 +260,25 @@ export const TW_TRANSLATIONS_DEFAULT = Object.freeze({
 
 export const USER_REGISTER = Object.freeze({
   REGISTER_HANDLE_PARSING_ERROR: 'Handles can start with @ or nothing and must contain only alphanumeric characters and/or underscores, up to a maximum of 15 characters.'
+});
+
+export const WARNING_LABELS = Object.freeze({
+  FOOTNOTE: 'FOOTNOTE',
+  OVERPOSTNOTE: 'OVERPOSTNOTE',
+  NONE: 'NONE'
+});
+
+export const SEE_WHY_MODAL = Object.freeze({
+  FALSE: 'False',
+  ABOUT_THIS_NOTICE: 'About this notice',
+  INDEPENDENT_FACT_CHECKERS: 'Independent fact-checkers',
+  SAY_THIS_INFORMATION_HAS_NO_BASIS_IN_FACT: 'say this information has no basis in fact.'
+});
+
+export const SHARE_ANYWAY_MODAL = Object.freeze({
+  SHARE_ANYWAY: 'Share anyway',
+  FALSE_INFORMATION_IN_THIS_POST: 'False information in this post',
+  INDEPENDENT_FACT_CHECKERS: 'Independent fact-checkers',
+  GO_BACK: 'Go Back',
+  SAY_THIS_POST_HAS_FALSE_INFORMATION: 'say this post has false information. To help stop the spread of false news, a notice will be added to your post if you decide to share this.'
 });

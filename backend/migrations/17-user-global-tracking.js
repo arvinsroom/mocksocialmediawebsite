@@ -1,13 +1,15 @@
-export async function down(queryInterface, DataTypes) {
+const { Sequelize } = require('sequelize');
+
+export async function down({ context: queryInterface }) {
   await queryInterface.dropTable('UserGlobalTracking');
 }
 
-export async function up(queryInterface, DataTypes) {
+export async function up({ context: queryInterface }) {
   await queryInterface.createTable('UserGlobalTracking', {
     _id: {
       allowNull: false,
       primaryKey: true,
-      type: DataTypes.UUID,
+      type: Sequelize.UUID,
     },
     pageId: {
       allowNull: true,
@@ -16,7 +18,7 @@ export async function up(queryInterface, DataTypes) {
         key: '_id',
         model: 'Page'
       },
-      type: DataTypes.UUID
+      type: Sequelize.UUID
     },
     activeTemplateId: {
       allowNull: true,
@@ -25,7 +27,7 @@ export async function up(queryInterface, DataTypes) {
         key: '_id',
         model: 'Template'
       },
-      type: DataTypes.UUID
+      type: Sequelize.UUID
     },
     userId: {
       allowNull: false,
@@ -34,15 +36,15 @@ export async function up(queryInterface, DataTypes) {
         key: '_id',
         model: 'User'
       },
-      type: DataTypes.UUID
+      type: Sequelize.UUID
     },
     pageMetaData: {
       allowNull: true,
-      type: DataTypes.TEXT,
+      type: Sequelize.TEXT,
     },
     createdAt: {
       allowNull: false,
-      type: DataTypes.DATE(3),
+      type: Sequelize.DATE(3),
     },
   });
   await queryInterface.addIndex('UserGlobalTracking', ['userId']);

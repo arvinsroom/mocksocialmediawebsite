@@ -2,7 +2,7 @@ import { Container } from '@material-ui/core';
 import React, { useEffect } from 'react';
 import useStyles from '../../style';
 import { useSelector, useDispatch } from "react-redux";
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { getCurrentUTCTime }  from '../../../utils';
 import "./UserResponse.css";
 
@@ -33,7 +33,7 @@ const UserResponse = () => {
   const { isLoggedInUser, translations } = useSelector(state => state.userAuth);
   const { flow, active, finished } = useSelector(state => state.flowState);
 
-  let history = useHistory();
+  let history = useNavigate();
 
   const updateFinishTimeAndLogout = async () => {
     // update last flow data
@@ -43,7 +43,7 @@ const UserResponse = () => {
 
   const classes = useStyles();
   useEffect(() => {
-    if (!isLoggedInUser && !finished) history.push('/');
+    if (!isLoggedInUser && !finished) history('/');
     if (finished) updateFinishTimeAndLogout();
   }, [finished]);
 

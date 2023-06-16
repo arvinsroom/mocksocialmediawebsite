@@ -1,25 +1,27 @@
-export async function down(queryInterface, DataTypes) {
+const { Sequelize } = require('sequelize');
+
+export async function down({ context: queryInterface }) {
   await queryInterface.dropTable('UserRegister');
 }
 
-export async function up(queryInterface, DataTypes) {
+export async function up({ context: queryInterface }) {
   await queryInterface.createTable('UserRegister', {
     _id: {
       allowNull: false,
       primaryKey: true,
-      type: DataTypes.UUID
+      type: Sequelize.UUID
     },
     image: {
       allowNull: true,
-      type: DataTypes.BLOB('long')
+      type: Sequelize.BLOB('long')
     },
     mimeType: {
       allowNull: true,
-      type: DataTypes.STRING
+      type: Sequelize.STRING
     },
     generalFieldValue: {
       allowNull: true,
-      type: DataTypes.STRING(1024),
+      type: Sequelize.STRING(1024),
     },
     registerId: {
       allowNull: false,
@@ -28,7 +30,7 @@ export async function up(queryInterface, DataTypes) {
         key: '_id',
         model: 'Register'
       },
-      type: DataTypes.UUID
+      type: Sequelize.UUID
     },
     userId: {
       allowNull: false,
@@ -37,11 +39,11 @@ export async function up(queryInterface, DataTypes) {
         key: '_id',
         model: 'User'
       },
-      type: DataTypes.UUID
+      type: Sequelize.UUID
     },
     finishedAt: {
       allowNull: false,
-      type: DataTypes.DATE(3),
+      type: Sequelize.DATE(3),
     },
   });
   await queryInterface.addIndex('UserRegister', ['userId', 'registerId']);

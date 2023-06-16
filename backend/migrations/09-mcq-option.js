@@ -1,13 +1,15 @@
-export async function down(queryInterface, DataTypes) {
+const { Sequelize } = require('sequelize');
+
+export async function down({ context: queryInterface }) {
   await queryInterface.dropTable('McqOption');
 }
 
-export async function up(queryInterface, DataTypes) {
+export async function up({ context: queryInterface }) {
   await queryInterface.createTable('McqOption', {
     _id: {
       allowNull: false,
       primaryKey: true,
-      type: DataTypes.UUID
+      type: Sequelize.UUID
     },
     questionId: {
       allowNull: false,
@@ -16,15 +18,15 @@ export async function up(queryInterface, DataTypes) {
         key: '_id',
         model: 'Question'
       },
-      type: DataTypes.UUID
+      type: Sequelize.UUID
     },
     optionText: {
       allowNull: false,
-      type: DataTypes.STRING
+      type: Sequelize.STRING
     },
     optionOrder: {
       allowNull: false,
-      type: DataTypes.SMALLINT
+      type: Sequelize.SMALLINT
     },
   });
   await queryInterface.addIndex('McqOption', ['questionId']);

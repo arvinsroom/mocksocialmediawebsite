@@ -1,10 +1,12 @@
-export async function up(queryInterface, DataTypes) {
+const { Sequelize } = require('sequelize');
+
+export async function up({ context: queryInterface }) {
   await queryInterface.addColumn('UserPostAuthor', 'handle', {
     allowNull: true,
-    type: DataTypes.STRING
+    type: Sequelize.STRING
   });
 }
 
-export async function down(queryInterface, DataTypes) {
+export async function down({ context: queryInterface }) {
   await queryInterface.removeColumn('UserPostAuthor', 'handle');
 }
