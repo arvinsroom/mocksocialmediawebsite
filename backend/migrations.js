@@ -1,11 +1,11 @@
-import { Umzug, SequelizeStorage } from 'umzug';
-import db from './clients/database-client';
+import { Umzug, SequelizeStorage } from "umzug";
+import db from "./clients/database-client";
 const path = require("path");
 
 const umzug = new Umzug({
   storage: new SequelizeStorage({ sequelize: db.sequelize }),
   migrations: {
-      glob: path.resolve(__dirname, './migrations') + '/*.js',
+    glob: path.resolve(__dirname, "./migrations") + "/*.js",
   },
   context: db.sequelize.getQueryInterface(),
   // We currently do not make use of the logging feature; therefore switching it off

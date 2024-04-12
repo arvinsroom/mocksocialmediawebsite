@@ -12,14 +12,14 @@ const mcqBulkCreate = async (options, questionId, transaction) => {
   }
   // formulate the mcq options object
   const mcqOptions = [];
-  for(let i = 0; i < options.length; i++) {
+  for (let i = 0; i < options.length; i++) {
     const tempObj = {};
     if (!options[i].optionText) throw "Option text is requiret!";
     tempObj.questionId = questionId;
     tempObj.optionText = options[i].optionText;
     tempObj.optionOrder = options[i].optionOrder || 0;
     mcqOptions.push(tempObj);
-  }  
+  }
   await McqOption.bulkCreate(mcqOptions, { transaction });
 };
 
@@ -30,10 +30,10 @@ const bulkCreate = async (questions, type, pageId, transaction) => {
 
   // recieve a question array
   if (!checkIfValidAndNotEmptyArray(questions)) {
-    throw 'Please provide a valid question.';
+    throw "Please provide a valid question.";
   }
 
-  for(let i = 0; i < questions.length; i++) {
+  for (let i = 0; i < questions.length; i++) {
     if (!questions[i].questionText) throw "Question Text field is required!";
     // then create a single option
     const questionObj = {
@@ -41,12 +41,14 @@ const bulkCreate = async (questions, type, pageId, transaction) => {
       required: questions[i].required || false,
       order: questions[i].order || 0,
       multiResponse: questions[i].multiResponse || false,
-      pageId
+      pageId,
     };
 
-    const { _id: questionId } = await Question.create(questionObj, { transaction });
+    const { _id: questionId } = await Question.create(questionObj, {
+      transaction,
+    });
 
-    if (type === 'MCQ') {
+    if (type === "MCQ") {
       await mcqBulkCreate(questions[i].mcqOptions, questionId, transaction);
     }
   }
@@ -54,4 +56,4 @@ const bulkCreate = async (questions, type, pageId, transaction) => {
 
 export default {
   bulkCreate,
-}
+};

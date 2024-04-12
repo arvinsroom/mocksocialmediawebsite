@@ -1,28 +1,28 @@
-const { Sequelize } = require('sequelize');
+const { Sequelize } = require("sequelize");
 
 export async function down({ context: queryInterface }) {
-  await queryInterface.dropTable('Question');
+  await queryInterface.dropTable("Question");
 }
 
 export async function up({ context: queryInterface }) {
-  await queryInterface.createTable('Question', {
+  await queryInterface.createTable("Question", {
     _id: {
       allowNull: false,
       primaryKey: true,
-      type: Sequelize.UUID
+      type: Sequelize.UUID,
     },
     pageId: {
       allowNull: false,
-      onDelete: 'CASCADE',
+      onDelete: "CASCADE",
       references: {
-        key: '_id',
-        model: 'Page'
+        key: "_id",
+        model: "Page",
       },
-      type: Sequelize.UUID
+      type: Sequelize.UUID,
     },
     questionText: {
       allowNull: false,
-      type: Sequelize.STRING
+      type: Sequelize.STRING,
     },
     required: {
       allowNull: false,
@@ -34,9 +34,8 @@ export async function up({ context: queryInterface }) {
     },
     order: {
       allowNull: false,
-      type: Sequelize.SMALLINT
-    }
+      type: Sequelize.SMALLINT,
+    },
   });
-  await queryInterface.addIndex('Question', ['pageId']);
+  await queryInterface.addIndex("Question", ["pageId"]);
 }
-

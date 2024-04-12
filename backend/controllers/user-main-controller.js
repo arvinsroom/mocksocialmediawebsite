@@ -8,7 +8,7 @@ const update = async (req, res, next) => {
   try {
     if (!req.userId) {
       res.status(400).send({
-        message: "Invalid User Token, please log in again!"
+        message: "Invalid User Token, please log in again!",
       });
       return;
     }
@@ -16,7 +16,7 @@ const update = async (req, res, next) => {
     const { userObj } = req.body;
     if (!checkIfValidAndNotEmptyObj(userObj)) {
       res.status(400).send({
-        message: "User data is required!"
+        message: "User data is required!",
       });
       return;
     }
@@ -29,29 +29,28 @@ const update = async (req, res, next) => {
 
     transaction = await db.sequelize.transaction();
     // now create a entry for register
-    await User.update(userData,
-      {
-        where: {
-          _id: req.userId
-        },
-        transaction
-      });
+    await User.update(userData, {
+      where: {
+        _id: req.userId,
+      },
+      transaction,
+    });
     // if we reach here, there were no errors therefore commit the transaction
     await transaction.commit();
 
     res.send({
-      response: "User successfuly updated!"
+      response: "User successfuly updated!",
     });
   } catch (error) {
     console.log(error.message);
     // if we reach here, there were some errors thrown, therefore roolback the transaction
     if (transaction) await transaction.rollback();
     res.status(500).send({
-      message: "Some error occurred while updating user's information."
+      message: "Some error occurred while updating user's information.",
     });
   }
 };
 
 export default {
   update,
-}
+};

@@ -1,51 +1,62 @@
-const { Sequelize } = require('sequelize');
+const { Sequelize } = require("sequelize");
 
 export async function down({ context: queryInterface }) {
-  await queryInterface.dropTable('Page');
+  await queryInterface.dropTable("Page");
 }
 
 export async function up({ context: queryInterface }) {
-  await queryInterface.createTable('Page', {
+  await queryInterface.createTable("Page", {
     _id: {
       allowNull: false,
       primaryKey: true,
-      type: Sequelize.UUID
+      type: Sequelize.UUID,
     },
     name: {
       allowNull: false,
-      type: Sequelize.STRING
+      type: Sequelize.STRING,
     },
     templateId: {
       allowNull: false,
-      onDelete: 'CASCADE',
+      onDelete: "CASCADE",
       references: {
-        key: '_id',
-        model: 'Template'
+        key: "_id",
+        model: "Template",
       },
-      type: Sequelize.UUID
+      type: Sequelize.UUID,
     },
     pageDataOrder: {
       allowNull: true,
-      type: Sequelize.ENUM('DESC', 'ASC', 'RANDOM')
+      type: Sequelize.ENUM("DESC", "ASC", "RANDOM"),
     },
     type: {
       allowNull: false,
-      type: Sequelize.ENUM('MCQ', 'OPENTEXT', 'INFO', 'REGISTER', 'FINISH', 'FACEBOOK', 'REDDIT', 'TWITTER', 'INSTAGRAM',
-      'YOUTUBE', 'SLACK', 'TIKTOK')
+      type: Sequelize.ENUM(
+        "MCQ",
+        "OPENTEXT",
+        "INFO",
+        "REGISTER",
+        "FINISH",
+        "FACEBOOK",
+        "REDDIT",
+        "TWITTER",
+        "INSTAGRAM",
+        "YOUTUBE",
+        "SLACK",
+        "TIKTOK",
+      ),
     },
     flowOrder: {
       allowNull: false,
-      type: Sequelize.SMALLINT
+      type: Sequelize.SMALLINT,
     },
     richText: {
       allowNull: true,
-      type: Sequelize.TEXT
+      type: Sequelize.TEXT,
     },
     appearTime: {
       allowNull: false,
-      type: Sequelize.SMALLINT
-    }
+      type: Sequelize.SMALLINT,
+    },
   });
-  await queryInterface.addIndex('Page', ['templateId', 'type']);
+  await queryInterface.addIndex("Page", ["templateId", "type"]);
 }
-

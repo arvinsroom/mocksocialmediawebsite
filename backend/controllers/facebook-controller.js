@@ -14,7 +14,7 @@ const createAction = async (req, res, next) => {
     // fetch userId from middleware
     if (!req.userId) {
       res.status(400).send({
-        message: "Invalid User Token, please log in again!"
+        message: "Invalid User Token, please log in again!",
       });
       return;
     }
@@ -22,7 +22,7 @@ const createAction = async (req, res, next) => {
     const { actionObj } = req.body;
     if (!checkIfValidAndNotEmptyObj(actionObj)) {
       res.status(400).send({
-        message: "Action data is required!"
+        message: "Action data is required!",
       });
       return;
     }
@@ -34,20 +34,25 @@ const createAction = async (req, res, next) => {
       userPostId: actionObj.userPostId || null,
     };
     transaction = await db.sequelize.transaction();
-    const data = await UserPostAction.create(action, { transaction, logging: false });
-    console.log(`${action.action} performed by ${action.userId} on user post with ID ${action.userPostId}.`);
+    const data = await UserPostAction.create(action, {
+      transaction,
+      logging: false,
+    });
+    console.log(
+      `${action.action} performed by ${action.userId} on user post with ID ${action.userPostId}.`,
+    );
     // if we reach here, there were no errors therefore commit the transaction
     await transaction.commit();
 
     res.send({
-      _id: data._id
+      _id: data._id,
     });
   } catch (error) {
     // if we reach here, there were some errors thrown, therefore roolback the transaction
     if (transaction) await transaction.rollback();
     res.status(500).send({
       message:
-        error.message || "Some error occurred while creating the Action."
+        error.message || "Some error occurred while creating the Action.",
     });
   }
 };
@@ -58,7 +63,7 @@ const deleteAction = async (req, res, next) => {
     // fetch userId from middleware
     if (!req.userId) {
       res.status(400).send({
-        message: "Invalid User Token, please log in again!"
+        message: "Invalid User Token, please log in again!",
       });
       return;
     }
@@ -67,7 +72,7 @@ const deleteAction = async (req, res, next) => {
     const _id = req.params._id;
     if (!_id) {
       res.status(400).send({
-        message: "Invalid Action Id!"
+        message: "Invalid Action Id!",
       });
       return;
     }
@@ -76,12 +81,12 @@ const deleteAction = async (req, res, next) => {
     await UserPostAction.destroy({
       where: {
         _id,
-        userId: req.userId
+        userId: req.userId,
       },
       transaction,
-      logging: false
+      logging: false,
     });
-    console.log(`Deleting action with ID ${_id} for user ${req.userId}.`)
+    console.log(`Deleting action with ID ${_id} for user ${req.userId}.`);
     await transaction.commit();
 
     res.send("Action was successfully deleted.");
@@ -89,7 +94,7 @@ const deleteAction = async (req, res, next) => {
     console.log(error.message);
     if (transaction) await transaction.rollback();
     res.status(500).send({
-      message: "Error occurred when deleting Action."
+      message: "Error occurred when deleting Action.",
     });
   }
 };
@@ -100,27 +105,28 @@ const createNewPost = async (req, res, next) => {
     // fetch userId from middleware
     if (!req.userId) {
       res.status(400).send({
-        message: "Invalid User Token, please log in again!"
+        message: "Invalid User Token, please log in again!",
       });
       return;
     }
     const postObj = JSON.parse(req.body.postObj);
     if (!postObj && !req.file) {
       res.status(400).send({
-        message: "Please create a valid post!"
+        message: "Please create a valid post!",
       });
       return;
     }
-    const { postMessage, parentPostId, pageId, type, isReplyTo, quoteTweetTo } = postObj;
+    const { postMessage, parentPostId, pageId, type, isReplyTo, quoteTweetTo } =
+      postObj;
     if (!pageId) {
       res.status(400).send({
-        message: "Please provide a valid pageId!"
+        message: "Please provide a valid pageId!",
       });
       return;
     }
     if (!type) {
       res.status(400).send({
-        message: "Please provide a valid post type!"
+        message: "Please provide a valid post type!",
       });
       return;
     }
@@ -133,7 +139,7 @@ const createNewPost = async (req, res, next) => {
       type,
       isReplyTo: isReplyTo || null,
       quoteTweetTo: quoteTweetTo || null,
-      parentPostId: parentPostId || null
+      parentPostId: parentPostId || null,
     };
     const data = await UserPost.create(post, { transaction, logging: false });
     console.log(`Creating post for user ${req.userId} of type ${type}.`);
@@ -147,7 +153,9 @@ const createNewPost = async (req, res, next) => {
         mimeType: req.file.mimetype,
       };
       mediaData = await Media.create(media, { transaction, logging: false });
-      console.log(`Also ataching Media entry for user ${req.userId} with file type as: ${media.mimeType}`);
+      console.log(
+        `Also ataching Media entry for user ${req.userId} with file type as: ${media.mimeType}`,
+      );
       attachedMedia.push(mediaData);
     }
 
@@ -162,14 +170,14 @@ const createNewPost = async (req, res, next) => {
         parentPostId: data.parentPostId,
         isReplyTo: data.isReplyTo,
         quoteTweetTo: data.quoteTweetTo,
-      }
+      },
     });
   } catch (error) {
     console.log(error.message);
     // if we reach here, there were some errors thrown, therefore roolback the transaction
     if (transaction) await transaction.rollback();
     res.status(500).send({
-      message: "Some error occurred while creating the New User post."
+      message: "Some error occurred while creating the New User post.",
     });
   }
 };
@@ -179,23 +187,20 @@ const getFacebookPostIds = async (req, res, next) => {
   try {
     if (!req.userId) {
       res.status(400).send({
-        message: "Invalid User Token, please log in again!"
+        message: "Invalid User Token, please log in again!",
       });
       return;
     }
     const { templateId, platform, language, pageId, order } = req.params;
     if (!pageId) {
       res.status(400).send({
-        message: "Invalid Page Id!"
+        message: "Invalid Page Id!",
       });
       return;
     }
     let data = null;
     const whereClause = {
-      [db.Sequelize.Op.and]: [
-        { pageId: pageId },
-        { userId: null }
-      ]
+      [db.Sequelize.Op.and]: [{ pageId: pageId }, { userId: null }],
     };
 
     transaction = await db.sequelize.transaction();
@@ -223,21 +228,30 @@ const getFacebookPostIds = async (req, res, next) => {
     //     attributes: ['adminPostId', '_id']
     //   }, { transaction });
     // }
-    data = await UserPost.findAndCountAll({
-      where: whereClause,
-      attributes: ['adminPostId', '_id', 'isReplyTo', 'isReplyToOrder', 'quoteTweetTo']
-    }, { transaction });
+    data = await UserPost.findAndCountAll(
+      {
+        where: whereClause,
+        attributes: [
+          "adminPostId",
+          "_id",
+          "isReplyTo",
+          "isReplyToOrder",
+          "quoteTweetTo",
+        ],
+      },
+      { transaction },
+    );
     // need to create a temp object which will fetch all the posts with postId
     const adminPostIds = {};
     const adminPostUUIDs = {};
     // get only the main posts which have no replies
-    data.rows.forEach(row => {
+    data.rows.forEach((row) => {
       if (row.isReplyTo === null) {
         adminPostIds[row.adminPostId] = {
           replies: [],
           childQuoteTweet: {},
-          _id: row._id
-        }
+          _id: row._id,
+        };
         adminPostUUIDs[row._id] = row.adminPostId;
       }
     });
@@ -245,7 +259,7 @@ const getFacebookPostIds = async (req, res, next) => {
     // we iterate over all the array again
     // and try to associate the replies to there correct parent
     // if not present we want to skip
-    data.rows.forEach(row => {
+    data.rows.forEach((row) => {
       // check if replyTo is not null
       if (row.isReplyTo !== null) {
         // check if assiciated key is present in adminPostIds object
@@ -253,15 +267,15 @@ const getFacebookPostIds = async (req, res, next) => {
           adminPostIds[adminPostUUIDs[row.isReplyTo]].replies.push({
             _id: row._id,
             order: getNumberOrZero(row.isReplyToOrder),
-            adminPostId: row.adminPostId
+            adminPostId: row.adminPostId,
           });
         }
       }
       if (row.quoteTweetTo !== null) {
         if (row.quoteTweetTo in adminPostUUIDs && row._id in adminPostUUIDs) {
           adminPostIds[adminPostUUIDs[row._id]].childQuoteTweet = {
-            _id: row.quoteTweetTo || '',
-            adminPostId: adminPostUUIDs[row.quoteTweetTo] || ''
+            _id: row.quoteTweetTo || "",
+            adminPostId: adminPostUUIDs[row.quoteTweetTo] || "",
           };
         }
       }
@@ -271,51 +285,53 @@ const getFacebookPostIds = async (req, res, next) => {
     for (const [, value] of Object.entries(adminPostIds)) {
       if (Object.keys(value.childQuoteTweet).length !== 0) {
         if (value.childQuoteTweet.adminPostId in adminPostIds) {
-          if (adminPostIds[value.childQuoteTweet.adminPostId]?.replies?.length > 0) {
+          if (
+            adminPostIds[value.childQuoteTweet.adminPostId]?.replies?.length > 0
+          ) {
             value.replies = [
               ...value.replies,
-              ...adminPostIds[value.childQuoteTweet.adminPostId].replies
+              ...adminPostIds[value.childQuoteTweet.adminPostId].replies,
             ];
           }
         }
       }
-    };
+    }
     let adminPostIdsSorted = [];
     // sort the adminPostIds according to desired values i.e. input order
-    if (order === 'RANDOM') {
-      adminPostIdsSorted = shuffle(Object.keys(adminPostIds))
-      .reduce((accumulator, key) => {
-        accumulator.push({
-          [key]: adminPostIds[key]
-        });
-        return accumulator;
-      }, []);
-    } else if (order === 'DESC') {
+    if (order === "RANDOM") {
+      adminPostIdsSorted = shuffle(Object.keys(adminPostIds)).reduce(
+        (accumulator, key) => {
+          accumulator.push({
+            [key]: adminPostIds[key],
+          });
+          return accumulator;
+        },
+        [],
+      );
+    } else if (order === "DESC") {
       adminPostIdsSorted = Object.keys(adminPostIds)
-      .sort((a, b) => (getNumberOrZero(a) > getNumberOrZero(b) ? -1 : 1))
-      .reduce((accumulator, key) => {
-        accumulator.push({
-          [key]: adminPostIds[key]
-        });
-        return accumulator;
-      }, []);
+        .sort((a, b) => (getNumberOrZero(a) > getNumberOrZero(b) ? -1 : 1))
+        .reduce((accumulator, key) => {
+          accumulator.push({
+            [key]: adminPostIds[key],
+          });
+          return accumulator;
+        }, []);
     } else {
       adminPostIdsSorted = Object.keys(adminPostIds)
-      .sort((a, b) => (getNumberOrZero(a) < getNumberOrZero(b) ? -1 : 1))
-      .reduce((accumulator, key) => {
-        accumulator.push({
-          [key]: adminPostIds[key]
-        });
-        return accumulator;
-      }, []);
+        .sort((a, b) => (getNumberOrZero(a) < getNumberOrZero(b) ? -1 : 1))
+        .reduce((accumulator, key) => {
+          accumulator.push({
+            [key]: adminPostIds[key],
+          });
+          return accumulator;
+        }, []);
     }
 
     // lastly need to sort all the replies to
     adminPostIdsSorted.forEach((item) => {
-      for(const [key, value] of Object.entries(item)) {
-        item[key].replies.sort(
-          (a, b) => a.order - b.order
-        );
+      for (const [key, value] of Object.entries(item)) {
+        item[key].replies.sort((a, b) => a.order - b.order);
       }
     });
 
@@ -324,27 +340,30 @@ const getFacebookPostIds = async (req, res, next) => {
     // finally form the adminPostId array
     if (adminPostIdsSorted.length > 0) {
       // fetch the old object, if it exist for that user
-      const prevGlobalTrackingObj = await UserGlobalTracking.findOne({
-        where: {
-          userId: req.userId,
-          pageId
-        }
-      }, { transaction });
+      const prevGlobalTrackingObj = await UserGlobalTracking.findOne(
+        {
+          where: {
+            userId: req.userId,
+            pageId,
+          },
+        },
+        { transaction },
+      );
 
       let parsedMetaData = {};
       if (prevGlobalTrackingObj?.pageMetaData) {
         // parse the metaData
         parsedMetaData = JSON.parse(prevGlobalTrackingObj.pageMetaData);
       }
-      parsedMetaData['facebookPostsOrderAdminIds'] = [];
+      parsedMetaData["facebookPostsOrderAdminIds"] = [];
       // fetch the renderering order and store that in database, for post tracking
       adminPostIdsSorted.forEach((item) => {
-        for(const [key, value] of Object.entries(item)) {
+        for (const [key, value] of Object.entries(item)) {
           if (value._id) postIds.push(value._id);
           // if (value.childQuoteTweet._id) {
           //   postIds.push(value.childQuoteTweet._id);
           // }
-          parsedMetaData['facebookPostsOrderAdminIds'].push(key);
+          parsedMetaData["facebookPostsOrderAdminIds"].push(key);
 
           // TODO: Do we really have to push quote tweet Ids here?
           // if (value.childQuoteTweet.adminPostId) {
@@ -354,7 +373,9 @@ const getFacebookPostIds = async (req, res, next) => {
           value.replies.forEach((reply) => {
             if (reply._id) {
               postIds.push(reply._id);
-              parsedMetaData['facebookPostsOrderAdminIds'].push(reply.adminPostId);
+              parsedMetaData["facebookPostsOrderAdminIds"].push(
+                reply.adminPostId,
+              );
             }
           });
         }
@@ -362,34 +383,44 @@ const getFacebookPostIds = async (req, res, next) => {
 
       // stringify again the metadata object and upsert it
       const stringify = JSON.stringify(parsedMetaData);
-      console.log('Adding to User Global Tracking MetaData: ', stringify);
+      console.log("Adding to User Global Tracking MetaData: ", stringify);
       let upsertObj = {};
-      if (prevGlobalTrackingObj?._id) upsertObj['_id'] = prevGlobalTrackingObj._id;
+      if (prevGlobalTrackingObj?._id)
+        upsertObj["_id"] = prevGlobalTrackingObj._id;
       upsertObj.userId = req.userId;
       upsertObj.pageMetaData = stringify;
       upsertObj.pageId = pageId;
 
-      await UserGlobalTracking.upsert(upsertObj, { transaction, logging: false });
-      console.log('Metadata updated!');
+      await UserGlobalTracking.upsert(upsertObj, {
+        transaction,
+        logging: false,
+      });
+      console.log("Metadata updated!");
     }
 
     // fetch the language data for current page
-    const translations = await Language.findOne({
-      where: {
-        templateId: templateId,
-        name: language,
-        platform: platform,
+    const translations = await Language.findOne(
+      {
+        where: {
+          templateId: templateId,
+          name: language,
+          platform: platform,
+        },
+        attributes: ["name", "translations"],
       },
-      attributes: ['name', 'translations']
-    }, { transaction });
+      { transaction },
+    );
 
     // fetch all the authors for this page
-    const userPostAuthors = await UserPostAuthor.findAll({
-      where: {
-        pageId,
+    const userPostAuthors = await UserPostAuthor.findAll(
+      {
+        where: {
+          pageId,
+        },
+        attributes: ["authorId", "authorName", "authorVerified", "handle"],
       },
-      attributes: ['authorId', 'authorName', 'authorVerified', 'handle']
-    }, { transaction });
+      { transaction },
+    );
 
     await transaction.commit();
 
@@ -397,13 +428,13 @@ const getFacebookPostIds = async (req, res, next) => {
       totalPosts: postIds.length ? postIds.length : 0,
       postIds: postIds,
       translations,
-      authors: userPostAuthors
+      authors: userPostAuthors,
     });
   } catch (error) {
     console.log(error.message);
     if (transaction) await transaction.rollback();
     res.status(500).send({
-      message: "Some error occurred while Fetching default media post(s)."
+      message: "Some error occurred while Fetching default media post(s).",
     });
   }
 };
@@ -413,39 +444,44 @@ const getFacebookPostWithDetails = async (req, res, next) => {
   try {
     if (!req.userId) {
       res.status(400).send({
-        message: "Invalid User Token, please log in again!"
+        message: "Invalid User Token, please log in again!",
       });
       return;
     }
     const { postIds } = req.body;
     if (!postIds) {
       res.status(400).send({
-        message: "Invalid fetch Posts Object!"
+        message: "Invalid fetch Posts Object!",
       });
       return;
     }
     transaction = await db.sequelize.transaction();
-    const data = await UserPost.findAll({
-      where: {
-        _id: postIds,
+    const data = await UserPost.findAll(
+      {
+        where: {
+          _id: postIds,
+        },
+        order: db.sequelize.literal(
+          "FIND_IN_SET(UserPost._id,'" + postIds.join(",") + "')",
+        ),
+        include: [
+          {
+            model: Media,
+            as: "attachedMedia",
+          },
+        ],
       },
-      order: db.sequelize.literal("FIND_IN_SET(UserPost._id,'"+postIds.join(',')+"')"),
-      include: [
-        {
-          model: Media,
-          as: 'attachedMedia',
-        }
-      ]
-    }, { transaction, logging: false });
+      { transaction, logging: false },
+    );
 
-    console.log(`Fetching posts with order perserved: ${postIds}.`)
+    console.log(`Fetching posts with order perserved: ${postIds}.`);
 
     const getAuthorMedia = async () => {
       for (const item of data) {
         const result = await Media.findOne({
           where: {
-            authorId: item.dataValues.authorId
-          }
+            authorId: item.dataValues.authorId,
+          },
         });
         item.dataValues.attachedAuthorPicture = result;
       }
@@ -459,7 +495,7 @@ const getFacebookPostWithDetails = async (req, res, next) => {
     console.log(error.message);
     if (transaction) await transaction.rollback();
     res.status(500).send({
-      message: "Some error occurred while Fetching default media post(s)."
+      message: "Some error occurred while Fetching default media post(s).",
     });
   }
 };
@@ -469,70 +505,93 @@ const getFacebookFakeActionPosts = async (req, res, next) => {
   try {
     if (!req.userId) {
       res.status(400).send({
-        message: "Invalid User Token, please log in again!"
+        message: "Invalid User Token, please log in again!",
       });
       return;
     }
     const pageId = req.params.pageId;
     if (!pageId) {
       res.status(400).send({
-        message: "Invalid Page Id!"
+        message: "Invalid Page Id!",
       });
       return;
     }
 
     transaction = await db.sequelize.transaction();
-    const shareData = await UserPost.findAll({
-      where: {
-        userId: req.userId,
-      },
-      attributes: ['postMessage', 'type', '_id', 'createdAt'],
-      include: [
-        {
-          where: {
-            isFake: true,
-            pageId: pageId
+    const shareData = await UserPost.findAll(
+      {
+        where: {
+          userId: req.userId,
+        },
+        attributes: ["postMessage", "type", "_id", "createdAt"],
+        include: [
+          {
+            where: {
+              isFake: true,
+              pageId: pageId,
+            },
+            model: UserPost,
+            as: "parentUserPost",
+            attributes: [
+              "_id",
+              "type",
+              "postMessage",
+              "isFake",
+              "adminPostId",
+              "linkTitle",
+            ],
           },
-          model: UserPost,
-          as: 'parentUserPost',
-          attributes: ['_id', 'type', 'postMessage', 'isFake', 'adminPostId', 'linkTitle'],
-        }
-      ]
-    }, { transaction, logging: false });
-
-    console.log(`Fetching fake shared posts by user ${req.userId} on social media page with Id ${pageId}.`);
-
-    const actionData = await UserPostAction.findAll({
-      where: {
-        userId: req.userId
+        ],
       },
-      attributes: ['_id', 'action', 'comment', 'createdAt'],
-      include: [
-        {
-          where: {
-            isFake: true,
-            pageId: pageId
-          },
-          model: UserPost,
-          as: 'userPosts',
-          attributes: ['_id', 'type', 'postMessage', 'isFake', 'adminPostId', 'linkTitle'],
-        }
-      ]
-    }, { transaction, logging: false });
+      { transaction, logging: false },
+    );
 
-    console.log(`Fetching fake comments and likes by user ${req.userId} on social media page with Id ${pageId}.`);
+    console.log(
+      `Fetching fake shared posts by user ${req.userId} on social media page with Id ${pageId}.`,
+    );
+
+    const actionData = await UserPostAction.findAll(
+      {
+        where: {
+          userId: req.userId,
+        },
+        attributes: ["_id", "action", "comment", "createdAt"],
+        include: [
+          {
+            where: {
+              isFake: true,
+              pageId: pageId,
+            },
+            model: UserPost,
+            as: "userPosts",
+            attributes: [
+              "_id",
+              "type",
+              "postMessage",
+              "isFake",
+              "adminPostId",
+              "linkTitle",
+            ],
+          },
+        ],
+      },
+      { transaction, logging: false },
+    );
+
+    console.log(
+      `Fetching fake comments and likes by user ${req.userId} on social media page with Id ${pageId}.`,
+    );
 
     await transaction.commit();
     res.send({
       sharePostsData: shareData,
       actionPostsData: actionData,
     });
-
   } catch (error) {
     console.log(error.message);
     if (transaction) await transaction.rollback();
     res.status(500).send({
-      message: "Some error occurred while Fetching (s)."
+      message: "Some error occurred while Fetching (s).",
     });
   }
 };
@@ -543,7 +602,7 @@ const updatePost = async (req, res, next) => {
     // fetch userId from middleware
     if (!req.userId) {
       res.status(400).send({
-        message: "Invalid User Token, please log in again!"
+        message: "Invalid User Token, please log in again!",
       });
       return;
     }
@@ -551,23 +610,26 @@ const updatePost = async (req, res, next) => {
     const { type, id } = req.body;
     if (!type || !id) {
       res.status(400).send({
-        message: "UserPost data required!"
+        message: "UserPost data required!",
       });
       return;
     }
     transaction = await db.sequelize.transaction();
     // update the user object
-    await UserPost.update({
-      type
-    }, {
-      where: {
-        _id: id,
-        // userId: req.userId
+    await UserPost.update(
+      {
+        type,
       },
-      transaction
-    });
+      {
+        where: {
+          _id: id,
+          // userId: req.userId
+        },
+        transaction,
+      },
+    );
 
-    console.log(`Updating post with ID ${id} for user ${req.userId}.`)
+    console.log(`Updating post with ID ${id} for user ${req.userId}.`);
     await transaction.commit();
 
     res.send("Post was successfully updated.");
@@ -575,7 +637,7 @@ const updatePost = async (req, res, next) => {
     console.log(error.message);
     if (transaction) await transaction.rollback();
     res.status(500).send({
-      message: "Error occurred when updating Post."
+      message: "Error occurred when updating Post.",
     });
   }
 };
@@ -583,14 +645,13 @@ const updatePost = async (req, res, next) => {
 const createNewReply = async (obj) => {
   let transaction;
   try {
-    
     transaction = await db.sequelize.transaction();
     // create post
     let post = {
       postMessage: obj.postMessage || "",
       pageId: obj.pageId,
       type: obj.type,
-      parentPostId: obj.parentPostId || null
+      parentPostId: obj.parentPostId || null,
     };
     await UserPost.create(obj, { transaction, logging: true });
     await transaction.commit();
@@ -601,7 +662,6 @@ const createNewReply = async (obj) => {
   }
 };
 
-
 export default {
   createAction,
   createNewPost,
@@ -610,5 +670,5 @@ export default {
   getFacebookFakeActionPosts,
   deleteAction,
   updatePost,
-  createNewReply
+  createNewReply,
 };

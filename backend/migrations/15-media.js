@@ -1,38 +1,37 @@
-const { Sequelize } = require('sequelize');
+const { Sequelize } = require("sequelize");
 
 export async function down({ context: queryInterface }) {
-  await queryInterface.dropTable('Media');
+  await queryInterface.dropTable("Media");
 }
 
 export async function up({ context: queryInterface }) {
-  await queryInterface.createTable('Media', {
+  await queryInterface.createTable("Media", {
     _id: {
       allowNull: false,
       primaryKey: true,
-      type: Sequelize.UUID
+      type: Sequelize.UUID,
     },
     mimeType: {
       allowNull: false,
-      type: Sequelize.STRING
+      type: Sequelize.STRING,
     },
     media: {
       allowNull: false,
-      type: Sequelize.BLOB('long')
+      type: Sequelize.BLOB("long"),
     },
     isThumbnail: {
       allowNull: false,
-      type: Sequelize.BOOLEAN
+      type: Sequelize.BOOLEAN,
     },
     userPostId: {
       allowNull: true,
-      onDelete: 'CASCADE',
+      onDelete: "CASCADE",
       references: {
-        key: '_id',
-        model: 'UserPost'
+        key: "_id",
+        model: "UserPost",
       },
-      type: Sequelize.UUID
-    }
+      type: Sequelize.UUID,
+    },
   });
-  await queryInterface.addIndex('Media', ['userPostId']);
+  await queryInterface.addIndex("Media", ["userPostId"]);
 }
-

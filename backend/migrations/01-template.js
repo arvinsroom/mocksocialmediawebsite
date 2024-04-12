@@ -1,27 +1,27 @@
-const { Sequelize } = require('sequelize');
+const { Sequelize } = require("sequelize");
 
 export async function down({ context: queryInterface }) {
-  await queryInterface.dropTable('Template');
+  await queryInterface.dropTable("Template");
 }
 
 export async function up({ context: queryInterface }) {
-  await queryInterface.createTable('Template', {
+  await queryInterface.createTable("Template", {
     _id: {
       allowNull: false,
       primaryKey: true,
-      type: Sequelize.UUID
+      type: Sequelize.UUID,
     },
     adminId: {
       allowNull: false,
       references: {
-        key: '_id',
-        model: 'Admin'
+        key: "_id",
+        model: "Admin",
       },
-      type: Sequelize.UUID
+      type: Sequelize.UUID,
     },
     name: {
       allowNull: false,
-      type: Sequelize.STRING
+      type: Sequelize.STRING,
     },
     videoPermission: {
       allowNull: false,
@@ -44,13 +44,12 @@ export async function up({ context: queryInterface }) {
     },
     templateCode: {
       allowNull: false,
-      type: Sequelize.INTEGER
+      type: Sequelize.INTEGER,
     },
     language: {
       allowNull: true,
-      type: Sequelize.STRING
-    }
+      type: Sequelize.STRING,
+    },
   });
-  await queryInterface.addIndex('Template', ['adminId', 'templateCode']);
+  await queryInterface.addIndex("Template", ["adminId", "templateCode"]);
 }
-

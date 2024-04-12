@@ -1,11 +1,11 @@
-const { Sequelize } = require('sequelize');
+const { Sequelize } = require("sequelize");
 
 export async function down({ context: queryInterface }) {
-  await queryInterface.dropTable('UserPost');
+  await queryInterface.dropTable("UserPost");
 }
 
 export async function up({ context: queryInterface }) {
-  await queryInterface.createTable('UserPost', {
+  await queryInterface.createTable("UserPost", {
     _id: {
       allowNull: false,
       primaryKey: true,
@@ -13,27 +13,27 @@ export async function up({ context: queryInterface }) {
     },
     adminPostId: {
       allowNull: true,
-      type: Sequelize.INTEGER
+      type: Sequelize.INTEGER,
     },
     type: {
       allowNull: true,
-      type: Sequelize.ENUM('LINK', 'VIDEO', 'PHOTO', 'TEXT', 'SHARE')
+      type: Sequelize.ENUM("LINK", "VIDEO", "PHOTO", "TEXT", "SHARE"),
     },
     linkTitle: {
       allowNull: true,
-      type: Sequelize.STRING(1024)
+      type: Sequelize.STRING(1024),
     },
     link: {
       allowNull: true,
-      type: Sequelize.STRING(1024)
+      type: Sequelize.STRING(1024),
     },
     linkPreview: {
       allowNull: true,
-      type: Sequelize.STRING(1024)
+      type: Sequelize.STRING(1024),
     },
     postMessage: {
       allowNull: true,
-      type: Sequelize.STRING(1024)
+      type: Sequelize.STRING(1024),
     },
     isFake: {
       allowNull: false,
@@ -41,40 +41,44 @@ export async function up({ context: queryInterface }) {
     },
     sourceTweet: {
       allowNull: true,
-      type: Sequelize.STRING(1024)
+      type: Sequelize.STRING(1024),
     },
     parentPostId: {
       allowNull: true,
-      onDelete: 'CASCADE',
+      onDelete: "CASCADE",
       references: {
-        key: '_id',
-        model: 'UserPost'
+        key: "_id",
+        model: "UserPost",
       },
-      type: Sequelize.UUID
+      type: Sequelize.UUID,
     },
     pageId: {
       allowNull: false,
-      onDelete: 'CASCADE',
+      onDelete: "CASCADE",
       references: {
-        key: '_id',
-        model: 'Page'
+        key: "_id",
+        model: "Page",
       },
-      type: Sequelize.UUID
+      type: Sequelize.UUID,
     },
     userId: {
       allowNull: true,
-      onDelete: 'CASCADE',
+      onDelete: "CASCADE",
       references: {
-        key: '_id',
-        model: 'User'
+        key: "_id",
+        model: "User",
       },
-      type: Sequelize.UUID
+      type: Sequelize.UUID,
     },
     createdAt: {
       allowNull: false,
       type: Sequelize.DATE(3),
     },
   });
-  await queryInterface.addIndex('UserPost', ['userId', 'adminPostId', 'pageId', 'parentPostId']);
+  await queryInterface.addIndex("UserPost", [
+    "userId",
+    "adminPostId",
+    "pageId",
+    "parentPostId",
+  ]);
 }
-

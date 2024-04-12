@@ -1,38 +1,37 @@
-const { Sequelize } = require('sequelize');
+const { Sequelize } = require("sequelize");
 
 export async function down({ context: queryInterface }) {
-  await queryInterface.dropTable('Language');
+  await queryInterface.dropTable("Language");
 }
 
 export async function up({ context: queryInterface }) {
-  await queryInterface.createTable('Language', {
+  await queryInterface.createTable("Language", {
     _id: {
       allowNull: false,
       primaryKey: true,
-      type: Sequelize.UUID
+      type: Sequelize.UUID,
     },
     name: {
       allowNull: false,
-      type: Sequelize.STRING // 255
+      type: Sequelize.STRING, // 255
     },
     templateId: {
       allowNull: false,
-      onDelete: 'CASCADE',
+      onDelete: "CASCADE",
       references: {
-        key: '_id',
-        model: 'Template'
+        key: "_id",
+        model: "Template",
       },
-      type: Sequelize.UUID
+      type: Sequelize.UUID,
     },
     platform: {
       allowNull: false,
-      type: Sequelize.STRING
+      type: Sequelize.STRING,
     },
     translations: {
       allowNull: false,
-      type: Sequelize.TEXT
-    }
+      type: Sequelize.TEXT,
+    },
   });
-  await queryInterface.addIndex('Language', ['templateId', 'name', 'platform']);
+  await queryInterface.addIndex("Language", ["templateId", "name", "platform"]);
 }
-

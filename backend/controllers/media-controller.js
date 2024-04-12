@@ -1,7 +1,7 @@
 import db from "../clients/database-client";
 import { checkIfValidAndNotEmptyArray } from "../utils";
-import fb from './facebook-controller'
-import page from './create-page';
+import fb from "./facebook-controller";
+import page from "./create-page";
 const Media = db.Media;
 const UserPost = db.UserPost;
 const UserPostAuthor = db.UserPostAuthor;
@@ -13,52 +13,73 @@ const create = async (req, res, next) => {
     // fetch the adminId added from middleware
     if (!req.adminId) {
       res.status(400).send({
-        message: "Invalid Token, please log in again!"
+        message: "Invalid Token, please log in again!",
       });
       return;
     }
-    const { templateId, type, name, mediaPosts, pageDataOrder, author, omitInteractionBar } = req.body;
+    const {
+      templateId,
+      type,
+      name,
+      mediaPosts,
+      pageDataOrder,
+      author,
+      omitInteractionBar,
+    } = req.body;
     if (!templateId) {
       res.status(400).send({
-        message: "Template Id is required!"
+        message: "Template Id is required!",
       });
       return;
     }
-    if (!name) { // media
+    if (!name) {
+      // media
       res.status(400).send({
-        message: "Page Name is required!"
+        message: "Page Name is required!",
       });
       return;
     }
-    if (!type) { // FACEBOOK, TWITTER, etc
+    if (!type) {
+      // FACEBOOK, TWITTER, etc
       res.status(400).send({
-        message: "Page type is required!"
+        message: "Page type is required!",
       });
       return;
     }
     if (!checkIfValidAndNotEmptyArray(mediaPosts)) {
       res.status(400).send({
-        message: "Media post object is required!"
+        message: "Media post object is required!",
       });
       return;
     }
     if (!checkIfValidAndNotEmptyArray(author)) {
       res.status(400).send({
-        message: "Author object is required!"
+        message: "Author object is required!",
       });
       return;
     }
     transaction = await db.sequelize.transaction();
     // create the page with the name within each pageQuestionArray and template Id
-    const pageId = await page.pageCreate({
-      name: name,
-      templateId,
-      type,
-      omitInteractionBar,
-      pageDataOrder: pageDataOrder || null
-    }, transaction);
+    const pageId = await page.pageCreate(
+      {
+        name: name,
+        templateId,
+        type,
+        omitInteractionBar,
+        pageDataOrder: pageDataOrder || null,
+      },
+      transaction,
+    );
     // bulk create the authors
-    const authorKeys = ['authorId', 'authorName', 'authorVerified', 'totalPosts', 'totalFollowing', 'totalFollower', 'handle'];
+    const authorKeys = [
+      "authorId",
+      "authorName",
+      "authorVerified",
+      "totalPosts",
+      "totalFollowing",
+      "totalFollower",
+      "handle",
+    ];
     const authorArr = [];
     for (let i = 1; i < author.length; i++) {
       if (author[i].length > 0) {
@@ -70,12 +91,33 @@ const create = async (req, res, next) => {
         authorArr.push(obj);
       }
     }
-    console.log('Trying to create User Authors from excel file!')
+    console.log("Trying to create User Authors from excel file!");
     // create the Post records
     await UserPostAuthor.bulkCreate(authorArr, { transaction, logging: false });
 
     // modify the media array
-    const mediaKeys = ['adminPostId', 'link', 'linkTitle', 'linkPreview', 'postMessage', 'sourceTweet', 'type', 'isFake', 'authorId', 'isReplyTo', 'isReplyToOrder', 'quoteTweetTo', 'initLike', 'initReply', 'initTweet', 'datePosted', 'likedBy', 'likedByOverflow', 'retweetedBy', 'retweetedByOverflow'];
+    const mediaKeys = [
+      "adminPostId",
+      "link",
+      "linkTitle",
+      "linkPreview",
+      "postMessage",
+      "sourceTweet",
+      "type",
+      "isFake",
+      "authorId",
+      "isReplyTo",
+      "isReplyToOrder",
+      "quoteTweetTo",
+      "initLike",
+      "initReply",
+      "initTweet",
+      "datePosted",
+      "likedBy",
+      "likedByOverflow",
+      "retweetedBy",
+      "retweetedByOverflow",
+    ];
     const mediaArr = [];
     //we will check if a post is a reply, if so we store in the mediaArrReplies
     const mediaArrReplies = [];
@@ -83,7 +125,11 @@ const create = async (req, res, next) => {
       if (mediaPosts[i].length > 0) {
         let obj = {};
         for (let j = 0; j < mediaPosts[i].length; j++) {
-          if (mediaKeys[j] === 'initTweet' || mediaKeys[j] === 'initReply' || mediaKeys[j] === 'isFake') {
+          if (
+            mediaKeys[j] === "initTweet" ||
+            mediaKeys[j] === "initReply" ||
+            mediaKeys[j] === "isFake"
+          ) {
             obj[mediaKeys[j]] = mediaPosts[i][j] ? mediaPosts[i][j] : 0;
           } else {
             obj[mediaKeys[j]] = mediaPosts[i][j];
@@ -94,13 +140,13 @@ const create = async (req, res, next) => {
         if (obj.isReplyTo) {
           // have something in isReplyTo or something in quoteTweet
           mediaArrReplies.push(obj);
-        } else{
+        } else {
           mediaArr.push(obj);
         }
       }
     }
 
-    console.log('Trying to create User Posts from excel file!')
+    console.log("Trying to create User Posts from excel file!");
     // create the Post records
     await UserPost.bulkCreate(mediaArr, { transaction, logging: false });
     // if we reach here, there were no errors therefore commit the transaction
@@ -116,17 +162,20 @@ const create = async (req, res, next) => {
     transaction = await db.sequelize.transaction();
     //Now we will change the replyTo id for submited initial twitters to the auto. generated authorId,
     //fetch all author and store the ones from this page in authorsData
-    let replyPosts = await UserPost.findAll({
-      where: {
-        pageId
+    let replyPosts = await UserPost.findAll(
+      {
+        where: {
+          pageId,
+        },
+        attributes: ["_id", "adminPostId"],
       },
-      attributes: ['_id', 'adminPostId']
-    }, { transaction });
-  
+      { transaction },
+    );
+
     let replyPostData = {};
     // const authorPostData = {};
-    replyPosts.forEach(replyPost => {
-      replyPostData[replyPost.adminPostId] = replyPost._id
+    replyPosts.forEach((replyPost) => {
+      replyPostData[replyPost.adminPostId] = replyPost._id;
     });
 
     //We will store in result the replyId and the author that made the reply.
@@ -134,13 +183,13 @@ const create = async (req, res, next) => {
     //mediaArrReplies comes from the previous req.body, is the one hat contains the replayTo posts
     //and we did not store in db yet
     let result = [];
-    for (let i = 0; i < mediaArrReplies.length; i++){
+    for (let i = 0; i < mediaArrReplies.length; i++) {
       // this contains all the previous parent posts created
       /*
         1) If any parentpost Id matched both isReplyTo and quoteTweetTo to a new to create post <-- should not happen
         2) if a parent post adminPostId matches some isReplyTo then we can update the isReplyTo
       */
-      // if ((mediaArrReplies[i].isReplyTo && mediaArrReplies[i].isReplyTo in mediaArrReplies) || 
+      // if ((mediaArrReplies[i].isReplyTo && mediaArrReplies[i].isReplyTo in mediaArrReplies) ||
       //     (mediaArrReplies[i].quoteTweetTo && mediaArrReplies[i].quoteTweetTo in mediaArrReplies)) {
       //     const obj = {
       //       ...mediaArrReplies[i],
@@ -150,11 +199,18 @@ const create = async (req, res, next) => {
       //     }
       //     result.push(obj);
       // }
-      if (mediaArrReplies[i].isReplyTo && mediaArrReplies[i].isReplyTo in replyPostData) {
+      if (
+        mediaArrReplies[i].isReplyTo &&
+        mediaArrReplies[i].isReplyTo in replyPostData
+      ) {
         result.push({
           ...mediaArrReplies[i],
-          parentPostId: replyPostData[mediaArrReplies[i].isReplyTo] ? replyPostData[mediaArrReplies[i].isReplyTo] : null,
-          isReplyTo: replyPostData[mediaArrReplies[i].isReplyTo] ? replyPostData[mediaArrReplies[i].isReplyTo] : null,
+          parentPostId: replyPostData[mediaArrReplies[i].isReplyTo]
+            ? replyPostData[mediaArrReplies[i].isReplyTo]
+            : null,
+          isReplyTo: replyPostData[mediaArrReplies[i].isReplyTo]
+            ? replyPostData[mediaArrReplies[i].isReplyTo]
+            : null,
         });
       }
     }
@@ -164,69 +220,77 @@ const create = async (req, res, next) => {
 
     transaction = await db.sequelize.transaction();
     // for quoteTweet
-    replyPosts = await UserPost.findAll({
-      where: {
-        pageId
+    replyPosts = await UserPost.findAll(
+      {
+        where: {
+          pageId,
+        },
+        attributes: ["_id", "adminPostId"],
       },
-      attributes: ['_id', 'adminPostId']
-    }, { transaction });
-    const quoteTweetPosts = await UserPost.findAll({
-      where: {
-        [db.Sequelize.Op.and]: [
-          {
-            pageId: pageId
-          },
-          {
-            quoteTweetTo: {
-              [db.Sequelize.Op.ne]: null
-            }
-          }
-        ]
+      { transaction },
+    );
+    const quoteTweetPosts = await UserPost.findAll(
+      {
+        where: {
+          [db.Sequelize.Op.and]: [
+            {
+              pageId: pageId,
+            },
+            {
+              quoteTweetTo: {
+                [db.Sequelize.Op.ne]: null,
+              },
+            },
+          ],
+        },
+        attributes: ["_id", "adminPostId", "quoteTweetTo", "pageId"],
       },
-      attributes: ['_id', 'adminPostId', 'quoteTweetTo', 'pageId']
-    }, { transaction });
-  
+      { transaction },
+    );
+
     replyPostData = {};
     // const authorPostData = {};
-    replyPosts.forEach(replyPost => {
-      replyPostData[replyPost.adminPostId] = replyPost._id
+    replyPosts.forEach((replyPost) => {
+      replyPostData[replyPost.adminPostId] = replyPost._id;
     });
 
     result = [];
-    quoteTweetPosts.forEach(quotedPost => {
-      if (quotedPost.quoteTweetTo === quotedPost.adminPostId || !(quotedPost.quoteTweetTo in replyPostData)) {
+    quoteTweetPosts.forEach((quotedPost) => {
+      if (
+        quotedPost.quoteTweetTo === quotedPost.adminPostId ||
+        !(quotedPost.quoteTweetTo in replyPostData)
+      ) {
         result.push({
           _id: quotedPost._id,
           pageId: quotedPost.pageId,
-          quoteTweetTo: null
+          quoteTweetTo: null,
         });
-      }
-      else if (quotedPost.quoteTweetTo in replyPostData) {
+      } else if (quotedPost.quoteTweetTo in replyPostData) {
         result.push({
           _id: quotedPost._id,
           pageId: quotedPost.pageId,
-          quoteTweetTo: replyPostData[quotedPost.quoteTweetTo]
+          quoteTweetTo: replyPostData[quotedPost.quoteTweetTo],
         });
       }
     });
 
     await UserPost.bulkCreate(result, {
-      updateOnDuplicate: ["quoteTweetTo", "pageId"], 
+      updateOnDuplicate: ["quoteTweetTo", "pageId"],
       transaction,
-      logging: false
+      logging: false,
     });
     // if we reach here, there were no errors therefore commit the transaction
     await transaction.commit();
 
     // return the pageId with the request
     res.send({
-      response: "Success"
+      response: "Success",
     });
   } catch (error) {
     // if we reach here, there were some errors thrown, therefore roolback the transaction
     if (transaction) await transaction.rollback();
     res.status(500).send({
-      message: `Error: ${error.message ? error.message : error}`
+      message: `Error: ${error.message ? error.message : error}`,
     });
   }
 };
@@ -239,13 +303,13 @@ const uploadMultipleFiles = async (req, res, next) => {
     const { files } = req;
     if (!files) {
       res.status(400).send({
-        message: "You must provide a file!"
+        message: "You must provide a file!",
       });
       return;
     }
     if (!pageId) {
       res.status(400).send({
-        message: "Page Id is required!"
+        message: "Page Id is required!",
       });
       return;
     }
@@ -253,15 +317,18 @@ const uploadMultipleFiles = async (req, res, next) => {
     transaction = await db.sequelize.transaction();
 
     // fetch all the posts for that specific social media page
-    const posts = await UserPost.findAll({
-      where: {
-        pageId
+    const posts = await UserPost.findAll(
+      {
+        where: {
+          pageId,
+        },
+        attributes: ["_id", "adminPostId"],
       },
-      attributes: ['_id', 'adminPostId']
-    }, { transaction });
+      { transaction },
+    );
 
     const postData = {};
-    posts.forEach(post => {
+    posts.forEach((post) => {
       postData[post.adminPostId] = post._id;
     });
 
@@ -278,26 +345,26 @@ const uploadMultipleFiles = async (req, res, next) => {
         });
       }
     }
-    console.log(`Trying to create Media entries for ${postData}.`)
+    console.log(`Trying to create Media entries for ${postData}.`);
     // updateOnDuplicate: ['userPostId'],
     // this won't work yet as we do not have a logic to make userPostId unique
     // find another way
     await Media.bulkCreate(mediaArr, {
       transaction,
-      logging: false
+      logging: false,
     });
     // if we reach here, there were no errors therefore commit the transaction
     await transaction.commit();
 
     // send json
     res.send({
-      response: "Success"
+      response: "Success",
     });
   } catch (error) {
     // if we reach here, there were some errors thrown, therefore roolback the transaction
     if (transaction) await transaction.rollback();
     res.status(500).send({
-      message: `Error: ${error.message ? error.message : error}`
+      message: `Error: ${error.message ? error.message : error}`,
     });
   }
 };
@@ -310,13 +377,13 @@ const uploadMultipleAuthourFiles = async (req, res, next) => {
     const { files } = req;
     if (!files) {
       res.status(400).send({
-        message: "You must provide a file!"
+        message: "You must provide a file!",
       });
       return;
     }
     if (!pageId) {
       res.status(400).send({
-        message: "Page Id is required!"
+        message: "Page Id is required!",
       });
       return;
     }
@@ -324,12 +391,15 @@ const uploadMultipleAuthourFiles = async (req, res, next) => {
     transaction = await db.sequelize.transaction();
 
     // fetch all the posts for that specific social media page
-    const posts = await UserPost.findAll({
-      where: {
-        pageId
+    const posts = await UserPost.findAll(
+      {
+        where: {
+          pageId,
+        },
+        attributes: ["_id", "authorId"],
       },
-      attributes: ['_id', 'authorId']
-    }, { transaction });
+      { transaction },
+    );
 
     //check if posts has an authorId and save them in authorData
     const authorData = {};
@@ -350,26 +420,26 @@ const uploadMultipleAuthourFiles = async (req, res, next) => {
         });
       }
     }
-    console.log(`Trying to create Media entries for Authors ${authorData}.`)
+    console.log(`Trying to create Media entries for Authors ${authorData}.`);
     // updateOnDuplicate: ['userPostId'],
     // this won't work yet as we do not have a logic to make userPostId unique
     // find another way
     await Media.bulkCreate(mediaArr, {
       transaction,
-      logging: false
+      logging: false,
     });
     // if we reach here, there were no errors therefore commit the transaction
     await transaction.commit();
 
     // send json
     res.send({
-      response: "Success"
+      response: "Success",
     });
   } catch (error) {
     // if we reach here, there were some errors thrown, therefore roolback the transaction
     if (transaction) await transaction.rollback();
     res.status(500).send({
-      message: `Error: ${error.message ? error.message : error}`
+      message: `Error: ${error.message ? error.message : error}`,
     });
   }
 };
@@ -377,5 +447,5 @@ const uploadMultipleAuthourFiles = async (req, res, next) => {
 export default {
   create,
   uploadMultipleFiles,
-  uploadMultipleAuthourFiles
-}
+  uploadMultipleAuthourFiles,
+};

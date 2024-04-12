@@ -1,23 +1,23 @@
-const { Sequelize } = require('sequelize');
+const { Sequelize } = require("sequelize");
 
 export async function down({ context: queryInterface }) {
-  await queryInterface.dropTable('UserRegister');
+  await queryInterface.dropTable("UserRegister");
 }
 
 export async function up({ context: queryInterface }) {
-  await queryInterface.createTable('UserRegister', {
+  await queryInterface.createTable("UserRegister", {
     _id: {
       allowNull: false,
       primaryKey: true,
-      type: Sequelize.UUID
+      type: Sequelize.UUID,
     },
     image: {
       allowNull: true,
-      type: Sequelize.BLOB('long')
+      type: Sequelize.BLOB("long"),
     },
     mimeType: {
       allowNull: true,
-      type: Sequelize.STRING
+      type: Sequelize.STRING,
     },
     generalFieldValue: {
       allowNull: true,
@@ -25,27 +25,26 @@ export async function up({ context: queryInterface }) {
     },
     registerId: {
       allowNull: false,
-      onDelete: 'CASCADE',
+      onDelete: "CASCADE",
       references: {
-        key: '_id',
-        model: 'Register'
+        key: "_id",
+        model: "Register",
       },
-      type: Sequelize.UUID
+      type: Sequelize.UUID,
     },
     userId: {
       allowNull: false,
-      onDelete: 'CASCADE',
+      onDelete: "CASCADE",
       references: {
-        key: '_id',
-        model: 'User'
+        key: "_id",
+        model: "User",
       },
-      type: Sequelize.UUID
+      type: Sequelize.UUID,
     },
     finishedAt: {
       allowNull: false,
       type: Sequelize.DATE(3),
     },
   });
-  await queryInterface.addIndex('UserRegister', ['userId', 'registerId']);
+  await queryInterface.addIndex("UserRegister", ["userId", "registerId"]);
 }
-

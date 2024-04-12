@@ -1,5 +1,8 @@
 import db from "../clients/database-client";
-import { checkIfValidAndNotEmptyArray, checkIfValidAndNotEmptyObj } from '../utils';
+import {
+  checkIfValidAndNotEmptyArray,
+  checkIfValidAndNotEmptyObj,
+} from "../utils";
 
 const UserAnswer = db.UserAnswer;
 
@@ -10,7 +13,7 @@ const createMCQ = async (req, res, next) => {
     // fetch userId from middleware
     if (!req.userId) {
       res.status(400).send({
-        message: "Invalid User Token, please log in again!"
+        message: "Invalid User Token, please log in again!",
       });
       return;
     }
@@ -18,7 +21,7 @@ const createMCQ = async (req, res, next) => {
     const { mcq } = req.body;
     if (!checkIfValidAndNotEmptyArray(mcq)) {
       res.status(400).send({
-        message: "MCQ data is required!"
+        message: "MCQ data is required!",
       });
       return;
     }
@@ -42,7 +45,7 @@ const createMCQ = async (req, res, next) => {
     await transaction.commit();
 
     res.send({
-      message: "Answers Created!"
+      message: "Answers Created!",
     });
   } catch (error) {
     console.log(error.message);
@@ -50,7 +53,8 @@ const createMCQ = async (req, res, next) => {
     if (transaction) await transaction.rollback();
     res.status(500).send({
       message:
-        error.message || "Some error occurred while creating the MCQ Answer record."
+        error.message ||
+        "Some error occurred while creating the MCQ Answer record.",
     });
   }
 };
@@ -62,7 +66,7 @@ const createOpentext = async (req, res, next) => {
     // fetch userId from middleware
     if (!req.userId) {
       res.status(400).send({
-        message: "Invalid User Token, please log in again!"
+        message: "Invalid User Token, please log in again!",
       });
       return;
     }
@@ -70,7 +74,7 @@ const createOpentext = async (req, res, next) => {
     const { opentext } = req.body;
     if (!checkIfValidAndNotEmptyObj(opentext)) {
       res.status(400).send({
-        message: "Opentext data is required!"
+        message: "Opentext data is required!",
       });
       return;
     }
@@ -82,7 +86,7 @@ const createOpentext = async (req, res, next) => {
         promises.push({
           userId: req.userId,
           questionId: key,
-          opentextAnswerText: value
+          opentextAnswerText: value,
         });
       }
     }
@@ -91,7 +95,7 @@ const createOpentext = async (req, res, next) => {
     // if we reach here, there were no errors therefore commit the transaction
     await transaction.commit();
     res.send({
-      message: "Answers created!"
+      message: "Answers created!",
     });
   } catch (error) {
     console.log(error.message);
@@ -99,13 +103,13 @@ const createOpentext = async (req, res, next) => {
     if (transaction) await transaction.rollback();
     res.status(500).send({
       message:
-        error.message || "Some error occurred while creating the OpenText Answer record."
+        error.message ||
+        "Some error occurred while creating the OpenText Answer record.",
     });
   }
 };
 
-
 export default {
   createMCQ,
-  createOpentext
-}
+  createOpentext,
+};
