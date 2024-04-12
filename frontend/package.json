@@ -44,7 +44,6 @@
     "build-dev": "npm run clean-dist && npm run webpack-build-dev",
     "build-prod": "npm run clean-dist && npm run webpack-build-prod",
     "run-node-server": "npm run copy-server && node ./dist/index.js",
-    "prepare": "cd .. && husky frontend/.husky",
     "format": "prettier --log-level warn --write ."
   },
   "eslintConfig": {
@@ -90,8 +89,6 @@
     "dotenv": "^16.0.3",
     "file-loader": "^6.2.0",
     "html-webpack-plugin": "^5.5.0",
-    "husky": "^9.0.11",
-    "lint-staged": "^15.2.2",
     "mini-css-extract-plugin": "^2.7.2",
     "nodemon": "^2.0.20",
     "prettier": "^3.2.5",
@@ -101,11 +98,5 @@
     "webpack": "^5.75.0",
     "webpack-cli": "^5.0.1",
     "webpack-dev-server": "^4.11.1"
-  },
-  "lint-staged": {
-    "*.{js,ts,tsx,jsx,css}": [
-      "eslint",
-      "prettier --log-level warn --write ."
-    ]
   }
 }
