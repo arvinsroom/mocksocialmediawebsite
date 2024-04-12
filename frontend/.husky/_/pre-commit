@@ -1,0 +1,5 @@
+#!/usr/bin/env sh
+. "${0%/*}/h"
+
+echo "somethign"
+cd frontend && npx lint-staged -c package.json
