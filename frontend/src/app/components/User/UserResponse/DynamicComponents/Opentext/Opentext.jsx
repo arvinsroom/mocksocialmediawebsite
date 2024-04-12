@@ -1,24 +1,33 @@
-import { useEffect, useState } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-import { getQuestions } from '../../../../../services/questions-service';
-import { createOpentext } from '../../../../../services/user-answer-service';
-import { Button, TextField } from '@material-ui/core';
-import { Navigate } from 'react-router-dom';
-import useStyles from '../../../../style';
-import { showErrorSnackbar, showInfoSnackbar, showSuccessSnackbar } from '../../../../../actions/snackbar';
-import { updateFlowActiveState } from '../../../../../actions/flowState';
+import { useEffect, useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { getQuestions } from "../../../../../services/questions-service";
+import { createOpentext } from "../../../../../services/user-answer-service";
+import { Button, TextField } from "@material-ui/core";
+import { Navigate } from "react-router-dom";
+import useStyles from "../../../../style";
+import {
+  showErrorSnackbar,
+  showInfoSnackbar,
+  showSuccessSnackbar,
+} from "../../../../../actions/snackbar";
+import { updateFlowActiveState } from "../../../../../actions/flowState";
 import "./Opentext.css";
-import { IconChevronRight } from '@tabler/icons-react';
-import Progress from '../../../../Common/Progress';
-import { USER_TRANSLATIONS_DEFAULT, WINDOW_GLOBAL } from '../../../../../constants';
-import RenderRichTextArea from '../../../../Common/UserCommon/RenderRichTextArea';
+import { IconChevronRight } from "@tabler/icons-react";
+import Progress from "../../../../Common/Progress";
+import {
+  USER_TRANSLATIONS_DEFAULT,
+  WINDOW_GLOBAL,
+} from "../../../../../constants";
+import RenderRichTextArea from "../../../../Common/UserCommon/RenderRichTextArea";
 
 const Opentext = ({ data }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [OpentextQuestions, setOpentextQuestions] = useState(null);
   const [opentextResponse, setOpentextResponse] = useState(null);
   const [normalizedReq, setNoramlizedReq] = useState([]);
-  const { isLoggedInUser, translations } = useSelector(state => state.userAuth);
+  const { isLoggedInUser, translations } = useSelector(
+    (state) => state.userAuth,
+  );
 
   const dispatch = useDispatch();
   const classes = useStyles();
@@ -33,7 +42,7 @@ const Opentext = ({ data }) => {
         // maintain the response object with key as questionId
         for (let i = 0; i < resultArr.length; i++) {
           const currentItem = resultArr[i];
-          normalizeOpenTextData[currentItem._id] = '';
+          normalizeOpenTextData[currentItem._id] = "";
           if (currentItem.required) {
             normalizeRequiredData.push(currentItem._id);
           }
@@ -45,7 +54,11 @@ const Opentext = ({ data }) => {
       setIsLoading(false);
     } catch (error) {
       setIsLoading(false);
-      dispatch(showErrorSnackbar((translations?.error) || USER_TRANSLATIONS_DEFAULT.ERROR));
+      dispatch(
+        showErrorSnackbar(
+          translations?.error || USER_TRANSLATIONS_DEFAULT.ERROR,
+        ),
+      );
     }
   };
 
@@ -53,7 +66,7 @@ const Opentext = ({ data }) => {
     if (!isLoggedInUser) return <Navigate to="/" />;
     setIsLoading(true);
     fetch();
-    window.onbeforeunload = function() {
+    window.onbeforeunload = function () {
       return WINDOW_GLOBAL.RELOAD_ALERT_MESSAGE;
     };
   }, []);
@@ -65,45 +78,65 @@ const Opentext = ({ data }) => {
     return true;
   };
 
-  const handleSubmit = async e => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     try {
       // check if all the required answers were submitted
       if (checkAndFilterRequired()) {
         await createOpentext({ opentext: opentextResponse });
-        dispatch(showSuccessSnackbar((translations?.responses_saved) || USER_TRANSLATIONS_DEFAULT.RESPONSES_SAVED));
+        dispatch(
+          showSuccessSnackbar(
+            translations?.responses_saved ||
+              USER_TRANSLATIONS_DEFAULT.RESPONSES_SAVED,
+          ),
+        );
         dispatch(updateFlowActiveState());
       } else {
-        dispatch(showInfoSnackbar((translations?.['please_answer_all_required_questions_to_continue.']) || USER_TRANSLATIONS_DEFAULT.ENTER_REQUIRED_INFO));
+        dispatch(
+          showInfoSnackbar(
+            translations?.[
+              "please_answer_all_required_questions_to_continue."
+            ] || USER_TRANSLATIONS_DEFAULT.ENTER_REQUIRED_INFO,
+          ),
+        );
       }
     } catch (error) {
-      dispatch(showErrorSnackbar((translations?.error) || USER_TRANSLATIONS_DEFAULT.ERROR));
+      dispatch(
+        showErrorSnackbar(
+          translations?.error || USER_TRANSLATIONS_DEFAULT.ERROR,
+        ),
+      );
     }
   };
 
   const handleChange = (_id, e) => {
-    setOpentextResponse({ ...opentextResponse, [_id]: e.target.value })
+    setOpentextResponse({ ...opentextResponse, [_id]: e.target.value });
   };
 
   return (
     <>
-      {data?.richText && <RenderRichTextArea richText={data.richText}/>}
-      {OpentextQuestions && OpentextQuestions.length > 0 ? OpentextQuestions.map((question, index) => (
-        <div key={index}>
-          <br/>
-          <p className="questionText">{question.questionText || ""}</p>
-          <TextField
-            className={classes.center}
-            value={opentextResponse ? opentextResponse[question._id] : ''}
-            label={(translations?.type_your_answer_here) || USER_TRANSLATIONS_DEFAULT.TYPE_YOUR_ANSWER_HERE}
-            onChange={(e) => handleChange(question._id, e)}
-            variant="outlined"
-            margin="normal"
-            fullWidth
-          />
-        </div>
-      )) : null}
+      {data?.richText && <RenderRichTextArea richText={data.richText} />}
+      {OpentextQuestions && OpentextQuestions.length > 0
+        ? OpentextQuestions.map((question, index) => (
+            <div key={index}>
+              <br />
+              <p className="questionText">{question.questionText || ""}</p>
+              <TextField
+                className={classes.center}
+                value={opentextResponse ? opentextResponse[question._id] : ""}
+                label={
+                  translations?.type_your_answer_here ||
+                  USER_TRANSLATIONS_DEFAULT.TYPE_YOUR_ANSWER_HERE
+                }
+                onChange={(e) => handleChange(question._id, e)}
+                variant="outlined"
+                margin="normal"
+                fullWidth
+              />
+            </div>
+          ))
+        : null}
       {isLoading && <Progress />}
       <Button
         type="submit"
@@ -115,8 +148,8 @@ const Opentext = ({ data }) => {
       >
         {translations?.next || "NEXT"}
       </Button>
-   </>
-  )
+    </>
+  );
 };
 
 export default Opentext;

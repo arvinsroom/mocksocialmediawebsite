@@ -1,14 +1,18 @@
-import { useState } from 'react';
-import { Button, Input, Box } from '@material-ui/core';
-import useStyles from '../../../../../style';
+import { useState } from "react";
+import { Button, Input, Box } from "@material-ui/core";
+import useStyles from "../../../../../style";
 import { useDispatch } from "react-redux";
 import { uploadMultipleFiles } from "../../../../../../services/media-service";
-import { showErrorSnackbar, showSuccessSnackbar, showInfoSnackbar } from '../../../../../../actions/snackbar';
-import { GENERAL_PAGE } from '../../../../../../constants';
-import Progress from '../../../../../Common/Progress';
-import SocialMediaPages from '../../../../../Common/AdminCommon/SocialMediaPages';
-import { IconPhoto, IconDeviceFloppy } from '@tabler/icons-react';
-import clsx from 'clsx';
+import {
+  showErrorSnackbar,
+  showSuccessSnackbar,
+  showInfoSnackbar,
+} from "../../../../../../actions/snackbar";
+import { GENERAL_PAGE } from "../../../../../../constants";
+import Progress from "../../../../../Common/Progress";
+import SocialMediaPages from "../../../../../Common/AdminCommon/SocialMediaPages";
+import { IconPhoto, IconDeviceFloppy } from "@tabler/icons-react";
+import clsx from "clsx";
 
 const Upload = ({ templateId }) => {
   const [selectedFiles, setSelectedFiles] = useState(null);
@@ -35,15 +39,22 @@ const Upload = ({ templateId }) => {
       if (totalFileSize <= 20e6) {
         formData.append("pageId", active);
         await uploadMultipleFiles(formData);
-        dispatch(showSuccessSnackbar(GENERAL_PAGE.SUCCESSFULLY_SAVED_LANGUAGE_AND_OR_MEDIA));
-        resetValues();  
+        dispatch(
+          showSuccessSnackbar(
+            GENERAL_PAGE.SUCCESSFULLY_SAVED_LANGUAGE_AND_OR_MEDIA,
+          ),
+        );
+        resetValues();
       } else {
-        dispatch(showInfoSnackbar("Please upload file(s) of size less than 20MB."));
+        dispatch(
+          showInfoSnackbar("Please upload file(s) of size less than 20MB."),
+        );
       }
-    } else dispatch(showInfoSnackbar(GENERAL_PAGE.PLEASE_ENTER_A_VALID_RESPONSE));
+    } else
+      dispatch(showInfoSnackbar(GENERAL_PAGE.PLEASE_ENTER_A_VALID_RESPONSE));
   };
 
-  const handleSubmit= async e => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
     try {
@@ -55,7 +66,7 @@ const Upload = ({ templateId }) => {
           error.response.data.message) ||
         error.message ||
         error.toString();
-        dispatch(showErrorSnackbar(resMessage));
+      dispatch(showErrorSnackbar(resMessage));
     }
     setIsLoading(false);
   };
@@ -64,26 +75,30 @@ const Upload = ({ templateId }) => {
     const allFiles = e.target.files;
     setSelectedFiles(allFiles);
     // and update the diaplay names
-    let allNames = '';
-    for (let i = 0; i < allFiles.length; i++) allNames += allFiles[i].name + ';';
+    let allNames = "";
+    for (let i = 0; i < allFiles.length; i++)
+      allNames += allFiles[i].name + ";";
     setUploadMediaNames(allNames);
-  }
+  };
 
   return (
     <>
       <form onSubmit={handleSubmit} className={classes.form}>
         <Box component="span" className={classes.note} display="block">
-          <p>Media can be uploaded all at once or in batches, as long as no batch exceeds 20MB in size.</p>
+          <p>
+            Media can be uploaded all at once or in batches, as long as no batch
+            exceeds 20MB in size.
+          </p>
         </Box>
-        <br/>
-        <SocialMediaPages active={active} setActive={setActive} templateId={templateId}/>
-        <br/>
-        <br/>
-        <Button
-          variant="contained"
-          component="label"
-          startIcon={<IconPhoto />}
-        >
+        <br />
+        <SocialMediaPages
+          active={active}
+          setActive={setActive}
+          templateId={templateId}
+        />
+        <br />
+        <br />
+        <Button variant="contained" component="label" startIcon={<IconPhoto />}>
           {GENERAL_PAGE.UPLOAD_POST_MEDIA}
           <Input
             style={{ display: "none" }}
@@ -95,8 +110,11 @@ const Upload = ({ templateId }) => {
             onChange={selectFiles}
           />
         </Button>
-        <br/>
-        <p style={{ overflowWrap: 'anywhere' }}>{" Media that will be uploaded upon clicking next step: " + (uploadMediaNames || "")}</p>
+        <br />
+        <p style={{ overflowWrap: "anywhere" }}>
+          {" Media that will be uploaded upon clicking next step: " +
+            (uploadMediaNames || "")}
+        </p>
 
         {isLoading && <Progress />}
         <Button
@@ -107,7 +125,7 @@ const Upload = ({ templateId }) => {
           disabled={active === ""}
           startIcon={<IconDeviceFloppy />}
           className={clsx(classes.submit, classes.widthFitContent)}
-          >
+        >
           {GENERAL_PAGE.SAVE_RESPONSES}
         </Button>
       </form>

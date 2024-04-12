@@ -2,24 +2,33 @@ import { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import {
   getFacebookPostsCount,
-  clearFacebookState
-} from '../../../../../actions/socialMedia';
-import useStyles from '../../../../style';
-import { Navigate } from 'react-router-dom';
-import { updateFlowActiveState } from '../../../../../actions/flowState';
-import { Button } from '@material-ui/core';
-import { IconChevronRight } from '@tabler/icons-react';
-import Sidebar from './Sidebar/Sidebar';
-import Feed from './Feed/Feed';
-import TweetBox from './Feed/TweetBox/TweetBox';
-import { WINDOW_GLOBAL, TW_TRANSLATIONS_DEFAULT } from '../../../../../constants';
+  clearFacebookState,
+} from "../../../../../actions/socialMedia";
+import useStyles from "../../../../style";
+import { Navigate } from "react-router-dom";
+import { updateFlowActiveState } from "../../../../../actions/flowState";
+import { Button } from "@material-ui/core";
+import { IconChevronRight } from "@tabler/icons-react";
+import Sidebar from "./Sidebar/Sidebar";
+import Feed from "./Feed/Feed";
+import TweetBox from "./Feed/TweetBox/TweetBox";
+import {
+  WINDOW_GLOBAL,
+  TW_TRANSLATIONS_DEFAULT,
+} from "../../../../../constants";
 
 import "./Twitter.css";
 
 const Twitter = ({ data }) => {
-  const { isLoggedInUser, translations, languageName } = useSelector(state => state.userAuth);
-  const totalPostCount = useSelector(state => state.socialMedia.totalPostCount);
-  const socialMediaTranslations = useSelector(state => state.socialMedia.socialMediaTranslations);
+  const { isLoggedInUser, translations, languageName } = useSelector(
+    (state) => state.userAuth,
+  );
+  const totalPostCount = useSelector(
+    (state) => state.socialMedia.totalPostCount,
+  );
+  const socialMediaTranslations = useSelector(
+    (state) => state.socialMedia.socialMediaTranslations,
+  );
 
   const dispatch = useDispatch();
   const classes = useStyles();
@@ -34,14 +43,14 @@ const Twitter = ({ data }) => {
       platform: data.type,
       order: data.pageDataOrder,
       language: languageName,
-    }
+    };
     dispatch(getFacebookPostsCount(getRequest));
   };
 
   useEffect(() => {
     if (!isLoggedInUser) return <Navigate to="/" />;
     fetch();
-    window.onbeforeunload = function() {
+    window.onbeforeunload = function () {
       return WINDOW_GLOBAL.RELOAD_ALERT_MESSAGE;
     };
   }, []);
@@ -61,21 +70,29 @@ const Twitter = ({ data }) => {
         <div className="twitterFeed">
           {/* header */}
           <div className="twitterFeedHeader">
-            <h2>{socialMediaTranslations?.home || TW_TRANSLATIONS_DEFAULT.HOME}</h2>
+            <h2>
+              {socialMediaTranslations?.home || TW_TRANSLATIONS_DEFAULT.HOME}
+            </h2>
           </div>
 
           {/* tweetbox */}
           <div key={"twitter"}>
-            <TweetBox 
-              placeholderText={socialMediaTranslations?.["what's_happening?"] || TW_TRANSLATIONS_DEFAULT.WHATS_HAPPENING}
+            <TweetBox
+              placeholderText={
+                socialMediaTranslations?.["what's_happening?"] ||
+                TW_TRANSLATIONS_DEFAULT.WHATS_HAPPENING
+              }
               replyTo={null}
               quoteTweet={null}
-              handleCloseModal={null} />
+              handleCloseModal={null}
+            />
           </div>
           {/* twitter feed */}
-          {totalPostCount && totalPostCount > 0 ? 
-            <Feed omitInteractionBar={data?.omitInteractionBar || false}/> 
-          : <p>No Posts Exists!</p>}
+          {totalPostCount && totalPostCount > 0 ? (
+            <Feed omitInteractionBar={data?.omitInteractionBar || false} />
+          ) : (
+            <p>No Posts Exists!</p>
+          )}
 
           <div className="twitterNextScreen">
             <Button
@@ -85,7 +102,7 @@ const Twitter = ({ data }) => {
               onClick={handleSubmit}
               className={classes.submit}
               endIcon={<IconChevronRight />}
-              >
+            >
               {translations?.next || "NEXT"}
             </Button>
           </div>

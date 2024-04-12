@@ -1,13 +1,13 @@
 import {
   SET_TEMPLATE_ID,
   PREV_TEMPLATES_SUCCESS,
-  CLEAR_TEMPLATE_STATE
+  CLEAR_TEMPLATE_STATE,
 } from "../actions/types";
 
 const initialState = {
   _id: null,
   name: "",
-  prevTemplates: null
+  prevTemplates: null,
 };
 
 // eslint-disable-next-line import/no-anonymous-default-export
@@ -19,9 +19,9 @@ export default function (state = initialState, action) {
       return {
         ...state,
         _id: payload._id,
-        name: payload.name
+        name: payload.name,
       };
-    
+
     case PREV_TEMPLATES_SUCCESS:
       return {
         ...state,

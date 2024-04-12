@@ -4,17 +4,17 @@ import userAuthHeader from "./user-auth-header";
 
 export const create = (data) => {
   return http.post("/register", data, {
-    headers: authHeader()
+    headers: authHeader(),
   });
-}
+};
 
 // USER Routes
 // fetch what needs to be rendered on registration page
 export const getUserRegisterDetails = (pageId) => {
   return http.get(`/user/register/${pageId}`, {
-    headers: userAuthHeader()
+    headers: userAuthHeader(),
   });
-}
+};
 
 // store user response register response
 export const createUserRegister = (formData) => {
@@ -22,7 +22,6 @@ export const createUserRegister = (formData) => {
     headers: {
       ...userAuthHeader(),
       "Content-Type": "multipart/form-data",
-    }
+    },
   });
-}
-
+};

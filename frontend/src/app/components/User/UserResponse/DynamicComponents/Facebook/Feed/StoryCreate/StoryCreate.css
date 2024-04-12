@@ -4,7 +4,7 @@
   flex-direction: column;
   background-color: white;
   border-radius: 15px;
-  box-shadow: 0px 5px 7px -7px rgba(0,0,0,0.75);
+  box-shadow: 0px 5px 7px -7px rgba(0, 0, 0, 0.75);
   width: 100%;
 }
 
@@ -55,7 +55,6 @@
   background-color: #eff2f5;
   border-radius: 20px;
 }
-
 
 .postOption {
   display: flex;

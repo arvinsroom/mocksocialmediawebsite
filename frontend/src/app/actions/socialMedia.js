@@ -16,9 +16,9 @@ import {
   UNDO_POST,
   INCREMENT_REPLIES_COUNT,
   INCREMENT_QUOTE_RETWEET_COUNT,
-  DECREMENT_QUOTE_RETWEET_COUNT
- } from "./types";
-import * as FacebookPostService from '../services/facebook-service';
+  DECREMENT_QUOTE_RETWEET_COUNT,
+} from "./types";
+import * as FacebookPostService from "../services/facebook-service";
 
 export const finishFetch = () => (dispatch) => {
   dispatch({
@@ -28,8 +28,8 @@ export const finishFetch = () => (dispatch) => {
 
 export const clearFacebookState = () => (dispatch) => {
   dispatch({
-    type: CLEAR_FB_STATE
-  })
+    type: CLEAR_FB_STATE,
+  });
 };
 
 export const getFacebookPostsCount = (data) => (dispatch) => {
@@ -38,7 +38,8 @@ export const getFacebookPostsCount = (data) => (dispatch) => {
       // these are all the posts
       const totalPostCount = response.data?.totalPosts || 0;
       const postIds = response.data?.postIds || [];
-      const socialMediaTranslations = response.data?.translations?.translations || null;
+      const socialMediaTranslations =
+        response.data?.translations?.translations || null;
       const authors = response.data?.authors || [];
       // normalize the authors data
       const normalizeAuthor = {};
@@ -53,8 +54,8 @@ export const getFacebookPostsCount = (data) => (dispatch) => {
           totalPostIds: postIds,
           pageId: data.pageId,
           socialMediaTranslations: socialMediaTranslations,
-          authors: normalizeAuthor
-        }
+          authors: normalizeAuthor,
+        },
       });
       return Promise.resolve();
     },
@@ -72,10 +73,10 @@ export const getFacebookPostsCount = (data) => (dispatch) => {
       });
 
       dispatch({
-        type: CLEAR_FB_STATE
+        type: CLEAR_FB_STATE,
       });
       return Promise.reject();
-    }
+    },
   );
 };
 
@@ -85,7 +86,7 @@ export const getFacebookWithCommentsPosts = (data) => (dispatch) => {
     type: SET_FB_LOADING,
     payload: {
       isLoading: true,
-    }
+    },
   });
   return FacebookPostService.getMediaPostDetails(data).then(
     (response) => {
@@ -110,27 +111,27 @@ export const getFacebookWithCommentsPosts = (data) => (dispatch) => {
                   attachedAuthorPicture: postRecords[i].attachedAuthorPicture,
                   comment: postRecords[i].postMessage,
                   userComment: false,
-                  authorId: postRecords[i].authorId
-                }
-              ]
-            }
+                  authorId: postRecords[i].authorId,
+                },
+              ],
+            };
           } else {
             const obj = {
               postId: parentId,
               attachedAuthorPicture: postRecords[i].attachedAuthorPicture,
               comment: postRecords[i].postMessage,
               userComment: false,
-              authorId: postRecords[i].authorId
+              authorId: postRecords[i].authorId,
             };
             dispatch({
               type: SET_FB_POST_COMMENT,
-              payload: obj
+              payload: obj,
             });
           }
         } else {
           posts[eachId] = { ...postRecords[i], userPost: false };
           metaData[eachId] = {
-            like: 'default',
+            like: "default",
             type: postRecords[i].type,
             initLike: postRecords[i].initLike || 0,
             actionId: null,
@@ -140,7 +141,7 @@ export const getFacebookWithCommentsPosts = (data) => (dispatch) => {
             initTweet: postRecords[i].initTweet,
             checkersLink: postRecords[i].checkersLink,
             warningLabel: postRecords[i].warningLabel,
-            labelRichText: postRecords[i].labelRichText
+            labelRichText: postRecords[i].labelRichText,
           };
           allIds.push(eachId);
         }
@@ -152,7 +153,7 @@ export const getFacebookWithCommentsPosts = (data) => (dispatch) => {
           metaData: metaData,
           allIds: allIds,
           isLoading: false,
-        }
+        },
       });
 
       dispatch({
@@ -177,14 +178,14 @@ export const getFacebookWithCommentsPosts = (data) => (dispatch) => {
         type: SET_FB_LOADING,
         payload: {
           isLoading: false,
-        }
+        },
       });
 
       dispatch({
-        type: CLEAR_FB_STATE
+        type: CLEAR_FB_STATE,
       });
       return Promise.reject();
-    }
+    },
   );
 };
 
@@ -193,7 +194,7 @@ export const getTwitterPosts = (data) => (dispatch) => {
     type: SET_FB_LOADING,
     payload: {
       isLoading: true,
-    }
+    },
   });
   return FacebookPostService.getMediaPostDetails(data).then(
     (response) => {
@@ -206,14 +207,14 @@ export const getTwitterPosts = (data) => (dispatch) => {
         const eachId = postRecords[i]._id;
         posts[eachId] = { ...postRecords[i], userPost: false };
         metaData[eachId] = {
-          like: 'default',
+          like: "default",
           type: postRecords[i].type,
           initLike: postRecords[i].initLike || 0,
           actionId: null,
           parentPostId: null,
           comments: [],
           initReply: postRecords[i].initReply,
-          initTweet: postRecords[i].initTweet
+          initTweet: postRecords[i].initTweet,
         };
         allIds.push(eachId);
       }
@@ -224,7 +225,7 @@ export const getTwitterPosts = (data) => (dispatch) => {
           metaData: metaData,
           allIds: allIds,
           isLoading: false,
-        }
+        },
       });
 
       dispatch({
@@ -249,14 +250,14 @@ export const getTwitterPosts = (data) => (dispatch) => {
         type: SET_FB_LOADING,
         payload: {
           isLoading: false,
-        }
+        },
       });
 
       dispatch({
-        type: CLEAR_FB_STATE
+        type: CLEAR_FB_STATE,
       });
       return Promise.reject();
-    }
+    },
   );
 };
 
@@ -290,12 +291,11 @@ export const getFacebookPost = (data) => (dispatch) => {
         payload: message,
       });
       return Promise.reject();
-    }
+    },
   );
 };
 
-
-// create a action for specific user with 
+// create a action for specific user with
 // adminPostId, actionType, isAdminPost, userPostId, platformType, comment
 export const likeFbPost = (data, id) => (dispatch) => {
   return FacebookPostService.createFbAction({ actionObj: data }).then(
@@ -306,8 +306,8 @@ export const likeFbPost = (data, id) => (dispatch) => {
         payload: {
           postId: id,
           like: data.action,
-          actionId: response.data._id
-        }
+          actionId: response.data._id,
+        },
       });
 
       return Promise.resolve();
@@ -326,10 +326,9 @@ export const likeFbPost = (data, id) => (dispatch) => {
       });
 
       return Promise.reject();
-    }
+    },
   );
 };
-
 
 export const unlikeFbPost = (actionId, id) => (dispatch) => {
   return FacebookPostService.deleteFbAction(actionId).then(
@@ -339,7 +338,7 @@ export const unlikeFbPost = (actionId, id) => (dispatch) => {
         type: SET_FB_POST_UNLIKE,
         payload: {
           postId: id,
-        }
+        },
       });
 
       return Promise.resolve();
@@ -358,7 +357,7 @@ export const unlikeFbPost = (actionId, id) => (dispatch) => {
       });
 
       return Promise.reject();
-    }
+    },
   );
 };
 
@@ -369,8 +368,8 @@ export const updatePost = (data) => (dispatch) => {
       dispatch({
         type: UNDO_POST,
         payload: {
-          postId: data.id
-        }
+          postId: data.id,
+        },
       });
 
       dispatch({
@@ -394,11 +393,11 @@ export const updatePost = (data) => (dispatch) => {
       });
 
       return Promise.reject();
-    }
+    },
   );
 };
 
-// create a action for specific user with 
+// create a action for specific user with
 // adminPostId, action, userPostId, comment
 export const commentFbPost = (data, id) => (dispatch) => {
   return FacebookPostService.createFbAction({ actionObj: data }).then(
@@ -410,8 +409,8 @@ export const commentFbPost = (data, id) => (dispatch) => {
           attachedAuthorPicture: null,
           comment: data.comment,
           userComment: true,
-          authorId: null
-        }
+          authorId: null,
+        },
       });
 
       return Promise.resolve();
@@ -430,7 +429,7 @@ export const commentFbPost = (data, id) => (dispatch) => {
       });
 
       return Promise.reject();
-    }
+    },
   );
 };
 
@@ -441,7 +440,7 @@ export const createFbPost = (data) => (dispatch) => {
     type: SET_FB_LOADING,
     payload: {
       isLoading: true,
-    }
+    },
   });
   return FacebookPostService.createFbPost(data).then(
     (response) => {
@@ -451,14 +450,14 @@ export const createFbPost = (data) => (dispatch) => {
           _id: response.data._id,
           post: response.data.post,
           attachedMedia: response.data.attachedMedia, // [{ _id: ..., other media details }]
-        }
+        },
       });
-      
+
       dispatch({
         type: SET_FB_LOADING,
         payload: {
           isLoading: false,
-        }
+        },
       });
 
       return Promise.resolve();
@@ -475,16 +474,16 @@ export const createFbPost = (data) => (dispatch) => {
         type: SET_FB_LOADING,
         payload: {
           isLoading: false,
-        }
+        },
       });
-      
+
       dispatch({
         type: SNACKBAR_ERROR,
         payload: message,
       });
 
       return Promise.reject();
-    }
+    },
   );
 };
 
@@ -492,12 +491,11 @@ export const createFbPost = (data) => (dispatch) => {
 export const unreportPost = (actionId, id) => (dispatch) => {
   return FacebookPostService.deleteFbAction(actionId).then(
     () => {
-      
       dispatch({
         type: SET_POST_UNREPORT,
         payload: {
           postId: id,
-        }
+        },
       });
 
       return Promise.resolve();
@@ -516,7 +514,7 @@ export const unreportPost = (actionId, id) => (dispatch) => {
       });
 
       return Promise.reject();
-    }
+    },
   );
 };
 
@@ -527,8 +525,8 @@ export const reportPost = (data, id) => (dispatch) => {
         type: SET_POST_REPORT,
         payload: {
           postId: id,
-          reportId: response.data._id
-        }
+          reportId: response.data._id,
+        },
       });
 
       return Promise.resolve();
@@ -547,7 +545,7 @@ export const reportPost = (data, id) => (dispatch) => {
       });
 
       return Promise.reject();
-    }
+    },
   );
 };
 
@@ -556,7 +554,7 @@ export const incrementRepliesCount = (data) => (dispatch) => {
     type: INCREMENT_REPLIES_COUNT,
     payload: {
       _id: data._id,
-    }
+    },
   });
 };
 
@@ -565,7 +563,7 @@ export const incrementQuoteRetweetCount = (data) => (dispatch) => {
     type: INCREMENT_QUOTE_RETWEET_COUNT,
     payload: {
       _id: data._id,
-    }
+    },
   });
 };
 
@@ -574,6 +572,6 @@ export const decrementQuoteRetweetCount = (data) => (dispatch) => {
     type: DECREMENT_QUOTE_RETWEET_COUNT,
     payload: {
       _id: data._id,
-    }
+    },
   });
 };

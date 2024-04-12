@@ -1,8 +1,6 @@
 {
   "presets": [
-    [
-      "@babel/preset-env"
-    ],
+    ["@babel/preset-env"],
     [
       "@babel/preset-react",
       {
@@ -19,9 +17,7 @@
   ],
   "env": {
     "production": {
-      "only": [
-        "src"
-      ],
+      "only": ["src"],
       "plugins": [
         [
           "transform-react-remove-prop-types",

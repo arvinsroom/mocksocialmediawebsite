@@ -1,9 +1,4 @@
-import {
-  LOGIN_SUCCESS,
-  LOGIN_FAIL,
-  LOGOUT,
-  SNACKBAR_ERROR,
-} from "./types";
+import { LOGIN_SUCCESS, LOGIN_FAIL, LOGOUT, SNACKBAR_ERROR } from "./types";
 
 import * as AuthService from "../services/auth-service";
 
@@ -35,7 +30,7 @@ export const login = (username, password) => (dispatch) => {
       });
 
       return Promise.reject();
-    }
+    },
   );
 };
 

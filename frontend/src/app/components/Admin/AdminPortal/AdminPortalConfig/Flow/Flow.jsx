@@ -1,4 +1,5 @@
-import { Button,
+import {
+  Button,
   TextField,
   Box,
   Table,
@@ -11,17 +12,21 @@ import { Button,
   DialogContent,
   DialogActions,
   DialogContentText,
-  DialogTitle
-} from '@material-ui/core';
-import { useEffect, useState } from 'react';
-import { update, get, deletePage } from '../../../../../services/page-service';
+  DialogTitle,
+} from "@material-ui/core";
+import { useEffect, useState } from "react";
+import { update, get, deletePage } from "../../../../../services/page-service";
 import { useSelector, useDispatch } from "react-redux";
-import { Navigate } from 'react-router-dom';
-import useStyles from '../../../../style';
-import { showErrorSnackbar, showSuccessSnackbar, showInfoSnackbar } from '../../../../../actions/snackbar';
-import { TEMPLATE, FLOW_PAGE } from '../../../../../constants';
-import { IconRefresh, IconTrash } from '@tabler/icons-react';
-import clsx from 'clsx';
+import { Navigate } from "react-router-dom";
+import useStyles from "../../../../style";
+import {
+  showErrorSnackbar,
+  showSuccessSnackbar,
+  showInfoSnackbar,
+} from "../../../../../actions/snackbar";
+import { TEMPLATE, FLOW_PAGE } from "../../../../../constants";
+import { IconRefresh, IconTrash } from "@tabler/icons-react";
+import clsx from "clsx";
 
 const Flow = () => {
   const [pages, setPages] = useState("");
@@ -30,21 +35,21 @@ const Flow = () => {
   const [flowDialogBox, setFlowDialogBox] = useState({
     open: false,
     pageId: null,
-    name: ""
+    name: "",
   });
 
-  const { isLoggedInAdmin } = useSelector(state => state.auth);
+  const { isLoggedInAdmin } = useSelector((state) => state.auth);
   const classes = useStyles();
-  const { _id: templateId } = useSelector(state => state.template);
+  const { _id: templateId } = useSelector((state) => state.template);
 
   const fetchAllPages = async () => {
     const { data } = await get(templateId);
     await setPages(data);
-  }
+  };
 
   useEffect(() => {
     fetchAllPages();
-  }, [])
+  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -56,7 +61,7 @@ const Flow = () => {
       await update({ pageObj: pageOrderData });
       await setPageOrderData(null);
       await fetchAllPages();
-      dispatch(showSuccessSnackbar(FLOW_PAGE.FLOW_PAGE_SUCCESS));    
+      dispatch(showSuccessSnackbar(FLOW_PAGE.FLOW_PAGE_SUCCESS));
     } catch (error) {
       const resMessage =
         (error.response &&
@@ -73,7 +78,7 @@ const Flow = () => {
 
     const newObj = {
       ...pageOrderData,
-      [pageId]: e.target.value
+      [pageId]: e.target.value,
     };
     await setPageOrderData(newObj);
   };
@@ -100,79 +105,109 @@ const Flow = () => {
   };
   return (
     <>
-    <Container component="main" maxWidth="lg" className={classes.card}>
-    <h1>Study Flow</h1>
-    <Box component="span" className={classes.note} display="block">
-      {FLOW_PAGE.FLOW_CONFIG_NOTE}
-    </Box>
+      <Container component="main" maxWidth="lg" className={classes.card}>
+        <h1>Study Flow</h1>
+        <Box component="span" className={classes.note} display="block">
+          {FLOW_PAGE.FLOW_CONFIG_NOTE}
+        </Box>
 
-    <Table aria-label="Configure Page Ordering">
-      <TableHead>
-        <TableRow>
-          <TableCell className={`${classes.body}, ${classes.head}`} align="center"><p>{FLOW_PAGE.PAGE_NAME}</p></TableCell>
-          <TableCell className={`${classes.body}, ${classes.head}`} align="center"><p>{FLOW_PAGE.PAGE_TYPE}</p></TableCell>
-          <TableCell className={`${classes.body}, ${classes.head}`} align="center"><p>{FLOW_PAGE.CURRENT_FLOW_ORDER}</p></TableCell>
-          <TableCell className={`${classes.body}, ${classes.head}`} align="center"><p>{FLOW_PAGE.SET_FLOW_ORDER}</p></TableCell>
-          <TableCell className={`${classes.body}, ${classes.head}`} align="center"><p>Delete Page</p></TableCell>
-        </TableRow>
-      </TableHead>
-      <TableBody>
-        {pages && pages.length > 0 ? pages.map((row) => (
-          <TableRow key={row._id}>
-            <TableCell align="center">
-              <p>{row.name}</p>
-            </TableCell>
-            <TableCell align="center">
-              <p>{row.type}</p>
-            </TableCell>
-            <TableCell align="center">
-              <p>{row.flowOrder || 0}</p>
-            </TableCell>
-            <TableCell align="center">
-              <TextField
-                id="standard-number"
-                onChange={e => handleChange(row._id, e)}
-                inputProps={{ min: 0, max: 65535, step: 1 }}
-                type="number"
-              />
-            </TableCell>
-            <TableCell align="center">
-              <Button
-                aria-label="delete template"
-                onClick={(e) => handleClickOpen(row._id, row.name, e)}
-                >
-                <IconTrash />
-              </Button>
-            </TableCell>
-          </TableRow>
-        )) : null}
-      </TableBody>
-    </Table>
-    <Button
-      type="submit"
-      variant="contained"
-      fullWidth
-      disabled={!pageOrderData}
-      onClick={handleSubmit}
-      component="label"
-      startIcon={<IconRefresh />}
-      className={clsx(classes.submit, classes.widthFitContent)}
-    >
-      UPDATE FLOW ORDER
-    </Button>
-
-    </Container>
-        <Dialog
+        <Table aria-label="Configure Page Ordering">
+          <TableHead>
+            <TableRow>
+              <TableCell
+                className={`${classes.body}, ${classes.head}`}
+                align="center"
+              >
+                <p>{FLOW_PAGE.PAGE_NAME}</p>
+              </TableCell>
+              <TableCell
+                className={`${classes.body}, ${classes.head}`}
+                align="center"
+              >
+                <p>{FLOW_PAGE.PAGE_TYPE}</p>
+              </TableCell>
+              <TableCell
+                className={`${classes.body}, ${classes.head}`}
+                align="center"
+              >
+                <p>{FLOW_PAGE.CURRENT_FLOW_ORDER}</p>
+              </TableCell>
+              <TableCell
+                className={`${classes.body}, ${classes.head}`}
+                align="center"
+              >
+                <p>{FLOW_PAGE.SET_FLOW_ORDER}</p>
+              </TableCell>
+              <TableCell
+                className={`${classes.body}, ${classes.head}`}
+                align="center"
+              >
+                <p>Delete Page</p>
+              </TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {pages && pages.length > 0
+              ? pages.map((row) => (
+                  <TableRow key={row._id}>
+                    <TableCell align="center">
+                      <p>{row.name}</p>
+                    </TableCell>
+                    <TableCell align="center">
+                      <p>{row.type}</p>
+                    </TableCell>
+                    <TableCell align="center">
+                      <p>{row.flowOrder || 0}</p>
+                    </TableCell>
+                    <TableCell align="center">
+                      <TextField
+                        id="standard-number"
+                        onChange={(e) => handleChange(row._id, e)}
+                        inputProps={{ min: 0, max: 65535, step: 1 }}
+                        type="number"
+                      />
+                    </TableCell>
+                    <TableCell align="center">
+                      <Button
+                        aria-label="delete template"
+                        onClick={(e) => handleClickOpen(row._id, row.name, e)}
+                      >
+                        <IconTrash />
+                      </Button>
+                    </TableCell>
+                  </TableRow>
+                ))
+              : null}
+          </TableBody>
+        </Table>
+        <Button
+          type="submit"
+          variant="contained"
+          fullWidth
+          disabled={!pageOrderData}
+          onClick={handleSubmit}
+          component="label"
+          startIcon={<IconRefresh />}
+          className={clsx(classes.submit, classes.widthFitContent)}
+        >
+          UPDATE FLOW ORDER
+        </Button>
+      </Container>
+      <Dialog
         open={flowDialogBox.open}
         onClose={handleClose}
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
       >
-        <DialogTitle>{"Are you sure you want to delete this Page?"}</DialogTitle>
+        <DialogTitle>
+          {"Are you sure you want to delete this Page?"}
+        </DialogTitle>
         <DialogContent>
           <DialogContentText>
-            Deleting this Page will also delete all the responses attached to this Page.
-            <br></br><br></br>
+            Deleting this Page will also delete all the responses attached to
+            this Page.
+            <br></br>
+            <br></br>
             <b>Page being deleted: {flowDialogBox.name}</b>
           </DialogContentText>
         </DialogContent>
@@ -180,12 +215,12 @@ const Flow = () => {
           <Button onClick={handleClose} color="primary" autoFocus>
             No
           </Button>
-          <Button onClick={removePage} color="primary" >
+          <Button onClick={removePage} color="primary">
             Yes
           </Button>
         </DialogActions>
       </Dialog>
-      </>
+    </>
   );
 };
 

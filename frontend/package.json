@@ -43,7 +43,8 @@
     "copy-server": "cp ./src/index.js ./dist/index.js",
     "build-dev": "npm run clean-dist && npm run webpack-build-dev",
     "build-prod": "npm run clean-dist && npm run webpack-build-prod",
-    "run-node-server": "npm run copy-server && node ./dist/index.js"
+    "run-node-server": "npm run copy-server && node ./dist/index.js",
+    "format": "prettier --log-level warn --write ."
   },
   "eslintConfig": {
     "extends": [
@@ -90,6 +91,7 @@
     "html-webpack-plugin": "^5.5.0",
     "mini-css-extract-plugin": "^2.7.2",
     "nodemon": "^2.0.20",
+    "prettier": "^3.2.5",
     "style-loader": "^3.3.1",
     "terser-webpack-plugin": "^5.3.6",
     "url-loader": "^4.1.1",

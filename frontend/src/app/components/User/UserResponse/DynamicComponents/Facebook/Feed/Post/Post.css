@@ -126,7 +126,7 @@
 }
 
 .link-preview {
-  /* display: table-caption; */             
+  /* display: table-caption; */
   /* make text wrap under image  */
   font-size: small;
   text-decoration: none;
@@ -134,7 +134,7 @@
 }
 
 .fbPostdescriptions {
-  background-color: #F2F3F5;
+  background-color: #f2f3f5;
   padding: 5px;
   margin-left: 1px;
   margin-right: 1px;
@@ -228,7 +228,7 @@
   background-color: rgba(0, 0, 0, 0.05);
 }
 
-.report-container{
+.report-container {
   position: absolute;
   color: gray;
   font-size: 10px;
@@ -243,11 +243,11 @@
   top: 20px;
 }
 
-.report-container:hover{
-background-color: rgba(0, 0, 0, 0.05);
+.report-container:hover {
+  background-color: rgba(0, 0, 0, 0.05);
 }
 
-.report-text{
+.report-text {
   margin-left: 8px;
   margin-top: 10px;
 }
@@ -264,7 +264,7 @@ background-color: rgba(0, 0, 0, 0.05);
 .modalTop {
   height: 60px;
   align-items: center;
-  border-bottom: 1px solid #E8E8E8;
+  border-bottom: 1px solid #e8e8e8;
   flex-direction: row;
   display: flex;
   /* width: 90%; */
@@ -298,7 +298,7 @@ background-color: rgba(0, 0, 0, 0.05);
   padding: 10px;
   border-radius: 10px;
   margin-bottom: 10px;
-  border-color: #D3D3D3;
+  border-color: #d3d3d3;
 }
 
 .newModalOption {
@@ -313,7 +313,6 @@ background-color: rgba(0, 0, 0, 0.05);
   font-size: 15px !important;
 }
 
-
 .newModalWidth2 {
   display: flex;
   justify-content: space-evenly;
@@ -323,7 +322,7 @@ background-color: rgba(0, 0, 0, 0.05);
 .fbModalContainerPaper {
   /* background-color: rgba(192,192,192,0.6); */
   background-color: white;
-  box-shadow: 0px 5px 7px -7px rgba(0,0,0, 0.75);
+  box-shadow: 0px 5px 7px -7px rgba(0, 0, 0, 0.75);
   padding: 8px;
   border-radius: 8px;
 }
@@ -349,7 +348,6 @@ background-color: rgba(0, 0, 0, 0.05);
   width: fit-content !important;
   justify-content: flex-start !important;
   font-size: small;
-
 }
 
 .reactionContainer > div {
@@ -471,8 +469,8 @@ background-color: rgba(0, 0, 0, 0.05);
   width: 18px;
   height: 18px;
   background-size: 100% 100%;
-  opacity: .4;
-  background-image: url('data:image/svg+xml;base64,PHN2ZyBhcmlhLWhpZGRlbj0idHJ1ZSIgZm9jdXNhYmxlPSJmYWxzZSIgZGF0YS1wcmVmaXg9ImZhciIgZGF0YS1pY29uPSJ0aHVtYnMtdXAiIGNsYXNzPSJzdmctaW5saW5lLS1mYSBmYS10aHVtYnMtdXAgZmEtdy0xNiIgcm9sZT0iaW1nIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIj48cGF0aCBmaWxsPSJjdXJyZW50Q29sb3IiIGQ9Ik00NjYuMjcgMjg2LjY5QzQ3NS4wNCAyNzEuODQgNDgwIDI1NiA0ODAgMjM2Ljg1YzAtNDQuMDE1LTM3LjIxOC04NS41OC04NS44Mi04NS41OEgzNTcuN2M0LjkyLTEyLjgxIDguODUtMjguMTMgOC44NS00Ni41NEMzNjYuNTUgMzEuOTM2IDMyOC44NiAwIDI3MS4yOCAwYy02MS42MDcgMC01OC4wOTMgOTQuOTMzLTcxLjc2IDEwOC42LTIyLjc0NyAyMi43NDctNDkuNjE1IDY2LjQ0Ny02OC43NiA4My40SDMyYy0xNy42NzMgMC0zMiAxNC4zMjctMzIgMzJ2MjQwYzAgMTcuNjczIDE0LjMyNyAzMiAzMiAzMmg2NGMxNC44OTMgMCAyNy40MDgtMTAuMTc0IDMwLjk3OC0yMy45NSA0NC41MDkgMS4wMDEgNzUuMDYgMzkuOTQgMTc3LjgwMiAzOS45NCA3LjIyIDAgMTUuMjIuMDEgMjIuMjIuMDEgNzcuMTE3IDAgMTExLjk4Ni0zOS40MjMgMTEyLjk0LTk1LjMzIDEzLjMxOS0xOC40MjUgMjAuMjk5LTQzLjEyMiAxNy4zNC02Ni45OSA5Ljg1NC0xOC40NTIgMTMuNjY0LTQwLjM0MyA4Ljk5LTYyLjk5em0tNjEuNzUgNTMuODNjMTIuNTYgMjEuMTMgMS4yNiA0OS40MS0xMy45NCA1Ny41NyA3LjcgNDguNzgtMTcuNjA4IDY1LjktNTMuMTIgNjUuOWgtMzcuODJjLTcxLjYzOSAwLTExOC4wMjktMzcuODItMTcxLjY0LTM3LjgyVjI0MGgxMC45MmMyOC4zNiAwIDY3Ljk4LTcwLjg5IDk0LjU0LTk3LjQ2IDI4LjM2LTI4LjM2IDE4LjkxLTc1LjYzIDM3LjgyLTk0LjU0IDQ3LjI3IDAgNDcuMjcgMzIuOTggNDcuMjcgNTYuNzMgMCAzOS4xNy0yOC4zNiA1Ni43Mi0yOC4zNiA5NC41NGgxMDMuOTljMjEuMTEgMCAzNy43MyAxOC45MSAzNy44MiAzNy44Mi4wOSAxOC45LTEyLjgyIDM3LjgxLTIyLjI3IDM3LjgxIDEzLjQ4OSAxNC41NTUgMTYuMzcxIDQ1LjIzNi01LjIxIDY1LjYyek04OCA0MzJjMCAxMy4yNTUtMTAuNzQ1IDI0LTI0IDI0cy0yNC0xMC43NDUtMjQtMjQgMTAuNzQ1LTI0IDI0LTI0IDI0IDEwLjc0NSAyNCAyNHoiPjwvcGF0aD48L3N2Zz4=');
+  opacity: 0.4;
+  background-image: url("data:image/svg+xml;base64,PHN2ZyBhcmlhLWhpZGRlbj0idHJ1ZSIgZm9jdXNhYmxlPSJmYWxzZSIgZGF0YS1wcmVmaXg9ImZhciIgZGF0YS1pY29uPSJ0aHVtYnMtdXAiIGNsYXNzPSJzdmctaW5saW5lLS1mYSBmYS10aHVtYnMtdXAgZmEtdy0xNiIgcm9sZT0iaW1nIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIj48cGF0aCBmaWxsPSJjdXJyZW50Q29sb3IiIGQ9Ik00NjYuMjcgMjg2LjY5QzQ3NS4wNCAyNzEuODQgNDgwIDI1NiA0ODAgMjM2Ljg1YzAtNDQuMDE1LTM3LjIxOC04NS41OC04NS44Mi04NS41OEgzNTcuN2M0LjkyLTEyLjgxIDguODUtMjguMTMgOC44NS00Ni41NEMzNjYuNTUgMzEuOTM2IDMyOC44NiAwIDI3MS4yOCAwYy02MS42MDcgMC01OC4wOTMgOTQuOTMzLTcxLjc2IDEwOC42LTIyLjc0NyAyMi43NDctNDkuNjE1IDY2LjQ0Ny02OC43NiA4My40SDMyYy0xNy42NzMgMC0zMiAxNC4zMjctMzIgMzJ2MjQwYzAgMTcuNjczIDE0LjMyNyAzMiAzMiAzMmg2NGMxNC44OTMgMCAyNy40MDgtMTAuMTc0IDMwLjk3OC0yMy45NSA0NC41MDkgMS4wMDEgNzUuMDYgMzkuOTQgMTc3LjgwMiAzOS45NCA3LjIyIDAgMTUuMjIuMDEgMjIuMjIuMDEgNzcuMTE3IDAgMTExLjk4Ni0zOS40MjMgMTEyLjk0LTk1LjMzIDEzLjMxOS0xOC40MjUgMjAuMjk5LTQzLjEyMiAxNy4zNC02Ni45OSA5Ljg1NC0xOC40NTIgMTMuNjY0LTQwLjM0MyA4Ljk5LTYyLjk5em0tNjEuNzUgNTMuODNjMTIuNTYgMjEuMTMgMS4yNiA0OS40MS0xMy45NCA1Ny41NyA3LjcgNDguNzgtMTcuNjA4IDY1LjktNTMuMTIgNjUuOWgtMzcuODJjLTcxLjYzOSAwLTExOC4wMjktMzcuODItMTcxLjY0LTM3LjgyVjI0MGgxMC45MmMyOC4zNiAwIDY3Ljk4LTcwLjg5IDk0LjU0LTk3LjQ2IDI4LjM2LTI4LjM2IDE4LjkxLTc1LjYzIDM3LjgyLTk0LjU0IDQ3LjI3IDAgNDcuMjcgMzIuOTggNDcuMjcgNTYuNzMgMCAzOS4xNy0yOC4zNiA1Ni43Mi0yOC4zNiA5NC41NGgxMDMuOTljMjEuMTEgMCAzNy43MyAxOC45MSAzNy44MiAzNy44Mi4wOSAxOC45LTEyLjgyIDM3LjgxLTIyLjI3IDM3LjgxIDEzLjQ4OSAxNC41NTUgMTYuMzcxIDQ1LjIzNi01LjIxIDY1LjYyek04OCA0MzJjMCAxMy4yNTUtMTAuNzQ1IDI0LTI0IDI0cy0yNC0xMC43NDUtMjQtMjQgMTAuNzQ1LTI0IDI0LTI0IDI0IDEwLjc0NSAyNCAyNHoiPjwvcGF0aD48L3N2Zz4=");
 }
 
 .commentEmoji {
@@ -480,8 +478,8 @@ background-color: rgba(0, 0, 0, 0.05);
   height: 18px;
   background-size: 100% 100%;
   margin-top: 2px;
-  opacity: .4;
-  background-image: url('data:image/svg+xml;base64,PHN2ZyBhcmlhLWhpZGRlbj0idHJ1ZSIgZm9jdXNhYmxlPSJmYWxzZSIgZGF0YS1wcmVmaXg9ImZhciIgZGF0YS1pY29uPSJjb21tZW50LWFsdCIgY2xhc3M9InN2Zy1pbmxpbmUtLWZhIGZhLWNvbW1lbnQtYWx0IGZhLXctMTYiIHJvbGU9ImltZyIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB2aWV3Qm94PSIwIDAgNTEyIDUxMiI+PHBhdGggZmlsbD0iY3VycmVudENvbG9yIiBkPSJNNDQ4IDBINjRDMjguNyAwIDAgMjguNyAwIDY0djI4OGMwIDM1LjMgMjguNyA2NCA2NCA2NGg5NnY4NGMwIDcuMSA1LjggMTIgMTIgMTIgMi40IDAgNC45LS43IDcuMS0yLjRMMzA0IDQxNmgxNDRjMzUuMyAwIDY0LTI4LjcgNjQtNjRWNjRjMC0zNS4zLTI4LjctNjQtNjQtNjR6bTE2IDM1MmMwIDguOC03LjIgMTYtMTYgMTZIMjg4bC0xMi44IDkuNkwyMDggNDI4di02MEg2NGMtOC44IDAtMTYtNy4yLTE2LTE2VjY0YzAtOC44IDcuMi0xNiAxNi0xNmgzODRjOC44IDAgMTYgNy4yIDE2IDE2djI4OHoiPjwvcGF0aD48L3N2Zz4=');
+  opacity: 0.4;
+  background-image: url("data:image/svg+xml;base64,PHN2ZyBhcmlhLWhpZGRlbj0idHJ1ZSIgZm9jdXNhYmxlPSJmYWxzZSIgZGF0YS1wcmVmaXg9ImZhciIgZGF0YS1pY29uPSJjb21tZW50LWFsdCIgY2xhc3M9InN2Zy1pbmxpbmUtLWZhIGZhLWNvbW1lbnQtYWx0IGZhLXctMTYiIHJvbGU9ImltZyIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB2aWV3Qm94PSIwIDAgNTEyIDUxMiI+PHBhdGggZmlsbD0iY3VycmVudENvbG9yIiBkPSJNNDQ4IDBINjRDMjguNyAwIDAgMjguNyAwIDY0djI4OGMwIDM1LjMgMjguNyA2NCA2NCA2NGg5NnY4NGMwIDcuMSA1LjggMTIgMTIgMTIgMi40IDAgNC45LS43IDcuMS0yLjRMMzA0IDQxNmgxNDRjMzUuMyAwIDY0LTI4LjcgNjQtNjRWNjRjMC0zNS4zLTI4LjctNjQtNjQtNjR6bTE2IDM1MmMwIDguOC03LjIgMTYtMTYgMTZIMjg4bC0xMi44IDkuNkwyMDggNDI4di02MEg2NGMtOC44IDAtMTYtNy4yLTE2LTE2VjY0YzAtOC44IDcuMi0xNiAxNi0xNmgzODRjOC44IDAgMTYgNy4yIDE2IDE2djI4OHoiPjwvcGF0aD48L3N2Zz4=");
 }
 
 .shareEmoji {
@@ -489,8 +487,8 @@ background-color: rgba(0, 0, 0, 0.05);
   width: 18px;
   height: 18px;
   background-size: 100% 100%;
-  opacity: .4;
-  background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjMgMi41IDIwLjUgMTciPjxwYXRoIGZpbGw9Im5vbmUiIGQ9Ik0wIDBoMjR2MjRIMHoiLz48cGF0aCBkPSJNMTMgMTRoLTJhOC45OTkgOC45OTkgMCAwIDAtNy45NjggNC44MUExMC4xMzYgMTAuMTM2IDAgMCAxIDMgMThDMyAxMi40NzcgNy40NzcgOCAxMyA4VjIuNUwyMy41IDExIDEzIDE5LjVWMTR6bS0yLTJoNHYzLjMwOEwyMC4zMjEgMTEgMTUgNi42OTJWMTBoLTJhNy45ODIgNy45ODIgMCAwIDAtNi4wNTcgMi43NzNBMTAuOTg4IDEwLjk4OCAwIDAgMSAxMSAxMnoiLz48L3N2Zz4=');
+  opacity: 0.4;
+  background-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjMgMi41IDIwLjUgMTciPjxwYXRoIGZpbGw9Im5vbmUiIGQ9Ik0wIDBoMjR2MjRIMHoiLz48cGF0aCBkPSJNMTMgMTRoLTJhOC45OTkgOC45OTkgMCAwIDAtNy45NjggNC44MUExMC4xMzYgMTAuMTM2IDAgMCAxIDMgMThDMyAxMi40NzcgNy40NzcgOCAxMyA4VjIuNUwyMy41IDExIDEzIDE5LjVWMTR6bS0yLTJoNHYzLjMwOEwyMC4zMjEgMTEgMTUgNi42OTJWMTBoLTJhNy45ODIgNy45ODIgMCAwIDAtNi4wNTcgMi43NzNBMTAuOTg4IDEwLjk4OCAwIDAgMSAxMSAxMnoiLz48L3N2Zz4=");
 }
 
 /* .emoji-mart-category {

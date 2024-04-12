@@ -8,8 +8,8 @@ const initialState = {
   isLoggedInUser: false,
   translations: null,
   templateId: null,
-  languageName: ""
-}
+  languageName: "",
+};
 
 // eslint-disable-next-line import/no-anonymous-default-export
 export default function (state = initialState, action) {
@@ -22,7 +22,7 @@ export default function (state = initialState, action) {
         isLoggedInUser: true,
         translations: payload.user.translations?.translations || null,
         templateId: payload.user.templateId,
-        languageName: payload.user.translations?.name || "ENGLISH"
+        languageName: payload.user.translations?.name || "ENGLISH",
       };
     case USER_LOGIN_FAIL:
       return {
@@ -30,7 +30,7 @@ export default function (state = initialState, action) {
         isLoggedInUser: false,
         translations: null,
         templateId: null,
-        languageName: "ENGLISH"
+        languageName: "ENGLISH",
       };
     case USER_LOGOUT:
       return {
@@ -38,7 +38,7 @@ export default function (state = initialState, action) {
         isLoggedInUser: false,
         // translations: null,
         templateId: null,
-        languageName: ""
+        languageName: "",
       };
     default:
       return state;

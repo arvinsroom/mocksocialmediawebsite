@@ -1,26 +1,35 @@
-import { getUserRegisterDetails, createUserRegister } from '../../../../../services/register-service';
+import {
+  getUserRegisterDetails,
+  createUserRegister,
+} from "../../../../../services/register-service";
 import { useEffect, useState } from "react";
-import { Button, Input, Avatar, TextField } from '@material-ui/core';
+import { Button, Input, Avatar, TextField } from "@material-ui/core";
 import { useSelector, useDispatch } from "react-redux";
-import { Navigate } from 'react-router-dom';
-import useStyles from '../../../../style';
-import { showErrorSnackbar, showInfoSnackbar, showSuccessSnackbar } from '../../../../../actions/snackbar';
-import { updateFlowActiveState } from '../../../../../actions/flowState';
-import { setRegisterMetaData } from '../../../../../actions/userRegister';
-import { 
-  USER_TRANSLATIONS_DEFAULT, 
+import { Navigate } from "react-router-dom";
+import useStyles from "../../../../style";
+import {
+  showErrorSnackbar,
+  showInfoSnackbar,
+  showSuccessSnackbar,
+} from "../../../../../actions/snackbar";
+import { updateFlowActiveState } from "../../../../../actions/flowState";
+import { setRegisterMetaData } from "../../../../../actions/userRegister";
+import {
+  USER_TRANSLATIONS_DEFAULT,
   WINDOW_GLOBAL,
-  USER_REGISTER
- } from '../../../../../constants';
-import cloneDeep from 'lodash/cloneDeep';
-import { IconCloudUpload, IconChevronRight } from '@tabler/icons-react';
-import RenderRichTextArea from '../../../../Common/UserCommon/RenderRichTextArea';
+  USER_REGISTER,
+} from "../../../../../constants";
+import cloneDeep from "lodash/cloneDeep";
+import { IconCloudUpload, IconChevronRight } from "@tabler/icons-react";
+import RenderRichTextArea from "../../../../Common/UserCommon/RenderRichTextArea";
 import "./Register.css";
 
 const regex = /^@?[A-Za-z0-9\_]+$/i;
 
 const Register = ({ data }) => {
-  const { isLoggedInUser, translations } = useSelector(state => state.userAuth);
+  const { isLoggedInUser, translations } = useSelector(
+    (state) => state.userAuth,
+  );
   const [registerState, setRegisterState] = useState([]);
   const [handleValidation, setHandleValidation] = useState(true);
   // const [avatar, setAvatar] = useState("");
@@ -41,13 +50,13 @@ const Register = ({ data }) => {
           referenceName: registerStateArr[i].referenceName,
           required: registerStateArr[i].required,
           storeResponse: registerStateArr[i].storeResponse,
-          value: ""
+          value: "",
         };
-        if (registerStateArr[i].type === 'IMAGE') {
+        if (registerStateArr[i].type === "IMAGE") {
           response[registerStateArr[i]._id] = {
             ...response[registerStateArr[i]._id],
-            avatar: ""
-          }
+            avatar: "",
+          };
         }
       }
       await setRegisterStateRes(response);
@@ -59,7 +68,7 @@ const Register = ({ data }) => {
     if (!isLoggedInUser) return <Navigate to="/" />;
     fetch();
 
-    window.onbeforeunload = function() {
+    window.onbeforeunload = function () {
       return WINDOW_GLOBAL.RELOAD_ALERT_MESSAGE;
     };
   }, []);
@@ -71,9 +80,9 @@ const Register = ({ data }) => {
       if (!result.value && result.required) return false;
     }
     return true;
-  }
+  };
 
-  const handleSubmit = async e => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     try {
@@ -84,33 +93,35 @@ const Register = ({ data }) => {
         // for now save the result in redux store
         const metaData = {};
         // add a default empty value for off by 1 cases
-        metaData.RELATIONSHIP = [''];
+        metaData.RELATIONSHIP = [""];
         // get the profile pic and username to store in the redux state
         for (const [key, response] of Object.entries(registerStateRes)) {
-          const { 
+          const {
             referenceName,
             value,
             // order,
-            storeResponse
+            storeResponse,
           } = response;
           if (value) {
-            if (referenceName === 'PROFILEPHOTO') {
+            if (referenceName === "PROFILEPHOTO") {
               metaData[referenceName] = URL.createObjectURL(value);
               if (storeResponse) {
                 regesterIds.push(key);
                 // change the file name to key
-                const splitArr = value.name.split('.');
-                const newFileName = key.toString() + '.' + splitArr[splitArr.length - 1];
-                 if (splitArr.length > 0) formData.append("files", value, newFileName);
+                const splitArr = value.name.split(".");
+                const newFileName =
+                  key.toString() + "." + splitArr[splitArr.length - 1];
+                if (splitArr.length > 0)
+                  formData.append("files", value, newFileName);
               }
-            }
-            else {
-              if (referenceName === 'RELATIONSHIP') {
+            } else {
+              if (referenceName === "RELATIONSHIP") {
                 metaData[referenceName] = [...metaData[referenceName], value];
                 // let orderNum = order ? order : -1;
                 // metaData.ORDER = metaData.ORDER ? [...metaData.ORDER, orderNum] : [orderNum];
               } else if (referenceName === "HANDLE") {
-                if (value && value.length > 0 && value[0] !== '@') value = '@' + value;
+                if (value && value.length > 0 && value[0] !== "@")
+                  value = "@" + value;
                 metaData[referenceName] = value;
               } else metaData[referenceName] = value;
 
@@ -119,21 +130,32 @@ const Register = ({ data }) => {
                 formData.append(key, value.toString());
               }
             }
-          }
-          else {
-            if (referenceName === 'RELATIONSHIP') metaData[referenceName] = [...metaData[referenceName], ""];
+          } else {
+            if (referenceName === "RELATIONSHIP")
+              metaData[referenceName] = [...metaData[referenceName], ""];
           }
         }
         if (regesterIds.length > 0) {
           // send the response to db
-          formData.append('registerIds', JSON.stringify(regesterIds));
+          formData.append("registerIds", JSON.stringify(regesterIds));
           await createUserRegister(formData);
         }
         await dispatch(setRegisterMetaData(metaData));
         await dispatch(updateFlowActiveState());
-        await dispatch(showSuccessSnackbar((translations?.responses_saved) || USER_TRANSLATIONS_DEFAULT.RESPONSES_SAVED));
+        await dispatch(
+          showSuccessSnackbar(
+            translations?.responses_saved ||
+              USER_TRANSLATIONS_DEFAULT.RESPONSES_SAVED,
+          ),
+        );
       } else {
-        dispatch(showInfoSnackbar((translations?.['please_answer_all_required_questions_to_continue.']) || USER_TRANSLATIONS_DEFAULT.ENTER_REQUIRED_INFO));
+        dispatch(
+          showInfoSnackbar(
+            translations?.[
+              "please_answer_all_required_questions_to_continue."
+            ] || USER_TRANSLATIONS_DEFAULT.ENTER_REQUIRED_INFO,
+          ),
+        );
       }
     } catch (error) {
       const resMessage =
@@ -160,11 +182,17 @@ const Register = ({ data }) => {
       let newResState = cloneDeep(registerStateRes);
       newResState[_id] = {
         ...newResState[_id],
-        value: value
+        value: value,
       };
       await setRegisterStateRes(newResState);
     } else {
-      dispatch(showErrorSnackbar(translations?.['handles_can_start_with_@_or_nothing_and_must_contain_only_alphanumeric_characters_and/or_underscores,_up_to_a_maximum_of_15_characters.']) || USER_REGISTER.REGISTER_HANDLE_PARSING_ERROR);
+      dispatch(
+        showErrorSnackbar(
+          translations?.[
+            "handles_can_start_with_@_or_nothing_and_must_contain_only_alphanumeric_characters_and/or_underscores,_up_to_a_maximum_of_15_characters."
+          ],
+        ) || USER_REGISTER.REGISTER_HANDLE_PARSING_ERROR,
+      );
     }
   };
 
@@ -175,37 +203,37 @@ const Register = ({ data }) => {
       newResState[_id] = {
         ...newResState[_id],
         avatar: URL.createObjectURL(e.target.files[0]),
-        value: e.target.files[0]
+        value: e.target.files[0],
       };
       await setRegisterStateRes(newResState);
     }
-  }
+  };
 
   const renderDynamicInput = (field) => {
-    if (field.type === 'IMAGE') {
+    if (field.type === "IMAGE") {
       return (
         <div className="registerTop">
           <Avatar
             src={registerStateRes[field._id].avatar}
             className="registerTopAvatar"
           />
-        <Button
-          variant="contained"
-          component="label"
-          startIcon={<IconCloudUpload />}
-        >
-          {translations?.upload || USER_TRANSLATIONS_DEFAULT.UPLOAD}
-          <Input
-            style={{ display: "none" }}
-            id="upload-photo"
-            name="profilePic"
-            type="file"
-            inputProps={{ multiple: false }}
-            accept={field.type.toLowerCase() + '/*'}
-            onChange={(e) => handleFileField(field._id, e)}
-          />
-        </Button>
-      </div>
+          <Button
+            variant="contained"
+            component="label"
+            startIcon={<IconCloudUpload />}
+          >
+            {translations?.upload || USER_TRANSLATIONS_DEFAULT.UPLOAD}
+            <Input
+              style={{ display: "none" }}
+              id="upload-photo"
+              name="profilePic"
+              type="file"
+              inputProps={{ multiple: false }}
+              accept={field.type.toLowerCase() + "/*"}
+              onChange={(e) => handleFileField(field._id, e)}
+            />
+          </Button>
+        </div>
       );
     } else {
       // 'text', 'number', 'email', 'password', 'date'
@@ -213,11 +241,15 @@ const Register = ({ data }) => {
         <TextField
           className={classes.marginBottom}
           error={field.referenceName === "HANDLE" ? !handleValidation : false}
-          helperText={field.referenceName === "HANDLE" && !handleValidation ? "Invalid Input" : null}
+          helperText={
+            field.referenceName === "HANDLE" && !handleValidation
+              ? "Invalid Input"
+              : null
+          }
           variant="outlined"
           margin="normal"
           fullWidth
-          style={{ fontFamily: 'Noto Sans, sans-serif' }}
+          style={{ fontFamily: "Noto Sans, sans-serif" }}
           type={field.type.toLowerCase()}
           required={field.required}
           name={field.referenceName}
@@ -230,13 +262,12 @@ const Register = ({ data }) => {
   };
 
   return (
-  <>
-      {data?.richText && <RenderRichTextArea richText={data.richText}/>}
-      {registerState?.length > 0 && registerState.map(field => (
-        <div key={field._id}>
-          {renderDynamicInput(field)}
-        </div>
-      ))}
+    <>
+      {data?.richText && <RenderRichTextArea richText={data.richText} />}
+      {registerState?.length > 0 &&
+        registerState.map((field) => (
+          <div key={field._id}>{renderDynamicInput(field)}</div>
+        ))}
       <Button
         type="submit"
         variant="contained"
@@ -247,7 +278,7 @@ const Register = ({ data }) => {
       >
         {translations?.next || "NEXT"}
       </Button>
-      </>
+    </>
   );
 };
 

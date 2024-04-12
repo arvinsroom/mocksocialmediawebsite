@@ -6,7 +6,7 @@
 }
 
 .sidebarTweet {
-  background-color: rgb(29,155,240);
+  background-color: rgb(29, 155, 240);
   border: none;
   font-size: 17px;
   height: 52px;
@@ -18,5 +18,5 @@
 }
 
 .sidebarTweet:hover {
-  background-color: rgb(26,155,240);
+  background-color: rgb(26, 155, 240);
 }

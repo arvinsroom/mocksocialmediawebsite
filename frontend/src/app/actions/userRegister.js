@@ -1,13 +1,10 @@
-import {
-  SET_REGISTER_META_DATA,
-  CLEAR_REGISTER_META_DATA
-} from "./types";
+import { SET_REGISTER_META_DATA, CLEAR_REGISTER_META_DATA } from "./types";
 
 export const setRegisterMetaData = (data) => ({
   type: SET_REGISTER_META_DATA,
   payload: {
-    metaData: data || {}
-  }
+    metaData: data || {},
+  },
 });
 
 export const clearRegisterMetaData = () => ({

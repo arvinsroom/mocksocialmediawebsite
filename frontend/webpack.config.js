@@ -4,20 +4,20 @@ const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const TerserWebpackPlugin = require("terser-webpack-plugin");
 const CssMinimizerPlugin = require("css-minimizer-webpack-plugin");
-const { CleanWebpackPlugin } = require('clean-webpack-plugin');
+const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 
-module.exports = function(_env, argv) {
+module.exports = function (_env, argv) {
   const isProduction = argv.mode === "production";
   const isDevelopment = !isProduction;
-  
+
   return {
     devtool: isDevelopment && "cheap-module-source-map",
     entry: path.resolve(__dirname, "src/app/index.jsx"),
-    target: 'web',
+    target: "web",
     output: {
       path: path.resolve(__dirname, "dist"),
       filename: "assets/js/[name].[contenthash:8].js",
-      publicPath: "/"
+      publicPath: "/",
     },
     module: {
       rules: [
@@ -26,16 +26,16 @@ module.exports = function(_env, argv) {
           exclude: /node_modules/,
           use: {
             loader: "babel-loader",
-            options: { babelrc: true }
-          }
+            options: { babelrc: true },
+          },
         },
         {
           test: /\.css$/,
           use: [
             isProduction ? MiniCssExtractPlugin.loader : "style-loader",
-            "css-loader"
+            "css-loader",
           ],
-          type: 'javascript/auto'
+          type: "javascript/auto",
         },
         {
           test: /\.(png|jpg|gif)$/i,
@@ -44,51 +44,51 @@ module.exports = function(_env, argv) {
               loader: "url-loader",
               options: {
                 limit: 8192,
-                name: "static/media/[name].[contenthash:8].[ext]"
-              }
-            }
+                name: "static/media/[name].[contenthash:8].[ext]",
+              },
+            },
           ],
-          type: 'javascript/auto'
+          type: "javascript/auto",
         },
         {
           test: /\.svg$/,
           use: ["@svgr/webpack"],
-          type: 'javascript/auto'
+          type: "javascript/auto",
         },
         {
           test: /\.(eot|otf|ttf|woff|woff2)$/,
           loader: require.resolve("file-loader"),
           options: {
-            name: "static/media/[name].[contenthash:8].[ext]"
+            name: "static/media/[name].[contenthash:8].[ext]",
           },
-          type: 'javascript/auto'
-        }
-      ]
+          type: "javascript/auto",
+        },
+      ],
     },
     resolve: {
       extensions: ["*", ".js", ".jsx"],
     },
     plugins: [
       isProduction &&
-      new MiniCssExtractPlugin({
-        filename: "assets/css/[name].[contenthash:8].css",
-        chunkFilename: "assets/css/[name].[contenthash:8].chunk.css"
-      }),
+        new MiniCssExtractPlugin({
+          filename: "assets/css/[name].[contenthash:8].css",
+          chunkFilename: "assets/css/[name].[contenthash:8].chunk.css",
+        }),
       new CleanWebpackPlugin(),
       new HtmlWebpackPlugin({
         template: path.resolve(__dirname, "public/index.html"),
-        favicon: 'public/favicon.ico',
+        favicon: "public/favicon.ico",
         inject: true,
         // filename: "assets/index.html",
       }),
       new webpack.DefinePlugin({
         "process.env.NODE_ENV": JSON.stringify(
-          isProduction ? "production" : "development"
+          isProduction ? "production" : "development",
         ),
         "process.env.IP_ADDRESS": JSON.stringify(
-          isProduction ? "3.97.196.198" : "localhost"
+          isProduction ? "3.97.196.198" : "localhost",
         ),
-      })
+      }),
     ].filter(Boolean),
     optimization: {
       minimize: isProduction,
@@ -96,19 +96,19 @@ module.exports = function(_env, argv) {
         new TerserWebpackPlugin({
           terserOptions: {
             compress: {
-              comparisons: false
+              comparisons: false,
             },
             mangle: {
-              safari10: true
+              safari10: true,
             },
             output: {
               comments: false,
-              ascii_only: true
+              ascii_only: true,
             },
-            warnings: false
-          }
+            warnings: false,
+          },
         }),
-        new CssMinimizerPlugin()
+        new CssMinimizerPlugin(),
       ],
       splitChunks: {
         chunks: "all",
@@ -120,23 +120,23 @@ module.exports = function(_env, argv) {
             test: /[\\/]node_modules[\\/]/,
             name(module, chunks, cacheGroupKey) {
               const packageName = module.context.match(
-                /[\\/]node_modules[\\/](.*?)([\\/]|$)/
+                /[\\/]node_modules[\\/](.*?)([\\/]|$)/,
               )[1];
               return `${cacheGroupKey}.${packageName.replace("@", "")}`;
-            }
+            },
           },
           common: {
             minChunks: 2,
-            priority: -10
-          }
-        }
+            priority: -10,
+          },
+        },
       },
-      runtimeChunk: "single"
+      runtimeChunk: "single",
     },
     devServer: {
       compress: true,
       historyApiFallback: true,
-      open: true
-    }
+      open: true,
+    },
   };
 };

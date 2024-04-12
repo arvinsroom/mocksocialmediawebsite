@@ -1,9 +1,14 @@
-import { SNACKBAR_CLEAR, SNACKBAR_SUCCESS, SNACKBAR_ERROR, SNACKBAR_INFO } from "../actions/types";
+import {
+  SNACKBAR_CLEAR,
+  SNACKBAR_SUCCESS,
+  SNACKBAR_ERROR,
+  SNACKBAR_INFO,
+} from "../actions/types";
 
-const initialState = { 
+const initialState = {
   type: null,
   open: false,
-  snackbarMessage: null
+  snackbarMessage: null,
 };
 
 // eslint-disable-next-line import/no-anonymous-default-export
@@ -14,31 +19,31 @@ export default function (state = initialState, action) {
       return {
         type: "S",
         open: true,
-        snackbarMessage: payload
+        snackbarMessage: payload,
       };
-    
+
     case SNACKBAR_ERROR:
       return {
         type: "E",
         open: true,
-        snackbarMessage: payload
-    };
+        snackbarMessage: payload,
+      };
 
     case SNACKBAR_INFO:
       return {
         type: "I",
         open: true,
-        snackbarMessage: payload
-    };
+        snackbarMessage: payload,
+      };
 
     case SNACKBAR_CLEAR:
       return {
         type: null,
         open: false,
-        snackbarMessage: null
+        snackbarMessage: null,
       };
-    
+
     default:
       return state;
   }
-};
+}

@@ -1,7 +1,8 @@
-body, html {
-  font-family: 'Noto Sans', sans-serif;
+body,
+html {
+  font-family: "Noto Sans", sans-serif;
   font-size: 16px !important;
-  background-color: #E5EBF0 !important;
+  background-color: #e5ebf0 !important;
 
   margin: 0 !important;
   --twitter-color: #50b7f5;
@@ -18,9 +19,8 @@ body, html {
   --twitter-retweet-color: #00ba7c;
   --twitter-reply-color: #1d9bf0;
 
-  --twitter-sidebar-color: #0F1419;
+  --twitter-sidebar-color: #0f1419;
 }
-
 
 /* used by facebook only; */
 .textAreaContainer {
@@ -30,7 +30,7 @@ body, html {
 }
 
 .textArea {
-  font-family: 'Noto Sans', sans-serif;
+  font-family: "Noto Sans", sans-serif;
   border-style: none;
   width: 100%;
   border: none;
@@ -45,7 +45,7 @@ body, html {
 
 /* Used for facebook to move the text towards right */
 .fbPostTopAvatar {
-  margin-right: 10px
+  margin-right: 10px;
 }
 
 /* used on twitter to resize the avatar and media;
@@ -54,4 +54,3 @@ no need to move text to right as we have a margin */
   height: 48px !important;
   width: 48px !important;
 }
-

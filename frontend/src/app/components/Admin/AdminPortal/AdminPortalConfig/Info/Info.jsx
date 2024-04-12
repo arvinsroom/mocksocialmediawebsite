@@ -5,20 +5,24 @@ import {
   FormControlLabel,
   Switch,
   Box,
-  Container
-} from '@material-ui/core';
-import { useState } from 'react';
-import { create } from '../../../../../services/info-service';
-import useStyles from '../../../../style';
+  Container,
+} from "@material-ui/core";
+import { useState } from "react";
+import { create } from "../../../../../services/info-service";
+import useStyles from "../../../../style";
 import { useSelector, useDispatch } from "react-redux";
-import { Navigate } from 'react-router-dom';
-import { showErrorSnackbar, showSuccessSnackbar, showInfoSnackbar } from '../../../../../actions/snackbar';
-import { TEMPLATE, INFO_PAGE } from '../../../../../constants';
-import SocialMediaPages from '../../../../Common/AdminCommon/SocialMediaPages';
-import RichTextArea from '../../../../Common/AdminCommon/RichTextArea';
-import { checkIfEmptyRichText } from '../../../../../utils';
-import { IconDeviceFloppy } from '@tabler/icons-react';
-import clsx from 'clsx';
+import { Navigate } from "react-router-dom";
+import {
+  showErrorSnackbar,
+  showSuccessSnackbar,
+  showInfoSnackbar,
+} from "../../../../../actions/snackbar";
+import { TEMPLATE, INFO_PAGE } from "../../../../../constants";
+import SocialMediaPages from "../../../../Common/AdminCommon/SocialMediaPages";
+import RichTextArea from "../../../../Common/AdminCommon/RichTextArea";
+import { checkIfEmptyRichText } from "../../../../../utils";
+import { IconDeviceFloppy } from "@tabler/icons-react";
+import clsx from "clsx";
 
 const InfoPage = () => {
   const [clearRichText, setClearRichText] = useState(false);
@@ -29,8 +33,8 @@ const InfoPage = () => {
   const [responseCode, setResponseCode] = useState(false);
   const [active, setActive] = useState("");
 
-  const { isLoggedInAdmin } = useSelector(state => state.auth);
-  const { _id: templateId } = useSelector(state => state.template);
+  const { isLoggedInAdmin } = useSelector((state) => state.auth);
+  const { _id: templateId } = useSelector((state) => state.template);
   const classes = useStyles();
   const dispatch = useDispatch();
 
@@ -47,7 +51,7 @@ const InfoPage = () => {
   const handleConsent = (e) => {
     setConsent(e.target.checked);
   };
-  
+
   const handleIsFinish = (e) => {
     setIsFinish(e.target.checked);
   };
@@ -56,7 +60,7 @@ const InfoPage = () => {
     setResponseCode(e.target.checked);
   };
 
-  const handleSave = async e => {
+  const handleSave = async (e) => {
     e.preventDefault();
 
     if (!templateId) {
@@ -71,11 +75,13 @@ const InfoPage = () => {
       consent: consent,
       socialMediaPageId: active,
       isFinish: isFinish,
-      responseCode: responseCode
+      responseCode: responseCode,
     };
     try {
       await create(info);
-      await dispatch(showSuccessSnackbar(INFO_PAGE.SUCCESSFULLY_CREATED_INFORMATION_PAGE));
+      await dispatch(
+        showSuccessSnackbar(INFO_PAGE.SUCCESSFULLY_CREATED_INFORMATION_PAGE),
+      );
       await resetValues();
     } catch (error) {
       const resMessage =
@@ -84,7 +90,7 @@ const InfoPage = () => {
           error.response.data.message) ||
         error.message ||
         error.toString();
-        dispatch(showErrorSnackbar(resMessage));
+      dispatch(showErrorSnackbar(resMessage));
     }
   };
 
@@ -105,43 +111,53 @@ const InfoPage = () => {
         autoFocus
       />
 
-      <RichTextArea setRichText={setRichText} clearRichText={clearRichText}/>
+      <RichTextArea setRichText={setRichText} clearRichText={clearRichText} />
 
-      <FormGroup style={{ padding: '15px' }}>
+      <FormGroup style={{ padding: "15px" }}>
         <FormControlLabel
-          control={<Switch
-            checked={consent}
-            onChange={handleConsent}
-            color="primary"
-            name="consent"
-            inputProps={{ 'aria-label': 'Render this page as a Consent Page' }}
-          />}
+          control={
+            <Switch
+              checked={consent}
+              onChange={handleConsent}
+              color="primary"
+              name="consent"
+              inputProps={{
+                "aria-label": "Render this page as a Consent Page",
+              }}
+            />
+          }
           label={INFO_PAGE.ADD_I_CONSENT_AND_I_DO_NOT_CONSENT_TO_THE_BOTTOM}
         />
       </FormGroup>
 
-      <FormGroup style={{ padding: '15px' }}>
+      <FormGroup style={{ padding: "15px" }}>
         <FormControlLabel
-          control={<Switch
-            checked={isFinish}
-            onChange={handleIsFinish}
-            color="primary"
-            name="consent"
-            inputProps={{ 'aria-label': 'Render this page as a Finish page' }}
-          />}
+          control={
+            <Switch
+              checked={isFinish}
+              onChange={handleIsFinish}
+              color="primary"
+              name="consent"
+              inputProps={{ "aria-label": "Render this page as a Finish page" }}
+            />
+          }
           label={"Make this page terminal"}
         />
       </FormGroup>
 
-      <FormGroup  style={{ padding: '15px' }}>
+      <FormGroup style={{ padding: "15px" }}>
         <FormControlLabel
-          control={<Switch
-            checked={responseCode}
-            onChange={handleResponseCode}
-            color="primary"
-            name="responseCode"
-            inputProps={{ 'aria-label': 'Generate six-digit completion code' }}
-          />}
+          control={
+            <Switch
+              checked={responseCode}
+              onChange={handleResponseCode}
+              color="primary"
+              name="responseCode"
+              inputProps={{
+                "aria-label": "Generate six-digit completion code",
+              }}
+            />
+          }
           label={"Generate six-digit completion code"}
         />
       </FormGroup>
@@ -149,8 +165,12 @@ const InfoPage = () => {
       <Box component="span" className={classes.note} display="block">
         {INFO_PAGE.ADD_FAKE_POSTS_TO_THE_BOTTOM}
       </Box>
-      
-      <SocialMediaPages active={active} setActive={setActive} templateId={templateId}/>
+
+      <SocialMediaPages
+        active={active}
+        setActive={setActive}
+        templateId={templateId}
+      />
 
       <Button
         type="submit"
@@ -161,10 +181,10 @@ const InfoPage = () => {
         startIcon={<IconDeviceFloppy />}
         className={clsx(classes.submit, classes.widthFitContent)}
       >
-      Save
+        Save
       </Button>
     </Container>
-  )
-}
+  );
+};
 
 export default InfoPage;

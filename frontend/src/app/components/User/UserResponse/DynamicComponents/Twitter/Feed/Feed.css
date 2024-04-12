@@ -12,13 +12,13 @@
 .hoverEffect:hover {
   /* background-color: rgba(0, 0, 0, 0.18); */
   background-color: rgba(0, 0, 0, 0.03);
-  transition: 0.3s
+  transition: 0.3s;
 }
 
 /* here max-width takes into account the padding of 12px on left and right */
 .twitterPostCard {
-  justify-content: 'center';
-  background-color: 'white';
+  justify-content: "center";
+  background-color: "white";
   border-bottom: 1px solid rgb(0 0 0 / 10%) !important;
   padding-top: 12px;
   padding-bottom: 12px;
@@ -34,4 +34,3 @@
     padding-right: 5px;
   }
 }
-

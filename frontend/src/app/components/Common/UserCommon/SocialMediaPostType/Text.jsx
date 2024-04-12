@@ -4,7 +4,7 @@ const Text = ({ postMessage, link, customClassName, charLimit }) => {
   if (charLimit && !isNaN(charLimit)) {
     postMessage = postMessage.slice(0, charLimit);
   }
-  
+
   return (
     <>
       <div className={customClassName ? customClassName : "postBottom"}>
@@ -13,6 +13,6 @@ const Text = ({ postMessage, link, customClassName, charLimit }) => {
       </div>
     </>
   );
-}
+};
 
 export default Text;

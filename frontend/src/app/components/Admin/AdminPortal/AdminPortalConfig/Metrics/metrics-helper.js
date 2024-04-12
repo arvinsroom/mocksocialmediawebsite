@@ -5,11 +5,17 @@ import { escapeChars } from "../../../../../utils";
 // each item of this array should be type:questionId;questionText
 export const formQuestionsIdsArray = (templateAdminPortalQuestionsData) => {
   const templateAllQuestionsData = [];
-  const pageConfigAllQuestions = templateAdminPortalQuestionsData?.pageFlowConfigurations || [];
+  const pageConfigAllQuestions =
+    templateAdminPortalQuestionsData?.pageFlowConfigurations || [];
   for (let i = 0; i < pageConfigAllQuestions.length; i++) {
     const allPageQuestions = pageConfigAllQuestions[i].question || [];
     for (let j = 0; j < allPageQuestions.length; j++) {
-      const item = pageConfigAllQuestions[i].type + "!~*!" + allPageQuestions[j]._id + "!~*!" + escapeChars(allPageQuestions[j].questionText);
+      const item =
+        pageConfigAllQuestions[i].type +
+        "!~*!" +
+        allPageQuestions[j]._id +
+        "!~*!" +
+        escapeChars(allPageQuestions[j].questionText);
       templateAllQuestionsData.push(item);
     }
   }
@@ -22,18 +28,25 @@ const normalizeUserQuestionAnswersHelper = (questionAnswers) => {
   for (let i = 0; i < questionAnswers.length; i++) {
     const currentItem = questionAnswers[i];
     let answerText = "";
-    if (currentItem.mcqOptionId) answerText = escapeChars(currentItem.mcqOption.optionText);
+    if (currentItem.mcqOptionId)
+      answerText = escapeChars(currentItem.mcqOption.optionText);
     else answerText = escapeChars(currentItem.opentextAnswerText);
-    
-    if (!normalize[currentItem.questionId]) normalize[currentItem.questionId] = "";
-    normalize[currentItem.questionId] = normalize[currentItem.questionId] + answerText + "!~*!";
+
+    if (!normalize[currentItem.questionId])
+      normalize[currentItem.questionId] = "";
+    normalize[currentItem.questionId] =
+      normalize[currentItem.questionId] + answerText + "!~*!";
   }
   return normalize;
 };
 
-export const formulateQuestionAnswerSpreadSheet = (questionAdminData, questionResponseData) => {
+export const formulateQuestionAnswerSpreadSheet = (
+  questionAdminData,
+  questionResponseData,
+) => {
   // questionId;questionText
-  const normalizedQuestionData = normalizeUserQuestionAnswersHelper(questionResponseData);
+  const normalizedQuestionData =
+    normalizeUserQuestionAnswersHelper(questionResponseData);
   const eachRow = [];
   for (let i = 0; i < questionAdminData.length; i++) {
     // we found a question in normalized user response that means they answered it
@@ -50,9 +63,17 @@ export const formulateQuestionAnswerSpreadSheet = (questionAdminData, questionRe
 export const formSocialMediaPageIdsArray = (globalSocialMediaPages) => {
   // this function is used to make the array of all the question _ids
   const globalSocialMediaPagesData = [];
-  const pageConfigAllSocialPages= globalSocialMediaPages?.pageFlowConfigurations || [];
+  const pageConfigAllSocialPages =
+    globalSocialMediaPages?.pageFlowConfigurations || [];
   for (let i = 0; i < pageConfigAllSocialPages.length; i++) {
-    const item = pageConfigAllSocialPages[i].type + "!~*!" + pageConfigAllSocialPages[i]._id + "!~*!" + escapeChars(pageConfigAllSocialPages[i].name) + "!~*!" + pageConfigAllSocialPages[i].pageDataOrder;
+    const item =
+      pageConfigAllSocialPages[i].type +
+      "!~*!" +
+      pageConfigAllSocialPages[i]._id +
+      "!~*!" +
+      escapeChars(pageConfigAllSocialPages[i].name) +
+      "!~*!" +
+      pageConfigAllSocialPages[i].pageDataOrder;
     globalSocialMediaPagesData.push(item);
   }
   return globalSocialMediaPagesData;
@@ -72,21 +93,30 @@ const normalizeUserGlobalTracking = (allGlobalTracking) => {
       let startTime = escapeChars(allGlobalTracking[i].createdAt);
       if (metaData) {
         const parseMetaData = JSON.parse(allGlobalTracking[i].pageMetaData);
-        finishTime = escapeChars(parseMetaData['finishedAt']);
+        finishTime = escapeChars(parseMetaData["finishedAt"]);
         if (finishTime !== "-9999") {
-          let timeArray = finishTime.split(' ');
-          if (timeArray && timeArray.length > 1) finishTime = timeArray[0] + 'T' + timeArray[1] + 'Z';
+          let timeArray = finishTime.split(" ");
+          if (timeArray && timeArray.length > 1)
+            finishTime = timeArray[0] + "T" + timeArray[1] + "Z";
         }
-        orderPosts = escapeChars(JSON.stringify(parseMetaData['facebookPostsOrderAdminIds'])) ||  "-9999";
+        orderPosts =
+          escapeChars(
+            JSON.stringify(parseMetaData["facebookPostsOrderAdminIds"]),
+          ) || "-9999";
       }
-      normalize[currentItem._id] = startTime + "!~*!" + orderPosts + "!~*!" + finishTime;
+      normalize[currentItem._id] =
+        startTime + "!~*!" + orderPosts + "!~*!" + finishTime;
     }
   }
   return normalize;
 };
 
-export const formulateUserGlobalTracking = (globalAdminData, globalResponseData) => {
-  const normalizedGlobalUserData = normalizeUserGlobalTracking(globalResponseData);
+export const formulateUserGlobalTracking = (
+  globalAdminData,
+  globalResponseData,
+) => {
+  const normalizedGlobalUserData =
+    normalizeUserGlobalTracking(globalResponseData);
   const eachRow = [];
   for (let i = 0; i < globalAdminData.length; i++) {
     const socialMediaPageId = globalAdminData[i].split("!~*!")[1];
@@ -106,17 +136,26 @@ const normalizeUserPostTracking = (globalTrakingResponseData) => {
     const currentAction = globalTrakingResponseData[i].action;
     const createdAtTime = globalTrakingResponseData[i].createdAt;
     const currentPostData = globalTrakingResponseData[i].userPosts;
-    const postId = (currentPostData.adminPostId || currentPostData._id);
+    const postId = currentPostData.adminPostId || currentPostData._id;
     if (!normalize[currentAction]) normalize[currentAction] = "";
-    normalize[currentAction] = normalize[currentAction] + postId + "!~*!" + createdAtTime + "|$|";
+    normalize[currentAction] =
+      normalize[currentAction] + postId + "!~*!" + createdAtTime + "|$|";
   }
   return normalize;
 };
 
-const possiblePostTracking = ['LINKCLICK', 'SEEWHY', 'SHAREANYWAY', 'SEEPHOTO', 'SEEVIDEO', 'SEELINK'];
+const possiblePostTracking = [
+  "LINKCLICK",
+  "SEEWHY",
+  "SHAREANYWAY",
+  "SEEPHOTO",
+  "SEEVIDEO",
+  "SEELINK",
+];
 export const formulateUserPostLinkClickTracking = (globalResponseData) => {
   const eachRow = [];
-  const normalizeUserPostTrackingData = normalizeUserPostTracking(globalResponseData);
+  const normalizeUserPostTrackingData =
+    normalizeUserPostTracking(globalResponseData);
   for (let i = 0; i < possiblePostTracking.length; i++) {
     const result = normalizeUserPostTrackingData[possiblePostTracking[i]];
     if (result) eachRow.push(result);
@@ -124,7 +163,6 @@ export const formulateUserPostLinkClickTracking = (globalResponseData) => {
   }
   return eachRow;
 };
-
 
 /* userPostActions */
 // comments are formulated as  postId!~*!comment|$|
@@ -134,19 +172,36 @@ const normalizeUserPostActionsTracking = (globalActionsResponseData) => {
   for (let i = 0; i < globalActionsResponseData.length; i++) {
     const currentAction = globalActionsResponseData[i].action;
     const currentPostData = globalActionsResponseData[i].userPosts;
-    const postId = (currentPostData.adminPostId || currentPostData._id);
+    const postId = currentPostData.adminPostId || currentPostData._id;
     if (!normalize[currentAction]) normalize[currentAction] = "";
-    if (currentAction === 'COMMENT') normalize[currentAction] = normalize[currentAction] + postId + "!~*!" + escapeChars(globalActionsResponseData[i].comment) + "|$|";
+    if (currentAction === "COMMENT")
+      normalize[currentAction] =
+        normalize[currentAction] +
+        postId +
+        "!~*!" +
+        escapeChars(globalActionsResponseData[i].comment) +
+        "|$|";
     else normalize[currentAction] = normalize[currentAction] + postId + "|$|";
   }
   return normalize;
 };
 
 // manually form the array for all the possible actions and then add postId for that action
-const possiblePostActions = ['LIKE', 'LOVE', 'HAHA', 'WOW', 'SAD', 'ANGRY', 'COMMENT', 'REPORT'];
+const possiblePostActions = [
+  "LIKE",
+  "LOVE",
+  "HAHA",
+  "WOW",
+  "SAD",
+  "ANGRY",
+  "COMMENT",
+  "REPORT",
+];
 export const formulateUserPostActionsTracking = (postActionsResponseData) => {
   const eachRow = [];
-  const normalizeUserPostActionsData = normalizeUserPostActionsTracking(postActionsResponseData);
+  const normalizeUserPostActionsData = normalizeUserPostActionsTracking(
+    postActionsResponseData,
+  );
   for (let i = 0; i < possiblePostActions.length; i++) {
     const result = normalizeUserPostActionsData[possiblePostActions[i]];
     if (result) eachRow.push(result);
@@ -163,7 +218,9 @@ const normalizeUserPosts = (responseUserPosts) => {
   for (let i = 0; i < responseUserPosts.length; i++) {
     const currentPost = responseUserPosts[i];
 
-    let dynamicPostID = currentPost.parentUserPost ? (currentPost.parentUserPost.adminPostId || currentPost.parentUserPost._id) : "-9999";
+    let dynamicPostID = currentPost.parentUserPost
+      ? currentPost.parentUserPost.adminPostId || currentPost.parentUserPost._id
+      : "-9999";
     let dynamicPostType = currentPost.type || "-9999";
     if (currentPost.isReplyTo) {
       dynamicPostType = "REPLYTO";
@@ -173,14 +230,36 @@ const normalizeUserPosts = (responseUserPosts) => {
       dynamicPostType = "QUOTETWEET";
       dynamicPostID = currentPost.quoteTweetTo;
     }
-    const postId = (currentPost.adminPostId || currentPost._id);
-    const attachedMediaId = currentPost?.attachedMedia?.length > 0 ? (currentPost.attachedMedia[0]._id || "-9999") : "-9999";
-    normalize[dynamicPostType] = (normalize[dynamicPostType] || "") + postId + "!~*!" + escapeChars(currentPost.postMessage) + "!~*!" + attachedMediaId + "!~*!" + dynamicPostID + "|$|";
+    const postId = currentPost.adminPostId || currentPost._id;
+    const attachedMediaId =
+      currentPost?.attachedMedia?.length > 0
+        ? currentPost.attachedMedia[0]._id || "-9999"
+        : "-9999";
+    normalize[dynamicPostType] =
+      (normalize[dynamicPostType] || "") +
+      postId +
+      "!~*!" +
+      escapeChars(currentPost.postMessage) +
+      "!~*!" +
+      attachedMediaId +
+      "!~*!" +
+      dynamicPostID +
+      "|$|";
   }
   return normalize;
 };
 
-const possiblePostTypes= ['LINK', 'VIDEO', 'PHOTO', 'TEXT', 'SHARE', 'RETWEET', 'QUOTETWEET', 'REPLYTO', 'UNDORETWEET'];
+const possiblePostTypes = [
+  "LINK",
+  "VIDEO",
+  "PHOTO",
+  "TEXT",
+  "SHARE",
+  "RETWEET",
+  "QUOTETWEET",
+  "REPLYTO",
+  "UNDORETWEET",
+];
 export const formulateUserPosts = (userPosts) => {
   // manually form the array for all the possible post types and then add postId for that action
   const normalizeUserPostsData = normalizeUserPosts(userPosts);
@@ -193,7 +272,7 @@ export const formulateUserPosts = (userPosts) => {
   return eachRow;
 };
 
-const possibleRegisterTypes= ['REGISTRATION'];
+const possibleRegisterTypes = ["REGISTRATION"];
 // structure: userRegisterId!~*!type!~*!displayName!~*!referenceName!~*!generalFieldValue!$!
 export const formulateRegistrations = (userRegistrations) => {
   let retStr = "";
@@ -204,9 +283,22 @@ export const formulateRegistrations = (userRegistrations) => {
       const displayName = registerDetails?.displayName || "-9999";
       const referenceName = registerDetails?.referenceName || "-9999";
       const type = registerDetails?.type || "-9999";
-      const generalFieldValue = escapeChars(userRegistrations[i]?.generalFieldValue);
+      const generalFieldValue = escapeChars(
+        userRegistrations[i]?.generalFieldValue,
+      );
 
-      retStr = retStr + userRegisterId + "!~*!" + type + "!~*!" + displayName + "!~*!" + referenceName + "!~*!" + generalFieldValue + "|$|";
+      retStr =
+        retStr +
+        userRegisterId +
+        "!~*!" +
+        type +
+        "!~*!" +
+        displayName +
+        "!~*!" +
+        referenceName +
+        "!~*!" +
+        generalFieldValue +
+        "|$|";
     }
   }
   return retStr;
@@ -218,11 +310,29 @@ export const formulateRegistrations = (userRegistrations) => {
 // templateCode ==> conditionCode
 // template _id ==> conditionId
 const headersRef = [
-  '_id', 'responseCode', 'templateId', 'templateCode', 'qualtricsId', 'consent', 'startedAt', 'finishedAt', 'templateName', 'language'
+  "_id",
+  "responseCode",
+  "templateId",
+  "templateCode",
+  "qualtricsId",
+  "consent",
+  "startedAt",
+  "finishedAt",
+  "templateName",
+  "language",
 ];
 
 const headers = [
-  'uniqueResponseId', 'responseCode', 'conditionId', 'accessCode', 'participantId', 'consent', 'startedAt', 'finishedAt', 'conditionName', 'language'
+  "uniqueResponseId",
+  "responseCode",
+  "conditionId",
+  "accessCode",
+  "participantId",
+  "consent",
+  "startedAt",
+  "finishedAt",
+  "conditionName",
+  "language",
 ];
 
 export const formUserAndTemplateData = (userResponse, template) => {
@@ -238,9 +348,12 @@ export const formUserAndTemplateData = (userResponse, template) => {
     else eachRow.push("");
   }
   return eachRow;
-}
+};
 
-export const formulateHeaders = (questionIdsDynamicArray, globalSocailMediaDynamicArray) => {
+export const formulateHeaders = (
+  questionIdsDynamicArray,
+  globalSocailMediaDynamicArray,
+) => {
   // 1) headers
   // 2) questionIdsDynamicArray
   // 3) globalSocailMediaDynamicArray
@@ -254,9 +367,9 @@ export const formulateHeaders = (questionIdsDynamicArray, globalSocailMediaDynam
     possiblePostActions,
     possiblePostTracking,
     possiblePostTypes,
-    possibleRegisterTypes
+    possibleRegisterTypes,
   );
-}
+};
 
 export const normalizeMediaData = (users) => {
   const eachMedia = [];
@@ -267,12 +380,13 @@ export const normalizeMediaData = (users) => {
     if (userPosts.length > 0) {
       // there were some posts for ith user
       // go over each post
-      for(let j = 0; j < userPosts.length; j++) {
+      for (let j = 0; j < userPosts.length; j++) {
         // check if each user posts have some attached media
         const attachedMedia = userPosts[j]?.attachedMedia || [];
         if (attachedMedia.length > 0) {
           // we do have some attached media
-          for (let k = 0; k < attachedMedia.length; k++) eachMedia.push(attachedMedia[k]);
+          for (let k = 0; k < attachedMedia.length; k++)
+            eachMedia.push(attachedMedia[k]);
         }
       }
     }
@@ -280,13 +394,16 @@ export const normalizeMediaData = (users) => {
     if (userRegistrations.length > 0) {
       // there were some posts for ith user
       // go over each post
-      for(let j = 0; j < userRegistrations.length; j++) {
+      for (let j = 0; j < userRegistrations.length; j++) {
         // check if each user posts have some attached media
-        if (userRegistrations[j].media !== null && userRegistrations[j].mimeType !== null) {
+        if (
+          userRegistrations[j].media !== null &&
+          userRegistrations[j].mimeType !== null
+        ) {
           eachMedia.push(userRegistrations[j]);
         }
       }
     }
   }
   return eachMedia;
-}
+};

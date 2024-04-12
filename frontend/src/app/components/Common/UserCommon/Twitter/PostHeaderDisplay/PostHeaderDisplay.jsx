@@ -1,16 +1,20 @@
 import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
-import { selectSinglePost } from '../../../../../selectors/socialMedia';
-import { selectSocialMediaAuthor } from '../../../../../selectors/socialMediaAuthors';
-import VerifiedIcon from '../../../../../../assets/Twitter/verified-icon.svg';
-import { parseUserRegisterName } from '../../../../../utils';
+import { selectSinglePost } from "../../../../../selectors/socialMedia";
+import { selectSocialMediaAuthor } from "../../../../../selectors/socialMediaAuthors";
+import VerifiedIcon from "../../../../../../assets/Twitter/verified-icon.svg";
+import { parseUserRegisterName } from "../../../../../utils";
 import "./PostHeaderDisplay.css";
 
 const PostHeaderDisplay = ({ id }) => {
-  const userRegisterData = useSelector(state => state.userRegister.metaData);
-  const singlePost = useSelector(state => selectSinglePost(state, id));
+  const userRegisterData = useSelector((state) => state.userRegister.metaData);
+  const singlePost = useSelector((state) => selectSinglePost(state, id));
   // eslint-disable-next-line react-hooks/rules-of-hooks
-  const singleAuthor = singlePost?.authorId ? useSelector(state => selectSocialMediaAuthor(state, singlePost.authorId)) : null;
+  const singleAuthor = singlePost?.authorId
+    ? useSelector((state) =>
+        selectSocialMediaAuthor(state, singlePost.authorId),
+      )
+    : null;
   const [renderDynamicHeader, setRenderDynamicHeader] = useState(null);
 
   useEffect(() => {
@@ -19,49 +23,44 @@ const PostHeaderDisplay = ({ id }) => {
         <>
           <div className="dynamicPostHeaderInfo">
             {/* username from registration page */}
-            {singlePost.userPost ? (parseUserRegisterName(userRegisterData)) : 
-              singleAuthor?.authorName || ""
-            }
+            {singlePost.userPost
+              ? parseUserRegisterName(userRegisterData)
+              : singleAuthor?.authorName || ""}
           </div>
-          
-          {singleAuthor?.authorVerified ? 
-          <>
-            <VerifiedIcon className="dynamicPostBadge"/>
-          </> : null}
-        
+
+          {singleAuthor?.authorVerified ? (
+            <>
+              <VerifiedIcon className="dynamicPostBadge" />
+            </>
+          ) : null}
+
           <span className="dynamicPostHeaderHandle">
-            {singlePost.userPost ? 
-            <div>
-              {userRegisterData['HANDLE'] || null}
-            </div> : 
-            <div>
-              {singleAuthor?.handle  || null}
-            </div>}
+            {singlePost.userPost ? (
+              <div>{userRegisterData["HANDLE"] || null}</div>
+            ) : (
+              <div>{singleAuthor?.handle || null}</div>
+            )}
           </span>
 
           <span className="dynamicPostHeaderTime">
-            {singlePost.isReplyTo !== null && singlePost.userPost === true ? 
-            <div>
-              <span>&#183;</span>
-              {"2s"}
-            </div> : 
-            singlePost.datePosted ?
-            <div>
-              <span>&#183;</span>
-              {singlePost.datePosted}
-            </div>
-            : null}
+            {singlePost.isReplyTo !== null && singlePost.userPost === true ? (
+              <div>
+                <span>&#183;</span>
+                {"2s"}
+              </div>
+            ) : singlePost.datePosted ? (
+              <div>
+                <span>&#183;</span>
+                {singlePost.datePosted}
+              </div>
+            ) : null}
           </span>
-        </>
-      )
+        </>,
+      );
     }
   }, [id, singlePost, singleAuthor]);
 
-  return (
-    <>
-      {renderDynamicHeader ? renderDynamicHeader : null}
-    </>
-  );
-}
+  return <>{renderDynamicHeader ? renderDynamicHeader : null}</>;
+};
 
 export default PostHeaderDisplay;
