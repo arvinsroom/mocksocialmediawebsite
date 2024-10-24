@@ -121,7 +121,7 @@ const getSocialMediaPages = async (req, res, next) => {
         templateId: _id,
         type: socialMediaPages,
       },
-      attributes: ["_id", "name"],
+      attributes: ["_id", "name", "type"],
     });
     res.send({
       data,

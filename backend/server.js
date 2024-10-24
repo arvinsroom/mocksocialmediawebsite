@@ -1,31 +1,31 @@
-import * as express from "express";
 import cors from "cors";
-import { umzugUp } from "./migrations";
+import * as express from "express";
 import db from "./clients/database-client";
+import { umzugUp } from "./migrations";
 
 import auth from "./routes/auth-routes";
 import authUser from "./routes/user-auth-routes";
 
-import template from "./routes/template-routes";
-import register from "./routes/register-routes";
-import finish from "./routes/finish-routes";
-import info from "./routes/info-routes";
-import question from "./routes/question-routes";
-import media from "./routes/media-routes";
-import language from "./routes/language-routes";
-import page from "./routes/page-routes";
 import metrics from "./routes/admin-metrics-routes";
 import adminUserPost from "./routes/admin-userpost-routes";
+import finish from "./routes/finish-routes";
+import info from "./routes/info-routes";
+import language from "./routes/language-routes";
+import media from "./routes/media-routes";
+import page from "./routes/page-routes";
+import question from "./routes/question-routes";
+import register from "./routes/register-routes";
+import template from "./routes/template-routes";
 
-import userRegister from "./routes/user-register-routes";
+import userFacebook from "./routes/facebook-routes";
+import userAnswer from "./routes/user-answer-routes";
 import userFinish from "./routes/user-finish-routes";
 import userInfo from "./routes/user-info-routes";
-import userFacebook from "./routes/facebook-routes";
-import userQuesion from "./routes/user-question-routes";
-import userAnswer from "./routes/user-answer-routes";
 import userMain from "./routes/user-main-routes";
+import userQuesion from "./routes/user-question-routes";
+import userRegister from "./routes/user-register-routes";
 import userTracking from "./routes/user-tracking-routes";
-import { databaseConfigurations, adminCredConfigurations } from "./utils";
+import { adminCredConfigurations, databaseConfigurations } from "./utils";
 
 const mysql = require("mysql2/promise");
 
@@ -172,10 +172,21 @@ try {
   // add middleware where we check of x-access-token with each request
   // in future maybe add this on on specific admin routes
   app.use(function (req, res, next) {
+    // Allow necessary headers to be sent from client
     res.header(
       "Access-Control-Allow-Headers",
-      "x-access-token, Origin, Content-Type, Accept",
+      "x-access-token, Origin, Content-Type, Accept, Range, Authorization"
     );
+  
+    // Expose necessary headers to be read by client
+    res.header(
+      "Access-Control-Expose-Headers",
+      "Content-Range, Accept-Ranges, Content-Length, Content-Type"
+    );
+  
+    // Add Accept-Ranges header for all responses
+    res.header("Accept-Ranges", "bytes");
+
     next();
   });
 
@@ -192,7 +203,8 @@ try {
   app.use("/api/questions", [verifyToken, isAdmin], question);
   app.use("/api/language", [verifyToken, isAdmin], language);
   app.use("/api/page", [verifyToken, isAdmin], page);
-  app.use("/api/media", [verifyToken, isAdmin], media);
+  // app.use("/api/media", [verifyToken, isAdmin], media);
+  app.use("/api/media", media);
   app.use("/api/metrics", [verifyToken, isAdmin], metrics);
   app.use("/api/userposts", [verifyToken, isAdmin], adminUserPost);
 

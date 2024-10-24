@@ -1,5 +1,5 @@
 import db from "../clients/database-client";
-import { checkIfValidAndNotEmptyObj, shuffle, getNumberOrZero } from "../utils";
+import { checkIfValidAndNotEmptyObj, getNumberOrZero, shuffle } from "../utils";
 const UserPostAction = db.UserPostAction;
 const UserPost = db.UserPost;
 const Media = db.Media;
@@ -472,8 +472,7 @@ const getFacebookPostWithDetails = async (req, res, next) => {
         ],
       },
       { transaction, logging: false },
-    );
-
+    );    
     console.log(`Fetching posts with order perserved: ${postIds}.`);
 
     const getAuthorMedia = async () => {

@@ -18,7 +18,7 @@ import {
   INCREMENT_QUOTE_RETWEET_COUNT,
   DECREMENT_QUOTE_RETWEET_COUNT,
 } from "./types";
-import * as FacebookPostService from "../services/facebook-service";
+import * as SocialMediaPostService from "../services/facebook-service";
 
 export const finishFetch = () => (dispatch) => {
   dispatch({
@@ -33,7 +33,7 @@ export const clearFacebookState = () => (dispatch) => {
 };
 
 export const getFacebookPostsCount = (data) => (dispatch) => {
-  return FacebookPostService.getFacebookAllPostsCount(data).then(
+  return SocialMediaPostService.getFacebookAllPostsCount(data).then(
     (response) => {
       // these are all the posts
       const totalPostCount = response.data?.totalPosts || 0;
@@ -88,7 +88,7 @@ export const getFacebookWithCommentsPosts = (data) => (dispatch) => {
       isLoading: true,
     },
   });
-  return FacebookPostService.getMediaPostDetails(data).then(
+  return SocialMediaPostService.getMediaPostDetails(data).then(
     (response) => {
       let postRecords = response.data?.postDetails || [];
       // normalize the data
@@ -189,6 +189,9 @@ export const getFacebookWithCommentsPosts = (data) => (dispatch) => {
   );
 };
 
+/**
+ * Twitter actions
+ */
 export const getTwitterPosts = (data) => (dispatch) => {
   dispatch({
     type: SET_FB_LOADING,
@@ -196,7 +199,7 @@ export const getTwitterPosts = (data) => (dispatch) => {
       isLoading: true,
     },
   });
-  return FacebookPostService.getMediaPostDetails(data).then(
+  return SocialMediaPostService.getMediaPostDetails(data).then(
     (response) => {
       let postRecords = response.data?.postDetails || [];
       // normalize the data
@@ -262,7 +265,7 @@ export const getTwitterPosts = (data) => (dispatch) => {
 };
 
 export const getFacebookPost = (data) => (dispatch) => {
-  return FacebookPostService.getMediaPostDetails(data).then(
+  return SocialMediaPostService.getMediaPostDetails(data).then(
     (response) => {
       let postRecords = response.data?.postDetails || [];
       // normalize the data
@@ -298,7 +301,7 @@ export const getFacebookPost = (data) => (dispatch) => {
 // create a action for specific user with
 // adminPostId, actionType, isAdminPost, userPostId, platformType, comment
 export const likeFbPost = (data, id) => (dispatch) => {
-  return FacebookPostService.createFbAction({ actionObj: data }).then(
+  return SocialMediaPostService.createFbAction({ actionObj: data }).then(
     (response) => {
       // this event should render the like transtion on the UI
       dispatch({
@@ -331,7 +334,7 @@ export const likeFbPost = (data, id) => (dispatch) => {
 };
 
 export const unlikeFbPost = (actionId, id) => (dispatch) => {
-  return FacebookPostService.deleteFbAction(actionId).then(
+  return SocialMediaPostService.deleteFbAction(actionId).then(
     () => {
       // this event should render the unlike transtion on the UI
       dispatch({
@@ -362,7 +365,7 @@ export const unlikeFbPost = (actionId, id) => (dispatch) => {
 };
 
 export const updatePost = (data) => (dispatch) => {
-  return FacebookPostService.updatePost(data).then(
+  return SocialMediaPostService.updatePost(data).then(
     () => {
       // this event should undo the retweet from postArray and render the UI properly
       dispatch({
@@ -400,7 +403,7 @@ export const updatePost = (data) => (dispatch) => {
 // create a action for specific user with
 // adminPostId, action, userPostId, comment
 export const commentFbPost = (data, id) => (dispatch) => {
-  return FacebookPostService.createFbAction({ actionObj: data }).then(
+  return SocialMediaPostService.createFbAction({ actionObj: data }).then(
     () => {
       dispatch({
         type: SET_FB_POST_COMMENT,
@@ -442,7 +445,7 @@ export const createFbPost = (data) => (dispatch) => {
       isLoading: true,
     },
   });
-  return FacebookPostService.createFbPost(data).then(
+  return SocialMediaPostService.createFbPost(data).then(
     (response) => {
       dispatch({
         type: CREATE_FB_POST,
@@ -489,7 +492,7 @@ export const createFbPost = (data) => (dispatch) => {
 
 //create action to delete FB report
 export const unreportPost = (actionId, id) => (dispatch) => {
-  return FacebookPostService.deleteFbAction(actionId).then(
+  return SocialMediaPostService.deleteFbAction(actionId).then(
     () => {
       dispatch({
         type: SET_POST_UNREPORT,
@@ -519,7 +522,7 @@ export const unreportPost = (actionId, id) => (dispatch) => {
 };
 
 export const reportPost = (data, id) => (dispatch) => {
-  return FacebookPostService.createFbAction({ actionObj: data }).then(
+  return SocialMediaPostService.createFbAction({ actionObj: data }).then(
     (response) => {
       dispatch({
         type: SET_POST_REPORT,
@@ -575,3 +578,85 @@ export const decrementQuoteRetweetCount = (data) => (dispatch) => {
     },
   });
 };
+
+/**
+ * TikTok actions
+ */
+export const getTikTokPosts = (data) => (dispatch) => {
+  dispatch({
+    type: SET_FB_LOADING,
+    payload: {
+      isLoading: true,
+    },
+  });
+  return SocialMediaPostService.getMediaPostDetails(data).then(
+    (response) => {
+      let postRecords = response.data?.postDetails || [];
+      console.log("postRecords", postRecords);
+      // normalize the data
+      const posts = {};
+      const metaData = {};
+      let allIds = [];
+      for (let i = 0; i < postRecords.length; i++) {
+        const eachId = postRecords[i]._id;
+        posts[eachId] = { ...postRecords[i], userPost: false };
+        metaData[eachId] = {
+          like: "default",
+          type: postRecords[i].type,
+          initLike: postRecords[i].initLike || 0,
+          actionId: null,
+          // parentPostId: null, // not requied for tiktok
+          comments: [],
+          initReply: postRecords[i].initReply,
+          // initTweet: postRecords[i].initTweet,
+          bookmark: false,
+          initBookmark: postRecords[i].initBookmark,
+          initShare: postRecords[i].initShare,
+          soundName: postRecords[i].soundName,
+        };
+        allIds.push(eachId);
+      }
+      dispatch({
+        type: STACK_FB_STATE,
+        payload: {
+          posts: posts,
+          metaData: metaData,
+          allIds: allIds,
+          isLoading: false,
+        },
+      });
+
+      dispatch({
+        type: UPDATE_FACEBOOK_PAGE_STATE,
+      });
+      return Promise.resolve();
+    },
+    (error) => {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+
+      dispatch({
+        type: SNACKBAR_ERROR,
+        payload: message,
+      });
+
+      dispatch({
+        type: SET_FB_LOADING,
+        payload: {
+          isLoading: false,
+        },
+      });
+
+      dispatch({
+        type: CLEAR_FB_STATE,
+      });
+      return Promise.reject();
+    },
+  );
+};
+
+

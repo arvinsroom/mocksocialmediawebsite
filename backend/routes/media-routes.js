@@ -20,4 +20,7 @@ router.post(
   media.uploadMultipleAuthourFiles,
 );
 
+// stream media
+router.get("/stream/:pageId/:mediaPath", media.streamMedia);
+
 export default router;

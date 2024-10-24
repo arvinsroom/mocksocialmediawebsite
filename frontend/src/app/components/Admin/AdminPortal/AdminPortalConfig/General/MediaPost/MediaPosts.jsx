@@ -1,20 +1,20 @@
-import { useState } from "react";
-import * as XLSX from "xlsx";
 import {
   Button,
-  Input,
-  TextField,
   FormControl,
-  FormGroup,
   FormControlLabel,
-  MenuItem,
+  FormGroup,
+  Input,
   InputLabel,
+  MenuItem,
   Select,
   Switch,
+  TextField,
 } from "@material-ui/core";
-import { create } from "../../../../../../services/media-service";
+import { IconDeviceFloppy, IconTableImport } from "@tabler/icons-react";
+import clsx from "clsx";
+import { useState } from "react";
 import { useDispatch } from "react-redux";
-import useStyles from "../../../../../style";
+import * as XLSX from "xlsx";
 import {
   showErrorSnackbar,
   showInfoSnackbar,
@@ -22,12 +22,41 @@ import {
 } from "../../../../../../actions/snackbar";
 import {
   GENERAL_PAGE,
+  ORDER_TYPES,
   TEMPLATE,
   TEMPLATE_TYPES,
-  ORDER_TYPES,
 } from "../../../../../../constants";
-import { IconTableImport, IconDeviceFloppy } from "@tabler/icons-react";
-import clsx from "clsx";
+import { create } from "../../../../../../services/media-service";
+import useStyles from "../../../../../style";
+
+const EXCEL_COLUMNS = 23;
+/* list of supported file types */
+const SheetJSFT = [
+  "xlsx",
+  "xlsb",
+  "xlsm",
+  "xls",
+  "xml",
+  "csv",
+  "txt",
+  "ods",
+  "fods",
+  "uos",
+  "sylk",
+  "dif",
+  "dbf",
+  "prn",
+  "qpw",
+  "123",
+  "wb*",
+  "wq*",
+  "html",
+  "htm",
+]
+  .map(function (x) {
+    return "." + x;
+  })
+  .join(",");
 
 const MediaPosts = ({ templateId }) => {
   const [mediaJSON, setMediaJSON] = useState(null);
@@ -44,49 +73,32 @@ const MediaPosts = ({ templateId }) => {
   const classes = useStyles();
   const dispatch = useDispatch();
 
-  /* list of supported file types */
-  const SheetJSFT = [
-    "xlsx",
-    "xlsb",
-    "xlsm",
-    "xls",
-    "xml",
-    "csv",
-    "txt",
-    "ods",
-    "fods",
-    "uos",
-    "sylk",
-    "dif",
-    "dbf",
-    "prn",
-    "qpw",
-    "123",
-    "wb*",
-    "wq*",
-    "html",
-    "htm",
-  ]
-    .map(function (x) {
-      return "." + x;
-    })
-    .join(",");
-
+  /**
+   * Read the file uplodaded by the user and convert it to JSON.
+   * @param {*} e  event
+   * @param {*} sType AUTHOR or MEDIA
+   *
+   * Note:
+   * We parse the first 23 columns (EXCEL_COLUMNS) of the excel sheet.
+   *
+   * Update:
+   * readAsBinaryString is deprecated. Using readAsArrayBuffer instead.
+   */
   const handleChange = (e, sType) => {
     e.preventDefault();
     let file = e.target.files ? e.target.files[0] : null;
     if (file) {
       if (file.size > 20e6) {
         dispatch(
-          showInfoSnackbar("Please upload file of size less than 10MB."),
+          showInfoSnackbar("Please upload file of size less than 10MB.")
         );
       } else {
         if (sType === "MEDIA") setUploadPostSpreadsheetName(file.name);
         else setUploadAuthorSpreadsheetName(file.name); // sType === 'AUTHOR'
         let reader = new FileReader();
         reader.onload = function (e) {
-          var data = e.target.result;
-          let readedData = XLSX.read(data, { type: "binary" });
+          var data = new Uint8Array(e.target.result);
+          let readedData = XLSX.read(data, { type: "array" });
           /* Get first worksheet */
           const wsname = readedData.SheetNames[0];
           const ws = readedData.Sheets[wsname];
@@ -100,13 +112,13 @@ const MediaPosts = ({ templateId }) => {
           });
           // filter excel, and get only expected rows
           dataParse = dataParse.map((arr) => {
-            return arr.splice(0, 20);
+            return arr.splice(0, EXCEL_COLUMNS);
           });
           /* Update state */
           if (sType === "MEDIA") setMediaJSON(dataParse);
           else setAuthorJSON(dataParse); // sType === 'AUTHOR'
         };
-        reader.readAsBinaryString(file);
+        reader.readAsArrayBuffer(file);
       }
     }
   };
@@ -139,13 +151,13 @@ const MediaPosts = ({ templateId }) => {
           });
           dispatch(
             showSuccessSnackbar(
-              GENERAL_PAGE.SUCCESSFULLY_UPLOADED_SOCIAL_MEDIA_SPREADSHEET,
-            ),
+              GENERAL_PAGE.SUCCESSFULLY_UPLOADED_SOCIAL_MEDIA_SPREADSHEET
+            )
           );
           resetValues();
         } else {
           dispatch(
-            showInfoSnackbar(GENERAL_PAGE.PLEASE_ENTER_A_VALID_RESPONSE),
+            showInfoSnackbar(GENERAL_PAGE.PLEASE_ENTER_A_VALID_RESPONSE)
           );
         }
       } catch (error) {
@@ -174,7 +186,7 @@ const MediaPosts = ({ templateId }) => {
       menuItems.push(
         <MenuItem value={item} key={item}>
           {item}
-        </MenuItem>,
+        </MenuItem>
       );
     }
     return menuItems;
@@ -190,7 +202,7 @@ const MediaPosts = ({ templateId }) => {
       menuItems.push(
         <MenuItem value={key} key={key}>
           {value}
-        </MenuItem>,
+        </MenuItem>
       );
     }
     return menuItems;

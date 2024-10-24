@@ -1,22 +1,31 @@
+import ffmpegPath from 'ffmpeg-static';
+import ffmpeg from 'fluent-ffmpeg';
+import path from "path";
+import { Readable } from 'stream';
 import db from "../clients/database-client";
 import { checkIfValidAndNotEmptyArray } from "../utils";
-import fb from "./facebook-controller";
 import page from "./create-page";
+const fs = require('fs').promises;
+const { createReadStream } = require('fs');
+
 const Media = db.Media;
 const UserPost = db.UserPost;
 const UserPostAuthor = db.UserPostAuthor;
+
+// Set ffmpeg path
+ffmpeg.setFfmpegPath(ffmpegPath);
 
 const create = async (req, res, next) => {
   // create the page first
   let transaction;
   try {
     // fetch the adminId added from middleware
-    if (!req.adminId) {
-      res.status(400).send({
-        message: "Invalid Token, please log in again!",
-      });
-      return;
-    }
+    // if (!req.adminId) {
+    //   res.status(400).send({
+    //     message: "Invalid Token, please log in again!",
+    //   });
+    //   return;
+    // }
     const {
       templateId,
       type,
@@ -117,6 +126,9 @@ const create = async (req, res, next) => {
       "likedByOverflow",
       "retweetedBy",
       "retweetedByOverflow",
+      "initShare",
+      "initBookmark",
+      "soundName"
     ];
     const mediaArr = [];
     //we will check if a post is a reply, if so we store in the mediaArrReplies
@@ -295,11 +307,23 @@ const create = async (req, res, next) => {
   }
 };
 
+/**
+ * Upload multiple files for a specific page.
+ * 
+ * For TikTok page we will only accept video files and create streams using ffmpeg.
+ */
 const uploadMultipleFiles = async (req, res, next) => {
   // create the page first
   let transaction;
   try {
-    const { pageId } = req.body;
+    // fetch the adminId added from middleware
+    // if (!req.adminId) {
+    //   res.status(400).send({
+    //     message: "Invalid Token, please log in again!",
+    //   });
+    //   return;
+    // }
+    const { pageId, pageType } = req.body;
     const { files } = req;
     if (!files) {
       res.status(400).send({
@@ -313,7 +337,7 @@ const uploadMultipleFiles = async (req, res, next) => {
       });
       return;
     }
-
+    console.log(`Uploading files for pageId: ${pageId}`);
     transaction = await db.sequelize.transaction();
 
     // fetch all the posts for that specific social media page
@@ -333,22 +357,151 @@ const uploadMultipleFiles = async (req, res, next) => {
     });
 
     const mediaArr = [];
-    for (let i = 0; i < files.length; i++) {
-      // fetch the id from file name
-      const postId = files[i].originalname.split(".")[0];
-      // should only create entry if post id exist
-      if (postData[postId]) {
-        mediaArr.push({
-          mimeType: files[i].mimetype,
-          media: files[i].buffer,
-          userPostId: postData[postId],
-        });
+
+    // create stream if pageType is TikTok    
+    if (pageType === "TIKTOK") {
+      // clean up process for the given videos pageId
+      // if we recieve a new video, we will delete all the previous videos for given files and that start with given postID 
+      const outputDir = path.join(__dirname, '..', 'videos', pageId);
+  
+      // Ensure the output directory exists
+      await fs.mkdir(outputDir, { recursive: true });
+    
+      for (let i = 0; i < files.length; i++) {
+        const postId = files[i].originalname.split(".")[0];
+        // Delete all the files that start with postId
+        const filesToDelete = (await fs.readdir(outputDir))
+          .filter(file => file.startsWith(`${postId}_ffmpeg_`));
+        for (let j = 0; j < filesToDelete.length; j++) {
+          await fs.unlink(path.join(outputDir, filesToDelete[j]));
+        }
+      }
+    
+      const streamingStartedAt = new Date().getTime();
+      console.log(`Streaming started!`);
+      // create streams to some local path and save the path in the database
+      for (let i = 0; i < files.length; i++) {
+        // fetch the id from file name
+        const postId = files[i].originalname.split(".")[0];
+        // should only create entry if post id exist
+        if (postData[postId]) {          
+          const fileName = `${postId}_ffmpeg_${new Date().getTime()}.m3u8`;
+          const outputPath = path.join(outputDir, fileName);
+          // create a stream from the buffer
+          const stream = new Readable();
+          stream.push(files[i].buffer);
+          stream.push(null); // Indicates end of the stream
+      
+          await new Promise((resolve, reject) => {
+            const command = ffmpeg()
+              .input(stream)
+              .inputFormat('mp4')
+              .inputOptions([
+                '-fflags +genpts', // Generate PTS for each packet
+                '-analyzeduration 2147483647', // Increase max analysis duration to prevent hanging
+                '-probesize 2147483647', // Increase max probe size to prevent hanging
+              ])
+              .outputOptions([
+                '-c:v copy', // Copy video codec 
+                '-c:a copy', // Copy audio codec
+                '-start_number 0', // Start segment numbering from 0
+                '-hls_time 4', // Set segment duration to 4 seconds
+                '-hls_list_size 0', // Keep all segments in the playlist
+                '-hls_segment_type mpegts', // Use MPEG-TS segments
+                '-hls_playlist_type vod', // video on demand, this is not streaming
+                '-hls_flags independent_segments', // Allow independent segments
+                '-f hls' // Force output format to HLS
+              ])
+              .output(outputPath)
+              // Keep only essential logs
+              .on('start', () => {
+                console.log(`Starting video processing for ID: ${postId}`);
+              })
+              .on('error', (err) => {
+                console.error(`Video processing failed for ID ${postId}:`, err.message);
+                reject(new Error(`Video processing failed: ${err.message}`));
+              })
+              .on('end', async () => {
+                try {
+                  // Verify output files
+                  const m3u8Content = await fs.readFile(outputPath, 'utf8');
+                  
+                  // Check for .ts segments
+                  const tsFiles = m3u8Content.match(/\.ts/g);
+                  if (!tsFiles) {
+                    throw new Error('No video segments generated');
+                  }
+        
+                  // Check for empty segments
+                  const segmentFiles = (await fs.readdir(outputDir))
+                  .filter(file => file.startsWith(postId) && file.endsWith('.ts'));
+                
+                  const emptySegments = await Promise.all(
+                    segmentFiles.map(async file => {
+                      const stats = await fs.stat(path.join(outputDir, file));
+                      return stats.size === 0 ? file : null;
+                    })
+                  );
+                  
+                  if (emptySegments.filter(file => file !== null).length > 0) {
+                    throw new Error('Empty video segments detected');
+                  }
+        
+                  console.log(`Successfully processed video for ID: ${postId}`);
+                  resolve();
+                } catch (error) {
+                  console.error(`Validation failed for ID ${postId}:`, error.message);
+                  reject(new Error(`Video validation failed: ${error.message}`));
+                }
+              });
+        
+            command.run();
+          });
+
+          // check here for tiktok only if media entry exists with userPostId as postData[postId]
+          // as for tiktok we cannot have multiple media entries for same userPostId
+          // if it exist we only update the mediaPath
+          const existingMedia = await Media.findOne({
+            where: {
+              userPostId: postData[postId],
+            },
+            transaction,
+          });
+          if (existingMedia) {
+            existingMedia.mediaPath = fileName;
+            existingMedia.mimeType = files[i].mimetype;
+            await existingMedia.save({ transaction });
+          } else {
+            // create new media entry
+            mediaArr.push({
+              mimeType: files[i].mimetype,
+              mediaPath: fileName,
+              userPostId: postData[postId],
+            });
+          }
+        }
+      }
+      console.log(`Streaming ended! Time taken: ${(new Date().getTime() - streamingStartedAt) / 60}sec`);
+    } else {
+      for (let i = 0; i < files.length; i++) {
+        // fetch the id from file name
+        const postId = files[i].originalname.split(".")[0];
+        // should only create entry if post id exist
+        if (postData[postId]) {
+          mediaArr.push({
+            mimeType: files[i].mimetype,
+            media: files[i].buffer,
+            userPostId: postData[postId],
+          });
+        }
       }
     }
     console.log(`Trying to create Media entries for ${postData}.`);
     // updateOnDuplicate: ['userPostId'],
     // this won't work yet as we do not have a logic to make userPostId unique
     // find another way
+    // Update: For TikTok we check if media entry exists with userPostId and never push on mediaArr
+    // for other pages, this is unchanged
     await Media.bulkCreate(mediaArr, {
       transaction,
       logging: false,
@@ -361,6 +514,7 @@ const uploadMultipleFiles = async (req, res, next) => {
       response: "Success",
     });
   } catch (error) {
+    console.log(error);
     // if we reach here, there were some errors thrown, therefore roolback the transaction
     if (transaction) await transaction.rollback();
     res.status(500).send({
@@ -373,6 +527,13 @@ const uploadMultipleAuthourFiles = async (req, res, next) => {
   // create the page first
   let transaction;
   try {
+    // fetch the adminId added from middleware
+    // if (!req.adminId) {
+    //   res.status(400).send({
+    //     message: "Invalid Token, please log in again!",
+    //   });
+    //   return;
+    // }
     const { pageId } = req.body;
     const { files } = req;
     if (!files) {
@@ -444,8 +605,141 @@ const uploadMultipleAuthourFiles = async (req, res, next) => {
   }
 };
 
+/**
+ * Streams HLS video content (.m3u8 playlists and .ts segments) to the client.
+ * 
+ * This function handles streaming of both playlist files (.m3u8) and video segments (.ts)
+ * created by FFmpeg's HLS segmentation. It currently implements basic streaming without
+ * range request support.
+ * 
+ * @example
+ * // Usage in Express route
+ * router.get("/stream/:mediaPath", streamMedia);
+ * 
+ * @todo Future improvements:
+ * - Implement HTTP range requests support for better seeking and bandwidth management
+ * - Add content-range headers for partial content responses (HTTP 206)
+ * - Handle byte-range requests with proper chunking
+ * - Add ETag support for caching
+ * - Implement bandwidth throttling for large files
+ * - Add support for adaptive bitrate streaming
+ */
+const streamMedia = async (req, res) => {
+  try {
+    const mediaPath = req.params.mediaPath;
+    const pageId = req.params.pageId;
+  
+    if (!mediaPath || !pageId) {
+      return res.status(400).send('Missing media path or page ID');
+    }
+
+    const videoDir = path.join(__dirname, '..', 'videos', pageId);
+    const filePath = path.join(videoDir, mediaPath);
+
+    // console.log('Streaming request received for:', filePath);
+
+    // Check if file exists
+    try {
+      await fs.access(filePath);
+    } catch (err) {
+      console.error(`File not found: ${filePath}`);
+      return res.status(404).send('File not found');
+    }
+
+    let stat;
+    try {
+      stat = await fs.stat(filePath);
+    } catch (err) {
+      console.error(`Error getting file stats: ${filePath}`);
+      return res.status(500).send('Error getting file stats');
+    }
+
+    const fileSize = stat.size;
+
+    // Check for empty files
+    if (fileSize === 0) {
+      console.error(`Empty file detected: ${filePath}`);
+      return res.status(422).send('Empty media file');
+    }
+
+    // For m3u8 files, validate content
+    if (mediaPath.endsWith('.m3u8')) {
+      const content = await fs.readFile(filePath, 'utf8');
+      
+      // Check for invalid duration
+      if (content.includes('#EXTINF:0.000000,')) {
+        console.error(`Invalid m3u8 file detected (0 duration): ${filePath}`);
+        return res.status(422).send('Invalid media file');
+      }
+
+      // Check for basic m3u8 structure
+      if (!content.includes('#EXTM3U') || !content.includes('#EXT-X-VERSION')) {
+        console.error(`Invalid m3u8 format: ${filePath}`);
+        return res.status(422).send('Invalid media format');
+      }
+
+      res.writeHead(200, {
+        'Content-Type': 'application/vnd.apple.mpegurl',
+        'Content-Length': fileSize,
+        'Cache-Control': 'no-cache'
+      });
+    } else if (mediaPath.endsWith('.ts')) {
+      // For ts files, check minimum size
+      const MIN_TS_SIZE = 1024; // 1KB minimum size for valid ts file
+      if (fileSize < MIN_TS_SIZE) {
+        console.error(`TS file too small: ${filePath} (${fileSize} bytes)`);
+        return res.status(422).send('Invalid media segment');
+      }
+
+      res.writeHead(200, {
+        'Content-Type': 'video/MP2T',
+        'Content-Length': fileSize,
+        'Cache-Control': 'no-cache'
+      });
+    } else {
+      return res.status(400).send('Unsupported file type');
+    }
+
+    // Create read stream and pipe to response
+    const stream = createReadStream(filePath);
+    
+    // Handle stream errors
+    stream.on('error', (error) => {
+      console.error('Stream error:', error);
+      if (!res.headersSent) {
+        res.status(500).send('Error streaming video');
+      }
+    });
+
+    // Add timeout to the stream
+    const timeout = setTimeout(() => {
+      if (!res.writableEnded) {
+        stream.destroy();
+        if (!res.headersSent) {
+          res.status(408).send('Stream timeout');
+        }
+      }
+    }, 10000); // 10 second timeout
+
+    // Clean up on stream end
+    stream.on('end', () => {
+      clearTimeout(timeout);
+    });
+
+    // Pipe the file to the response
+    stream.pipe(res);
+
+  } catch (error) {
+    console.error('Error streaming video:', error);
+    if (!res.headersSent) {
+      res.status(500).send('Error streaming video');
+    }
+  }
+};
+
 export default {
   create,
   uploadMultipleFiles,
   uploadMultipleAuthourFiles,
+  streamMedia
 };

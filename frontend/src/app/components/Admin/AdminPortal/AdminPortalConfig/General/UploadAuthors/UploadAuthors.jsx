@@ -1,18 +1,18 @@
-import { useState } from "react";
-import { Button, Input, Box } from "@material-ui/core";
-import useStyles from "../../../../../style";
-import { useDispatch } from "react-redux";
-import { uploadMultipleAuthourFiles } from "../../../../../../services/media-service";
-import {
-  showErrorSnackbar,
-  showSuccessSnackbar,
-  showInfoSnackbar,
-} from "../../../../../../actions/snackbar";
-import { GENERAL_PAGE } from "../../../../../../constants";
-import Progress from "../../../../../Common/Progress";
-import SocialMediaPages from "../../../../../Common/AdminCommon/SocialMediaPages";
+import { Box, Button } from "@material-ui/core";
 import { IconDeviceFloppy, IconUserCircle } from "@tabler/icons-react";
 import clsx from "clsx";
+import { useState } from "react";
+import { useDispatch } from "react-redux";
+import {
+  showErrorSnackbar,
+  showInfoSnackbar,
+  showSuccessSnackbar,
+} from "../../../../../../actions/snackbar";
+import { GENERAL_PAGE } from "../../../../../../constants";
+import { uploadMultipleAuthourFiles } from "../../../../../../services/media-service";
+import SocialMediaPages from "../../../../../Common/AdminCommon/SocialMediaPages";
+import Progress from "../../../../../Common/Progress";
+import useStyles from "../../../../../style";
 
 const Upload = ({ templateId }) => {
   const [selectedFiles, setSelectedFiles] = useState(null);
@@ -41,13 +41,13 @@ const Upload = ({ templateId }) => {
         await uploadMultipleAuthourFiles(formData);
         dispatch(
           showSuccessSnackbar(
-            GENERAL_PAGE.SUCCESSFULLY_SAVED_LANGUAGE_AND_OR_MEDIA,
-          ),
+            GENERAL_PAGE.SUCCESSFULLY_SAVED_LANGUAGE_AND_OR_MEDIA
+          )
         );
         resetValues();
       } else {
         dispatch(
-          showInfoSnackbar("Please upload file(s) of size less than 20MB."),
+          showInfoSnackbar("Please upload file(s) of size less than 20MB.")
         );
       }
     } else
@@ -104,12 +104,12 @@ const Upload = ({ templateId }) => {
           startIcon={<IconUserCircle />}
         >
           {GENERAL_PAGE.UPLOAD_AUTHOR_MEDIA}
-          <Input
+          <input
             style={{ display: "none" }}
             disableUnderline={true}
             id="upload-files"
             type="file"
-            inputProps={{ multiple: true }}
+            multiple={true}
             accept="image/*, video/*"
             onChange={selectFiles}
           />

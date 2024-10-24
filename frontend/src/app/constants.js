@@ -1,6 +1,7 @@
 export const TEMPLATE_TYPES = Object.freeze({
   FACEBOOK: "FACEBOOK",
   TWITTER: "TWITTER",
+  TIKTOK: "TIKTOK",
 });
 
 export const ORDER_TYPES = Object.freeze({

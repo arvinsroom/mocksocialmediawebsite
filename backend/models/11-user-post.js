@@ -125,6 +125,21 @@ export default (sequelize, DataTypes) => {
         type: DataTypes.STRING(1024),
         defaultValue: null,
       },
+      initShare: {
+        allowNull: false,
+        type: DataTypes.INTEGER,
+        defaultValue: 0,
+      },
+      initBookmark: {
+        allowNull: false,
+        type: DataTypes.INTEGER,
+        defaultValue: 0,
+      },
+      soundName: {
+        allowNull: true,
+        type: DataTypes.STRING,
+        defaultValue: null,
+      },
       userId: {
         allowNull: true,
         references: {

@@ -19,7 +19,10 @@ export default function SocialMediaPages({ setActive, active, templateId }) {
   }, [focused]);
 
   const handleSocialMediaPage = async (e) => {
-    setActive(e.target.value);
+    setActive({
+      pageId: e.target.value,
+      pageType: socialMediaPages.find((page) => page._id === e.target.value).type ?? "",
+    });
   };
 
   const onFocus = () => setFocused(true);
@@ -35,7 +38,7 @@ export default function SocialMediaPages({ setActive, active, templateId }) {
         onBlur={onBlur}
         labelId="demo-simple-select-outlined-label"
         id="demo-simple-select-outlined"
-        value={active}
+        value={active.pageId}
         onChange={handleSocialMediaPage}
         label={INFO_PAGE.SELECT_SOCIAL_MEDIA_PAGE}
       >

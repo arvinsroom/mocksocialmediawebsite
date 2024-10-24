@@ -1,0 +1,39 @@
+.tiktok {
+  font-family: "TikTok Sans", Arial, sans-serif;
+  display: flex;
+  max-width: 100%;
+  height: 100vh;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.tiktokFeed {
+  flex: 1;
+  overflow-y: scroll;
+  scroll-snap-type: y mandatory;
+}
+
+.tiktokFeed::-webkit-scrollbar {
+  display: none;
+}
+
+.tiktokFeed {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.tiktokNextScreen {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 100;
+}
+
+@media (min-width: 768px) {
+  .tiktok {
+    max-width: 414px;
+    margin: 0 auto;
+    border-left: 1px solid #e0e0e0;
+    border-right: 1px solid #e0e0e0;
+  }
+}

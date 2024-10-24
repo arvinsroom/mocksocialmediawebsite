@@ -13,7 +13,8 @@ export default (sequelize, DataTypes) => {
         type: DataTypes.STRING,
       },
       media: {
-        allowNull: false,
+        allowNull: true,
+        defaultValue: null,
         type: DataTypes.BLOB("long"),
       },
       isThumbnail: {
@@ -31,6 +32,11 @@ export default (sequelize, DataTypes) => {
         defaultValue: null,
       },
       authorId: {
+        allowNull: true,
+        defaultValue: null,
+        type: DataTypes.STRING,
+      },
+      mediaPath: {
         allowNull: true,
         defaultValue: null,
         type: DataTypes.STRING,

@@ -13,6 +13,7 @@ import Opentext from "./DynamicComponents/Opentext/Opentext";
 import Register from "./DynamicComponents/Register/Register";
 import Facebook from "./DynamicComponents/Facebook/Facebook";
 import Twitter from "./DynamicComponents/Twitter/Twitter";
+import TitTok from "./DynamicComponents/Tiktok/Tiktok";
 
 import { userLogout } from "../../../actions/userAuth";
 import { updateUserMain } from "../../../actions/user";
@@ -26,12 +27,13 @@ const Components = {
   FACEBOOK: Facebook,
   INFO: InfoPage,
   TWITTER: Twitter,
+  TIKTOK: TitTok,
 };
 
 const UserResponse = () => {
   const dispatch = useDispatch();
   const { isLoggedInUser, translations } = useSelector(
-    (state) => state.userAuth,
+    (state) => state.userAuth
   );
   const { flow, active, finished } = useSelector((state) => state.flowState);
 
@@ -51,7 +53,7 @@ const UserResponse = () => {
 
   const dynamicClasses = () => {
     let customCSS = `${classes.card}`;
-    if (flow[active]?.type === "TWITTER" || flow[active]?.type === "FACEBOOK") {
+    if (flow[active]?.type === "TWITTER" || flow[active]?.type === "FACEBOOK" || flow[active]?.type === "TIKTOK") {
       customCSS += " twitterCSS";
     }
     if (finished) {
