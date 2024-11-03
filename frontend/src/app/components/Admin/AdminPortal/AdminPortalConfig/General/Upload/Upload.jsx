@@ -1,7 +1,7 @@
 import { Box, Button } from "@material-ui/core";
 import { IconDeviceFloppy, IconPhoto } from "@tabler/icons-react";
 import clsx from "clsx";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useDispatch } from "react-redux";
 import {
   showErrorSnackbar,
@@ -84,10 +84,6 @@ const Upload = ({ templateId }) => {
       allNames += allFiles[i].name + ";";
     setUploadMediaNames(allNames);
   };
-
-  useEffect(() => {
-    console.log(pageActive);
-  }, [pageActive]);
 
   return (
     <>

@@ -17,6 +17,8 @@ import {
   INCREMENT_REPLIES_COUNT,
   INCREMENT_QUOTE_RETWEET_COUNT,
   DECREMENT_QUOTE_RETWEET_COUNT,
+  SET_POST_UNBOOKMARK,
+  SET_POST_BOOKMARK,
 } from "./types";
 import * as SocialMediaPostService from "../services/facebook-service";
 
@@ -300,6 +302,9 @@ export const getFacebookPost = (data) => (dispatch) => {
 
 // create a action for specific user with
 // adminPostId, actionType, isAdminPost, userPostId, platformType, comment
+// TODO: Initially, when I created this project we were only using Facebook
+// but then Twitter and now TikTok has been added. So, we need to update the name of this function to be more generic.
+// This function adds and action to the post
 export const likeFbPost = (data, id) => (dispatch) => {
   return SocialMediaPostService.createFbAction({ actionObj: data }).then(
     (response) => {
@@ -490,7 +495,7 @@ export const createFbPost = (data) => (dispatch) => {
   );
 };
 
-//create action to delete FB report
+// create action to delete FB report
 export const unreportPost = (actionId, id) => (dispatch) => {
   return SocialMediaPostService.deleteFbAction(actionId).then(
     () => {
@@ -552,6 +557,75 @@ export const reportPost = (data, id) => (dispatch) => {
   );
 };
 
+/**
+ * TikTok actions for bookmarking
+ * @param {Object} data - action object for tiktok it only needs to delete the action with actionId
+ */
+export const unBookmarkPost = (actionId, id) => (dispatch) => {
+  return SocialMediaPostService.deleteFbAction(actionId).then(
+    () => {
+      dispatch({
+        type: SET_POST_UNBOOKMARK,
+        payload: {
+          postId: id,
+        },
+      });
+
+      return Promise.resolve();
+    },
+    (error) => {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+
+      dispatch({
+        type: SNACKBAR_ERROR,
+        payload: message,
+      });
+
+      return Promise.reject();
+    },
+  );
+};
+
+/**
+ * TikTok actions for bookmarking
+ * @param {Object} data - action object for tiktok it has action set to BOOKMARK
+ */
+export const bookmarkPost = (data, id) => (dispatch) => {
+  return SocialMediaPostService.createFbAction({ actionObj: data }).then(
+    (response) => {
+      dispatch({
+        type: SET_POST_BOOKMARK,
+        payload: {
+          postId: id,
+          bookmarkId: response.data._id,
+        },
+      });
+
+      return Promise.resolve();
+    },
+    (error) => {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+
+      dispatch({
+        type: SNACKBAR_ERROR,
+        payload: message,
+      });
+
+      return Promise.reject();
+    },
+  );
+};
+
 export const incrementRepliesCount = (data) => (dispatch) => {
   dispatch({
     type: INCREMENT_REPLIES_COUNT,
@@ -581,6 +655,20 @@ export const decrementQuoteRetweetCount = (data) => (dispatch) => {
 
 /**
  * TikTok actions
+ * 
+ * Notes:
+ * Precomputation of Comments are not supported in TikTok for now.
+ * For Facebook, we look at the parentPostId to determine if the post is a comment.
+ * The format of comment for Facebook is as follows:
+  {
+    postId: parentId,
+    attachedAuthorPicture: postRecords[i].attachedAuthorPicture,
+    comment: postRecords[i].postMessage,
+    userComment: false,
+    authorId: postRecords[i].authorId,
+  }
+  * For TikTok, only current users can add comments while viewing interacting with the social media post.
+  * But they are saved in a similar format as above.
  */
 export const getTikTokPosts = (data) => (dispatch) => {
   dispatch({
@@ -589,10 +677,10 @@ export const getTikTokPosts = (data) => (dispatch) => {
       isLoading: true,
     },
   });
+  // initLike, initReply, initTweet, initBookmark, initShare are all integers
   return SocialMediaPostService.getMediaPostDetails(data).then(
     (response) => {
       let postRecords = response.data?.postDetails || [];
-      console.log("postRecords", postRecords);
       // normalize the data
       const posts = {};
       const metaData = {};
@@ -604,14 +692,15 @@ export const getTikTokPosts = (data) => (dispatch) => {
           like: "default",
           type: postRecords[i].type,
           initLike: postRecords[i].initLike || 0,
-          actionId: null,
+          bookmarkId: null, // used for bookmark and unbookmark
+          actionId: null, // used for like and unlike
           // parentPostId: null, // not requied for tiktok
           comments: [],
-          initReply: postRecords[i].initReply,
+          initReply: postRecords[i].initReply || 0,
           // initTweet: postRecords[i].initTweet,
           bookmark: false,
-          initBookmark: postRecords[i].initBookmark,
-          initShare: postRecords[i].initShare,
+          initBookmark: postRecords[i].initBookmark || 0,
+          initShare: postRecords[i].initShare || 0,
           soundName: postRecords[i].soundName,
         };
         allIds.push(eachId);

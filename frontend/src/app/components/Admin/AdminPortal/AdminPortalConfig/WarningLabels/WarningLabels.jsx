@@ -1,42 +1,45 @@
-import { useEffect, useState } from "react";
 import {
-  FormControl,
-  InputLabel,
-  Select,
-  MenuItem,
+  Box,
   Button,
   Container,
-  TextField,
-  Table,
-  TableHead,
-  TableRow,
-  TableCell,
-  TableBody,
   Dialog,
   DialogActions,
   DialogContent,
   DialogTitle,
-  Box,
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Select,
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableRow,
+  TextField,
 } from "@material-ui/core";
-import SocialMediaPages from "../../../../Common/AdminCommon/SocialMediaPages";
-import useStyles from "../../../../style";
-import {
-  getSocialMediaPosts,
-  setSocialMediaLabels,
-} from "../../../../../services/admin-userpost-service";
-import { useSelector, useDispatch } from "react-redux";
+import TextFormatOutlinedIcon from "@material-ui/icons/TextFormatOutlined";
 import { IconDeviceFloppy } from "@tabler/icons-react";
 import clsx from "clsx";
-import RichTextArea from "../../../../Common/AdminCommon/RichTextArea";
-import { WARNING_LABELS } from "../../../../../constants";
-import TextFormatOutlinedIcon from "@material-ui/icons/TextFormatOutlined";
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import {
   showErrorSnackbar,
   showSuccessSnackbar,
 } from "../../../../../actions/snackbar";
+import { WARNING_LABELS } from "../../../../../constants";
+import {
+  getSocialMediaPosts,
+  setSocialMediaLabels,
+} from "../../../../../services/admin-userpost-service";
+import RichTextArea from "../../../../Common/AdminCommon/RichTextArea";
+import SocialMediaPages from "../../../../Common/AdminCommon/SocialMediaPages";
+import useStyles from "../../../../style";
 
 const WarningLabels = () => {
-  const [active, setActive] = useState("");
+  const [pageActive, setPageActive] = useState({
+    pageId: "",
+    pageType: "",
+  });
   const [currSelectedPost, setCurrSelectedPost] = useState([]);
   const classes = useStyles();
   const [richText, setRichText] = useState(null);
@@ -50,7 +53,7 @@ const WarningLabels = () => {
   const [currPostsData, setCurrPostsData] = useState({});
 
   const fetchCurrPagePosts = async () => {
-    const { data } = await getSocialMediaPosts(templateId, active);
+    const { data } = await getSocialMediaPosts(templateId, pageActive.pageId);
     await setCurrSelectedPost(data?.response || []);
     let postsData = {};
     if (data?.response) {
@@ -68,10 +71,10 @@ const WarningLabels = () => {
 
   useEffect(() => {
     // fetch previous posts
-    if (active !== "") {
+    if (pageActive.pageId !== "") {
       fetchCurrPagePosts();
     }
-  }, [active]);
+  }, [pageActive.pageId]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -79,7 +82,7 @@ const WarningLabels = () => {
       await setSocialMediaLabels({ data: JSON.stringify(currPostsData) });
       await fetchCurrPagePosts();
       dispatch(
-        showSuccessSnackbar("Warning Labels have been successfully updated!"),
+        showSuccessSnackbar("Warning Labels have been successfully updated!")
       );
     } catch (error) {
       const resMessage =
@@ -124,7 +127,7 @@ const WarningLabels = () => {
       menuItems.push(
         <MenuItem value={item} key={item}>
           {item}
-        </MenuItem>,
+        </MenuItem>
       );
     }
     return menuItems;
@@ -141,8 +144,8 @@ const WarningLabels = () => {
           </p>
         </Box>
         <SocialMediaPages
-          active={active}
-          setActive={setActive}
+          active={pageActive}
+          setActive={setPageActive}
           templateId={templateId}
         />
         <br />

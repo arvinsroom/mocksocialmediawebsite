@@ -1,28 +1,28 @@
 import {
-  TextField,
-  Button,
-  FormGroup,
-  FormControlLabel,
-  Switch,
   Box,
+  Button,
   Container,
+  FormControlLabel,
+  FormGroup,
+  Switch,
+  TextField,
 } from "@material-ui/core";
+import { IconDeviceFloppy } from "@tabler/icons-react";
+import clsx from "clsx";
 import { useState } from "react";
-import { create } from "../../../../../services/info-service";
-import useStyles from "../../../../style";
-import { useSelector, useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Navigate } from "react-router-dom";
 import {
   showErrorSnackbar,
-  showSuccessSnackbar,
   showInfoSnackbar,
+  showSuccessSnackbar,
 } from "../../../../../actions/snackbar";
-import { TEMPLATE, INFO_PAGE } from "../../../../../constants";
-import SocialMediaPages from "../../../../Common/AdminCommon/SocialMediaPages";
-import RichTextArea from "../../../../Common/AdminCommon/RichTextArea";
+import { INFO_PAGE, TEMPLATE } from "../../../../../constants";
+import { create } from "../../../../../services/info-service";
 import { checkIfEmptyRichText } from "../../../../../utils";
-import { IconDeviceFloppy } from "@tabler/icons-react";
-import clsx from "clsx";
+import RichTextArea from "../../../../Common/AdminCommon/RichTextArea";
+import SocialMediaPages from "../../../../Common/AdminCommon/SocialMediaPages";
+import useStyles from "../../../../style";
 
 const InfoPage = () => {
   const [clearRichText, setClearRichText] = useState(false);
@@ -31,7 +31,10 @@ const InfoPage = () => {
   const [consent, setConsent] = useState(false);
   const [isFinish, setIsFinish] = useState(false);
   const [responseCode, setResponseCode] = useState(false);
-  const [active, setActive] = useState("");
+  const [pageActive, setPageActive] = useState({
+    pageId: "",
+    pageType: "",
+  });
 
   const { isLoggedInAdmin } = useSelector((state) => state.auth);
   const { _id: templateId } = useSelector((state) => state.template);
@@ -42,7 +45,10 @@ const InfoPage = () => {
     await setClearRichText(true);
     await setPageName("");
     await setConsent(false);
-    await setActive("");
+    await setPageActive({
+      pageId: "",
+      pageType: "",
+    });
     await setConsent(false);
     await setIsFinish(false);
     await setResponseCode(false);
@@ -73,14 +79,14 @@ const InfoPage = () => {
       type: "INFO",
       richText: checkIfEmptyRichText(richText) ? null : richText,
       consent: consent,
-      socialMediaPageId: active,
+      socialMediaPageId: pageActive.pageId,
       isFinish: isFinish,
       responseCode: responseCode,
     };
     try {
       await create(info);
       await dispatch(
-        showSuccessSnackbar(INFO_PAGE.SUCCESSFULLY_CREATED_INFORMATION_PAGE),
+        showSuccessSnackbar(INFO_PAGE.SUCCESSFULLY_CREATED_INFORMATION_PAGE)
       );
       await resetValues();
     } catch (error) {
@@ -167,8 +173,8 @@ const InfoPage = () => {
       </Box>
 
       <SocialMediaPages
-        active={active}
-        setActive={setActive}
+        active={pageActive}
+        setActive={setPageActive}
         templateId={templateId}
       />
 

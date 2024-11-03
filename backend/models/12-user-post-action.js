@@ -21,6 +21,7 @@ export default (sequelize, DataTypes) => {
           "TWEET",
           "RETWEET",
           "REPORT",
+          "BOOKMARK",
         ),
       },
       comment: {

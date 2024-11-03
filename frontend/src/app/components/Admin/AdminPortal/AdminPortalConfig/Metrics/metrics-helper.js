@@ -195,7 +195,10 @@ const possiblePostActions = [
   "SAD",
   "ANGRY",
   "COMMENT",
+  "TWEET",
+  "RETWEET",
   "REPORT",
+  "BOOKMARK",
 ];
 export const formulateUserPostActionsTracking = (postActionsResponseData) => {
   const eachRow = [];

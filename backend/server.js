@@ -25,6 +25,7 @@ import userMain from "./routes/user-main-routes";
 import userQuesion from "./routes/user-question-routes";
 import userRegister from "./routes/user-register-routes";
 import userTracking from "./routes/user-tracking-routes";
+import userMedia from "./routes/user-media-routes";
 import { adminCredConfigurations, databaseConfigurations } from "./utils";
 
 const mysql = require("mysql2/promise");
@@ -203,11 +204,11 @@ try {
   app.use("/api/questions", [verifyToken, isAdmin], question);
   app.use("/api/language", [verifyToken, isAdmin], language);
   app.use("/api/page", [verifyToken, isAdmin], page);
-  // app.use("/api/media", [verifyToken, isAdmin], media);
-  app.use("/api/media", media);
+  app.use("/api/media", [verifyToken, isAdmin], media);
   app.use("/api/metrics", [verifyToken, isAdmin], metrics);
   app.use("/api/userposts", [verifyToken, isAdmin], adminUserPost);
 
+  app.use("/api/user/media", [verifyUserToken, isUser], userMedia);
   app.use("/api/user/questions", [verifyUserToken, isUser], userQuesion);
   app.use("/api/user/answer", [verifyUserToken, isUser], userAnswer);
   app.use("/api/user/register", [verifyUserToken, isUser], userRegister);

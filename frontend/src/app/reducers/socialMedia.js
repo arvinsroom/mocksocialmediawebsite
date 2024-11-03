@@ -15,6 +15,8 @@ import {
   INCREMENT_REPLIES_COUNT,
   INCREMENT_QUOTE_RETWEET_COUNT,
   DECREMENT_QUOTE_RETWEET_COUNT,
+  SET_POST_BOOKMARK,
+  SET_POST_UNBOOKMARK,
 } from "../actions/types";
 import { removePropery } from "../utils";
 
@@ -137,6 +139,30 @@ export default function (state = initialState, action) {
           [payload.postId]: {
             ...state.metaData[payload.postId],
             reportId: null,
+          },
+        },
+      };
+
+    case SET_POST_BOOKMARK:
+      return {
+        ...state,
+        metaData: {
+          ...state.metaData,
+          [payload.postId]: {
+            ...state.metaData[payload.postId],
+            bookmarkId: payload.bookmarkId,
+          },
+        },
+      };
+
+    case SET_POST_UNBOOKMARK:
+      return {
+        ...state,
+        metaData: {
+          ...state.metaData,
+          [payload.postId]: {
+            ...state.metaData[payload.postId],
+            bookmarkId: null,
           },
         },
       };

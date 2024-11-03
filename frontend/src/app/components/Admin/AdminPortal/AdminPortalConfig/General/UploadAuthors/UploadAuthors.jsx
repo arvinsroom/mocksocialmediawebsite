@@ -17,7 +17,10 @@ import useStyles from "../../../../../style";
 const Upload = ({ templateId }) => {
   const [selectedFiles, setSelectedFiles] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
-  const [active, setActive] = useState("");
+  const [pageActive, setPageActive] = useState({
+    pageId: "",
+    pageType: "",
+  });
   const [uploadMediaNames, setUploadMediaNames] = useState("");
 
   const classes = useStyles();
@@ -37,7 +40,7 @@ const Upload = ({ templateId }) => {
         totalFileSize += selectedFiles[i].size;
       }
       if (totalFileSize <= 20e6) {
-        formData.append("pageId", active);
+        formData.append("pageId", pageActive.pageId);
         await uploadMultipleAuthourFiles(formData);
         dispatch(
           showSuccessSnackbar(
@@ -92,8 +95,8 @@ const Upload = ({ templateId }) => {
         </Box>
         <br />
         <SocialMediaPages
-          active={active}
-          setActive={setActive}
+          active={pageActive}
+          setActive={setPageActive}
           templateId={templateId}
         />
         <br />
@@ -126,7 +129,7 @@ const Upload = ({ templateId }) => {
           variant="contained"
           color="primary"
           fullWidth
-          disabled={active === ""}
+          disabled={pageActive.pageId === ""}
           startIcon={<IconDeviceFloppy />}
           className={clsx(classes.submit, classes.widthFitContent)}
         >

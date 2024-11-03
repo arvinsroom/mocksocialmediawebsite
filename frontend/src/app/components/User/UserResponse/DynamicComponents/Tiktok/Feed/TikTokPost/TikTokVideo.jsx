@@ -1,15 +1,28 @@
+import { MusicNote } from "@material-ui/icons";
 import Hls from "hls.js";
 import React, { useEffect, useRef, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import {
-  BookmarkBorder,
-  ChatBubbleOutline,
-  FavoriteOutlined,
-  MusicNote,
-  Share,
-} from "@material-ui/icons";
-import { useSelector } from "react-redux";
+  bookmarkPost,
+  commentFbPost,
+  likeFbPost,
+  unBookmarkPost,
+  unlikeFbPost,
+} from "../../../../../../../actions/socialMedia";
+import { selectPostsMetadata } from "../../../../../../../selectors/socialMedia";
 import { selectSocialMediaAuthor } from "../../../../../../../selectors/socialMediaAuthors";
+import AnimatedBookmarkButton from "../../Buttons/AnimatedBookmarkButton";
+import AnimatedLikeButton from "../../Buttons/AnimatedLikeButton";
+import {
+  CommentIcon,
+  ErrorPlaceholder,
+  LoadingPlaceholder,
+  ShareIcon,
+  VerifiedIcon,
+} from "../../Buttons/TikTokActionButton";
+import { Avatar } from "@material-ui/core";
 import "./TikTokVideo.css";
+import DynamicMediaProfile from "../../../../../../Common/UserCommon/SocialMediaPostType/DynamicMediaProfile";
 
 // Get the base url for the API
 // TODO: Move this to .env file, for any production deployment this should be changed
@@ -19,78 +32,26 @@ const getBaseUrl = () => {
     : "https://studysocial.media/api";
 };
 
-const LoadingPlaceholder = () => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    viewBox="0 0 540 960"
-    style={{ width: "100%", height: "100%" }}
-  >
-    <rect width="100%" height="100%" fill="#f8f9fa" />
-    <circle cx="270" cy="480" r="80" fill="#e9ecef" />
-    <path d="M250,440 L310,480 L250,520 Z" fill="#adb5bd" />
-    <text
-      x="270"
-      y="600"
-      fontFamily="Arial, sans-serif"
-      fontSize="24"
-      textAnchor="middle"
-      fill="#6c757d"
-    >
-      Loading video...
-    </text>
-  </svg>
-);
-
-const ErrorPlaceholder = ({ errorMessage = "Video unavailable" }) => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    viewBox="0 0 540 960"
-    style={{ width: "100%", height: "100%" }}
-  >
-    <rect width="100%" height="100%" fill="#f8f9fa" />
-    <circle cx="270" cy="450" r="80" fill="#e9ecef" />
-    <path
-      d="M230,410 L310,490 M310,410 L230,490"
-      stroke="#adb5bd"
-      strokeWidth="12"
-      strokeLinecap="round"
-    />
-    <text
-      x="270"
-      y="580"
-      fontFamily="Arial, sans-serif"
-      fontSize="24"
-      textAnchor="middle"
-      fill="#6c757d"
-    >
-      {errorMessage}
-    </text>
-    <text
-      x="270"
-      y="620"
-      fontFamily="Arial, sans-serif"
-      fontSize="18"
-      textAnchor="middle"
-      fill="#adb5bd"
-    >
-      Please try again later
-    </text>
-  </svg>
-);
-
 const TikTokVideo = ({ mediaPath, singlePost }) => {
   const singlePostAuthor = useSelector((state) =>
     selectSocialMediaAuthor(state, singlePost?.authorId)
   );
+  const postMetadata = useSelector((state) =>
+    selectPostsMetadata(state, singlePost._id)
+  );
   const pageId = useSelector((state) => state.socialMedia.pageId);
-  const videoSrc = `${getBaseUrl()}/media/stream/${pageId}/${mediaPath}`;
+  const videoSrc = `${getBaseUrl()}/user/media/stream/${pageId}/${mediaPath}`;
   const videoRef = useRef(null);
   const observerRef = useRef(null);
   const [error, setError] = useState(null);
   const [loadAttempts, setLoadAttempts] = useState(0);
   const MAX_RETRY_ATTEMPTS = 1;
   const [progress, setProgress] = useState(0);
+  const [showComments, setShowComments] = useState(false);
+  const userRegisterData = useSelector((state) => state.userRegister.metaData);
+  const [currentComment, setCurrentComment] = useState("");
 
+  const dispatch = useDispatch();
   useEffect(() => {
     const video = videoRef.current;
     let hlsInstance = null;
@@ -142,6 +103,11 @@ const TikTokVideo = ({ mediaPath, singlePost }) => {
           maxBufferLength: 5,
           enableWorker: true,
           xhrSetup: (xhr) => {
+            // TODO: Make a proxy server to handle this
+            xhr.setRequestHeader(
+              "x-access-token",
+              JSON.parse(localStorage.getItem("user")).accessToken
+            );
             xhr.addEventListener("error", () => {
               // Check response status to handle specific errors
               if (xhr.status === 422) {
@@ -219,7 +185,16 @@ const TikTokVideo = ({ mediaPath, singlePost }) => {
     };
   }, [mediaPath, videoSrc, error, loadAttempts]);
 
+  /**
+   * Handles the video click event, we also hide commments when video is clicked
+   */
   const handleVideoClick = () => {
+    // Hide comments when video is clicked if open and return
+    if (showComments) {
+      setShowComments(false);
+      return;
+    }
+
     if (videoRef.current) {
       if (videoRef.current.paused) {
         videoRef.current.play();
@@ -237,21 +212,75 @@ const TikTokVideo = ({ mediaPath, singlePost }) => {
     }
   };
 
+  /**
+   * Handles the like button click event
+   */
+  const handleToggleLike = (e) => {
+    e.preventDefault();
+    if (postMetadata.actionId) {
+      dispatch(unlikeFbPost(postMetadata.actionId, singlePost._id));
+    } else {
+      const data = {
+        action: "LIKE",
+        comment: null,
+        userPostId: singlePost._id,
+      };
+      dispatch(likeFbPost(data, singlePost._id));
+    }
+  };
+
+  /**
+   * Handles the bookmark button click event
+   */
+  const handleBookmark = (e) => {
+    e.preventDefault();
+    // already bookmarked, unbookmark it
+    if (postMetadata.bookmarkId) {
+      dispatch(unBookmarkPost(postMetadata.bookmarkId, singlePost._id));
+    } else {
+      const data = {
+        action: "BOOKMARK",
+        comment: null,
+        userPostId: singlePost._id,
+      };
+      dispatch(bookmarkPost(data, singlePost._id));
+    }
+  };
+
+  /**
+   * Handles the comment button click event
+   */
+  const handleComment = (e) => {
+    e.preventDefault();
+    if (currentComment) {
+      const data = {
+        action: "COMMENT",
+        comment: currentComment,
+        userPostId: singlePost._id,
+      };
+      dispatch(commentFbPost(data, singlePost._id));
+      setCurrentComment("");
+    }
+  };
+
   return (
-    <div className="video-container">
-      {error ? <ErrorPlaceholder errorMessage={error} /> :
-      <video
-        ref={videoRef}
-        controls={false}
-        className="video-player"
-        playsInline
-        onClick={handleVideoClick}
-        onTimeUpdate={handleTimeUpdate}
-        loop
-      >
-        <source src={videoSrc} type="application/x-mpegURL" />
-        <LoadingPlaceholder />
-      </video>}
+    <div className={`video-container ${showComments ? "with-comments" : ""}`}>
+      {error ? (
+        <ErrorPlaceholder errorMessage={error} />
+      ) : (
+        <video
+          ref={videoRef}
+          controls={false}
+          className="video-player"
+          playsInline
+          onClick={handleVideoClick}
+          onTimeUpdate={handleTimeUpdate}
+          loop
+        >
+          <source src={videoSrc} type="application/x-mpegURL" />
+          <LoadingPlaceholder />
+        </video>
+      )}
 
       <div className="progress-bar">
         <div className="progress-filled" style={{ width: `${progress}%` }} />
@@ -262,35 +291,55 @@ const TikTokVideo = ({ mediaPath, singlePost }) => {
         <div className="action-sidebar">
           {/* Author picture */}
           <div className="author-picture">
-            {singlePost?.attachedAuthorPicture ? (
-              <img src={singlePost.attachedAuthorPicture} alt="author" />
-            ) : (
+            {singlePost.attachedAuthorPicture ? (
+                <DynamicMediaProfile
+                  attachedMedia={singlePost.attachedAuthorPicture}
+                />
+              ) : (
               <div className="author-placeholder" />
             )}
           </div>
 
           {/* Action buttons */}
-          <div className="action-button">
-            <FavoriteOutlined />
-            <span>0</span>
+          <AnimatedLikeButton
+            isLiked={!!postMetadata.actionId}
+            onLike={(e) => handleToggleLike(e)}
+            likeCount={
+              postMetadata.actionId
+                ? postMetadata.initLike + 1
+                : postMetadata.initLike
+            }
+          />
+          {/* On click here should open up a comment popup very small one and showld*/}
+          <div
+            className="action-button"
+            onClick={() => setShowComments(!showComments)}
+          >
+            <CommentIcon />
+            <span>{postMetadata.initReply + postMetadata.comments.length}</span>
           </div>
+
+          <AnimatedBookmarkButton
+            isBookmarked={!!postMetadata.bookmarkId}
+            onBookmark={(e) => handleBookmark(e)}
+            bookmarkCount={
+              postMetadata.bookmarkId
+                ? postMetadata.initBookmark + 1
+                : postMetadata.initBookmark
+            }
+          />
+
           <div className="action-button">
-            <ChatBubbleOutline />
-            <span>0</span>
-          </div>
-          <div className="action-button">
-            <BookmarkBorder />
-            <span>0</span>
-          </div>
-          <div className="action-button">
-            <Share />
-            <span>0</span>
+            <ShareIcon />
+            <span>{postMetadata.initShare}</span>
           </div>
           {/* replicate the authorID profile photo here, which is what TikTok does by default now */}
           <div className="author-picture">
-            {singlePost?.attachedAuthorPicture ? (
-              <img src={singlePost.attachedAuthorPicture} alt="author" />
-            ) : (
+            {singlePost.attachedAuthorPicture ? (
+                <DynamicMediaProfile
+                  attachedMedia={singlePost.attachedAuthorPicture}
+                />
+              ) : (
               <div className="author-placeholder" />
             )}
           </div>
@@ -304,7 +353,7 @@ const TikTokVideo = ({ mediaPath, singlePost }) => {
               {singlePostAuthor?.authorName || "Unknown Author"}
             </span>
             {singlePostAuthor?.authorVerified && (
-              <span className="verified-badge">✓</span>
+              <VerifiedIcon />
             )}
             <span className="post-date">{singlePost?.datePosted}</span>
           </div>
@@ -318,6 +367,51 @@ const TikTokVideo = ({ mediaPath, singlePost }) => {
             <span className="sound-name">{singlePost?.soundName}</span>
           </div>
         </div>
+      </div>
+
+      {/* Comment section */}
+      {/* Here all comments will be userComments, so no need to complicate logic. Will need to update when we enable replyTo */}
+      <div className={`comment-section ${showComments ? "open" : ""}`}>
+        {/* Comments list overlay */}
+        {showComments && postMetadata.comments?.length > 0 && (
+          <div className="comments-overlay">
+            {postMetadata.comments.map(({ comment, userComment }, index) => (
+              <div key={index} className="comment-item">
+                <div className="comment-author-picture">
+                  {userRegisterData["PROFILEPHOTO"] ? (
+                    <Avatar src={userRegisterData["PROFILEPHOTO"]} alt="author" />
+                  ) : (
+                    <div className="author-placeholder" />
+                  )}
+                </div>
+                <div className="comment-content">
+                  <span className="comment-author-name">
+                    {userRegisterData["USERNAME"] || "You"}
+                  </span>
+                  <p className="comment-text">{comment}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+        <div className="comment-author-picture">
+          {userRegisterData["PROFILEPHOTO"] ? (
+            <Avatar src={userRegisterData["PROFILEPHOTO"]} alt="author" />
+          ) : (
+            <div className="author-placeholder" />
+          )}
+        </div>
+        <input
+          type="text"
+          className="comment-input"
+          placeholder="Add a comment..."
+          value={currentComment}
+          onChange={(e) => setCurrentComment(e.target.value)}
+          onKeyDown={(e) => (e.key === "Enter" ? handleComment(e) : null)}
+        />
+        <button className="post-comment-btn" onClick={(e) => handleComment(e)}>
+          Post
+        </button>
       </div>
     </div>
   );
