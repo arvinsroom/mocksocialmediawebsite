@@ -110,18 +110,18 @@ export const ErrorPlaceholder = ({ errorMessage = "Video unavailable" }) => (
 
 export const VerifiedIcon = () => (
   <svg
-    font-size="14px"
+    fontSize="14px"
     viewBox="0 0 48 48"
     fill="currentColor"
     xmlns="http://www.w3.org/2000/svg"
     width="1em"
     height="1em"
   >
-    <g clip-path="url(#Icon_Color-Verified_Badge_svg__a)">
+    <g clipPath="url(#Icon_Color-Verified_Badge_svg__a)">
       <path d="M0 24a24 24 0 1 1 48 0 24 24 0 0 1-48 0Z" fill="#20D5EC"></path>
       <path
-        fill-rule="evenodd"
-        clip-rule="evenodd"
+        fillRule="evenodd"
+        clipRule="evenodd"
         d="M37.12 15.88a3 3 0 0 1 0 4.24l-13.5 13.5a3 3 0 0 1-4.24 0l-8.5-8.5a3 3 0 1 1 4.24-4.24l6.38 6.38 11.38-11.38a3 3 0 0 1 4.24 0Z"
         fill="#fff"
       ></path>

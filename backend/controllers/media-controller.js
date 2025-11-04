@@ -383,7 +383,7 @@ const uploadMultipleFiles = async (req, res, next) => {
         // fetch the id from file name
         const postId = files[i].originalname.split(".")[0];
         // should only create entry if post id exist
-        if (postData[postId]) {          
+        if (postData[postId]) {
           const fileName = `${postId}_ffmpeg_${new Date().getTime()}.m3u8`;
           const outputPath = path.join(outputDir, fileName);
           // create a stream from the buffer

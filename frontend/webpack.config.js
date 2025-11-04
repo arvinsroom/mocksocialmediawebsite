@@ -137,6 +137,7 @@ module.exports = function (_env, argv) {
       compress: true,
       historyApiFallback: true,
       open: true,
+      hot: true,
     },
   };
 };
