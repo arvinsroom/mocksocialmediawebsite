@@ -13,7 +13,7 @@ import Opentext from "./DynamicComponents/Opentext/Opentext";
 import Register from "./DynamicComponents/Register/Register";
 import Facebook from "./DynamicComponents/Facebook/Facebook";
 import Twitter from "./DynamicComponents/Twitter/Twitter";
-import TikTok from "./DynamicComponents/Tiktok/Tiktok";
+import TikTok from "./DynamicComponents/TikTok/TikTok";
 
 import { userLogout } from "../../../actions/userAuth";
 import { updateUserMain } from "../../../actions/user";
@@ -27,7 +27,7 @@ const Components = {
   FACEBOOK: Facebook,
   INFO: InfoPage,
   TWITTER: Twitter,
-  TIKTOK: TikTok,
+  TikTok: TikTok,
 };
 
 const UserResponse = () => {

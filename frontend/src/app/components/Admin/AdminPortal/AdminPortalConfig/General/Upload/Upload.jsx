@@ -31,6 +31,8 @@ const Upload = ({ templateId }) => {
     setUploadMediaNames("");
   };
 
+  // TODO: For now removing the file size limit check to allow large TikTok video uploads
+  // as they are converted to stream and stored as files in the backend.
   const uploadFiles = async () => {
     if (selectedFiles && selectedFiles.length > 0) {
       let formData = new FormData();
@@ -39,7 +41,7 @@ const Upload = ({ templateId }) => {
         formData.append("files", selectedFiles[i]);
         totalFileSize += selectedFiles[i].size;
       }
-      if (totalFileSize <= 20e6) {
+      // if (totalFileSize <= 20e6) {
         formData.append("pageId", pageActive.pageId);
         formData.append("pageType", pageActive.pageType);
         await uploadMultipleFiles(formData);
@@ -49,11 +51,11 @@ const Upload = ({ templateId }) => {
           )
         );
         resetValues();
-      } else {
-        dispatch(
-          showInfoSnackbar("Please upload file(s) of size less than 20MB.")
-        );
-      }
+      // } else {
+      //   dispatch(
+      //     showInfoSnackbar("Please upload file(s) of size less than 20MB.")
+      //   );
+      // }
     } else
       dispatch(showInfoSnackbar(GENERAL_PAGE.PLEASE_ENTER_A_VALID_RESPONSE));
   };

@@ -27,14 +27,19 @@ const createOrUpdatePostTrackingData = async (req, res, next) => {
     }
     // create the page first
     transaction = await db.sequelize.transaction();
-    await UserPostTracking.create(
-      {
-        userId: req.userId,
-        userPostId: trackObj.userPostId,
-        action: trackObj.action,
-      },
-      { transaction },
-    );
+    
+    const trackingData = {
+      userId: req.userId,
+      userPostId: trackObj.userPostId,
+      action: trackObj.action,
+    };
+    
+    // Add metaData if provided (for TIKTOK_DWELLTIME tracking)
+    if (trackObj.metaData) {
+      trackingData.metaData = JSON.stringify(trackObj.metaData);
+    }
+    
+    await UserPostTracking.create(trackingData, { transaction });
     // if we reach here, there were no errors therefore commit the transaction
     await transaction.commit();
 

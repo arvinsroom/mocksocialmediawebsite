@@ -9,6 +9,7 @@ import {
   unBookmarkPost,
   unlikeFbPost,
 } from "../../../../../../../actions/socialMedia";
+import { trackUserClick } from "../../../../../../../actions/userTracking";
 import { selectPostsMetadata } from "../../../../../../../selectors/socialMedia";
 import { selectSocialMediaAuthor } from "../../../../../../../selectors/socialMediaAuthors";
 import AnimatedBookmarkButton from "../../Buttons/AnimatedBookmarkButton";
@@ -48,6 +49,9 @@ const TikTokVideo = ({ mediaPath, singlePost }) => {
   const MAX_RETRY_ATTEMPTS = 1;
   const [progress, setProgress] = useState(0);
   const [showComments, setShowComments] = useState(false);
+  const dwellStartTimeRef = useRef(null);
+  const [dwellSessions, setDwellSessions] = useState([]);
+  const [hasInitialTracking, setHasInitialTracking] = useState(false);
   const userRegisterData = useSelector((state) => state.userRegister.metaData);
   const [currentComment, setCurrentComment] = useState("");
 
@@ -67,12 +71,45 @@ const TikTokVideo = ({ mediaPath, singlePost }) => {
       const handleIntersection = (entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
-            // video in view, play it
+            // Video enters viewport - start dwell tracking
+            const startTime = new Date().toISOString();
+            dwellStartTimeRef.current = startTime;
+
+            // Video in view, play it
             video?.play().catch((error) => {
               console.error("Failed to play video:", error);
             });
           } else {
-            // video not in view, pause it
+            // Video leaves viewport - end dwell tracking
+            if (dwellStartTimeRef.current) {
+              const endTime = new Date().toISOString();
+              const newSession = {
+                start: dwellStartTimeRef.current,
+                end: endTime
+              };
+              
+              // Update dwell sessions and send tracking data
+              setDwellSessions(prevSessions => {
+                const updatedSessions = [...prevSessions, newSession];
+                
+                // Create or update tracking record with all sessions
+                const track = {
+                  action: "TIKTOK_DWELLTIME",
+                  userPostId: singlePost._id,
+                  metaData: {
+                    sessions: updatedSessions
+                  }
+                };
+                
+                dispatch(trackUserClick(track));
+                
+                return updatedSessions;
+              });
+              
+              dwellStartTimeRef.current = null;
+            }
+
+            // Video not in view, pause it
             video?.pause();
           }
         });

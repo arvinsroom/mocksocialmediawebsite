@@ -129,18 +129,58 @@ export const formulateUserGlobalTracking = (
 };
 
 /* userPostTracking */
-// Action are formulated as postId|$|postId
+// Actions are formulated as postId!~*!timestamp|$|postId!~*!timestamp|$|
+// TIKTOK_DWELLTIME format: postId!~*!starttime1|endtime1||starttime2|endtime2||...|$|
 const normalizeUserPostTracking = (globalTrakingResponseData) => {
   const normalize = {};
+  const dwellTimeSessions = {}; // To group TIKTOK_DWELLTIME sessions by postId
+  
   for (let i = 0; i < globalTrakingResponseData.length; i++) {
     const currentAction = globalTrakingResponseData[i].action;
     const createdAtTime = globalTrakingResponseData[i].createdAt;
+    const metaData = globalTrakingResponseData[i].metaData;
     const currentPostData = globalTrakingResponseData[i].userPosts;
     const postId = currentPostData.adminPostId || currentPostData._id;
+    
     if (!normalize[currentAction]) normalize[currentAction] = "";
-    normalize[currentAction] =
-      normalize[currentAction] + postId + "!~*!" + createdAtTime + "|$|";
+    
+    // Special handling for TIKTOK_DWELLTIME with metaData
+    if (currentAction === "TIKTOK_DWELLTIME" && metaData) {
+      try {
+        const parsedMetaData = JSON.parse(metaData);
+        const sessions = parsedMetaData.sessions || [];
+        
+        // Initialize postId sessions array if not exists
+        if (!dwellTimeSessions[postId]) {
+          dwellTimeSessions[postId] = [];
+        }
+        
+        // Add all sessions for this postId
+        sessions.forEach(session => {
+          dwellTimeSessions[postId].push(`${session.start}|${session.end}`);
+        });
+        
+      } catch (error) {
+        // Fallback to regular format if JSON parsing fails
+        normalize[currentAction] =
+          normalize[currentAction] + postId + "!~*!" + createdAtTime + "|$|";
+      }
+    } else {
+      // Regular format for other actions
+      normalize[currentAction] =
+        normalize[currentAction] + postId + "!~*!" + createdAtTime + "|$|";
+    }
   }
+  
+  // Process grouped TIKTOK_DWELLTIME sessions
+  if (Object.keys(dwellTimeSessions).length > 0) {
+    normalize["TIKTOK_DWELLTIME"] = "";
+    for (const [postId, sessions] of Object.entries(dwellTimeSessions)) {
+      const sessionString = sessions.join("||");
+      normalize["TIKTOK_DWELLTIME"] += postId + "!~*!" + sessionString + "|$|";
+    }
+  }
+  
   return normalize;
 };
 
@@ -151,6 +191,7 @@ const possiblePostTracking = [
   "SEEPHOTO",
   "SEEVIDEO",
   "SEELINK",
+  "TIKTOK_DWELLTIME",
 ];
 export const formulateUserPostLinkClickTracking = (globalResponseData) => {
   const eachRow = [];

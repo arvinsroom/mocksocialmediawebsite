@@ -84,7 +84,7 @@ const getUserData = async (req, res, next) => {
           {
             model: db.UserPostTracking,
             as: "userPostTracking",
-            attributes: ["userPostId", "action", "createdAt"],
+            attributes: ["userPostId", "action", "createdAt", "metaData"],
             include: [
               {
                 // we might need to show adminId where applicable

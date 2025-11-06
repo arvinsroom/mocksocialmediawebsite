@@ -26,8 +26,9 @@ export default (sequelize, DataTypes) => {
           "SEEPHOTO",
           "SEEVIDEO",
           "SEELINK",
+          "TIKTOK_DWELLTIME",
         ),
-        // For now we only use 'LINKCLICK', 'SEEWHY', 'SHAREANYWAY', 'SEEPHOTO', 'SEEVIDEO', 'SEELINK' in the output
+        // For tracking we use 'LINKCLICK', 'SEEWHY', 'SHAREANYWAY', 'SEEPHOTO', 'SEEVIDEO', 'SEELINK', 'TIKTOK_DWELLTIME' in the output
       },
       userPostId: {
         allowNull: false,
@@ -44,6 +45,11 @@ export default (sequelize, DataTypes) => {
           model: "User",
         },
         type: DataTypes.UUID,
+      },
+      metaData: {
+        allowNull: true,
+        type: DataTypes.TEXT,
+        comment: "JSON string for storing dwell session start/end times",
       },
       createdAt: {
         allowNull: false,
