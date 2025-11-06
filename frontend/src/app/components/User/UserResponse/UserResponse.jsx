@@ -27,7 +27,7 @@ const Components = {
   FACEBOOK: Facebook,
   INFO: InfoPage,
   TWITTER: Twitter,
-  TikTok: TikTok,
+  TIKTOK: TikTok,
 };
 
 const UserResponse = () => {
