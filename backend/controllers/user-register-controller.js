@@ -6,7 +6,7 @@ const getRegisterDetails = async (req, res, next) => {
   try {
     if (!req.userId) {
       res.status(400).send({
-        message: "Invalid User Token, please log in again!"
+        message: "Invalid User Token, please log in again!",
       });
       return;
     }
@@ -15,18 +15,16 @@ const getRegisterDetails = async (req, res, next) => {
 
     if (!pageId) {
       res.status(400).send({
-        message: "Invalid Page Id!"
+        message: "Invalid Page Id!",
       });
       return;
     }
-  
+
     const data = await Register.findAll({
       where: {
-        pageId: pageId
+        pageId: pageId,
       },
-      order: [
-        ['order', 'ASC']
-      ],
+      order: [["order", "ASC"]],
     });
 
     res.send({
@@ -36,7 +34,8 @@ const getRegisterDetails = async (req, res, next) => {
     console.log(error.message);
     res.status(500).send({
       message:
-        error.message || "Some error occurred while Fetching the Register details."
+        error.message ||
+        "Some error occurred while Fetching the Register details.",
     });
   }
 };
@@ -46,7 +45,7 @@ const createUserRegister = async (req, res, next) => {
   try {
     if (!req.userId) {
       res.status(400).send({
-        message: "Invalid User Token, please log in again!"
+        message: "Invalid User Token, please log in again!",
       });
       return;
     }
@@ -59,7 +58,7 @@ const createUserRegister = async (req, res, next) => {
     const parseRegisterIdsArr = JSON.parse(registerIds);
     const userRegisterData = [];
     // fetch each entry data from req body and form the userRegisterData
-    for(let i = 0; i < parseRegisterIdsArr.length; i++) {
+    for (let i = 0; i < parseRegisterIdsArr.length; i++) {
       const id = parseRegisterIdsArr[i];
       // filter out the files ids
       const fieldValue = req.body[id];
@@ -67,11 +66,11 @@ const createUserRegister = async (req, res, next) => {
         userRegisterData.push({
           registerId: id,
           userId: req.userId,
-          generalFieldValue: req.body[id]
+          generalFieldValue: req.body[id],
         });
       }
     }
-    
+
     // process the files array now
     for (let i = 0; i < files.length; i++) {
       // fetch the id from file name
@@ -81,27 +80,27 @@ const createUserRegister = async (req, res, next) => {
         mimeType: files[i].mimetype,
         image: files[i].buffer,
         registerId: registerId,
-        userId: req.userId
+        userId: req.userId,
       });
     }
 
     // now create all entries for register
     await UserRegister.bulkCreate(userRegisterData, {
       transaction,
-      logging: false
+      logging: false,
     });
     // if we reach here, there were no errors therefore commit the transaction
     await transaction.commit();
 
     res.send({
-      response: "Success!"
+      response: "Success!",
     });
   } catch (error) {
     console.log(error.message);
     // if we reach here, there were some errors thrown, therefore roolback the transaction
     if (transaction) await transaction.rollback();
     res.status(500).send({
-      message: "Some error occurred while saving user registration details."
+      message: "Some error occurred while saving user registration details.",
     });
   }
 };
@@ -109,4 +108,4 @@ const createUserRegister = async (req, res, next) => {
 export default {
   getRegisterDetails,
   createUserRegister,
-}
+};

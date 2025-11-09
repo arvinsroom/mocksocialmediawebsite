@@ -1,0 +1,280 @@
+/* TikTokVideo.css */
+
+/* Container styles */
+.video-container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  background: #000;
+  margin: 0 auto;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Video player styles */
+.video-player {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+/* Overlay container */
+.video-overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 20px;
+  background: linear-gradient(transparent, rgba(0, 0, 0, 0.4));
+  color: white;
+}
+
+/* Right sidebar styles */
+.action-sidebar {
+  position: absolute;
+  right: 10px;
+  bottom: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  align-items: center;
+}
+
+/* Author picture styles */
+.author-picture {
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 2px solid white;
+  margin-bottom: 15px;
+}
+
+.author-picture img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.author-placeholder {
+  width: 100%;
+  height: 100%;
+  background-color: #ccc;
+}
+
+/* Action button styles */
+.action-button {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+}
+
+.action-button svg {
+  font-size: 28px;
+  cursor: pointer;
+}
+
+.action-button span {
+  font-size: 12px;
+}
+
+/* Video info section */
+.video-info {
+  position: absolute;
+  bottom: 20px;
+  left: 10px;
+  right: 70px; /* Space for action sidebar */
+}
+
+/* Author info styles */
+.author-info {
+  margin-bottom: 8px;
+}
+
+.author-name {
+  font-weight: bold;
+  margin-right: 5px;
+}
+
+.post-date {
+  font-size: 12px;
+  opacity: 0.8;
+}
+
+/* Post text styles */
+.post-text {
+  margin-bottom: 10px;
+  font-size: 14px;
+  word-wrap: break-word;
+}
+
+/* Sound info styles */
+.sound-info {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 14px;
+}
+
+.sound-info svg {
+  font-size: 18px;
+}
+
+/* Mobile optimizations */
+@media (max-width: 768px) {
+  .video-container {
+    width: 100%;
+    height: 100%;
+  }
+  
+  .action-sidebar {
+    right: 8px;
+    bottom: 80px;
+  }
+  
+  .video-info {
+    bottom: 15px;
+    left: 8px;
+  }
+}
+
+.video-wrapper {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  cursor: pointer;
+}
+
+.progress-bar {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 3px; /* Thin line */
+  background: rgba(255, 255, 255, 0.2);
+  z-index: 2;
+}
+
+.progress-filled {
+  background: white;
+  height: 100%;
+  width: 0%;
+  transition: width 0.1s linear;
+}
+
+.comment-section {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: white;
+  padding: 10px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  height: 60px;
+  transform: translateY(100%);
+  transition: transform 0.3s ease;
+  z-index: 1000;
+  box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.comment-section.open {
+  transform: translateY(0);
+}
+
+@media (min-width: 768px) {
+  .comment-section {
+    left: 50%;
+    right: auto;
+    width: 414px;
+    transform: translateX(-50%) translateY(100%);
+  }
+  
+  .comment-section.open {
+    transform: translateX(-50%) translateY(0);
+  }
+}
+
+.comment-author-picture {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  overflow: hidden;
+  flex: 0 0 auto;
+}
+
+.comment-input {
+  flex: 1;
+  padding: 8px 12px;
+  border: 1px solid #ddd;
+  border-radius: 20px;
+  font-size: 14px;
+}
+
+.post-comment-btn {
+  padding: 8px 16px;
+  background: #fe2c55;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  white-space: nowrap;
+}
+
+.comments-overlay {
+  position: fixed;
+  bottom: 60px;
+  left: 0;
+  right: 0;
+  max-height: 300px;
+  overflow-y: auto;
+  background: rgba(255, 255, 255, 0.98);
+  border-top-left-radius: 12px;
+  border-top-right-radius: 12px;
+  padding: 10px;
+  z-index: 999;
+  box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+}
+
+@media (min-width: 768px) {
+  .comments-overlay {
+    left: 50%;
+    right: auto;
+    width: 414px;
+    transform: translateX(-50%);
+  }
+}
+
+.comment-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 8px 0;
+  border-bottom: 1px solid #eee;
+}
+
+.comment-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.comment-author-name {
+  font-size: 12px;
+  font-weight: 600;
+  color: #333;
+}
+
+.comment-text {
+  font-size: 14px;
+  color: #000;
+  margin: 0;
+  word-break: break-word;
+}
+

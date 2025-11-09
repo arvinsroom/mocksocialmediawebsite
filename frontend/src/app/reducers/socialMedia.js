@@ -14,9 +14,11 @@ import {
   UNDO_POST,
   INCREMENT_REPLIES_COUNT,
   INCREMENT_QUOTE_RETWEET_COUNT,
-  DECREMENT_QUOTE_RETWEET_COUNT
+  DECREMENT_QUOTE_RETWEET_COUNT,
+  SET_POST_BOOKMARK,
+  SET_POST_UNBOOKMARK,
 } from "../actions/types";
-import { removePropery } from '../utils';
+import { removePropery } from "../utils";
 
 const initialState = {
   posts: {},
@@ -30,7 +32,7 @@ const initialState = {
   totalPostIds: [],
   finish: false,
   socialMediaTranslations: null,
-  authors: null
+  authors: null,
 };
 
 // this is bad and goes against whole point of using redux but for
@@ -67,45 +69,42 @@ export default function (state = initialState, action) {
           ...state.metaData,
           ...payload.metaData,
         },
-        allIds: [
-          ...state.allIds,
-          ...payload.allIds,
-        ],
+        allIds: [...state.allIds, ...payload.allIds],
         isLoading: payload.isLoading,
       };
 
-      case SET_FB_POST_FETCH_FINISH:
-        return {
-          ...state,
-          finish: true
-        }
+    case SET_FB_POST_FETCH_FINISH:
+      return {
+        ...state,
+        finish: true,
+      };
 
-      case UPDATE_FACEBOOK_PAGE_STATE:
-        let nextCurrentPostPage = state.currentPostPage;
-        let finish = false;
-        if ((nextCurrentPostPage+1) * 5 < state.totalPostCount) {
-          nextCurrentPostPage++;
-        } else {
-          finish = true;
-        }
-        return {
-          ...state,
-          currentPostPage: nextCurrentPostPage,
-          finish,
-        };
+    case UPDATE_FACEBOOK_PAGE_STATE:
+      let nextCurrentPostPage = state.currentPostPage;
+      let finish = false;
+      if ((nextCurrentPostPage + 1) * 5 < state.totalPostCount) {
+        nextCurrentPostPage++;
+      } else {
+        finish = true;
+      }
+      return {
+        ...state,
+        currentPostPage: nextCurrentPostPage,
+        finish,
+      };
 
-      case SET_FB_POST_LIKE:
-        return {
-          ...state,
-          metaData: {
-            ...state.metaData,
-            [payload.postId]: {
-              ...state.metaData[payload.postId],
-              like: payload.like,
-              actionId: payload.actionId
-            }
-          }
-        };
+    case SET_FB_POST_LIKE:
+      return {
+        ...state,
+        metaData: {
+          ...state.metaData,
+          [payload.postId]: {
+            ...state.metaData[payload.postId],
+            like: payload.like,
+            actionId: payload.actionId,
+          },
+        },
+      };
 
     case SET_FB_POST_UNLIKE:
       return {
@@ -114,10 +113,10 @@ export default function (state = initialState, action) {
           ...state.metaData,
           [payload.postId]: {
             ...state.metaData[payload.postId],
-            like: 'default',
-            actionId: null
-          }
-        }
+            like: "default",
+            actionId: null,
+          },
+        },
       };
 
     case SET_POST_REPORT:
@@ -127,11 +126,11 @@ export default function (state = initialState, action) {
           ...state.metaData,
           [payload.postId]: {
             ...state.metaData[payload.postId],
-            reportId: payload.reportId
-          }
-        }
+            reportId: payload.reportId,
+          },
+        },
       };
-      
+
     case SET_POST_UNREPORT:
       return {
         ...state,
@@ -139,9 +138,33 @@ export default function (state = initialState, action) {
           ...state.metaData,
           [payload.postId]: {
             ...state.metaData[payload.postId],
-            reportId: null
-          }
-        }
+            reportId: null,
+          },
+        },
+      };
+
+    case SET_POST_BOOKMARK:
+      return {
+        ...state,
+        metaData: {
+          ...state.metaData,
+          [payload.postId]: {
+            ...state.metaData[payload.postId],
+            bookmarkId: payload.bookmarkId,
+          },
+        },
+      };
+
+    case SET_POST_UNBOOKMARK:
+      return {
+        ...state,
+        metaData: {
+          ...state.metaData,
+          [payload.postId]: {
+            ...state.metaData[payload.postId],
+            bookmarkId: null,
+          },
+        },
       };
 
     case SET_FB_POST_COMMENT:
@@ -151,18 +174,17 @@ export default function (state = initialState, action) {
           ...state.metaData,
           [payload.postId]: {
             ...state.metaData[payload.postId],
-            comments: 
-              [
-                ...state.metaData[payload.postId].comments,
-                {
-                  comment: payload.comment,
-                  userComment: payload.userComment,
-                  attachedAuthorPicture: payload.attachedAuthorPicture,
-                  authorId: payload.authorId
-                }
-              ]
-          }
-        }
+            comments: [
+              ...state.metaData[payload.postId].comments,
+              {
+                comment: payload.comment,
+                userComment: payload.userComment,
+                attachedAuthorPicture: payload.attachedAuthorPicture,
+                authorId: payload.authorId,
+              },
+            ],
+          },
+        },
       };
 
     case INCREMENT_REPLIES_COUNT:
@@ -172,9 +194,9 @@ export default function (state = initialState, action) {
           ...state.metaData,
           [payload._id]: {
             ...state.metaData[payload._id],
-            initReply: state.metaData[payload._id].initReply + 1
-          }
-        }
+            initReply: state.metaData[payload._id].initReply + 1,
+          },
+        },
       };
 
     case INCREMENT_QUOTE_RETWEET_COUNT:
@@ -184,9 +206,9 @@ export default function (state = initialState, action) {
           ...state.metaData,
           [payload._id]: {
             ...state.metaData[payload._id],
-            initTweet: state.metaData[payload._id].initTweet + 1
-          }
-        }
+            initTweet: state.metaData[payload._id].initTweet + 1,
+          },
+        },
       };
 
     case DECREMENT_QUOTE_RETWEET_COUNT:
@@ -196,13 +218,20 @@ export default function (state = initialState, action) {
           ...state.metaData,
           [payload._id]: {
             ...state.metaData[payload._id],
-            initTweet: state.metaData[payload._id].initTweet - 1
-          }
-        }
+            initTweet: state.metaData[payload._id].initTweet - 1,
+          },
+        },
       };
 
     case CREATE_FB_POST:
-      const { type, parentPostId, postMessage, initLike, isReplyTo, quoteTweetTo } = payload.post;
+      const {
+        type,
+        parentPostId,
+        postMessage,
+        initLike,
+        isReplyTo,
+        quoteTweetTo,
+      } = payload.post;
       return {
         ...state,
         posts: {
@@ -221,7 +250,7 @@ export default function (state = initialState, action) {
         metaData: {
           [payload._id]: {
             comments: [],
-            like: 'default',
+            like: "default",
             type: type,
             initLike: 0,
             initReply: 0,
@@ -231,7 +260,7 @@ export default function (state = initialState, action) {
           },
           ...state.metaData,
         },
-        allIds: [payload._id, ...state.allIds]
+        allIds: [payload._id, ...state.allIds],
       };
 
     case UNDO_POST:
@@ -239,15 +268,15 @@ export default function (state = initialState, action) {
         ...state,
         posts: removePropery(payload.postId, state.posts),
         metaData: removePropery(payload.postId, state.metaData),
-        allIds: state.allIds.filter(item => item !== payload.postId)
+        allIds: state.allIds.filter((item) => item !== payload.postId),
       };
 
     case SET_FB_LOADING:
       return {
         ...state,
-        isLoading: payload.isLoading
+        isLoading: payload.isLoading,
       };
-    
+
     case CLEAR_FB_STATE:
       return {
         ...state,
@@ -262,9 +291,9 @@ export default function (state = initialState, action) {
         totalPostIds: [],
         finish: false,
         socialMediaTranslations: null,
-        authors: {}
-      }
-    
+        authors: {},
+      };
+
     default:
       return state;
   }

@@ -1,33 +1,33 @@
-const { Sequelize } = require('sequelize');
+const { Sequelize } = require("sequelize");
 
 export async function down({ context: queryInterface }) {
-  await queryInterface.dropTable('Info');
+  await queryInterface.dropTable("Info");
 }
 
 export async function up({ context: queryInterface }) {
-  await queryInterface.createTable('Info', {
+  await queryInterface.createTable("Info", {
     _id: {
       allowNull: false,
       primaryKey: true,
-      type: Sequelize.UUID
+      type: Sequelize.UUID,
     },
     templateId: {
       allowNull: false,
-      onDelete: 'CASCADE',
+      onDelete: "CASCADE",
       references: {
-        key: '_id',
-        model: 'Template'
+        key: "_id",
+        model: "Template",
       },
-      type: Sequelize.UUID
+      type: Sequelize.UUID,
     },
     pageId: {
       allowNull: false,
-      onDelete: 'CASCADE',
+      onDelete: "CASCADE",
       references: {
-        key: '_id',
-        model: 'Page'
+        key: "_id",
+        model: "Page",
       },
-      type: Sequelize.UUID
+      type: Sequelize.UUID,
     },
     consent: {
       allowNull: true,
@@ -40,12 +40,11 @@ export async function up({ context: queryInterface }) {
     socialMediaPageId: {
       allowNull: true,
       references: {
-        key: '_id',
-        model: 'Page'
+        key: "_id",
+        model: "Page",
       },
-      type: Sequelize.UUID
-    }
+      type: Sequelize.UUID,
+    },
   });
-  await queryInterface.addIndex('Info', ['templateId', 'pageId']);
+  await queryInterface.addIndex("Info", ["templateId", "pageId"]);
 }
-

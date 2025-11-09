@@ -3,12 +3,12 @@ import authHeader from "./auth-header";
 
 export const getSocialMediaPosts = (templateId, pageId) => {
   return http.get(`/userposts/mediapage/${templateId}/${pageId}`, {
-    headers: authHeader()
+    headers: authHeader(),
   });
-}
+};
 
 export const setSocialMediaLabels = (data) => {
-  return http.post('/userposts/mediapage/labels', data, {
-    headers: authHeader()
+  return http.post("/userposts/mediapage/labels", data, {
+    headers: authHeader(),
   });
-}
+};

@@ -1,11 +1,11 @@
-const { Sequelize } = require('sequelize');
+const { Sequelize } = require("sequelize");
 
 export async function down({ context: queryInterface }) {
-  await queryInterface.dropTable('UserPostAuthor');
+  await queryInterface.dropTable("UserPostAuthor");
 }
 
 export async function up({ context: queryInterface }) {
-  await queryInterface.createTable('UserPostAuthor', {
+  await queryInterface.createTable("UserPostAuthor", {
     _id: {
       allowNull: false,
       primaryKey: true,
@@ -13,11 +13,11 @@ export async function up({ context: queryInterface }) {
     },
     authorId: {
       allowNull: false,
-      type: Sequelize.INTEGER
+      type: Sequelize.INTEGER,
     },
     authorName: {
       allowNull: false,
-      type: Sequelize.STRING(1024)
+      type: Sequelize.STRING(1024),
     },
     authorVerified: {
       allowNull: false,
@@ -37,17 +37,17 @@ export async function up({ context: queryInterface }) {
     },
     pageId: {
       allowNull: false, // ???
-      onDelete: 'CASCADE',
+      onDelete: "CASCADE",
       references: {
-        key: '_id',
-        model: 'Page'
+        key: "_id",
+        model: "Page",
       },
-      type: Sequelize.UUID
+      type: Sequelize.UUID,
     },
     createdAt: {
       allowNull: false,
       type: Sequelize.DATE(3),
     },
   });
-  await queryInterface.addIndex('UserPostAuthor', ['authorId', 'pageId']);
+  await queryInterface.addIndex("UserPostAuthor", ["authorId", "pageId"]);
 }

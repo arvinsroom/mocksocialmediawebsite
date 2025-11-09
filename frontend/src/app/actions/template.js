@@ -3,7 +3,7 @@ import {
   PREV_TEMPLATES_SUCCESS,
   CLEAR_TEMPLATE_STATE,
   SNACKBAR_ERROR,
-  SNACKBAR_SUCCESS
+  SNACKBAR_SUCCESS,
 } from "./types";
 
 import * as TemplateService from "../services/template-service";
@@ -12,18 +12,18 @@ export const setTemplateId = (template) => ({
   type: SET_TEMPLATE_ID,
   payload: {
     _id: template._id,
-    name: template.name
+    name: template.name,
   },
 });
 
 export const clearTemplate = () => ({
-  type: CLEAR_TEMPLATE_STATE
+  type: CLEAR_TEMPLATE_STATE,
 });
 
 // fetch using admin _id
 export const getPrevTemplate = () => (dispatch) => {
   return TemplateService.getPrevTemplates().then(
-    ({data}) => {
+    ({ data }) => {
       dispatch({
         type: PREV_TEMPLATES_SUCCESS,
         payload: {
@@ -51,14 +51,13 @@ export const getPrevTemplate = () => (dispatch) => {
       });
 
       return Promise.reject();
-    }
+    },
   );
 };
 
 export const deletePrevTemplate = (_id) => (dispatch) => {
   return TemplateService.deletePrevTemplate(_id)
     .then(() => {
-
       dispatch({
         type: SNACKBAR_SUCCESS,
         payload: "Condition was successfully deleted",
@@ -66,7 +65,7 @@ export const deletePrevTemplate = (_id) => (dispatch) => {
 
       Promise.resolve();
     })
-    .catch(error => {
+    .catch((error) => {
       const message =
         (error.response &&
           error.response.data &&
@@ -80,14 +79,12 @@ export const deletePrevTemplate = (_id) => (dispatch) => {
       });
 
       return Promise.reject();
-    }
-  );
+    });
 };
 
 export const updateTemplate = (data, message) => (dispatch) => {
   return TemplateService.updateTemplate(data)
     .then(() => {
-
       dispatch({
         type: SNACKBAR_SUCCESS,
         payload: message,
@@ -95,7 +92,7 @@ export const updateTemplate = (data, message) => (dispatch) => {
 
       Promise.resolve();
     })
-    .catch(error => {
+    .catch((error) => {
       const message =
         (error.response &&
           error.response.data &&
@@ -109,6 +106,5 @@ export const updateTemplate = (data, message) => (dispatch) => {
       });
 
       return Promise.reject();
-    }
-  );
+    });
 };

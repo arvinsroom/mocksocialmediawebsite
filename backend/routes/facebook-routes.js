@@ -1,12 +1,15 @@
-import facebook from "../controllers/facebook-controller"
+import facebook from "../controllers/facebook-controller";
 import { uploadFiles } from "../middleware/upload";
 
-var express = require('express')
-var router = express.Router()
+var express = require("express");
+var router = express.Router();
 
 router.post("/posts", facebook.getFacebookPostWithDetails);
 
-router.get("/:templateId/:platform/:language/:pageId/:order", facebook.getFacebookPostIds);
+router.get(
+  "/:templateId/:platform/:language/:pageId/:order",
+  facebook.getFacebookPostIds,
+);
 
 router.get("/fake/actions/:pageId", facebook.getFacebookFakeActionPosts);
 

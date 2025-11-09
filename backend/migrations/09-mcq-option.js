@@ -1,34 +1,33 @@
-const { Sequelize } = require('sequelize');
+const { Sequelize } = require("sequelize");
 
 export async function down({ context: queryInterface }) {
-  await queryInterface.dropTable('McqOption');
+  await queryInterface.dropTable("McqOption");
 }
 
 export async function up({ context: queryInterface }) {
-  await queryInterface.createTable('McqOption', {
+  await queryInterface.createTable("McqOption", {
     _id: {
       allowNull: false,
       primaryKey: true,
-      type: Sequelize.UUID
+      type: Sequelize.UUID,
     },
     questionId: {
       allowNull: false,
-      onDelete: 'CASCADE',
+      onDelete: "CASCADE",
       references: {
-        key: '_id',
-        model: 'Question'
+        key: "_id",
+        model: "Question",
       },
-      type: Sequelize.UUID
+      type: Sequelize.UUID,
     },
     optionText: {
       allowNull: false,
-      type: Sequelize.STRING
+      type: Sequelize.STRING,
     },
     optionOrder: {
       allowNull: false,
-      type: Sequelize.SMALLINT
+      type: Sequelize.SMALLINT,
     },
   });
-  await queryInterface.addIndex('McqOption', ['questionId']);
+  await queryInterface.addIndex("McqOption", ["questionId"]);
 }
-

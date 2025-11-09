@@ -1,23 +1,33 @@
-const { Sequelize } = require('sequelize');
+const { Sequelize } = require("sequelize");
 
 export async function down({ context: queryInterface }) {
-  await queryInterface.dropTable('UserPostAction');
+  await queryInterface.dropTable("UserPostAction");
 }
 
 export async function up({ context: queryInterface }) {
-  await queryInterface.createTable('UserPostAction', {
+  await queryInterface.createTable("UserPostAction", {
     _id: {
       allowNull: false,
       primaryKey: true,
-      type: Sequelize.UUID
+      type: Sequelize.UUID,
     },
     action: {
       allowNull: false,
-      type: Sequelize.ENUM('LIKE', 'LOVE', 'HAHA', 'WOW', 'SAD', 'ANGRY', 'COMMENT', 'TWEET', 'RETWEET')
+      type: Sequelize.ENUM(
+        "LIKE",
+        "LOVE",
+        "HAHA",
+        "WOW",
+        "SAD",
+        "ANGRY",
+        "COMMENT",
+        "TWEET",
+        "RETWEET",
+      ),
     },
     comment: {
       allowNull: true,
-      type: Sequelize.STRING
+      type: Sequelize.STRING,
     },
     createdAt: {
       allowNull: false,
@@ -25,23 +35,22 @@ export async function up({ context: queryInterface }) {
     },
     userId: {
       allowNull: false,
-      onDelete: 'CASCADE',
+      onDelete: "CASCADE",
       references: {
-        key: '_id',
-        model: 'User'
+        key: "_id",
+        model: "User",
       },
-      type: Sequelize.UUID
+      type: Sequelize.UUID,
     },
     userPostId: {
       allowNull: false,
-      onDelete: 'CASCADE',
+      onDelete: "CASCADE",
       references: {
-        key: '_id',
-        model: 'UserPost'
+        key: "_id",
+        model: "UserPost",
       },
-      type: Sequelize.UUID
-    }
+      type: Sequelize.UUID,
+    },
   });
-  await queryInterface.addIndex('UserPostAction', ['userPostId', 'userId']);
+  await queryInterface.addIndex("UserPostAction", ["userPostId", "userId"]);
 }
-

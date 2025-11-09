@@ -2,8 +2,8 @@ import {
   SNACKBAR_SUCCESS,
   SNACKBAR_CLEAR,
   SNACKBAR_INFO,
-  SNACKBAR_ERROR
- } from "./types";
+  SNACKBAR_ERROR,
+} from "./types";
 
 export const showSuccessSnackbar = (message) => ({
   type: SNACKBAR_SUCCESS,

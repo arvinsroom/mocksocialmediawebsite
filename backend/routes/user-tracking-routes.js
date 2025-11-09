@@ -1,6 +1,6 @@
-import tracking from "../controllers/user-tracking-controller"
-var express = require('express')
-var router = express.Router()
+import tracking from "../controllers/user-tracking-controller";
+var express = require("express");
+var router = express.Router();
 
 router.post("/post", tracking.createOrUpdatePostTrackingData);
 

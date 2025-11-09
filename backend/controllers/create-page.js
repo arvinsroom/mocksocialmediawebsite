@@ -1,5 +1,5 @@
 import db from "../clients/database-client";
-import { shuffle } from '../utils';
+import { shuffle } from "../utils";
 const Page = db.Page;
 
 const pageCreate = async (pageObj, transaction) => {
@@ -12,13 +12,15 @@ const pageCreate = async (pageObj, transaction) => {
   if (!pageObj.type) {
     throw "Page type is required!";
   }
-  
+
   try {
     const data = await Page.create(pageObj, { transaction });
     return data._id;
   } catch (error) {
     console.log(error.message);
-    throw error.message || "Some error occurred while creating the Page record."
+    throw (
+      error.message || "Some error occurred while creating the Page record."
+    );
   }
 };
 
@@ -27,12 +29,12 @@ const findOne = (req, res) => {
   const _id = req.params._id;
 
   Page.findByPk(_id)
-    .then(data => {
+    .then((data) => {
       res.send(data);
     })
-    .catch(err => {
+    .catch((err) => {
       res.status(500).send({
-        message: "Error retrieving Page with id=" + _id
+        message: "Error retrieving Page with id=" + _id,
       });
     });
 };
@@ -41,11 +43,12 @@ const randomizeSamePages = (pages, pagesLength) => {
   try {
     let newPages = [];
     let prevOrder = pages[0].flowOrder;
-    for (let i = 1; i < pagesLength;) {
+    for (let i = 1; i < pagesLength; ) {
       let currOrder = pages[i].flowOrder;
-      if (currOrder !== prevOrder) { // we assume they are already in increasing order
+      if (currOrder !== prevOrder) {
+        // we assume they are already in increasing order
         // add prev to newPages and make prev the current
-        newPages = newPages.concat(pages.slice(i-1, i));
+        newPages = newPages.concat(pages.slice(i - 1, i));
         prevOrder = currOrder;
         i++;
         continue;
@@ -53,8 +56,8 @@ const randomizeSamePages = (pages, pagesLength) => {
       // if currOrder is same as prevOrder
       // start checking till be find something not equal
       // and untill then sort them
-      let prevOrderIndex = i-1;
-      let j = i+1;
+      let prevOrderIndex = i - 1;
+      let j = i + 1;
       while (j < pagesLength && pages[j].flowOrder === currOrder) {
         j++;
       }
@@ -82,17 +85,18 @@ const randomizeSamePages = (pages, pagesLength) => {
 };
 
 // get all pages (flow) data using template Id
-// have 
+// have
 const findAllPages = async (templateId, transaction) => {
   try {
-    const pages = await Page.findAll({
-      where: {
-        templateId
+    const pages = await Page.findAll(
+      {
+        where: {
+          templateId,
+        },
+        order: [["flowOrder", "ASC"]],
       },
-      order: [
-        ['flowOrder', 'ASC']
-      ]
-    }, { transaction });
+      { transaction },
+    );
 
     const pagesLength = pages.length;
     // if two posts ID are same then using random numbers switch them
@@ -102,8 +106,13 @@ const findAllPages = async (templateId, transaction) => {
       try {
         return randomizeSamePages(pages, pagesLength);
       } catch (error) {
-        console.log(`Some error occured while randomizing these ${pages}.`, error);
-        console.log(`Returning original pages ${pages} as it in ASC from sequelize!.`);
+        console.log(
+          `Some error occured while randomizing these ${pages}.`,
+          error,
+        );
+        console.log(
+          `Returning original pages ${pages} as it in ASC from sequelize!.`,
+        );
         return pages;
       }
     }
@@ -115,5 +124,5 @@ const findAllPages = async (templateId, transaction) => {
 export default {
   findOne,
   pageCreate,
-  findAllPages
-}
+  findAllPages,
+};

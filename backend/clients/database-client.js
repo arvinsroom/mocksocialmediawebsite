@@ -1,24 +1,24 @@
-import Sequelize from 'sequelize';
+import Sequelize from "sequelize";
 
-import Admin from '../models/00-admin';
-import Template from '../models/01-template';
-import Language from '../models/03-language';
-import Page from '../models/02-page';
-import Info from '../models/05-info';
-import Finish from '../models/06-finish';
-import Register from '../models/07-register';
-import Question from '../models/08-question';
-import McqOption from '../models/09-mcq-option';
-import User from '../models/10-user';
-import UserPost from '../models/11-user-post';
-import UserPostAuthor from '../models/18-user-post-author';
-import UserPostAction from '../models/12-user-post-action';
-import UserRegister from '../models/13-user-register';
-import UserAnswer from '../models/14-user-answer';
-import Media from '../models/15-media';
-import UserPostTracking from '../models/16-user-post-tracking';
-import UserGlobalTracking from '../models/17-user-global-tracking';
-import { databaseConfigurations } from '../utils';
+import Admin from "../models/00-admin";
+import Template from "../models/01-template";
+import Language from "../models/03-language";
+import Page from "../models/02-page";
+import Info from "../models/05-info";
+import Finish from "../models/06-finish";
+import Register from "../models/07-register";
+import Question from "../models/08-question";
+import McqOption from "../models/09-mcq-option";
+import User from "../models/10-user";
+import UserPost from "../models/11-user-post";
+import UserPostAuthor from "../models/18-user-post-author";
+import UserPostAction from "../models/12-user-post-action";
+import UserRegister from "../models/13-user-register";
+import UserAnswer from "../models/14-user-answer";
+import Media from "../models/15-media";
+import UserPostTracking from "../models/16-user-post-tracking";
+import UserGlobalTracking from "../models/17-user-global-tracking";
+import { databaseConfigurations } from "../utils";
 
 const config = databaseConfigurations();
 

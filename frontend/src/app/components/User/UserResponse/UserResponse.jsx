@@ -1,22 +1,23 @@
-import { Container } from '@material-ui/core';
-import React, { useEffect } from 'react';
-import useStyles from '../../style';
+import { Container } from "@material-ui/core";
+import React, { useEffect } from "react";
+import useStyles from "../../style";
 import { useSelector, useDispatch } from "react-redux";
-import { useNavigate } from 'react-router-dom';
-import { getCurrentUTCTime }  from '../../../utils';
+import { useNavigate } from "react-router-dom";
+import { getCurrentUTCTime } from "../../../utils";
 import "./UserResponse.css";
 
-import InfoPage from './DynamicComponents/InfoPage/InfoPage';
-import Finish from './DynamicComponents/Finish/Finish';
-import MCQ from './DynamicComponents/MCQ/MCQ';
-import Opentext from './DynamicComponents/Opentext/Opentext';
-import Register from './DynamicComponents/Register/Register';
-import Facebook from './DynamicComponents/Facebook/Facebook';
-import Twitter from './DynamicComponents/Twitter/Twitter';
+import InfoPage from "./DynamicComponents/InfoPage/InfoPage";
+import Finish from "./DynamicComponents/Finish/Finish";
+import MCQ from "./DynamicComponents/MCQ/MCQ";
+import Opentext from "./DynamicComponents/Opentext/Opentext";
+import Register from "./DynamicComponents/Register/Register";
+import Facebook from "./DynamicComponents/Facebook/Facebook";
+import Twitter from "./DynamicComponents/Twitter/Twitter";
+import TikTok from "./DynamicComponents/TikTok/TikTok";
 
 import { userLogout } from "../../../actions/userAuth";
-import { updateUserMain } from '../../../actions/user';
-import { USER_TRANSLATIONS_DEFAULT } from '../../../constants';
+import { updateUserMain } from "../../../actions/user";
+import { USER_TRANSLATIONS_DEFAULT } from "../../../constants";
 
 const Components = {
   MCQ: MCQ,
@@ -26,12 +27,15 @@ const Components = {
   FACEBOOK: Facebook,
   INFO: InfoPage,
   TWITTER: Twitter,
+  TIKTOK: TikTok,
 };
 
 const UserResponse = () => {
   const dispatch = useDispatch();
-  const { isLoggedInUser, translations } = useSelector(state => state.userAuth);
-  const { flow, active, finished } = useSelector(state => state.flowState);
+  const { isLoggedInUser, translations } = useSelector(
+    (state) => state.userAuth
+  );
+  const { flow, active, finished } = useSelector((state) => state.flowState);
 
   let history = useNavigate();
 
@@ -43,54 +47,54 @@ const UserResponse = () => {
 
   const classes = useStyles();
   useEffect(() => {
-    if (!isLoggedInUser && !finished) history('/');
+    if (!isLoggedInUser && !finished) history("/");
     if (finished) updateFinishTimeAndLogout();
   }, [finished]);
 
   const dynamicClasses = () => {
     let customCSS = `${classes.card}`;
-    if (flow[active]?.type === 'TWITTER' || flow[active]?.type === 'FACEBOOK') {
-      customCSS += ' twitterCSS';
+    if (flow[active]?.type === "TWITTER" || flow[active]?.type === "FACEBOOK" || flow[active]?.type === "TIKTOK") {
+      customCSS += " twitterCSS";
     }
     if (finished) {
       customCSS += ` ${classes.centerCard}`;
     }
     return customCSS;
-  }
+  };
 
   const block = (currentActive) => {
     if (finished) {
       return (
         <div>
-          <h1>{(translations && translations['thank_you!']) || 'Thank You!'}</h1>
+          <h1>
+            {(translations && translations["thank_you!"]) || "Thank You!"}
+          </h1>
           <p>
-            {translations?.['your_response_has_been_recorded,_and_you_can_safely_close_this_page.'] || USER_TRANSLATIONS_DEFAULT.RESPONSE_SUCCESSFULLY_RECORDED_CLOSE_TAB}
+            {translations?.[
+              "your_response_has_been_recorded,_and_you_can_safely_close_this_page."
+            ] ||
+              USER_TRANSLATIONS_DEFAULT.RESPONSE_SUCCESSFULLY_RECORDED_CLOSE_TAB}
           </p>
         </div>
-      )
-    }
-    else if (currentActive !== -1 && typeof Components[flow[currentActive]?.type] !== "undefined") {
+      );
+    } else if (
+      currentActive !== -1 &&
+      typeof Components[flow[currentActive]?.type] !== "undefined"
+    ) {
       const pageType = flow[currentActive].type;
       return React.createElement(Components[pageType], {
         key: flow[currentActive]._id,
         data: flow[currentActive],
       });
-    }
-    else {
-      return (
-        <>
-          This Flow component configurations have not been created yet.
-        </>
-      )
+    } else {
+      return <>This Flow component configurations have not been created yet.</>;
     }
   };
   return (
-    <Container component="main" maxWidth="md"
-      className={dynamicClasses()}
-     >
+    <Container component="main" maxWidth="md" className={dynamicClasses()}>
       {block(active)}
     </Container>
   );
-}
+};
 
 export default UserResponse;

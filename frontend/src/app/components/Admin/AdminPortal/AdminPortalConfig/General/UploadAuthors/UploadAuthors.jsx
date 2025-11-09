@@ -1,19 +1,26 @@
-import { useState } from 'react';
-import { Button, Input, Box } from '@material-ui/core';
-import useStyles from '../../../../../style';
+import { Box, Button } from "@material-ui/core";
+import { IconDeviceFloppy, IconUserCircle } from "@tabler/icons-react";
+import clsx from "clsx";
+import { useState } from "react";
 import { useDispatch } from "react-redux";
+import {
+  showErrorSnackbar,
+  showInfoSnackbar,
+  showSuccessSnackbar,
+} from "../../../../../../actions/snackbar";
+import { GENERAL_PAGE } from "../../../../../../constants";
 import { uploadMultipleAuthourFiles } from "../../../../../../services/media-service";
-import { showErrorSnackbar, showSuccessSnackbar, showInfoSnackbar } from '../../../../../../actions/snackbar';
-import { GENERAL_PAGE } from '../../../../../../constants';
-import Progress from '../../../../../Common/Progress';
-import SocialMediaPages from '../../../../../Common/AdminCommon/SocialMediaPages';
-import { IconDeviceFloppy, IconUserCircle } from '@tabler/icons-react';
-import clsx from 'clsx';
+import SocialMediaPages from "../../../../../Common/AdminCommon/SocialMediaPages";
+import Progress from "../../../../../Common/Progress";
+import useStyles from "../../../../../style";
 
 const Upload = ({ templateId }) => {
   const [selectedFiles, setSelectedFiles] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
-  const [active, setActive] = useState("");
+  const [pageActive, setPageActive] = useState({
+    pageId: "",
+    pageType: "",
+  });
   const [uploadMediaNames, setUploadMediaNames] = useState("");
 
   const classes = useStyles();
@@ -32,18 +39,28 @@ const Upload = ({ templateId }) => {
         formData.append("files", selectedFiles[i]);
         totalFileSize += selectedFiles[i].size;
       }
-      if (totalFileSize <= 20e6) {
-        formData.append("pageId", active);
+      // TODO: For now removing the file size limit check to allow large TikTok video uploads
+      // as they are converted to stream and stored as files in the backend.
+      // if (totalFileSize <= 20e6) {
+        formData.append("pageId", pageActive.pageId);
         await uploadMultipleAuthourFiles(formData);
-        dispatch(showSuccessSnackbar(GENERAL_PAGE.SUCCESSFULLY_SAVED_LANGUAGE_AND_OR_MEDIA));
-        resetValues();  
-      } else {
-        dispatch(showInfoSnackbar("Please upload file(s) of size less than 20MB."));
-      }
-    } else dispatch(showInfoSnackbar(GENERAL_PAGE.PLEASE_ENTER_A_VALID_RESPONSE));
+        dispatch(
+          showSuccessSnackbar(
+            GENERAL_PAGE.SUCCESSFULLY_SAVED_LANGUAGE_AND_OR_MEDIA
+          )
+        );
+        resetValues();
+      // }
+      // else {
+      //   dispatch(
+      //     showInfoSnackbar("Please upload file(s) of size less than 20MB.")
+      //   );
+      // }
+    } else
+      dispatch(showInfoSnackbar(GENERAL_PAGE.PLEASE_ENTER_A_VALID_RESPONSE));
   };
 
-  const handleSubmit= async e => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
     try {
@@ -55,7 +72,7 @@ const Upload = ({ templateId }) => {
           error.response.data.message) ||
         error.message ||
         error.toString();
-        dispatch(showErrorSnackbar(resMessage));
+      dispatch(showErrorSnackbar(resMessage));
     }
     setIsLoading(false);
   };
@@ -64,39 +81,50 @@ const Upload = ({ templateId }) => {
     const allFiles = e.target.files;
     setSelectedFiles(allFiles);
     // and update the diaplay names
-    let allNames = '';
-    for (let i = 0; i < allFiles.length; i++) allNames += allFiles[i].name + ';';
+    let allNames = "";
+    for (let i = 0; i < allFiles.length; i++)
+      allNames += allFiles[i].name + ";";
     setUploadMediaNames(allNames);
-  }
+  };
 
   return (
     <>
       <form onSubmit={handleSubmit} className={classes.form}>
         <Box component="span" className={classes.note} display="block">
-          <p>Media can be uploaded all at once or in batches, as long as no batch exceeds 20MB in size.</p>
+          <p>
+            Media can be uploaded all at once or in batches, as long as no batch
+            exceeds 20MB in size.
+          </p>
         </Box>
-        <br/>
-        <SocialMediaPages active={active} setActive={setActive} templateId={templateId}/>
-        <br/>
-        <br/>
+        <br />
+        <SocialMediaPages
+          active={pageActive}
+          setActive={setPageActive}
+          templateId={templateId}
+        />
+        <br />
+        <br />
         <Button
           variant="contained"
           component="label"
           startIcon={<IconUserCircle />}
         >
           {GENERAL_PAGE.UPLOAD_AUTHOR_MEDIA}
-          <Input
+          <input
             style={{ display: "none" }}
             disableUnderline={true}
             id="upload-files"
             type="file"
-            inputProps={{ multiple: true }}
+            multiple={true}
             accept="image/*, video/*"
             onChange={selectFiles}
           />
         </Button>
-        <br/>
-        <p style={{ overflowWrap: 'anywhere' }}>{" Media that will be uploaded upon clicking next step: " + (uploadMediaNames || "")}</p>
+        <br />
+        <p style={{ overflowWrap: "anywhere" }}>
+          {" Media that will be uploaded upon clicking next step: " +
+            (uploadMediaNames || "")}
+        </p>
 
         {isLoading && <Progress />}
         <Button
@@ -104,10 +132,10 @@ const Upload = ({ templateId }) => {
           variant="contained"
           color="primary"
           fullWidth
-          disabled={active === ""}
+          disabled={pageActive.pageId === ""}
           startIcon={<IconDeviceFloppy />}
           className={clsx(classes.submit, classes.widthFitContent)}
-          >
+        >
           {GENERAL_PAGE.SAVE_RESPONSES}
         </Button>
       </form>

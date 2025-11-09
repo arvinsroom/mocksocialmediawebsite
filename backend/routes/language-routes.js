@@ -1,5 +1,5 @@
 import language from "../controllers/language-controller";
-var express = require('express');
+var express = require("express");
 var router = express.Router();
 
 router.post("/", language.create);

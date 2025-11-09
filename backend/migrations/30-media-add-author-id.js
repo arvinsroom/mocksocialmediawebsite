@@ -1,4 +1,4 @@
-const { Sequelize } = require('sequelize');
+const { Sequelize } = require("sequelize");
 
 export async function down({ context: queryInterface }) {
   await queryInterface.removeColumn("Media", "authorId");

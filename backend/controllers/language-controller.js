@@ -6,13 +6,13 @@ const create = async (req, res, next) => {
   const { templateId, languageData } = req.body;
   if (!templateId) {
     res.status(400).send({
-      message: "Template Id is required!"
+      message: "Template Id is required!",
     });
     return;
   }
   if (!checkIfValidAndNotEmptyArray(languageData)) {
     res.status(400).send({
-      message: "Language data is required!"
+      message: "Language data is required!",
     });
     return;
   }
@@ -29,7 +29,7 @@ const create = async (req, res, next) => {
         // handle empty case
         if (!languageData[0][i]) break;
         // get uppercase language name
-        let key = languageData[0][i].toUpperCase().split(' ').join('_');
+        let key = languageData[0][i].toUpperCase().split(" ").join("_");
         languageName.push(key);
       }
     }
@@ -37,16 +37,22 @@ const create = async (req, res, next) => {
     for (let i = 1; i < languageData.length; i++) {
       // handle empty array case, nulify everything after
       if (!languageData[i] || languageData[i].length < 1) break;
-      let platform = languageData[i][0].toUpperCase().split(' ').join('_');
+      let platform = languageData[i][0].toUpperCase().split(" ").join("_");
       // force to go # of languages times o/w store null there
       for (let j = 1; j <= languageName.length; j++) {
         // if i == 1, then language name will be at index 1 in languageName
         // this is english keywords which are made keys, must need them
-        let translationKey = languageData[i][1].toLowerCase().split(' ').join('_');
+        let translationKey = languageData[i][1]
+          .toLowerCase()
+          .split(" ")
+          .join("_");
         // set platform first
         if (!obj[platform]) obj[platform] = {};
-        if (!obj[platform][languageName[j - 1]]) obj[platform][languageName[j - 1]] = {};
-        if (!obj[platform][languageName[j - 1]][translationKey]) obj[platform][languageName[j - 1]][translationKey] = languageData[i][j] || null;
+        if (!obj[platform][languageName[j - 1]])
+          obj[platform][languageName[j - 1]] = {};
+        if (!obj[platform][languageName[j - 1]][translationKey])
+          obj[platform][languageName[j - 1]][translationKey] =
+            languageData[i][j] || null;
       }
     }
     const languageArr = [];
@@ -57,7 +63,7 @@ const create = async (req, res, next) => {
       for (const [language, translations] of entriesLan) {
         // push each platform and language specific entry in the database
         let lanObj = {};
-        lanObj.platform = platform;  
+        lanObj.platform = platform;
         lanObj.templateId = templateId;
         lanObj.name = language;
         lanObj.translations = JSON.stringify(translations);
@@ -68,9 +74,9 @@ const create = async (req, res, next) => {
     // just a check
     await Language.destroy({
       where: {
-        templateId: templateId
+        templateId: templateId,
       },
-      transaction
+      transaction,
     });
 
     // create the language records
@@ -79,7 +85,7 @@ const create = async (req, res, next) => {
     });
     // select all the Unique languages
     const uniqueLanguages = new Set([]);
-    data.map(item => {
+    data.map((item) => {
       uniqueLanguages.add(item.name);
     });
     const lanArr = [...uniqueLanguages];
@@ -87,13 +93,13 @@ const create = async (req, res, next) => {
     await transaction.commit();
     // add response for _id of all questions with specific page id's
     res.send({
-      languages: lanArr
+      languages: lanArr,
     });
   } catch (error) {
     // if we reach here, there were some errors thrown, therefore roolback the transaction
     if (transaction) await transaction.rollback();
     res.status(500).send({
-      message: `Error: ${error.message ? error.message : error}`
+      message: `Error: ${error.message ? error.message : error}`,
     });
   }
 };
@@ -102,7 +108,7 @@ const getLanguages = async (req, res, next) => {
   // fetch the adminId added from middleware
   if (!req.adminId) {
     res.status(400).send({
-      message: "Invalid Token, please log in again!"
+      message: "Invalid Token, please log in again!",
     });
     return;
   }
@@ -111,7 +117,7 @@ const getLanguages = async (req, res, next) => {
   const _id = req.params._id;
   if (!_id) {
     res.status(400).send({
-      message: "Invalid Template Id!"
+      message: "Invalid Template Id!",
     });
     return;
   }
@@ -119,19 +125,19 @@ const getLanguages = async (req, res, next) => {
   try {
     const data = await Language.findAll({
       where: {
-        templateId: _id
+        templateId: _id,
       },
-      attributes: ['_id', 'name', 'platform']
+      attributes: ["_id", "name", "platform"],
     });
     res.send(data);
   } catch (error) {
     res.status(500).send({
-      message: `Error: ${error.message ? error.message : error}`
+      message: `Error: ${error.message ? error.message : error}`,
     });
   }
 };
 
 export default {
   create,
-  getLanguages
-}
+  getLanguages,
+};

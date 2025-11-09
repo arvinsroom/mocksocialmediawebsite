@@ -1,0 +1,21 @@
+.tiktokFeedMain {
+  height: 100%;
+}
+
+.tiktokPostCard {
+  height: 100vh;
+  width: 100%;
+  scroll-snap-align: start;
+  position: relative;
+}
+
+.paddingTop {
+  padding-top: 20px;
+}
+
+@media (min-width: 768px) {
+  .tiktokPostCard {
+    max-width: 414px;
+    margin: 0 auto;
+  }
+}

@@ -3,24 +3,24 @@ import authHeader from "./auth-header";
 
 export const update = (data) => {
   return http.put("/page", data, {
-    headers: authHeader()
+    headers: authHeader(),
   });
-}
+};
 
 export const get = (_id) => {
   return http.get(`/page/${_id}`, {
-    headers: authHeader()
+    headers: authHeader(),
   });
-}
+};
 
 export const getSocialMediaPages = (templateId) => {
   return http.get(`/page/socialmedia/${templateId}`, {
-    headers: authHeader()
+    headers: authHeader(),
   });
-}
+};
 
 export const deletePage = (_id) => {
   return http.delete(`/page/${_id}`, {
-    headers: authHeader()
+    headers: authHeader(),
   });
-}
+};

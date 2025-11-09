@@ -1,0 +1,85 @@
+/* AnimatedLikeButton.css */
+.like-button-container {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.heart-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.heart-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  transform-origin: center;
+}
+
+.heart-icon {
+  color: white;
+  cursor: pointer;
+  transition: transform 0.2s ease, color 0.2s ease;
+  transform-origin: center;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.heart-icon.liked {
+  color: #fe2c55;
+  filter: drop-shadow(0 0 3px rgba(254, 44, 85, 0.4));
+}
+
+/* Particle styles - Updated */
+.particle {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 4px;
+  height: 4px;
+  background: #fe2c55;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Like count styles */
+.like-count {
+  font-size: 12px;
+  color: white;
+  text-align: center;
+}
+
+/* Animation for the heart */
+@keyframes like {
+  0% { transform: scale(1); }
+  15% { transform: scale(0.85); }
+  30% { transform: scale(1.1); }
+  45% { transform: scale(0.95); }
+  60% { transform: scale(1.05); }
+  75% { transform: scale(0.98); }
+  100% { transform: scale(1); }
+}
+
+.animate-like {
+  animation: like 0.7s cubic-bezier(0.17, 0.89, 0.32, 1.49);
+}
+
+/* Updated particle animation */
+@keyframes particle {
+  0% {
+    opacity: 1;
+    transform: translate(-50%, -50%) rotate(var(--angle)) translateX(0);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -50%) rotate(var(--angle)) translateX(var(--distance));
+  }
+}

@@ -1,23 +1,30 @@
-const { Sequelize } = require('sequelize');
+const { Sequelize } = require("sequelize");
 
 export async function down({ context: queryInterface }) {
-  await queryInterface.dropTable('Register');
+  await queryInterface.dropTable("Register");
 }
 
 export async function up({ context: queryInterface }) {
-  await queryInterface.createTable('Register', {
+  await queryInterface.createTable("Register", {
     _id: {
       allowNull: false,
       primaryKey: true,
-      type: Sequelize.UUID
+      type: Sequelize.UUID,
     },
     type: {
       allowNull: false,
-      type: Sequelize.ENUM('TEXT', 'NUMBER', 'EMAIL', 'IMAGE', 'PASSWORD', 'DATE')
+      type: Sequelize.ENUM(
+        "TEXT",
+        "NUMBER",
+        "EMAIL",
+        "IMAGE",
+        "PASSWORD",
+        "DATE",
+      ),
     },
     displayName: {
       allowNull: false,
-      type: Sequelize.STRING // 255
+      type: Sequelize.STRING, // 255
     },
     required: {
       allowNull: false,
@@ -26,7 +33,15 @@ export async function up({ context: queryInterface }) {
     },
     referenceName: {
       allowNull: true,
-      type: Sequelize.ENUM('PROFILEPHOTO', 'EMAIL', 'USERNAME', 'REALNAME', 'PASSWORD', 'DATE', 'NUMBER')
+      type: Sequelize.ENUM(
+        "PROFILEPHOTO",
+        "EMAIL",
+        "USERNAME",
+        "REALNAME",
+        "PASSWORD",
+        "DATE",
+        "NUMBER",
+      ),
     },
     storeResponse: {
       allowNull: false,
@@ -35,27 +50,26 @@ export async function up({ context: queryInterface }) {
     },
     order: {
       allowNull: false,
-      type: Sequelize.SMALLINT
+      type: Sequelize.SMALLINT,
     },
     pageId: {
       allowNull: false,
-      onDelete: 'CASCADE',
+      onDelete: "CASCADE",
       references: {
-        key: '_id',
-        model: 'Page'
+        key: "_id",
+        model: "Page",
       },
-      type: Sequelize.UUID
+      type: Sequelize.UUID,
     },
     templateId: {
       allowNull: false,
-      onDelete: 'CASCADE',
+      onDelete: "CASCADE",
       references: {
-        key: '_id',
-        model: 'Template'
+        key: "_id",
+        model: "Template",
       },
-      type: Sequelize.UUID
+      type: Sequelize.UUID,
     },
   });
-  await queryInterface.addIndex('Register', ['templateId', 'pageId']);
+  await queryInterface.addIndex("Register", ["templateId", "pageId"]);
 }
-

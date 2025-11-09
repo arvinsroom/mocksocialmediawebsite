@@ -1,11 +1,11 @@
-const { Sequelize } = require('sequelize');
+const { Sequelize } = require("sequelize");
 
 export async function down({ context: queryInterface }) {
-  await queryInterface.dropTable('UserGlobalTracking');
+  await queryInterface.dropTable("UserGlobalTracking");
 }
 
 export async function up({ context: queryInterface }) {
-  await queryInterface.createTable('UserGlobalTracking', {
+  await queryInterface.createTable("UserGlobalTracking", {
     _id: {
       allowNull: false,
       primaryKey: true,
@@ -13,30 +13,30 @@ export async function up({ context: queryInterface }) {
     },
     pageId: {
       allowNull: true,
-      onDelete: 'CASCADE',
+      onDelete: "CASCADE",
       references: {
-        key: '_id',
-        model: 'Page'
+        key: "_id",
+        model: "Page",
       },
-      type: Sequelize.UUID
+      type: Sequelize.UUID,
     },
     activeTemplateId: {
       allowNull: true,
-      onDelete: 'CASCADE',
+      onDelete: "CASCADE",
       references: {
-        key: '_id',
-        model: 'Template'
+        key: "_id",
+        model: "Template",
       },
-      type: Sequelize.UUID
+      type: Sequelize.UUID,
     },
     userId: {
       allowNull: false,
-      onDelete: 'CASCADE',
+      onDelete: "CASCADE",
       references: {
-        key: '_id',
-        model: 'User'
+        key: "_id",
+        model: "User",
       },
-      type: Sequelize.UUID
+      type: Sequelize.UUID,
     },
     pageMetaData: {
       allowNull: true,
@@ -47,6 +47,5 @@ export async function up({ context: queryInterface }) {
       type: Sequelize.DATE(3),
     },
   });
-  await queryInterface.addIndex('UserGlobalTracking', ['userId']);
+  await queryInterface.addIndex("UserGlobalTracking", ["userId"]);
 }
-

@@ -1,5 +1,5 @@
-import { CircularProgress } from '@material-ui/core';
-import './Progress.css';
+import { CircularProgress } from "@material-ui/core";
+import "./Progress.css";
 
 const Progress = () => {
   return (
@@ -7,6 +7,6 @@ const Progress = () => {
       <CircularProgress />
     </div>
   );
-}
+};
 
 export default Progress;

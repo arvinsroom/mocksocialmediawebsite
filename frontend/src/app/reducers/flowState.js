@@ -18,7 +18,7 @@ export default function (state = initialState, action) {
       return {
         flow: payload.flow,
         active: payload.active,
-        finished: payload.finished
+        finished: payload.finished,
       };
 
     // when ever we modify the active flow state, initilize disabled prop to be true
@@ -35,17 +35,17 @@ export default function (state = initialState, action) {
         ...state,
         active: nextState,
         finished: finished,
-        flow: flow
+        flow: flow,
       };
 
     case CLEAR_FLOW_STATE:
       return {
         flow: [],
         active: -1,
-        finished: true
+        finished: true,
       };
-    
+
     default:
       return state;
   }
-};
+}

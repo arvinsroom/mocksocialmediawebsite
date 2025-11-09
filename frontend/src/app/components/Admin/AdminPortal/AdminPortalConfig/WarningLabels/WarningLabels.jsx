@@ -1,36 +1,45 @@
-import { useEffect, useState } from "react";
 import {
-  FormControl,
-  InputLabel,
-  Select,
-  MenuItem,
+  Box,
   Button,
   Container,
-  TextField,
-  Table,
-  TableHead,
-  TableRow,
-  TableCell,
-  TableBody,
   Dialog,
   DialogActions,
   DialogContent,
   DialogTitle,
-  Box,
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Select,
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableRow,
+  TextField,
 } from "@material-ui/core";
-import SocialMediaPages from "../../../../Common/AdminCommon/SocialMediaPages";
-import useStyles from "../../../../style";
-import { getSocialMediaPosts, setSocialMediaLabels } from "../../../../../services/admin-userpost-service";
-import { useSelector, useDispatch } from "react-redux";
+import TextFormatOutlinedIcon from "@material-ui/icons/TextFormatOutlined";
 import { IconDeviceFloppy } from "@tabler/icons-react";
 import clsx from "clsx";
-import RichTextArea from "../../../../Common/AdminCommon/RichTextArea";
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  showErrorSnackbar,
+  showSuccessSnackbar,
+} from "../../../../../actions/snackbar";
 import { WARNING_LABELS } from "../../../../../constants";
-import TextFormatOutlinedIcon from "@material-ui/icons/TextFormatOutlined";
-import { showErrorSnackbar, showSuccessSnackbar } from "../../../../../actions/snackbar";
+import {
+  getSocialMediaPosts,
+  setSocialMediaLabels,
+} from "../../../../../services/admin-userpost-service";
+import RichTextArea from "../../../../Common/AdminCommon/RichTextArea";
+import SocialMediaPages from "../../../../Common/AdminCommon/SocialMediaPages";
+import useStyles from "../../../../style";
 
 const WarningLabels = () => {
-  const [active, setActive] = useState("");
+  const [pageActive, setPageActive] = useState({
+    pageId: "",
+    pageType: "",
+  });
   const [currSelectedPost, setCurrSelectedPost] = useState([]);
   const classes = useStyles();
   const [richText, setRichText] = useState(null);
@@ -44,7 +53,7 @@ const WarningLabels = () => {
   const [currPostsData, setCurrPostsData] = useState({});
 
   const fetchCurrPagePosts = async () => {
-    const { data } = await getSocialMediaPosts(templateId, active);
+    const { data } = await getSocialMediaPosts(templateId, pageActive.pageId);
     await setCurrSelectedPost(data?.response || []);
     let postsData = {};
     if (data?.response) {
@@ -53,7 +62,7 @@ const WarningLabels = () => {
         postsData[item._id] = {
           link: item.checkersLink || "",
           richText: item.labelRichText || "",
-          label: item.warningLabel || ""
+          label: item.warningLabel || "",
         };
       }
       await setCurrPostsData(postsData);
@@ -62,17 +71,19 @@ const WarningLabels = () => {
 
   useEffect(() => {
     // fetch previous posts
-    if (active !== "") {
+    if (pageActive.pageId !== "") {
       fetchCurrPagePosts();
     }
-  }, [active]);
+  }, [pageActive.pageId]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       await setSocialMediaLabels({ data: JSON.stringify(currPostsData) });
       await fetchCurrPagePosts();
-      dispatch(showSuccessSnackbar("Warning Labels have been successfully updated!"));    
+      dispatch(
+        showSuccessSnackbar("Warning Labels have been successfully updated!")
+      );
     } catch (error) {
       const resMessage =
         (error.response &&
@@ -100,12 +111,12 @@ const WarningLabels = () => {
       ...currPostsData,
       [postId]: {
         ...currPostsData[postId],
-        [type]: type === 'richText' ? richText : e.target.value
-      }
+        [type]: type === "richText" ? richText : e.target.value,
+      },
     };
     await setCurrPostsData(newObj);
 
-    if (type === 'richText') {
+    if (type === "richText") {
       handleClose();
     }
   };
@@ -113,7 +124,11 @@ const WarningLabels = () => {
   const createMenuItems = () => {
     let menuItems = [];
     for (let item in WARNING_LABELS) {
-      menuItems.push(<MenuItem value={item} key={item}>{item}</MenuItem>)
+      menuItems.push(
+        <MenuItem value={item} key={item}>
+          {item}
+        </MenuItem>
+      );
     }
     return menuItems;
   };
@@ -123,12 +138,14 @@ const WarningLabels = () => {
       <Container component="main" maxWidth="lg" className={classes.card}>
         <h1>Warning Labels Page</h1>
         <Box component="span" className={classes.note} display="block">
-          <p>Please note that the warning labels will only appear on Facebook's 
-            social media page, but other pages may be visible below.</p>
+          <p>
+            Please note that the warning labels will only appear on Facebook's
+            social media page, but other pages may be visible below.
+          </p>
         </Box>
         <SocialMediaPages
-          active={active}
-          setActive={setActive}
+          active={pageActive}
+          setActive={setPageActive}
           templateId={templateId}
         />
         <br />
@@ -169,7 +186,8 @@ const WarningLabels = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {Object.keys(currPostsData).length > 0 && currSelectedPost.length > 0
+            {Object.keys(currPostsData).length > 0 &&
+            currSelectedPost.length > 0
               ? currSelectedPost.map((row) => (
                   <TableRow key={row._id}>
                     <TableCell align="center">
@@ -190,7 +208,7 @@ const WarningLabels = () => {
                           labelId="demo-simple-select-outlined-label"
                           id="demo-simple-select-outlined"
                           value={currPostsData[row._id]?.label || ""}
-                          onChange={(e) => handleChange(e, row._id, 'label')}
+                          onChange={(e) => handleChange(e, row._id, "label")}
                           label={"Warning Labels"}
                         >
                           {createMenuItems()}
@@ -209,7 +227,7 @@ const WarningLabels = () => {
                       <TextField
                         id="checkersLink"
                         value={currPostsData[row._id]?.link || ""}
-                        onChange={(e) => handleChange(e, row._id, 'link')}
+                        onChange={(e) => handleChange(e, row._id, "link")}
                         type="text"
                       />
                     </TableCell>
@@ -253,7 +271,9 @@ const WarningLabels = () => {
             Discard
           </Button>
           <Button
-            onClick={(e) => handleChange(e, templateDialogBox.postId, 'richText')}
+            onClick={(e) =>
+              handleChange(e, templateDialogBox.postId, "richText")
+            }
             color="primary"
           >
             Done

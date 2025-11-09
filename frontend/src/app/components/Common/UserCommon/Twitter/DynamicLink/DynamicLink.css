@@ -4,7 +4,7 @@
 
 .twitterLinkThreeSideBorder {
   border-radius: 0 0 16px 16px;
-  border: 1px solid rgb(207,217,222);
+  border: 1px solid rgb(207, 217, 222);
   padding: 12px;
   /* border-left: 1px solid rgb(207,217,222);
   border-right: 1px solid rgb(207,217,222); */
@@ -15,7 +15,7 @@
 }
 
 .twitter-og-title {
-  color: rgb(15,20,25);
+  color: rgb(15, 20, 25);
   font-size: 15px;
 }
 
@@ -30,12 +30,12 @@
 
 .twitterAllRoundBorder {
   border-radius: 16px;
-  border: 1px solid rgb(207,217,222);
+  border: 1px solid rgb(207, 217, 222);
 }
 
 .twitterThreeSideBorder {
   border-radius: 16px 16px 0 0;
-  border: 1px solid rgb(207,217,222);
+  border: 1px solid rgb(207, 217, 222);
   /* border-top: 1px solid rgb(207,217,222);
   border-left: 1px solid rgb(207,217,222);
   border-right: 1px solid rgb(207,217,222); */
@@ -43,6 +43,6 @@
 
 .twitterLinkAllRoundBorder {
   border-radius: 16px;
-  border: 1px solid rgb(207,217,222);
+  border: 1px solid rgb(207, 217, 222);
   padding: 12px;
 }

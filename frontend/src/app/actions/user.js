@@ -1,4 +1,4 @@
-import * as UserMainService from '../services/user-main-service';
+import * as UserMainService from "../services/user-main-service";
 
 export const updateUserMain = (data) => (dispatch) => {
   return UserMainService.updateUser({ userObj: data }).then(
@@ -7,6 +7,6 @@ export const updateUserMain = (data) => (dispatch) => {
     },
     (error) => {
       return Promise.reject(error);
-    }
+    },
   );
 };

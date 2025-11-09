@@ -1,24 +1,24 @@
-const { Sequelize } = require('sequelize');
+const { Sequelize } = require("sequelize");
 
 export async function down({ context: queryInterface }) {
-  await queryInterface.dropTable('User');
+  await queryInterface.dropTable("User");
 }
 
 export async function up({ context: queryInterface }) {
-  await queryInterface.createTable('User', {
+  await queryInterface.createTable("User", {
     _id: {
       allowNull: false,
       primaryKey: true,
-      type: Sequelize.UUID
+      type: Sequelize.UUID,
     },
     templateId: {
       allowNull: false,
-      onDelete: 'CASCADE',
+      onDelete: "CASCADE",
       references: {
-        key: '_id',
-        model: 'Template'
+        key: "_id",
+        model: "Template",
       },
-      type: Sequelize.UUID
+      type: Sequelize.UUID,
     },
     qualtricsId: {
       allowNull: true,
@@ -38,6 +38,5 @@ export async function up({ context: queryInterface }) {
       type: Sequelize.DATE(3),
     },
   });
-  await queryInterface.addIndex('User', ['templateId']);
+  await queryInterface.addIndex("User", ["templateId"]);
 }
-

@@ -18,10 +18,9 @@ export const userLogin = (templateCode) => (dispatch) => {
             flow: [],
             active: -1,
             finished: true,
-          }
+          },
         });
-      }
-      else {
+      } else {
         // dispatch a function to set the initial flow state
         dispatch({
           type: SET_FLOW_STATE,
@@ -29,7 +28,7 @@ export const userLogin = (templateCode) => (dispatch) => {
             flow: data.flow,
             active: 0,
             finished: false,
-          }
+          },
         });
 
         // data has user token, flow and translations
@@ -61,7 +60,7 @@ export const userLogin = (templateCode) => (dispatch) => {
       });
 
       return Promise.reject();
-    }
+    },
   );
 };
 

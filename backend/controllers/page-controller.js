@@ -7,7 +7,7 @@ const getAllPages = async (req, res, next) => {
     // fetch the adminId added from middleware
     if (!req.adminId) {
       res.status(400).send({
-        message: "Invalid Token, please log in again!"
+        message: "Invalid Token, please log in again!",
       });
       return;
     }
@@ -16,18 +16,21 @@ const getAllPages = async (req, res, next) => {
     const _id = req.params._id;
     if (!_id) {
       res.status(400).send({
-        message: "Invalid Template Id!"
+        message: "Invalid Template Id!",
       });
       return;
     }
-    
+
     transaction = await db.sequelize.transaction();
-    const data = await Page.findAll({
-      where: {
-        templateId: _id
+    const data = await Page.findAll(
+      {
+        where: {
+          templateId: _id,
+        },
+        attributes: ["_id", "name", "type", "flowOrder"],
       },
-      attributes: ['_id', 'name', 'type', 'flowOrder']
-    }, { transaction });
+      { transaction },
+    );
     await transaction.commit();
 
     res.send(data);
@@ -35,7 +38,8 @@ const getAllPages = async (req, res, next) => {
     console.log(error.message);
     if (transaction) await transaction.rollback();
     res.status(500).send({
-      message: "Some error occurred while fetching all pages for given template Id!"
+      message:
+        "Some error occurred while fetching all pages for given template Id!",
     });
   }
 };
@@ -46,7 +50,7 @@ const updatePage = async (req, res, next) => {
   const { pageObj } = req.body;
   if (!pageObj) {
     res.status(400).send({
-      message: "Update page object of order is required!"
+      message: "Update page object of order is required!",
     });
     return;
   }
@@ -56,26 +60,30 @@ const updatePage = async (req, res, next) => {
     transaction = await db.sequelize.transaction();
     const promises = [];
     for (const [page_id, flowOrder] of Object.entries(pageObj)) {
-      promises.push(Page.update({
-        flowOrder: flowOrder
-      }, {
-        where: {
-          _id: page_id
-        },
-        transaction
-      }
-      ));
+      promises.push(
+        Page.update(
+          {
+            flowOrder: flowOrder,
+          },
+          {
+            where: {
+              _id: page_id,
+            },
+            transaction,
+          },
+        ),
+      );
     }
     let data = await Promise.all(promises);
     await transaction.commit();
     res.send({
-      data
+      data,
     });
   } catch (error) {
     console.log(error.message);
     if (transaction) await transaction.rollback();
     res.status(500).send({
-      message: "Some error occurred while updating orders!"
+      message: "Some error occurred while updating orders!",
     });
   }
 };
@@ -84,7 +92,7 @@ const getSocialMediaPages = async (req, res, next) => {
   // fetch the adminId added from middleware
   if (!req.adminId) {
     res.status(400).send({
-      message: "Invalid Token, please log in again!"
+      message: "Invalid Token, please log in again!",
     });
     return;
   }
@@ -93,28 +101,36 @@ const getSocialMediaPages = async (req, res, next) => {
   const _id = req.params._id;
   if (!_id) {
     res.status(400).send({
-      message: "Invalid Template Id!"
+      message: "Invalid Template Id!",
     });
     return;
   }
 
   try {
-    const socialMediaPages = ['FACEBOOK', 'REDDIT', 'TWITTER', 'INSTAGRAM',
-    'YOUTUBE', 'SLACK', 'TIKTOK'];
+    const socialMediaPages = [
+      "FACEBOOK",
+      "REDDIT",
+      "TWITTER",
+      "INSTAGRAM",
+      "YOUTUBE",
+      "SLACK",
+      "TIKTOK",
+    ];
     const data = await Page.findAll({
       where: {
         templateId: _id,
-        type: socialMediaPages
+        type: socialMediaPages,
       },
-      attributes: ['_id', 'name']
+      attributes: ["_id", "name", "type"],
     });
     res.send({
-      data
+      data,
     });
   } catch (error) {
     console.log(error.message);
     res.status(500).send({
-      message: "Some error occurred while fetching all pages for given template Id!"
+      message:
+        "Some error occurred while fetching all pages for given template Id!",
     });
   }
 };
@@ -123,7 +139,7 @@ const deletePage = async (req, res, next) => {
   // fetch the adminId added from middleware
   if (!req.adminId) {
     res.status(400).send({
-      message: "Invalid Token, please log in again!"
+      message: "Invalid Token, please log in again!",
     });
     return;
   }
@@ -132,7 +148,7 @@ const deletePage = async (req, res, next) => {
   const _id = req.params._id;
   if (!_id) {
     res.status(400).send({
-      message: "Invalid Page Id!"
+      message: "Invalid Page Id!",
     });
     return;
   }
@@ -142,28 +158,27 @@ const deletePage = async (req, res, next) => {
     transaction = await db.sequelize.transaction();
     await Page.destroy({
       where: {
-        _id
+        _id,
       },
-      transaction
+      transaction,
     });
     await transaction.commit();
 
     res.send({
-      message: "Page was successfully deleted."
+      message: "Page was successfully deleted.",
     });
   } catch (error) {
     console.log(error.message);
     if (transaction) await transaction.rollback();
     res.status(500).send({
-      message: "Error occurred when deleting given Page."
+      message: "Error occurred when deleting given Page.",
     });
   }
 };
-
 
 export default {
   updatePage,
   getAllPages,
   getSocialMediaPages,
-  deletePage
-}
+  deletePage,
+};

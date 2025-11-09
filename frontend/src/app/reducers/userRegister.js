@@ -1,6 +1,6 @@
 import {
   SET_REGISTER_META_DATA,
-  CLEAR_REGISTER_META_DATA
+  CLEAR_REGISTER_META_DATA,
 } from "../actions/types";
 
 const initialState = {
