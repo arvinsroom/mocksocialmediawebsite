@@ -109,8 +109,9 @@ const TikTokVideo = ({ mediaPath, singlePost }) => {
               dwellStartTimeRef.current = null;
             }
 
-            // Video not in view, pause it
+            // Video not in view, pause it and close comments
             video?.pause();
+            setShowComments(false);
           }
         });
       };
@@ -121,6 +122,22 @@ const TikTokVideo = ({ mediaPath, singlePost }) => {
       );
       if (video) {
         observerRef.current.observe(video);
+        
+        // Check if video is already in viewport (important for first video on page load)
+        const rect = video.getBoundingClientRect();
+        const isInViewport = rect.top >= 0 && 
+                            rect.bottom <= window.innerHeight &&
+                            rect.left >= 0 && 
+                            rect.right <= window.innerWidth;
+        
+        // If already in viewport and dwell tracking hasn't started, start it
+        if (isInViewport && !dwellStartTimeRef.current) {
+          const startTime = new Date().toISOString();
+          dwellStartTimeRef.current = startTime;
+          video.play().catch((error) => {
+            console.error("Failed to play video:", error);
+          });
+        }
       }
     };
 
@@ -209,6 +226,26 @@ const TikTokVideo = ({ mediaPath, singlePost }) => {
 
     // Cleanup
     return () => {
+      // Capture final dwell time if video was being tracked when component unmounts
+      if (dwellStartTimeRef.current) {
+        const endTime = new Date().toISOString();
+        const finalSession = {
+          start: dwellStartTimeRef.current,
+          end: endTime
+        };
+        
+        // Send final tracking data
+        const track = {
+          action: "TIKTOK_DWELLTIME",
+          userPostId: singlePost._id,
+          metaData: {
+            sessions: [...dwellSessions, finalSession]
+          }
+        };
+        
+        dispatch(trackUserClick(track));
+      }
+      
       if (hlsInstance) {
         hlsInstance.destroy();
       }
@@ -301,7 +338,7 @@ const TikTokVideo = ({ mediaPath, singlePost }) => {
   };
 
   return (
-    <div className={`video-container ${showComments ? "with-comments" : ""}`}>
+    <div className="video-container">
       {error ? (
         <ErrorPlaceholder errorMessage={error} />
       ) : (

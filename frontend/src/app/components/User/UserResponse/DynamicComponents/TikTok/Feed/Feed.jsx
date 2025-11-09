@@ -6,7 +6,7 @@ import Progress from "../../../../../Common/Progress";
 import "./Feed.css";
 import TikTokPost from "./TikTokPost/TikTokPost";
 
-const Feed = () => {
+const Feed = ({ onLastVideoVisible }) => {
   const allIds = useSelector((state) => selectAllPostIds(state));
   const currentPostPage = useSelector(
     (state) => state.socialMedia.currentPostPage
@@ -32,15 +32,20 @@ const Feed = () => {
       if (isLoading) return;
       if (observer.current) observer.current.disconnect();
       observer.current = new IntersectionObserver((entries) => {
-        if (entries[0].isIntersecting && !finish) {
-          const startIndex = currentPostPage * postEachPage;
-          const slicePosts = totalPostIds.slice(startIndex, startIndex + 5);
-          dispatch(getTikTokPosts({ postIds: slicePosts }));
+        if (entries[0].isIntersecting) {
+          if (!finish) {
+            const startIndex = currentPostPage * postEachPage;
+            const slicePosts = totalPostIds.slice(startIndex, startIndex + 5);
+            dispatch(getTikTokPosts({ postIds: slicePosts }));
+          } else {
+            // Last video reached - show button permanently
+            onLastVideoVisible?.(true);
+          }
         }
       });
       if (node) observer.current.observe(node);
     },
-    [isLoading, finish, currentPostPage, postEachPage, totalPostIds, dispatch]
+    [isLoading, finish, currentPostPage, postEachPage, totalPostIds, dispatch, onLastVideoVisible]
   );
 
   // allIds represent the current length of ids start from 5 and at the 5th node
@@ -51,13 +56,13 @@ const Feed = () => {
         {allIds.map((postId, index) => {
           if (allIds.length === index + 1) {
             return (
-              <div key={index} ref={lastPostRef}>
+              <div key={index} ref={lastPostRef} className="tiktokPostCard">
                 <TikTokPost id={postId} />
               </div>
             );
           } else {
             return (
-              <div key={index}>
+              <div key={index} className="tiktokPostCard">
                 <TikTokPost id={postId} />
               </div>
             );

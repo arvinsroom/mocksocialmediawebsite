@@ -1,6 +1,6 @@
 import { Button } from "@material-ui/core";
 import { IconChevronRight } from "@tabler/icons-react";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Navigate } from "react-router-dom";
 import { updateFlowActiveState } from "../../../../../actions/flowState";
@@ -21,6 +21,7 @@ const TikTok = ({ data }) => {
   const totalPostCount = useSelector(
     (state) => state.socialMedia.totalPostCount
   );
+  const [showNextButton, setShowNextButton] = useState(false);
   // const socialMediaTranslations = useSelector(
   //   (state) => state.socialMedia.socialMediaTranslations
   // );
@@ -55,29 +56,49 @@ const TikTok = ({ data }) => {
     dispatch(updateFlowActiveState());
   };
 
+  const handleLastVideoVisible = (isVisible) => {
+    setShowNextButton(isVisible);
+  };
+
   return (
     <>
       <div className="tiktok">
         <div className="tiktokFeed">
           {/* TikTok feed */}
           {totalPostCount && totalPostCount > 0 ? (
-            <Feed />
+            <Feed onLastVideoVisible={handleLastVideoVisible} />
           ) : (
-            <p>No Posts Exist!</p>
+            <>
+              <p>No Posts Exist!</p>
+              <div className="tiktokNextScreen">
+                <Button
+                  type="submit"
+                  variant="contained"
+                  color="primary"
+                  onClick={handleSubmit}
+                  className={classes.submit}
+                  endIcon={<IconChevronRight />}
+                >
+                  {translations?.next || "NEXT"}
+                </Button>
+              </div>
+            </>
           )}
 
-          <div className="tiktokNextScreen">
-            <Button
-              type="submit"
-              variant="contained"
-              color="primary"
-              onClick={handleSubmit}
-              className={classes.submit}
-              endIcon={<IconChevronRight />}
-            >
-              {translations?.next || "NEXT"}
-            </Button>
-          </div>
+          {totalPostCount > 0 && showNextButton && (
+            <div className="tiktokNextScreen">
+              <Button
+                type="submit"
+                variant="contained"
+                color="primary"
+                onClick={handleSubmit}
+                className={classes.submit}
+                endIcon={<IconChevronRight />}
+              >
+                {translations?.next || "NEXT"}
+              </Button>
+            </div>
+          )}
         </div>
       </div>
     </>
